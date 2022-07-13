@@ -3,14 +3,19 @@ import { HomeDashboardComponent } from "./home-dashboard/home-dashboard.componen
 import { HomeSideMenuComponent } from "./home-side-menu/home-side-menu.component";
 import { HomeToolbarComponent } from "./home-toolbar/home-toolbar.component";
 import { HomeComponent } from "./home.component";
+import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
-    imports: [],
+    imports: [
+      MatToolbarModule,
+      MatIconModule,
+    ],
     declarations: [
         HomeDashboardComponent,
         HomeSideMenuComponent,
         HomeComponent,
-        HomeToolbarComponent
+        HomeToolbarComponent,
     ],
     exports: [
         HomeComponent
