@@ -5,11 +5,13 @@ import { HomeToolbarComponent } from "./home-toolbar/home-toolbar.component";
 import { HomeComponent } from "./home.component";
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
+import { CommonModule } from "@angular/common";
 
 @NgModule({
     imports: [
       MatToolbarModule,
       MatIconModule,
+      CommonModule
     ],
     declarations: [
         HomeDashboardComponent,

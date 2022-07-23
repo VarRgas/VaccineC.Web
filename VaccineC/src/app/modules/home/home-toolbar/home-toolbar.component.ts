@@ -7,5 +7,10 @@ import { Component } from "@angular/core";
 })
 
 export class HomeToolbarComponent {
+  public sideButtonIsOpened: boolean = false;
 
+
+  public openSideNav(): void {
+
+  }
 }
