@@ -1,0 +1,15 @@
+.example-spacer {
+    flex: 1 1 auto;
+    text-align: -webkit-center;
+  }
+  
+  .btn-search {
+    background-color: #5099dd;
+  }
+  
+  #home-topbar {
+    position: fixed;
+    z-index: 30;
+    width: calc(100% - 16em);
+    margin-left: 16em;
+  }

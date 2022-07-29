@@ -1,0 +1,17 @@
+
+.is-footer {
+    color: #677788;
+    padding: 0.5em 5.5rem;
+    display: flex;
+    justify-content: left;
+    bottom: 0;
+    height: 40px;
+    position: fixed;
+    width: 100%;
+}
+
+.is-footer .is-author {
+    font-size: 10px;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
