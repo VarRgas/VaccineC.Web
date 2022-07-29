@@ -1,6 +1,9 @@
 #accordionSidebar {
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
+  position: fixed;
+  z-index: 20;
+  transition: width 0.3s;
 }
 
 .resource-icon {
@@ -23,4 +26,17 @@
   box-shadow: 0 0.375rem 0.75rem rgb(140 152 164 / 13%);
   cursor: pointer;
   transition: background 0.2s, left 0.3s;
+}
+
+@media (max-width: 1366px) {
+  .is-handle-expanded {
+    top: 0.4em;
+  }
+}
+
+@media (max-width: 768px) {
+  .is-handle-expanded {
+    top: 0.4em;
+    left: 6.25em;
+  }
 }
