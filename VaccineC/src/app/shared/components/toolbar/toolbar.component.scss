@@ -10,6 +10,13 @@
   #home-topbar {
     position: fixed;
     z-index: 30;
-    width: calc(100% - 16em);
-    margin-left: 16em;
+    width: calc(100% - 14em);
+    margin-left: 14em;
+  }
+
+  @media (max-width: 768px) {
+    #home-topbar {
+        width: calc(100% - 6.5em);
+      margin-left: 6.5em;
+    }
   }
