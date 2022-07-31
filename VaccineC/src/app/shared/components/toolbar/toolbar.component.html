@@ -39,85 +39,71 @@
         </li>
 
         <!-- Nav Item - Alerts -->
-        <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown no-arrow mx-1" dropdown (onShown)="onShown()" (onHidden)="onHidden()"
+            (isOpenChange)="isOpenChange()">
+            <a class="nav-link dropdown-toggle" href id="basic-link" dropdownToggle (click)="false">
                 <i class="fas fa-bell fa-fw"></i>
-                <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">3+</span>
+                <span class="badge badge-danger badge-counter">2+</span>
             </a>
-            <!-- Dropdown - Alerts -->
-            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                aria-labelledby="alertsDropdown">
+            <ul id="basic-link-dropdown" *dropdownMenu
+                class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" role="menu"
+                aria-labelledby="basic-link">
                 <h6 class="dropdown-header">
-                    Alerts Center
+                    Central de Notificações
                 </h6>
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <div class="mr-3">
-                        <div class="icon-circle bg-primary">
-                            <i class="fas fa-file-alt text-white"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="small text-gray-500">December 12, 2019</div>
-                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                    </div>
-                </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                        <div class="icon-circle bg-success">
-                            <i class="fas fa-donate text-white"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="small text-gray-500">December 7, 2019</div>
-                        $290.29 has been deposited into your account!
-                    </div>
-                </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
                         <div class="icon-circle bg-warning">
-                            <i class="fas fa-exclamation-triangle text-white"></i>
+                            <i class="fas fa-cart-flatbed text-white"></i>
                         </div>
                     </div>
                     <div>
-                        <div class="small text-gray-500">December 2, 2019</div>
-                        Spending Alert: We've noticed unusually high spending for your account.
+                        <div class="small-text">Agosto 12, 2022</div>
+                        <span class="font-weight-bold text-gray-600">O lote A1B2C3 está para vencer em
+                            25/08/2022!</span>
                     </div>
                 </a>
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-            </div>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div class="mr-3">
+                        <div class="icon-circle bg-danger">
+                            <i class="fas fa-boxes-stacked text-white"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="small-text">Abril 7, 2022</div>
+                        <span class="text-gray-600">A vacina INFLUENZA encontra-se abaixo do estoque mínimo!</span>
+                    </div>
+                </a>
+            </ul>
         </li>
 
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
-        <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown no-arrow" dropdown (onShown)="onShown()" (onHidden)="onHidden()"
+            (isOpenChange)="isOpenChange()">
+            <a class="nav-link dropdown-toggle" href id="basic-link" dropdownToggle (click)="false"
+                aria-controls="basic-link-dropdown">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuário Exemplo</span>
-                <img class="img-profile rounded-circle" src="../../../../assets/img/undraw_profile_3.svg">    
+                <img class="img-profile rounded-circle" src="../../../../assets/img/undraw_profile_3.svg">
             </a>
-            <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
-                </a>
-                <a class="dropdown-item" href="#">
-                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Settings
-                </a>
-                <a class="dropdown-item" href="#">
-                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Activity Log
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Logout
-                </a>
-            </div>
+            <ul id="basic-link-dropdown" *dropdownMenu
+                class="dropdown-menu dropdown-menu-right shadow animated--grow-in" role="menu"
+                aria-labelledby="basic-link">
+                <li>
+                    <a class="dropdown-item text-gray-600" href="#">
+                        <i class="fas fa-user fa-sm fa-fw mr-2"></i>
+                        Minha Conta
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item text-gray-600" href="#">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2"></i>
+                        Sair
+                    </a>
+                </li>
+            </ul>
         </li>
 
     </ul>

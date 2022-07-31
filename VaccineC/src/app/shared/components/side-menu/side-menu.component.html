@@ -19,12 +19,16 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/home" data-toggle="collapse" data-target="#collapseRegistration"
-                aria-expanded="false" aria-controls="collapseRegistration">
-                <i class="fas fa-fw fa-address-card resource-icon"></i>
-                <span>CADASTROS</span>
-            </a>
-            <div id="collapseRegistration" class="collapse" aria-labelledby="headingRegistration"
+            <div (click)="isCollapsedRegistration = !isCollapsedRegistration"
+                [attr.aria-expanded]="!isCollapsedRegistration" aria-controls="collapseRegistration"
+                class="nav-link nav-link-menu">
+                <div>
+                    <i class="fas fa-fw fa-address-card resource-icon"></i>
+                    <span>CADASTROS</span>
+                </div>
+                <i class="fas fa-fw fa-chevron-right resource-icon menu-chevron-icon"></i>
+            </div>
+            <div id="collapseRegistration" [collapse]="isCollapsedRegistration" [isAnimated]="true"
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="/formas-pagamento">FORMAS PAGAMENTO</a>
@@ -37,12 +41,16 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/home" data-toggle="collapse" data-target="#collapseOperational"
-                aria-expanded="false" aria-controls="collapseOperational">
-                <i class="fas fa-fw fa-hand-holding-medical resource-icon"></i>
-                <span>OPERACIONAL</span>
-            </a>
-            <div id="collapseOperational" class="collapse" aria-labelledby="headingOperational"
+            <div (click)="isCollapsedOperational = !isCollapsedOperational"
+                [attr.aria-expanded]="!isCollapsedOperational" aria-controls="collapseOperational"
+                class="nav-link nav-link-menu">
+                <div>
+                    <i class="fas fa-fw fa-hand-holding-medical resource-icon"></i>
+                    <span>OPERACIONAL</span>
+                </div>
+                <i class="fas fa-fw fa-chevron-right resource-icon menu-chevron-icon"></i>
+            </div>
+            <div id="collapseOperational" [collapse]="isCollapsedOperational" [isAnimated]="true"
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="#">AGENDAMENTO</a>
@@ -53,12 +61,15 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/home" data-toggle="collapse" data-target="#collapseInventory"
-                aria-expanded="false" aria-controls="collapseInventory">
-                <i class="fas fa-fw fa-box-open resource-icon"></i>
-                <span>ESTOQUE</span>
-            </a>
-            <div id="collapseInventory" class="collapse" aria-labelledby="headingInventory"
+            <div (click)="isCollapsedInventory = !isCollapsedInventory" [attr.aria-expanded]="!isCollapsedInventory"
+                aria-controls="collapseInventory" class="nav-link nav-link-menu">
+                <div>
+                    <i class="fas fa-fw fa-box-open resource-icon"></i>
+                    <span>ESTOQUE</span>
+                </div>
+                <i class="fas fa-fw fa-chevron-right resource-icon menu-chevron-icon"></i>
+            </div>
+            <div id="collapseInventory" [collapse]="isCollapsedInventory" [isAnimated]="true"
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="#">COMPRAR OU VENDER</a>
@@ -68,12 +79,15 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="/home" data-toggle="collapse" data-target="#collapseUser"
-                aria-expanded="false" aria-controls="collapseUser">
-                <i class="fas fa-fw fa-users resource-icon"></i>
-                <span>USUÁRIOS</span>
-            </a>
-            <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
+            <div (click)="isCollapsedUser = !isCollapsedUser" [attr.aria-expanded]="!isCollapsedUser"
+                aria-controls="collapseUser" class="nav-link nav-link-menu">
+                <div>
+                    <i class="fas fa-fw fa-users resource-icon"></i>
+                    <span>USUÁRIOS</span>
+                </div>
+                <i class="fas fa-fw fa-chevron-right resource-icon menu-chevron-icon"></i>
+            </div>
+            <div id="collapseUser" [collapse]="isCollapsedUser" [isAnimated]="true" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="#">GERENCIAR USUÁRIOS</a>
                     <a class="collapse-item" href="#">PERFIS</a>

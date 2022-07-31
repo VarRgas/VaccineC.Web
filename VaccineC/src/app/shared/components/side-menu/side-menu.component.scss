@@ -21,6 +21,10 @@
     font-weight: 900;
 }
 
+#accordionSidebar.toggled div .nav-item div .menu-chevron-icon {
+    display: none;
+}
+
 #accordionSidebar.toggled div a div #logo {
     content: url(../../../../assets/img/menu-logo.png);
     height: 35px !important;
@@ -59,6 +63,16 @@
     transition: background 0.2s, left 0.3s;
 }
 
+.nav-item {
+    cursor: pointer;
+}
+
+.nav-link-menu {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+}
+
 @media (max-width: 1366px) {
     #sidebarToggle {
         top: 0.4em;
@@ -85,6 +99,10 @@
         content: '\f105' !important;
         font-family: 'Font Awesome 6 Free';
         font-weight: 900;
+    }
+
+    .menu-chevron-icon {
+        display: none;
     }
 
 }

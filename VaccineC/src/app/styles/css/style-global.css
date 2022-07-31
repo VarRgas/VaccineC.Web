@@ -2165,27 +2165,27 @@ pre code {
 }
 
 .form-control::-webkit-input-placeholder {
-  color: #858796;
+  color: var(--cor-placeholder-produto);
   opacity: 1;
 }
 
 .form-control::-moz-placeholder {
-  color: #858796;
+  color: var(--cor-placeholder-produto);
   opacity: 1;
 }
 
 .form-control:-ms-input-placeholder {
-  color: #858796;
+  color: var(--cor-placeholder-produto);
   opacity: 1;
 }
 
 .form-control::-ms-input-placeholder {
-  color: #858796;
+  color: var(--cor-placeholder-produto);
   opacity: 1;
 }
 
 .form-control::placeholder {
-  color: #858796;
+  color: var(--cor-placeholder-produto);
   opacity: 1;
 }
 
@@ -12629,4 +12629,26 @@ body.sidebar-toggled footer.sticky-footer {
   margin-left: 14.5rem;
   transition: margin 0.3s;
   min-height: 100vh;
+}
+
+.cor-produto {
+  color: var(--cor-produto) !important;
+}
+
+.bg-cor-produto {
+  background-color: var(--cor-produto) !important;
+}
+
+.cor-produto-primary {
+  color: var(--cor-btn-primary-produto) !important;
+}
+
+.bg-cor-produto-primary {
+  background-color: var(--cor-btn-primary-produto) !important;
+}
+
+.small-text {
+  color: #c9c9c9 !important;
+  font-size: 80% !important;
+  font-weight: 400 !important;
 }

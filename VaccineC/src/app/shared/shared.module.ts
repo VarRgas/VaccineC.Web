@@ -4,6 +4,8 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ContainerComponent } from './components/container/container.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 @NgModule({
   declarations: [
@@ -13,7 +15,10 @@ import { ContainerComponent } from './components/container/container.component';
     ContainerComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+
+    BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
   ],
   exports: [
     SideMenuComponent,

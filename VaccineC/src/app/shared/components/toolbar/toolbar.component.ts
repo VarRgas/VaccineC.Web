@@ -12,4 +12,14 @@ export class ToolbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onHidden(): void {
+
+  }
+  onShown(): void {
+
+  }
+  isOpenChange(): void {
+   
+  }
+
 }

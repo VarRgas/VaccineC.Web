@@ -9,11 +9,15 @@ import * as $ from 'jquery';
 export class SideMenuComponent implements OnInit {
 
   is_toggled = "";
+  isCollapsedRegistration = true;
+  isCollapsedOperational = true;
+  isCollapsedInventory = true;
+  isCollapsedUser = true;
 
   constructor() { }
 
   ngOnInit(): void {
-   
+
   }
 
   toggleSideNav() {
