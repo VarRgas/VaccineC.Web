@@ -25,6 +25,18 @@
     display: none;
 }
 
+#accordionSidebar.toggled div .nav-item div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#accordionSidebar.toggled div .nav-item div div i {
+    margin-right: 0px !important;
+    margin-bottom: 0.2rem !important;
+}
+
+
 #accordionSidebar.toggled div a div #logo {
     content: url(../../../../assets/img/menu-logo.png);
     height: 35px !important;
@@ -73,6 +85,10 @@
     justify-content: space-between;
 }
 
+.collapse-inner {
+    align-items: flex-start !important;
+}
+
 @media (max-width: 1366px) {
     #sidebarToggle {
         top: 0.4em;
@@ -103,6 +119,18 @@
 
     .menu-chevron-icon {
         display: none;
+    }
+
+    .sidebar .nav-item .nav-link {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .sidebar .nav-item .nav-link div i {
+        margin-right: 0px !important;
+        margin-bottom: 0.2rem !important;
+        font-size: 0.85rem;
     }
 
 }

@@ -13,11 +13,21 @@ export class SideMenuComponent implements OnInit {
   isCollapsedOperational = true;
   isCollapsedInventory = true;
   isCollapsedUser = true;
-
+ 
   constructor() { }
 
   ngOnInit(): void {
 
+  }
+
+  collapses(): void {
+    document.getElementsByClassName('nav-link-menu')[0].classList.remove('collapsed');
+    document.getElementsByClassName('nav-link-menu')[0].classList.add('collapsed');
+  }
+
+  expands(): void {
+    document.getElementsByClassName('nav-link-menu')[0].classList.add('collapsed');
+    document.getElementsByClassName('nav-link-menu')[0].classList.remove('collapsed');
   }
 
   toggleSideNav() {
