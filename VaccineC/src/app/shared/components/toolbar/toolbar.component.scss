@@ -24,6 +24,10 @@
   border-color: var(--cor-btn-primary-produto) !important;
 }
 
+.notification-icon {
+  font-size: 20px;
+}
+
 @media (max-width: 768px) {
   #home-topbar {
     width: calc(100% - 6.5em);

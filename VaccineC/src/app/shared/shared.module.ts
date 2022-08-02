@@ -6,25 +6,31 @@ import { FooterComponent } from './components/footer/footer.component';
 import { ContainerComponent } from './components/container/container.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 
 @NgModule({
   declarations: [
     SideMenuComponent,
     ToolbarComponent,
     FooterComponent,
-    ContainerComponent
+    ContainerComponent,
+    ConfirmModalComponent
   ],
   imports: [
     CommonModule,
 
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
+    ModalModule.forRoot()
   ],
   exports: [
     SideMenuComponent,
     ToolbarComponent,
     FooterComponent,
-    ContainerComponent
-  ]
+    ContainerComponent,
+    ConfirmModalComponent
+  ],
+  bootstrap: [ConfirmModalComponent]
 })
 export class SharedModule { }

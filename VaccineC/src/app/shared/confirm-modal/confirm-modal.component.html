@@ -1,0 +1,9 @@
+<button type="button" class="btn btn-primary" (click)="openModal(template)">Alterar Senha</button>
+<br><br>
+<ng-template #template>
+    <div class="modal-body text-center">
+        <p>Deseja mesmo alterar a senha?</p>
+        <button type="button" class="btn btn-default" (click)="confirm()">Sim</button>
+        <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
+    </div>
+</ng-template>

@@ -54,7 +54,7 @@
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <div class="mr-3">
                         <div class="icon-circle bg-warning">
-                            <i class="fas fa-cart-flatbed text-white"></i>
+                            <i class="fas fa-triangle-exclamation text-white notification-icon"></i>
                         </div>
                     </div>
                     <div>
@@ -66,7 +66,7 @@
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <div class="mr-3">
                         <div class="icon-circle bg-danger">
-                            <i class="fas fa-boxes-stacked text-white"></i>
+                            <i class="fas fa-radiation text-white notification-icon"></i>
                         </div>
                     </div>
                     <div>
@@ -84,14 +84,14 @@
             (isOpenChange)="isOpenChange()">
             <a class="nav-link dropdown-toggle" href id="basic-link" dropdownToggle (click)="false"
                 aria-controls="basic-link-dropdown">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuário Exemplo</span>
-                <img class="img-profile rounded-circle" src="../../../../assets/img/undraw_profile_3.svg">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">John Doe</span>
+                <img class="img-profile rounded-circle" src="../../../../assets/img/bg-profile-default.png">
             </a>
             <ul id="basic-link-dropdown" *dropdownMenu
                 class="dropdown-menu dropdown-menu-right shadow animated--grow-in" role="menu"
                 aria-labelledby="basic-link">
                 <li>
-                    <a class="dropdown-item text-gray-600" href="#">
+                    <a class="dropdown-item text-gray-600" href="/minha-conta">
                         <i class="fas fa-user fa-sm fa-fw mr-2"></i>
                         Minha Conta
                     </a>

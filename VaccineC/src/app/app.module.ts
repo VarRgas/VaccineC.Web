@@ -15,6 +15,18 @@ import { FormasPagamentoComponent } from './pages/formas-pagamento/formas-pagame
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
+import { OcupacoesComponent } from './pages/ocupacoes/ocupacoes.component';
+import { PessoasComponent } from './pages/pessoas/pessoas.component';
+import { PrestadoresComponent } from './pages/prestadores/prestadores.component';
+import { ProdutoComponent } from './pages/produto/produto.component';
+import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
+import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
+import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
+import { ComprarVenderComponent } from './pages/comprar-vender/comprar-vender.component';
+import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
+import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
+import { PerfisComponent } from './pages/perfis/perfis.component';
+import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +37,19 @@ import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.c
     FormasPagamentoComponent,
     NotFoundComponent,
     InternalServerErrorComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    OcupacoesComponent,
+    PessoasComponent,
+    PrestadoresComponent,
+    ProdutoComponent,
+    AgendamentoComponent,
+    AplicacaoComponent,
+    OrcamentosComponent,
+    ComprarVenderComponent,
+    SituacaoEstoqueComponent,
+    GerenciarUsuariosComponent,
+    PerfisComponent,
+    MinhaContaComponent
   ],
   imports: [
     BrowserModule,
