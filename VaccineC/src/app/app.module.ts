@@ -26,7 +26,13 @@ import { ComprarVenderComponent } from './pages/comprar-vender/comprar-vender.co
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { PerfisComponent } from './pages/perfis/perfis.component';
-import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
+import { MinhaContaComponent, DialogOverviewExampleDialog } from './pages/minha-conta/minha-conta.component';
+
+
+import {MaterialExampleModule} from './material.module';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatNativeDateModule} from '@angular/material/core';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -49,7 +55,8 @@ import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
     SituacaoEstoqueComponent,
     GerenciarUsuariosComponent,
     PerfisComponent,
-    MinhaContaComponent
+    MinhaContaComponent,
+    DialogOverviewExampleDialog
   ],
   imports: [
     BrowserModule,
@@ -57,6 +64,11 @@ import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     SharedModule,
+    FormsModule,
+    HttpClientModule,
+    MatNativeDateModule,
+    MaterialExampleModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
