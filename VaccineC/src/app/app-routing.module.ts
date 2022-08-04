@@ -8,18 +8,19 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { FormasPagamentoComponent } from './pages/formas-pagamento/formas-pagamento.component';
 import { OcupacoesComponent } from './pages/ocupacoes/ocupacoes.component';
 import { PessoasComponent } from './pages/pessoas/pessoas.component';
-import { PrestadoresComponent } from './pages/prestadores/prestadores.component';
+import { EmpresasComponent } from './pages/prestadores/empresas.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
 
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
 
-import { ComprarVenderComponent } from './pages/comprar-vender/comprar-vender.component';
+import { MovimentarEstoqueComponent } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
 
 import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
-import { PerfisComponent } from './pages/perfis/perfis.component';
+import { RecursosComponent } from './pages/recursos/recursos.component';
+import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
@@ -34,18 +35,19 @@ const routes: Routes = [
   { path: 'formas-pagamento', component: FormasPagamentoComponent },
   { path: 'ocupacoes', component: OcupacoesComponent },
   { path: 'pessoas', component: PessoasComponent },
-  { path: 'prestadores', component: PrestadoresComponent },
+  { path: 'empresas', component: EmpresasComponent },
   { path: 'produto', component: ProdutoComponent },
 
   { path: 'agendamento', component: AgendamentoComponent },
   { path: 'aplicacao', component: AplicacaoComponent },
   { path: 'orcamentos', component: OrcamentosComponent },
 
-  { path: 'comprar-vender', component: ComprarVenderComponent },
+  { path: 'movimentar-estoque', component: MovimentarEstoqueComponent },
   { path: 'situacao-estoque', component: SituacaoEstoqueComponent },
 
   { path: 'gerenciar-usuarios', component: GerenciarUsuariosComponent },
-  { path: 'perfis', component: PerfisComponent },
+  { path: 'recursos', component: RecursosComponent },
+  { path: 'visao-faturamento', component: VisaoFaturamentoComponent },
 
   { path: 'minha-conta', component: MinhaContaComponent },
 

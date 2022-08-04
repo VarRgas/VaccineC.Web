@@ -12,7 +12,7 @@ export class SideMenuComponent implements OnInit {
   isCollapsedRegistration = true;
   isCollapsedOperational = true;
   isCollapsedInventory = true;
-  isCollapsedUser = true;
+  isCollapsedManagement = true;
  
   constructor() { }
 

@@ -8,10 +8,10 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ContainerComponent implements OnInit {
 
   @Input()
-  titulo!: string;
+  containerTitle!: string;
 
   @Input()
-  caminho!: string;
+  containerPath!: string;
 
   constructor() { }
 

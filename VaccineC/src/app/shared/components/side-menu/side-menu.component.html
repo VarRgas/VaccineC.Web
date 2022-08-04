@@ -30,11 +30,10 @@
             <div id="collapseRegistration" [collapse]="isCollapsedRegistration" [isAnimated]="true"
                 data-parent="#accordionSidebar" (expands)="expands()" (collapses)="collapses()">
                 <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/pessoas">PESSOAS</a>
+                    <a class="collapse-item" href="/produto">PRODUTO</a>
                     <a class="collapse-item" href="/formas-pagamento">FORMAS PAGAMENTO</a>
                     <a class="collapse-item" href="/ocupacoes">OCUPAÇÕES</a>
-                    <a class="collapse-item" href="/pessoas">PESSOAS</a>
-                    <a class="collapse-item" href="/prestadores">PRESTADORES</a>
-                    <a class="collapse-item" href="/produto">PRODUTO</a>
                 </div>
             </div>
         </li>
@@ -69,24 +68,26 @@
             <div id="collapseInventory" [collapse]="isCollapsedInventory" [isAnimated]="true"
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/comprar-vender">COMPRAR OU VENDER</a>
+                    <a class="collapse-item" href="/movimentar-estoque">MOVIMENTAR ESTOQUE</a>
                     <a class="collapse-item" href="/situacao-estoque">SITUAÇÃO ESTOQUE</a>
                 </div>
             </div>
         </li>
 
         <li class="nav-item">
-            <div (click)="isCollapsedUser = !isCollapsedUser" [attr.aria-expanded]="!isCollapsedUser"
-                aria-controls="collapseUser" class="nav-link nav-link-menu collapsed" data-toggle="collapse">
+            <div (click)="isCollapsedManagement = !isCollapsedManagement" [attr.aria-expanded]="!isCollapsedManagement"
+                aria-controls="collapseManagement" class="nav-link nav-link-menu collapsed" data-toggle="collapse">
                 <div>
-                    <i class="fas fa-fw fa-users resource-icon"></i>
-                    <span>USUÁRIOS</span>
+                    <i class="fas fa-fw fa-gear resource-icon"></i>
+                    <span>GERENCIAL</span>
                 </div>
             </div>
-            <div id="collapseUser" [collapse]="isCollapsedUser" [isAnimated]="true" data-parent="#accordionSidebar">
+            <div id="collapseManagement" [collapse]="isCollapsedManagement" [isAnimated]="true" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="/empresas">EMPRESAS</a>
                     <a class="collapse-item" href="/gerenciar-usuarios">GERENCIAR USUÁRIOS</a>
-                    <a class="collapse-item" href="/perfis">PERFIS</a>
+                    <a class="collapse-item" href="/visao-faturamento">VISÃO FATURAMENTO</a>
+                    <a class="collapse-item" href="/recursos">RECURSOS</a>
                 </div>
             </div>
         </li>

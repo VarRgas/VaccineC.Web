@@ -17,22 +17,22 @@ import { InternalServerErrorComponent } from './pages/error/internal-server-erro
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { OcupacoesComponent } from './pages/ocupacoes/ocupacoes.component';
 import { PessoasComponent } from './pages/pessoas/pessoas.component';
-import { PrestadoresComponent } from './pages/prestadores/prestadores.component';
+import { EmpresasComponent } from './pages/prestadores/empresas.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
-import { ComprarVenderComponent } from './pages/comprar-vender/comprar-vender.component';
+import { MovimentarEstoqueComponent } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
-import { PerfisComponent } from './pages/perfis/perfis.component';
+import { RecursosComponent } from './pages/recursos/recursos.component';
 import { MinhaContaComponent, DialogOverviewExampleDialog } from './pages/minha-conta/minha-conta.component';
-
 
 import {MaterialExampleModule} from './material.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatNativeDateModule} from '@angular/material/core';
 import {HttpClientModule} from '@angular/common/http';
+import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 
 @NgModule({
   declarations: [
@@ -46,17 +46,18 @@ import {HttpClientModule} from '@angular/common/http';
     UnauthorizedComponent,
     OcupacoesComponent,
     PessoasComponent,
-    PrestadoresComponent,
+    EmpresasComponent,
     ProdutoComponent,
     AgendamentoComponent,
     AplicacaoComponent,
     OrcamentosComponent,
-    ComprarVenderComponent,
+    MovimentarEstoqueComponent,
     SituacaoEstoqueComponent,
     GerenciarUsuariosComponent,
-    PerfisComponent,
+    RecursosComponent,
     MinhaContaComponent,
-    DialogOverviewExampleDialog
+    DialogOverviewExampleDialog,
+    VisaoFaturamentoComponent
   ],
   imports: [
     BrowserModule,
