@@ -8,7 +8,7 @@ import * as $ from 'jquery';
 })
 export class SideMenuComponent implements OnInit {
 
-  is_toggled = "";
+  is_toggled = "toggled";
   isCollapsedRegistration = true;
   isCollapsedOperational = true;
   isCollapsedInventory = true;

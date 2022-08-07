@@ -42,6 +42,7 @@
                         </mat-table>
                     </div>
                 </mat-tab>
+
                 <mat-tab label="Cadastro">
                     <div class="registration-group">
                         <div class="offset-sm-1 col-sm-11 p-0">
@@ -49,12 +50,13 @@
                                 <table class="example-full-width" cellspacing="0">
                                     <tr>
                                         <td>
-                                            <div id="avatar"></div>
+                                            <div id="profilePic"></div>
                                         </td>
-                                        <td class="table-name">
+                                        <td class="table-name col-sm-11">
                                             <mat-form-field appearance="fill" class="col-sm-11 pl-0">
                                                 <mat-label>Nome</mat-label>
-                                                <input matInput #input maxlength="10" placeholder="Ex. Maria da Silva">
+                                                <input matInput #input maxlength="10" placeholder="Ex. Maria da Silva"
+                                                    id="name">
                                             </mat-form-field>
                                         </td>
                                     </tr>
@@ -63,7 +65,7 @@
                             <div class="example-container">
                                 <mat-form-field appearance="fill" class="col-sm-6">
                                     <mat-label>Tipo de Pessoa</mat-label>
-                                    <mat-select>
+                                    <mat-select id="kindOfPerson">
                                         <mat-option value="F">Física</mat-option>
                                         <mat-option value="J">Jurídica</mat-option>
                                     </mat-select>
@@ -71,7 +73,7 @@
 
                                 <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                                     <mat-label>Data de Nascimento</mat-label>
-                                    <input matInput [matDatepicker]="picker">
+                                    <input matInput [matDatepicker]="picker" id="commemorativeDate">
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
@@ -80,14 +82,14 @@
                             <div class="example-container">
                                 <mat-form-field appearance="fill" class="col-sm-11">
                                     <mat-label>E-mail</mat-label>
-                                    <input matInput #input maxlength="10" placeholder="email@exemplo.com.br">
+                                    <input matInput #input maxlength="10" placeholder="email@exemplo.com.br" id="email">
                                 </mat-form-field>
                             </div>
 
                             <div class="example-container">
                                 <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
                                     <mat-label>Detalhes</mat-label>
-                                    <textarea matInput></textarea>
+                                    <textarea matInput placeholder="Informações complementares" id="details"></textarea>
                                 </mat-form-field>
                             </div>
 
@@ -101,7 +103,64 @@
                     </div>
 
                 </mat-tab>
-                <mat-tab label="Complemento"> Complemento </mat-tab>
+
+                <mat-tab label="Complemento">
+                    <div class="complement-group">
+                        <div class="offset-sm-1 col-sm-11 p-0">
+                            <div class="example-container">
+
+                                <div class="example-container">
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>CPF</mat-label>
+                                        <input type="number" matInput #input maxlength="11" placeholder="000.000.000-00"
+                                            id="cpfNumber">
+                                    </mat-form-field>
+                                    <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                                        <mat-label>CNS</mat-label>
+                                        <input type="number" matInput #input maxlength="15"
+                                            placeholder="000 0000 0000 0000" id="cnsNumber">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="example-container">
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>Estado Civil</mat-label>
+                                        <mat-select id="maritalStatus">
+                                            <mat-option value="S">Solteiro(a)</mat-option>
+                                            <mat-option value="C">Casado(a)</mat-option>
+                                            <mat-option value="X">Separado(a)</mat-option>
+                                            <mat-option value="D">Divorciado(a)</mat-option>
+                                            <mat-option value="V">Viúvo(a)</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                                        <mat-label>Gênero</mat-label>
+                                        <mat-select id="gender">
+                                            <mat-option value="M">Masculino</mat-option>
+                                            <mat-option value="F">Feminino</mat-option>
+                                            <mat-option value="O">Outro</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="example-container">
+                                <mat-form-field appearance="fill" class="col-sm-6">
+                                    <mat-label>Data de Óbito</mat-label>
+                                    <input matInput [matDatepicker]="picker2" id="deathDate">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="example-container example-button-row">
+                                <button mat-raised-button color="primary">Salvar</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </mat-tab>
+
                 <mat-tab label="Telefones"> Telefones </mat-tab>
                 <mat-tab label="Endereços"> Endereços </mat-tab>
             </mat-tab-group>

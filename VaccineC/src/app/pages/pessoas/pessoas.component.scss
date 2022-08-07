@@ -10,6 +10,11 @@
     font-size: 14px;
 }
 
+.complement-group {
+    font-size: 14px;
+}
+
+
 #mat-search-button {
     margin-bottom: 1rem;
 }
@@ -23,7 +28,7 @@
 }
 
 
-#avatar {
+#profilePic {
     background-image: url(../../../assets/img/default-profile-pic.png);
     width: 100px;
     height: 100px;
@@ -50,8 +55,4 @@
 .example-button-row {
     margin: 0.75rem;
 
-}
-
-.table-name {
-    min-width: 695px;
 }
