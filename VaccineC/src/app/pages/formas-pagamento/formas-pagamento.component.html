@@ -60,7 +60,12 @@
                          #input
                          maxlength="10"
                          placeholder="Forma de pagamento"
-                         id="paymentForm">
+                         id="paymentForm"
+                         required="true">
+                         <mat-hint>Errors appear instantly!</mat-hint>
+                         <!-- <mat-error *ngIf="this.paymentForm.hasError('required')">
+                           Forma de pagamento é <strong>required</strong>
+                         </mat-error> -->
                 </mat-form-field>
               </div>
 
@@ -72,7 +77,8 @@
                          #input
                          maxlength="10"
                          placeholder="Máximo de parcelas"
-                         id="parcels">
+                         id="parcels"
+                         required="true">
                 </mat-form-field>
               </div>
 

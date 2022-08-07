@@ -6,10 +6,10 @@ export interface PeriodicElement {
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { paymentForm: 'Boleto', parcels: 1},
-  { paymentForm: 'Cartão de crédito', parcels: 5},
-  { paymentForm: 'Cartão de débito', parcels: 1},
-  { paymentForm: 'Cheque', parcels: 20}
+  { paymentForm: 'Boleto', parcels: 1 },
+  { paymentForm: 'Cartão de crédito', parcels: 5 },
+  { paymentForm: 'Cartão de débito', parcels: 1 },
+  { paymentForm: 'Cheque', parcels: 20 }
 ];
 
 @Component({
@@ -18,15 +18,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./formas-pagamento.component.scss']
 })
 export class FormasPagamentoComponent implements OnInit {
+
+  //public paymentMethodFormGroup: FormGroup;
+  public displayedColumns: string[] = ['paymentForm', 'parcels'];
+
   value = '';
   value2 = '';
 
-  displayedColumns: string[] = ['paymentForm', 'parcels'];
   dataSource = ELEMENT_DATA;
 
   constructor() { }
 
   ngOnInit(): void {
   }
-
 }

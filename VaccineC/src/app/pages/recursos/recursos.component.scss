@@ -1,0 +1,58 @@
+.search-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.registration-group {
+  font-size: 14px;
+}
+
+.complement-group {
+  font-size: 14px;
+}
+
+
+#mat-search-button {
+  margin-bottom: 1rem;
+}
+
+#search-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
+
+#profilePic {
+  background-image: url(../../../assets/img/default-profile-pic.png);
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: top center;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  margin-left: 0.75rem;
+}
+
+.example-container .mat-form-field+.mat-form-field {
+  margin-left: 8px;
+}
+
+.example-table-container {
+  padding-bottom: 1.34375em;
+}
+
+.example-button-row button,
+.example-button-row a {
+  margin-right: 0.5rem;
+}
+
+.example-button-row {
+  margin: 0.75rem;
+
+}
