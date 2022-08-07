@@ -1,9 +1,10 @@
-.is-content {
+#is-content {
     padding: 5.5rem;
     padding-bottom: 0;
     display: flex;
     flex: 1;
     flex-direction: column;
+    transition: width 0.3s, margin 0.3s;
 }
 
 .is-section-datail-header {
@@ -68,6 +69,10 @@
     padding: 1.3125rem 1.3125rem;
 }
 
-.is-section-content > .is-card > .is-card-body {
-    padding: 1.5em;
+.is-section-content>.is-card>.is-card-body {
+    padding: 1em;
+}
+
+#is-content.is-content-grow {
+    margin-left: -7.5em;
 }

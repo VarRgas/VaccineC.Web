@@ -36,12 +36,18 @@ export class SideMenuComponent implements OnInit {
       document.body.classList.remove('sidebar-toggled')
       document.getElementById('sidebarToggle')?.classList.remove('withdrawn')
       document.getElementById('home-topbar')?.classList.remove('home-topbar-grow')
+      document.getElementById('is-content')?.classList.remove('is-content-grow')
+      document.getElementById('is-footer')?.classList.remove('is-footer-grow')
+
     }
     else {
       this.is_toggled = "toggled";
       document.body.classList.add('sidebar-toggled')
       document.getElementById('sidebarToggle')?.classList.add('withdrawn')
       document.getElementById('home-topbar')?.classList.add('home-topbar-grow')
+      document.getElementById('is-content')?.classList.add('is-content-grow')
+      document.getElementById('is-footer')?.classList.add('is-footer-grow')
+
     }
   }
 

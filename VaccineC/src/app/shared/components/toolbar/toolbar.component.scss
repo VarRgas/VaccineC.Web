@@ -12,6 +12,7 @@
   z-index: 30;
   width: calc(100% - 14em);
   margin-left: 14em;
+  transition: width 0.3s, margin 0.3s
 }
 
 #home-topbar.home-topbar-grow {

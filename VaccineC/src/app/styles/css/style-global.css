@@ -12673,3 +12673,7 @@ body.sidebar-toggled footer.sticky-footer {
   border-radius: 0.75rem;
   box-shadow: 0 0.375rem 0.75rem rgb(140 152 164 / 8%);
 }
+
+.mat-tab-header{
+  margin-bottom: 2em !important;
+}

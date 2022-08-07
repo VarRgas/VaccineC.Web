@@ -28,10 +28,10 @@ import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar
 import { RecursosComponent } from './pages/recursos/recursos.component';
 import { MinhaContaComponent, DialogOverviewExampleDialog } from './pages/minha-conta/minha-conta.component';
 
-import {MaterialExampleModule} from './material.module';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatNativeDateModule} from '@angular/material/core';
-import {HttpClientModule} from '@angular/common/http';
+import { MaterialExampleModule } from './material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { HttpClientModule } from '@angular/common/http';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 
 @NgModule({

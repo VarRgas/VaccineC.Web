@@ -1,17 +1,73 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@include mat-core();
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~font-awesome/css/font-awesome.min.css';
 @import 'app/styles/css/style-global.min.css';
 @import 'app/styles/css/style-global.css';
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
+/* Adicionando um tema customizado ao AM */
+$md-mcgpalette0: (
+    50 : #eaf3fb,
+    100 : #cbe0f5,
+    200 : #a8ccee,
+    300 : #85b8e7,
+    400 : #6aa8e2,
+    500 : #5099dd,
+    600 : #4991d9,
+    700 : #4086d4,
+    800 : #377ccf,
+    900 : #276bc7,
+    A100 : #ffffff,
+    A200 : #d1e3ff,
+    A400 : #9ec5ff,
+    A700 : #85b5ff,
+    contrast: (
+        50 : #ffffff,
+        100 : #ffffff,
+        200 : #ffffff,
+        300 : #ffffff,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #ffffff,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+
+$candy-app-primary: mat-palette($md-mcgpalette0);
+$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$candy-app-warn:    mat-palette($mat-red);
+
+$candy-app-theme: mat-light-theme((
+  color: (
+    primary: $candy-app-primary,
+    accent: $candy-app-accent,
+    warn: $candy-app-warn,  
+  )
+));
+
+@include angular-material-theme($candy-app-theme);
+
+/* Adicionando uma fonte customizada ao AM */
+@import '~@angular/material/theming';
+$custom-typography: mat-typography-config(
+  $font-family: 'Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+);
+
+@include angular-material-typography($custom-typography);
 
 html,
 body {
     height: 100%;
     background-color: #FAFAFA;
-}
-
-body {
     margin: 0;
     font-family: Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
 }

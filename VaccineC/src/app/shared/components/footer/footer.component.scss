@@ -1,5 +1,5 @@
 
-.is-footer {
+#is-footer {
     color: #677788;
     padding: 0.5em 5.5rem;
     display: flex;
@@ -7,10 +7,15 @@
     bottom: 0;
     height: 40px;
     width: 100%;
+    transition: width 0.3s, margin 0.3s;
 }
 
-.is-footer .is-author {
+#is-footer .is-author {
     font-size: 10px;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
+}
+
+.is-footer-grow {
+    margin-left: -7rem;
 }

@@ -8,6 +8,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
   ],
   imports: [
     CommonModule,
-
+    MatIconModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
     ModalModule.forRoot()
