@@ -4,165 +4,21 @@
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Pessoas" containerPath="Cadastros / Pessoas">
             <mat-tab-group>
-
                 <mat-tab label="Pesquisa">
-                    <div class="search-group">
-                        <div class="col-sm-11 p-0">
-                            <mat-form-field class="search-form-field col-sm-10" appearance="fill">
-                                <mat-label>Digite o nome da pessoa ou o CPF</mat-label>
-                                <input matInput type="text" [(ngModel)]="value">
-                                <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                            </mat-form-field>
-                            <button id="mat-search-button" mat-raised-button color="primary">Pesquisar</button>
-                        </div>
-                    </div>
-
-                    <div id="search-table">
-                        <mat-table [dataSource]="dataSource" class="mat-elevation-z3 col-sm-11">
-
-                            <ng-container matColumnDef="name">
-                                <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="document">
-                                <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.document}} </mat-cell>
-                            </ng-container>
-
-                            <ng-container matColumnDef="birthDate">
-                                <mat-header-cell *matHeaderCellDef> Data de Nascimento </mat-header-cell>
-                                <mat-cell *matCellDef="let element"> {{element.birthDate}} </mat-cell>
-                            </ng-container>
-
-                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                        </mat-table>
-                    </div>
+                    <app-pessoas-pesquisa></app-pessoas-pesquisa>
                 </mat-tab>
-
                 <mat-tab label="Cadastro">
-                    <div class="registration-group">
-                        <div class="offset-sm-1 col-sm-11 p-0">
-                            <div class="example-table-container">
-                                <table class="example-full-width" cellspacing="0">
-                                    <tr>
-                                        <td>
-                                            <div id="profilePic"></div>
-                                        </td>
-                                        <td class="table-name col-sm-11">
-                                            <mat-form-field appearance="fill" class="col-sm-11 pl-0">
-                                                <mat-label>Nome</mat-label>
-                                                <input matInput #input maxlength="10" placeholder="Ex. Maria da Silva"
-                                                    id="name">
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="example-container">
-                                <mat-form-field appearance="fill" class="col-sm-6">
-                                    <mat-label>Tipo de Pessoa</mat-label>
-                                    <mat-select id="kindOfPerson">
-                                        <mat-option value="F">Física</mat-option>
-                                        <mat-option value="J">Jurídica</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="fill" class="col-sm-5 ml-0">
-                                    <mat-label>Data de Nascimento</mat-label>
-                                    <input matInput [matDatepicker]="picker" id="commemorativeDate">
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-
-                            <div class="example-container">
-                                <mat-form-field appearance="fill" class="col-sm-11">
-                                    <mat-label>E-mail</mat-label>
-                                    <input matInput #input maxlength="10" placeholder="email@exemplo.com.br" id="email">
-                                </mat-form-field>
-                            </div>
-
-                            <div class="example-container">
-                                <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
-                                    <mat-label>Detalhes</mat-label>
-                                    <textarea matInput placeholder="Informações complementares" id="details"></textarea>
-                                </mat-form-field>
-                            </div>
-
-
-                            <div class="example-container example-button-row">
-                                <button mat-raised-button color="primary">Salvar</button>
-                                <button mat-raised-button color="warn">Excluir</button>
-                            </div>
-
-                        </div>
-                    </div>
-
+                    <app-pessoas-cadastro></app-pessoas-cadastro>
                 </mat-tab>
-
                 <mat-tab label="Complemento">
-                    <div class="complement-group">
-                        <div class="offset-sm-1 col-sm-11 p-0">
-                            <div class="example-container">
-
-                                <div class="example-container">
-                                    <mat-form-field appearance="fill" class="col-sm-6">
-                                        <mat-label>CPF</mat-label>
-                                        <input type="number" matInput #input maxlength="11" placeholder="000.000.000-00"
-                                            id="cpfNumber">
-                                    </mat-form-field>
-                                    <mat-form-field appearance="fill" class="col-sm-5 ml-0">
-                                        <mat-label>CNS</mat-label>
-                                        <input type="number" matInput #input maxlength="15"
-                                            placeholder="000 0000 0000 0000" id="cnsNumber">
-                                    </mat-form-field>
-                                </div>
-
-                                <div class="example-container">
-                                    <mat-form-field appearance="fill" class="col-sm-6">
-                                        <mat-label>Estado Civil</mat-label>
-                                        <mat-select id="maritalStatus">
-                                            <mat-option value="S">Solteiro(a)</mat-option>
-                                            <mat-option value="C">Casado(a)</mat-option>
-                                            <mat-option value="X">Separado(a)</mat-option>
-                                            <mat-option value="D">Divorciado(a)</mat-option>
-                                            <mat-option value="V">Viúvo(a)</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-
-                                    <mat-form-field appearance="fill" class="col-sm-5 ml-0">
-                                        <mat-label>Gênero</mat-label>
-                                        <mat-select id="gender">
-                                            <mat-option value="M">Masculino</mat-option>
-                                            <mat-option value="F">Feminino</mat-option>
-                                            <mat-option value="O">Outro</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="example-container">
-                                <mat-form-field appearance="fill" class="col-sm-6">
-                                    <mat-label>Data de Óbito</mat-label>
-                                    <input matInput [matDatepicker]="picker2" id="deathDate">
-                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker2></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-                            <div class="example-container example-button-row">
-                                <button mat-raised-button color="primary">Salvar</button>
-                            </div>
-
-                        </div>
-                    </div>
-
+                    <app-pessoas-complemento></app-pessoas-complemento>
                 </mat-tab>
-
-                <mat-tab label="Telefones"> Telefones </mat-tab>
-                <mat-tab label="Endereços"> Endereços </mat-tab>
+                <mat-tab label="Telefones">
+                    <app-pessoas-telefones></app-pessoas-telefones>
+                </mat-tab>
+                <mat-tab label="Endereços"> 
+                    <app-pessoas-enderecos></app-pessoas-enderecos>
+                </mat-tab>
             </mat-tab-group>
         </app-container>
     </div>

@@ -15,7 +15,6 @@ import { FormasPagamentoComponent } from './pages/formas-pagamento/formas-pagame
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
-import { OcupacoesComponent } from './pages/ocupacoes/ocupacoes.component';
 import { PessoasComponent } from './pages/pessoas/pessoas.component';
 import { EmpresasComponent } from './pages/prestadores/empresas.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
@@ -33,6 +32,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
+import { PessoasPesquisaComponent } from './pages/pessoas/pessoas-pesquisa/pessoas-pesquisa.component';
+import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pessoas-cadastro.component';
+import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
+import { PessoasTelefonesComponent } from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
+import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +48,6 @@ import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-fatur
     NotFoundComponent,
     InternalServerErrorComponent,
     UnauthorizedComponent,
-    OcupacoesComponent,
     PessoasComponent,
     EmpresasComponent,
     ProdutoComponent,
@@ -57,7 +60,12 @@ import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-fatur
     RecursosComponent,
     MinhaContaComponent,
     DialogOverviewExampleDialog,
-    VisaoFaturamentoComponent
+    VisaoFaturamentoComponent,
+    PessoasPesquisaComponent,
+    PessoasCadastroComponent,
+    PessoasComplementoComponent,
+    PessoasTelefonesComponent,
+    PessoasEnderecosComponent,
   ],
   imports: [
     BrowserModule,

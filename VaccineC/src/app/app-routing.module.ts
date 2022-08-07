@@ -6,7 +6,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 import { FormasPagamentoComponent } from './pages/formas-pagamento/formas-pagamento.component';
-import { OcupacoesComponent } from './pages/ocupacoes/ocupacoes.component';
 import { PessoasComponent } from './pages/pessoas/pessoas.component';
 import { EmpresasComponent } from './pages/prestadores/empresas.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
@@ -33,7 +32,6 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
 
   { path: 'formas-pagamento', component: FormasPagamentoComponent },
-  { path: 'ocupacoes', component: OcupacoesComponent },
   { path: 'pessoas', component: PessoasComponent },
   { path: 'empresas', component: EmpresasComponent },
   { path: 'produto', component: ProdutoComponent },

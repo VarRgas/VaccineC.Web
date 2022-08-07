@@ -1,0 +1,51 @@
+<div class="complement-group">
+    <div class="offset-sm-1 col-sm-11 p-0">
+        <div class="div-row-input">
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-6">
+                    <mat-label>CPF</mat-label>
+                    <input type="number" matInput #input maxlength="11" placeholder="000.000.000-00" id="cpfNumber">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                    <mat-label>CNS</mat-label>
+                    <input type="number" matInput #input maxlength="15" placeholder="000 0000 0000 0000" id="cnsNumber">
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-6">
+                    <mat-label>Estado Civil</mat-label>
+                    <mat-select id="maritalStatus">
+                        <mat-option value="S">Solteiro(a)</mat-option>
+                        <mat-option value="C">Casado(a)</mat-option>
+                        <mat-option value="X">Separado(a)</mat-option>
+                        <mat-option value="D">Divorciado(a)</mat-option>
+                        <mat-option value="V">Viúvo(a)</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                    <mat-label>Gênero</mat-label>
+                    <mat-select id="gender">
+                        <mat-option value="M">Masculino</mat-option>
+                        <mat-option value="F">Feminino</mat-option>
+                        <mat-option value="O">Outro</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Data de Óbito</mat-label>
+                <input matInput [matDatepicker]="picker2" id="deathDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="div-row-input complement-button-row">
+            <button mat-raised-button color="primary">Salvar</button>
+        </div>
+
+    </div>
+</div>
