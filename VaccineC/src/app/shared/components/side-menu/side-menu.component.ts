@@ -13,7 +13,7 @@ export class SideMenuComponent implements OnInit {
   isCollapsedOperational = true;
   isCollapsedInventory = true;
   isCollapsedManagement = true;
- 
+
   constructor() { }
 
   ngOnInit(): void {
@@ -39,14 +39,22 @@ export class SideMenuComponent implements OnInit {
       document.getElementById('is-content')?.classList.remove('is-content-grow')
       document.getElementById('is-footer')?.classList.remove('is-footer-grow')
 
-    }
-    else {
+      if (!!document.getElementById('center')) {
+        document.getElementById('center')?.classList.remove('container-expand');
+        document.getElementById('center')?.classList.add('container-retract');
+      }
+    }else {
       this.is_toggled = "toggled";
       document.body.classList.add('sidebar-toggled')
       document.getElementById('sidebarToggle')?.classList.add('withdrawn')
       document.getElementById('home-topbar')?.classList.add('home-topbar-grow')
       document.getElementById('is-content')?.classList.add('is-content-grow')
       document.getElementById('is-footer')?.classList.add('is-footer-grow')
+
+      if (!!document.getElementById('center')) {
+        document.getElementById('center')?.classList.add('container-expand');
+        document.getElementById('center')?.classList.remove('container-retract');
+      }
 
     }
   }

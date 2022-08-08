@@ -75,3 +75,8 @@ body {
 :host {
     height: 100%
 }
+
+input[readonly], textarea[readonly], select[readonly]{
+  pointer-events: initial;
+  cursor: not-allowed !important;
+}

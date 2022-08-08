@@ -25,8 +25,8 @@ export interface PeriodicElement {
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { paymentForm: 'Boleto', parcels: 1 },
-  { paymentForm: 'Cartão de crédito', parcels: 5 },
-  { paymentForm: 'Cartão de débito', parcels: 1 },
-  { paymentForm: 'Cheque', parcels: 20 }
+  { paymentForm: 'BOLETO', parcels: 1 },
+  { paymentForm: 'CARTÃO DE CRÉDITO', parcels: 5 },
+  { paymentForm: 'CARTÃO DE DÉBITO', parcels: 1 },
+  { paymentForm: 'CHEQUE', parcels: 20 }
 ];

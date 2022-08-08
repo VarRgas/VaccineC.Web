@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>Telefone</h2>
+<mat-dialog-content class="mat-typography">
+
+    <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-12">
+            <mat-label>Tipo de Telefone</mat-label>
+            <mat-select id="phoneType" required="true">
+                <mat-option value="P">Principal</mat-option>
+                <mat-option value="C">Celular</mat-option>
+                <mat-option value="E">Comercial</mat-option>
+                <mat-option value="R">Residencial</mat-option>
+                <mat-option value="O">Outro</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Área</mat-label>
+            <input matInput #input maxlength="2" id="phoneArea" required="true">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Telefone</mat-label>
+            <input matInput #input maxlength="20" id="phoneNumber" required="true">
+        </mat-form-field>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close >Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>

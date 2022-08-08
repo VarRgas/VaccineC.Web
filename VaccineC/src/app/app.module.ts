@@ -16,7 +16,7 @@ import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { PessoasComponent } from './pages/pessoas/pessoas.component';
-import { EmpresasComponent } from './pages/prestadores/empresas.component';
+import { EmpresasComponent } from './pages/empresa/empresas.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
@@ -25,7 +25,7 @@ import { MovimentarEstoqueComponent } from './pages/movimentar-estoque/movimenta
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent } from './pages/recursos/recursos.component';
-import { MinhaContaComponent, DialogOverviewExampleDialog } from './pages/minha-conta/minha-conta.component';
+import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
 
 import { MaterialExampleModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,8 +35,8 @@ import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-fatur
 import { PessoasPesquisaComponent } from './pages/pessoas/pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pessoas-cadastro.component';
 import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
-import { PessoasTelefonesComponent } from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
-import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
+import { PessoasTelefonesComponent,  DialogContentPhoneDialog} from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
+import { PessoasEnderecosComponent, DialogContentAddressDialog } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
 
 @NgModule({
   declarations: [
@@ -59,13 +59,14 @@ import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pes
     GerenciarUsuariosComponent,
     RecursosComponent,
     MinhaContaComponent,
-    DialogOverviewExampleDialog,
     VisaoFaturamentoComponent,
     PessoasPesquisaComponent,
     PessoasCadastroComponent,
     PessoasComplementoComponent,
     PessoasTelefonesComponent,
     PessoasEnderecosComponent,
+    DialogContentPhoneDialog,
+    DialogContentAddressDialog
   ],
   imports: [
     BrowserModule,

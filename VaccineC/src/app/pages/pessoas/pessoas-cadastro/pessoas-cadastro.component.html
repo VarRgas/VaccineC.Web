@@ -9,7 +9,7 @@
                     <td class="table-name col-sm-11">
                         <mat-form-field appearance="fill" class="col-sm-11 pl-0">
                             <mat-label>Nome</mat-label>
-                            <input matInput #input maxlength="10" placeholder="Ex. Maria da Silva" id="name">
+                            <input matInput #input maxlength="10" placeholder="Ex. Maria da Silva" id="name" required="true">
                         </mat-form-field>
                     </td>
                 </tr>
@@ -18,7 +18,7 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Tipo de Pessoa</mat-label>
-                <mat-select id="kindOfPerson">
+                <mat-select id="kindOfPerson" required="true">
                     <mat-option value="F">Física</mat-option>
                     <mat-option value="J">Jurídica</mat-option>
                 </mat-select>

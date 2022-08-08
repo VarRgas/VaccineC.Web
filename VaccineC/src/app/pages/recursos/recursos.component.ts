@@ -23,6 +23,6 @@ export interface PeriodicElement {
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { resourceName: 'Pessoas', resourceUrl: 'https://vaccinec.com.br/pessoas' },
-  { resourceName: 'Formas de Pagamentos', resourceUrl: 'https://vaccinec.com.br/formas-pagamento' }
+  { resourceName: 'PESSOAS', resourceUrl: 'https://vaccinec.com.br/pessoas' },
+  { resourceName: 'FORMAS PAGAMENTO', resourceUrl: 'https://vaccinec.com.br/formas-pagamento' }
 ];

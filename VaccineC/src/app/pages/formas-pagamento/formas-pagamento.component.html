@@ -1,30 +1,21 @@
 <div class="d-flex">
   <app-side-menu></app-side-menu>
-  <div id="content-wrapper"
-       class="d-flex flex-column">
+  <div id="content-wrapper" class="d-flex flex-column">
     <app-toolbar></app-toolbar>
-    <app-container containerTitle="Formas Pagamento"
-                   containerPath="Cadastros / Formas Pagamento">
+    <app-container containerTitle="Formas Pagamento" containerPath="Cadastros / Formas Pagamento">
       <mat-tab-group>
 
         <mat-tab label="Pesquisa">
           <div class="search-group">
             <div class="col-sm-11 p-0">
-                <mat-form-field class="search-form-field col-sm-10"
-                appearance="fill">
-                    <mat-label>Digite a forma de pagamento</mat-label>
-                    <input matInput
-                           type="text"
-                           [(ngModel)]="value">
-                    <button *ngIf="value"
-                            matSuffix
-                            mat-icon-button
-                            aria-label="Clear"
-                            (click)="value=''">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </mat-form-field>
-                <button id="mat-search-button" mat-raised-button color="primary">Pesquisar</button>
+              <mat-form-field class="search-form-field col-sm-10" appearance="fill">
+                <mat-label>Digite a forma de pagamento</mat-label>
+                <input matInput type="text" [(ngModel)]="value">
+                <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <button id="mat-search-button" mat-raised-button color="primary">Pesquisar</button>
             </div>
           </div>
 
@@ -52,45 +43,19 @@
             <div class="offset-sm-1 col-sm-11 p-0">
 
               <div class="example-container">
-                <mat-form-field appearance="fill"
-                                class="col-sm-11">
+                <mat-form-field appearance="fill" class="col-sm-11">
                   <mat-label>Forma de pagamento</mat-label>
-                  <input matInput
-                         #input
-                         maxlength="10"
-                         placeholder="Forma de pagamento"
-                         id="paymentForm"
-                         required="true">
-                         <!-- <mat-error *ngIf="this.paymentForm.hasError('required')">
-                           Forma de pagamento é <strong>required</strong>
-                         </mat-error> -->
+                  <input matInput #input maxlength="10" placeholder="Ex. Cartão de Crédito" id="paymentForm"
+                    required="true">
                 </mat-form-field>
               </div>
 
               <div class="example-container">
-                <mat-form-field appearance="fill"
-                                class="col-sm-11">
+                <mat-form-field appearance="fill" class="col-sm-6">
                   <mat-label>Máximo de parcelas</mat-label>
-                  <input matInput
-                         #input
-                         maxlength="10"
-                         placeholder="Máximo de parcelas"
-                         id="parcels"
-                         required="true">
+                  <input type="number" matInput #input maxlength="10" id="parcels" required="true">
                 </mat-form-field>
               </div>
-
-              <div class="example-container">
-                <mat-form-field class="example-full-width"
-                                appearance="fill"
-                                class="col-sm-11">
-                  <mat-label>Detalhes</mat-label>
-                  <textarea matInput
-                            placeholder="Informações complementares"
-                            id="details"></textarea>
-                </mat-form-field>
-              </div>
-
 
               <div class="example-container example-button-row">
                 <button mat-raised-button color="primary">Salvar</button>

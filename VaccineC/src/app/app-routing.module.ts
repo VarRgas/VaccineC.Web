@@ -7,7 +7,7 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 
 import { FormasPagamentoComponent } from './pages/formas-pagamento/formas-pagamento.component';
 import { PessoasComponent } from './pages/pessoas/pessoas.component';
-import { EmpresasComponent } from './pages/prestadores/empresas.component';
+import { EmpresasComponent } from './pages/empresa/empresas.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
 
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';

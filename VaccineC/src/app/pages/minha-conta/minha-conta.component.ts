@@ -1,46 +1,25 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-export interface DialogData {
-  password: string;
-
-}
+import { Component, Inject, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-minha-conta',
   templateUrl: './minha-conta.component.html',
   styleUrls: ['./minha-conta.component.scss']
 })
-export class MinhaContaComponent {
+export class MinhaContaComponent implements OnInit {
 
   password: string | undefined;
 
-  constructor(public dialog: MatDialog) { }
+  constructor() { }
+  ngOnInit(): void {
+    if (document.getElementById('sidebarToggle')?.classList.contains('withdrawn')) {
+      document.getElementById('center')?.classList.add('container-expand');
+      document.getElementById('center')?.classList.remove('container-retract');
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      width: '250px',
-      data: { password: this.password },
-    });
+    } else {
+      document.getElementById('center')?.classList.add('container-retract');
+      document.getElementById('center')?.classList.remove('container-expanded');
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.password = result;
-    });
+    }
   }
 
-}
-
-@Component({
-  selector: 'app-minha-conta-modal',
-  templateUrl: './minha-conta-modal.component.html',
-})
-export class DialogOverviewExampleDialog {
-  constructor(
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }
