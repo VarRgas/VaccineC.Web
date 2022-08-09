@@ -36,7 +36,7 @@
             </tr>
         </table>
 
-        <button mat-fab id="add-schedule-btn" color="primary" aria-label="Add button" matTooltip="Inserir Horário"
+        <button mat-fab id="add-schedule-btn" color="primary" (click)="openScheduleDialog()" aria-label="Add button" matTooltip="Inserir Horário"
             matTooltipPosition="above">
             <mat-icon>add</mat-icon>
         </button>

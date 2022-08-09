@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Horários</h2>
+<mat-dialog-content class="mat-typography">
+    <form>
+        <div class="div-row-input" style="padding-right: 0.75rem;padding-left: 0.75rem;padding-bottom: 1.34375em;">
+            <select class="form-select" id="day" multiple aria-label="multiple select example" size="7">
+                <option selected value="SEG">Segunda</option>
+                <option value="TER">Terça</option>
+                <option value="QUA">Quarta</option>
+                <option value="QUI">Quinta</option>
+                <option value="SEX">Sexta</option>
+                <option value="SAB">Sábado</option>
+                <option value="DOM">Domingo</option>
+              </select>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Horário Inicial</mat-label>
+                <input matInput id="startTime" type="time" #input id="phoneArea" required="true">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Horário Final</mat-label>
+                <input matInput id="finalTime" type="time" #input id="phoneArea" required="true">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>

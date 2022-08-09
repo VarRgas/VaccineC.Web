@@ -44,7 +44,7 @@ import { RecursosCadastroComponent } from './pages/recursos/recursos-cadastro/re
 import { EmpresaCadastroComponent } from './pages/empresa/empresa-cadastro/empresa-cadastro.component';
 import { EmpresaPesquisaComponent } from './pages/empresa/empresa-pesquisa/empresa-pesquisa.component';
 import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
-import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
+import { EmpresaAgendaComponent, DialogContentScheduleDialog } from './pages/empresa/empresa-agenda/empresa-agenda.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +83,7 @@ import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-a
     EmpresaPesquisaComponent,
     EmpresaParametrosComponent,
     EmpresaAgendaComponent,
+    DialogContentScheduleDialog
   ],
   imports: [
     BrowserModule,
