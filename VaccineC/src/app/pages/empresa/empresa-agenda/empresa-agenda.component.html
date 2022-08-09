@@ -6,12 +6,12 @@
                 <th mat-header-cell *matHeaderCellDef>
                     <mat-checkbox (change)="$event ? toggleAllRows() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" >
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
                     </mat-checkbox>
                 </th>
                 <td mat-cell *matCellDef="let row">
                     <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)" >
+                        [checked]="selection.isSelected(row)">
                     </mat-checkbox>
                 </td>
             </ng-container>
@@ -36,8 +36,8 @@
             </tr>
         </table>
 
-        <button mat-fab id="add-schedule-btn" color="primary" (click)="openScheduleDialog()" aria-label="Add button" matTooltip="Inserir Horário"
-            matTooltipPosition="above">
+        <button mat-fab id="add-schedule-btn" color="primary" (click)="openScheduleDialog()" aria-label="Add button"
+            matTooltip="Inserir Horário" matTooltipPosition="above">
             <mat-icon>add</mat-icon>
         </button>
     </div>

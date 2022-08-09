@@ -1,10 +1,14 @@
 <section id="center" class="section-main">
     <div id="is-content" class="flex-1 is-content is-content-grow">
         <div class="is-section-datail-header">
-            <div class="d-flex is-container-header-section">
-                <h1 class="is-section-detail-header-title" id="title">{{containerTitle}}</h1>
-                <div class="is-path-page">( {{containerPath}} )</div>
-            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">{{containerPath}}</li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><b>{{containerTitle}}</b>
+                    </li>
+                </ol>
+            </nav>
         </div>
         <div class="is-section-content">
             <div class="is-card is-card-default-content">
