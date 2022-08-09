@@ -37,6 +37,14 @@ import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pesso
 import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
 import { PessoasTelefonesComponent,  DialogContentPhoneDialog} from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
 import { PessoasEnderecosComponent, DialogContentAddressDialog } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
+import { FormasPagamentoPesquisaComponent } from './pages/formas-pagamento/formas-pagamento-pesquisa/formas-pagamento-pesquisa.component';
+import { FormasPagamentoCadastroComponent } from './pages/formas-pagamento/formas-pagamento-cadastro/formas-pagamento-cadastro.component';
+import { RecursosPesquisaComponent } from './pages/recursos/recursos-pesquisa/recursos-pesquisa.component';
+import { RecursosCadastroComponent } from './pages/recursos/recursos-cadastro/recursos-cadastro.component';
+import { EmpresaCadastroComponent } from './pages/empresa/empresa-cadastro/empresa-cadastro.component';
+import { EmpresaPesquisaComponent } from './pages/empresa/empresa-pesquisa/empresa-pesquisa.component';
+import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
+import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +74,15 @@ import { PessoasEnderecosComponent, DialogContentAddressDialog } from './pages/p
     PessoasTelefonesComponent,
     PessoasEnderecosComponent,
     DialogContentPhoneDialog,
-    DialogContentAddressDialog
+    DialogContentAddressDialog,
+    FormasPagamentoPesquisaComponent,
+    FormasPagamentoCadastroComponent,
+    RecursosPesquisaComponent,
+    RecursosCadastroComponent,
+    EmpresaCadastroComponent,
+    EmpresaPesquisaComponent,
+    EmpresaParametrosComponent,
+    EmpresaAgendaComponent,
   ],
   imports: [
     BrowserModule,

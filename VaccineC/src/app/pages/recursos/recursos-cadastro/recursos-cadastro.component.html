@@ -1,0 +1,33 @@
+<form>
+    <div class="registration-group">
+        <div class="offset-sm-1 col-sm-11 p-0">
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-11">
+                    <mat-label>Recurso</mat-label>
+                    <input matInput #input maxlength="10" placeholder="Ex. Pessoas" id="name" required="true">
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-6">
+                    <mat-label>URL</mat-label>
+                    <input matInput #input maxlength="10" placeholder="Ex. https://vaccinec.com.br/pessoas" id="urlName"
+                        required="true">
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                    <mat-label>Letra de Atalho</mat-label>
+                    <input matInput #input maxlength="1" id="shortcutLetter">
+                </mat-form-field>
+
+            </div>
+
+            <div class="div-row-input registration-button-row">
+                <button mat-raised-button color="primary">Salvar</button>
+                <button mat-raised-button color="warn">Excluir</button>
+            </div>
+
+        </div>
+    </div>
+</form>

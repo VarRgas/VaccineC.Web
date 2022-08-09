@@ -1,64 +1,65 @@
 <h2 mat-dialog-title>Endereço</h2>
 <mat-dialog-content class="mat-typography">
+    <form>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Tipo de Endereço</mat-label>
+                <mat-select id="addressType" required="true">
+                    <mat-option value="P">Principal</mat-option>
+                    <mat-option value="C">Comercial</mat-option>
+                    <mat-option value="R">Residencial</mat-option>
+                    <mat-option value="O">Outro</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
-    <div class="div-row-input">
-        <mat-form-field appearance="fill" class="col-sm-12">
-            <mat-label>Tipo de Endereço</mat-label>
-            <mat-select id="addressType" required="true">
-                <mat-option value="P">Principal</mat-option>
-                <mat-option value="C">Comercial</mat-option>
-                <mat-option value="R">Residencial</mat-option>
-                <mat-option value="O">Outro</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>CEP</mat-label>
+                <input matInput #input maxlength="8" placeholder="00000-000" id="addressCode" required="true">
+                <span matSuffix><img src="../../../../assets/img/correios-logo.png"
+                        style="height:15px;width:60px;"></span>
+            </mat-form-field>
+        </div>
 
-    <div class="div-row-input">
-        <mat-form-field appearance="fill" class="col-sm-12">
-            <mat-label>CEP</mat-label>
-            <input matInput #input maxlength="8" placeholder="00000-000" id="addressCode" required="true">
-            <span matSuffix><img src="../../../../assets/img/correios-logo.png" style="height:15px;width:60px;"></span>
-        </mat-form-field>
-    </div>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Logradouro</mat-label>
+                <input matInput #input id="publicPlace" required="true" readonly>
+            </mat-form-field>
+        </div>
 
-    <div class="div-row-input">
-        <mat-form-field appearance="fill" class="col-sm-12">
-            <mat-label>Logradouro</mat-label>
-            <input matInput #input id="publicPlace" required="true" readonly>
-        </mat-form-field>
-    </div>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Bairro</mat-label>
+                <input matInput #input id="district" required="true" readonly>
+            </mat-form-field>
+        </div>
 
-    <div class="div-row-input">
-        <mat-form-field appearance="fill" class="col-sm-12">
-            <mat-label>Bairro</mat-label>
-            <input matInput #input id="district" required="true" readonly>
-        </mat-form-field>
-    </div>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-8">
+                <mat-label>Cidade</mat-label>
+                <input matInput #input id="city" required="true" readonly>
+            </mat-form-field>
 
-    <div class="div-row-input">
-        <mat-form-field appearance="fill" class="col-sm-8">
-            <mat-label>Cidade</mat-label>
-            <input matInput #input id="city" required="true" readonly>
-        </mat-form-field>
+            <mat-form-field appearance="fill" class="col-sm-2">
+                <mat-label>UF</mat-label>
+                <input matInput #input id="state" required="true" readonly>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill" class="col-sm-2">
-            <mat-label>UF</mat-label>
-            <input matInput #input id="state" required="true" readonly>
-        </mat-form-field>
+            <mat-form-field appearance="fill" class="col-sm-2">
+                <mat-label>Nº</mat-label>
+                <input type="number" matInput #input id="addressNumber" required="true">
+            </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="fill" class="col-sm-2">
-            <mat-label>Nº</mat-label>
-            <input type="number" matInput #input id="addressNumber" required="true">
-        </mat-form-field>
-    </div>
-
-    <div class="div-row-input">
-        <mat-form-field appearance="fill" class="col-sm-12">
-            <mat-label>Complemento</mat-label>
-            <input matInput #input id="complement">
-        </mat-form-field>
-    </div>
-
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Complemento</mat-label>
+                <input matInput #input id="complement">
+            </mat-form-field>
+        </div>
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancelar</button>

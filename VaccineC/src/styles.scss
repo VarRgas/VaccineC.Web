@@ -10,73 +10,108 @@
 
 /* Adicionando um tema customizado ao AM */
 $md-mcgpalette0: (
-    50 : #eaf3fb,
-    100 : #cbe0f5,
-    200 : #a8ccee,
-    300 : #85b8e7,
-    400 : #6aa8e2,
-    500 : #5099dd,
-    600 : #4991d9,
-    700 : #4086d4,
-    800 : #377ccf,
-    900 : #276bc7,
+  50 : #eaf3fb,
+  100 : #cbe0f5,
+  200 : #a8ccee,
+  300 : #85b8e7,
+  400 : #6aa8e2,
+  500 : #5099dd,
+  600 : #4991d9,
+  700 : #4086d4,
+  800 : #377ccf,
+  900 : #276bc7,
+  A100 : #ffffff,
+  A200 : #d1e3ff,
+  A400 : #9ec5ff,
+  A700 : #85b5ff,
+  contrast: (50 : #ffffff,
+    100 : #ffffff,
+    200 : #ffffff,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
     A100 : #ffffff,
-    A200 : #d1e3ff,
-    A400 : #9ec5ff,
-    A700 : #85b5ff,
-    contrast: (
-        50 : #ffffff,
-        100 : #ffffff,
-        200 : #ffffff,
-        300 : #ffffff,
-        400 : #ffffff,
-        500 : #ffffff,
-        600 : #ffffff,
-        700 : #ffffff,
-        800 : #ffffff,
-        900 : #ffffff,
-        A100 : #ffffff,
-        A200 : #ffffff,
-        A400 : #ffffff,
-        A700 : #ffffff,
-    )
+    A200 : #ffffff,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  )
 );
 
 $candy-app-primary: mat-palette($md-mcgpalette0);
-$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
-$candy-app-warn:    mat-palette($mat-red);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$candy-app-warn: mat-palette($mat-red);
 
-$candy-app-theme: mat-light-theme((
-  color: (
-    primary: $candy-app-primary,
-    accent: $candy-app-accent,
-    warn: $candy-app-warn,  
-  )
-));
+$candy-app-theme: mat-light-theme((color: (primary: $candy-app-primary,
+        accent: $candy-app-accent,
+        warn: $candy-app-warn,
+      )));
 
 @include angular-material-theme($candy-app-theme);
 
 /* Adicionando uma fonte customizada ao AM */
 @import '~@angular/material/theming';
-$custom-typography: mat-typography-config(
-  $font-family: 'Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
-);
+$custom-typography: mat-typography-config($font-family: 'Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+  );
 
 @include angular-material-typography($custom-typography);
 
 html,
 body {
-    height: 100%;
-    background-color: #FAFAFA;
-    margin: 0;
-    font-family: Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+  height: 100%;
+  background-color: #FAFAFA;
+  margin: 0;
+  font-family: Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
 }
 
 :host {
-    height: 100%
+  height: 100%
 }
 
-input[readonly], textarea[readonly], select[readonly]{
+input[readonly],
+textarea[readonly],
+select[readonly] {
   pointer-events: initial;
   cursor: not-allowed !important;
+}
+
+.search-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+#search-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
+#mat-search-button {
+  margin-bottom: 1rem;
+}
+
+.registration-group {
+  font-size: 14px;
+}
+
+#mat-search-button {
+  margin-bottom: 1rem;
+}
+
+.registration-button-row button,
+.registration-button-row a {
+  margin-right: 0.5rem;
+}
+
+.registration-button-row {
+  margin: 0.75rem;
+
 }
