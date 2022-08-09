@@ -5,7 +5,44 @@
     <app-container containerTitle="Visão de faturamento" containerPath="Gerencial">
       <mat-tab-group>
         <mat-tab label="Pesquisa">
-          <app-visao-faturamento-pesquisa></app-visao-faturamento-pesquisa>
+          <div class="div-row-input">
+            <mat-form-field appearance="fill">
+              <mat-label>Selecione o ano</mat-label>
+              <mat-select id="kindOfPerson" required="true">
+                <mat-option value="2022">2022</mat-option>
+                <mat-option value="2019">2019</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+
+            <mat-card>
+              <mat-card-subtitle>Ano selecionado aqui:</mat-card-subtitle>
+              <mat-divider inset></mat-divider>
+              <mat-card-content>
+                <p></p>
+                <p><b>Grafico aqui </b></p>
+              </mat-card-content>
+            </mat-card>
+
+
+            <mat-divider></mat-divider>
+
+            <mat-card class="example-card">
+              <mat-card-subtitle>Previsão de faturamento para maio - 2022</mat-card-subtitle>
+              <mat-divider inset></mat-divider>
+              <mat-card-content>
+                <p></p>
+                <p>Data atual: <b>{{ currentDate }}</b></p>
+                <p>Faturamento atual: <b>{{ invoicing }}</b></p>
+                <p>Data de fechamento: <b>{{ endDate }}</b></p>
+                <p></p>
+                <p>Estimativa de lucro visando o mês anterior: <b>{{ profitEstimate }}</b></p>
+              </mat-card-content>
+              <mat-progress-bar></mat-progress-bar>
+            </mat-card>
+
+          </div>
         </mat-tab>
       </mat-tab-group>
     </app-container>
