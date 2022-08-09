@@ -15,10 +15,5 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-
-        <button mat-fab id="add-address-btn" (click)="openAddressDialog()" color="primary" aria-label="Add button" matTooltip="Inserir Endereço"
-            matTooltipPosition="above">
-            <mat-icon>add</mat-icon>
-        </button>
     </div>
 </div>

@@ -15,8 +15,8 @@ import { FormasPagamentoComponent } from './pages/formas-pagamento/formas-pagame
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
-import { PessoasComponent } from './pages/pessoas/pessoas.component';
-import { EmpresasComponent } from './pages/empresa/empresas.component';
+import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog } from './pages/pessoas/pessoas.component';
+import { EmpresasComponent, DialogContentScheduleDialog } from './pages/empresa/empresas.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
@@ -35,8 +35,8 @@ import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-fatur
 import { PessoasPesquisaComponent } from './pages/pessoas/pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pessoas-cadastro.component';
 import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
-import { PessoasTelefonesComponent,  DialogContentPhoneDialog} from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
-import { PessoasEnderecosComponent, DialogContentAddressDialog } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
+import { PessoasTelefonesComponent} from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
+import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
 import { FormasPagamentoPesquisaComponent } from './pages/formas-pagamento/formas-pagamento-pesquisa/formas-pagamento-pesquisa.component';
 import { FormasPagamentoCadastroComponent } from './pages/formas-pagamento/formas-pagamento-cadastro/formas-pagamento-cadastro.component';
 import { RecursosPesquisaComponent } from './pages/recursos/recursos-pesquisa/recursos-pesquisa.component';
@@ -44,7 +44,7 @@ import { RecursosCadastroComponent } from './pages/recursos/recursos-cadastro/re
 import { EmpresaCadastroComponent } from './pages/empresa/empresa-cadastro/empresa-cadastro.component';
 import { EmpresaPesquisaComponent } from './pages/empresa/empresa-pesquisa/empresa-pesquisa.component';
 import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
-import { EmpresaAgendaComponent, DialogContentScheduleDialog } from './pages/empresa/empresa-agenda/empresa-agenda.component';
+import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
 
 @NgModule({
   declarations: [

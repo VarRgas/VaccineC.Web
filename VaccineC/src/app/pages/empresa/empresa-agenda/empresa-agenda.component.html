@@ -35,10 +35,5 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
             </tr>
         </table>
-
-        <button mat-fab id="add-schedule-btn" color="primary" (click)="openScheduleDialog()" aria-label="Add button"
-            matTooltip="Inserir Horário" matTooltipPosition="above">
-            <mat-icon>add</mat-icon>
-        </button>
     </div>
 </div>

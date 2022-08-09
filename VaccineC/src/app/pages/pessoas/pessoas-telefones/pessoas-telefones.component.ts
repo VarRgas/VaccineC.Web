@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 
 export interface PhoneElement {
   type: string;
@@ -24,23 +23,11 @@ export class PessoasTelefonesComponent implements OnInit {
   displayedColumns: string[] = ['type', 'area', 'number'];
   dataSource = ELEMENT_DATA;
 
-  constructor(public dialog: MatDialog) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  openPhoneDialog() {
-    const dialogRef = this.dialog.open(DialogContentPhoneDialog);
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
 
 }
-
-@Component({
-  selector: 'dialog-content-phone-dialog',
-  templateUrl: 'dialog-content-phone-dialog.html',
-})
-export class DialogContentPhoneDialog { }
