@@ -9,6 +9,8 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    MatCardModule,
+    MatProgressBarModule
   ],
   exports: [
     SideMenuComponent,
