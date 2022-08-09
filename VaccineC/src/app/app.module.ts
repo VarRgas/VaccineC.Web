@@ -45,6 +45,7 @@ import { EmpresaCadastroComponent } from './pages/empresa/empresa-cadastro/empre
 import { EmpresaPesquisaComponent } from './pages/empresa/empresa-pesquisa/empresa-pesquisa.component';
 import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
 import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
+import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
 
 @NgModule({
   declarations: [
