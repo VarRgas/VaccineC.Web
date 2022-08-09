@@ -1,0 +1,33 @@
+<form>
+    <div class="parameter-group">
+        <div class="offset-sm-1 col-sm-11 p-0">
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-6">
+                    <mat-label>Tempo de Aplicação</mat-label>
+                    <input type="number" matInput #input maxlength="2" placeholder="Ex. 10"
+                        id="applicationTimePerMinute" required="true">
+                    <span matSuffix>min</span>
+
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-6">
+                    <mat-label>Validade do Orçamento</mat-label>
+                    <input type="number" matInput #input maxlength="15" placeholder="Ex. 30"
+                        id="maximumDaysBudgetValidity" required="true">
+                    <span matSuffix>dias</span>
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+
+            </div>
+
+            <div class="div-row-input registration-button-row">
+                <button mat-raised-button color="primary">Salvar</button>
+            </div>
+
+        </div>
+    </div>
+</form>

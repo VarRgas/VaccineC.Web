@@ -1,0 +1,27 @@
+<form>
+    <div class="registration-group">
+        <div class="offset-sm-1 col-sm-11 p-0">
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-11">
+                    <mat-label>Forma de pagamento</mat-label>
+                    <input matInput #input maxlength="10" placeholder="Ex. Cartão de Crédito" id="paymentForm"
+                        required="true">
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-6">
+                    <mat-label>Máximo de parcelas</mat-label>
+                    <input type="number" matInput #input maxlength="10" id="parcels" required="true">
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input registration-button-row">
+                <button mat-raised-button color="primary">Salvar</button>
+                <button mat-raised-button color="warn">Excluir</button>
+            </div>
+
+        </div>
+    </div>
+</form>

@@ -4,11 +4,19 @@
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Empresa" containerPath="Gerencial / Empresa">
             <mat-tab-group>
-                <mat-tab label="Pesquisa"> Pesquisa </mat-tab>
-                <mat-tab label="Cadastro"> Cadastro </mat-tab>
-                <mat-tab label="Parâmetros"> Parâmetros </mat-tab>
-                <mat-tab label="Agenda"> Agenda </mat-tab>
-              </mat-tab-group>
+                <mat-tab label="Pesquisa">
+                    <app-empresa-pesquisa></app-empresa-pesquisa>
+                </mat-tab>
+                <mat-tab label="Cadastro">
+                    <app-empresa-cadastro></app-empresa-cadastro>
+                </mat-tab>
+                <mat-tab label="Parâmetros">
+                    <app-empresa-parametros></app-empresa-parametros>
+                </mat-tab>
+                <mat-tab label="Agenda">
+                    <app-empresa-agenda></app-empresa-agenda>
+                </mat-tab>
+            </mat-tab-group>
         </app-container>
     </div>
 </div>
