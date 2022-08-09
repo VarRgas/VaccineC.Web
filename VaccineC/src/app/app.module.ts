@@ -67,6 +67,7 @@ import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-a
     GerenciarUsuariosComponent,
     RecursosComponent,
     MinhaContaComponent,
+    VisaoFaturamentoPesquisaComponent,
     VisaoFaturamentoComponent,
     PessoasPesquisaComponent,
     PessoasCadastroComponent,

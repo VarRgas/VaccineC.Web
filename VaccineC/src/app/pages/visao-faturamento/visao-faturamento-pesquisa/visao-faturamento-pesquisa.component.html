@@ -1,0 +1,37 @@
+<div>
+  <div>
+    <mat-form-field class="margin-form" appearance="fill">
+      <mat-label>Selecione o ano</mat-label>
+      <mat-select id="kindOfPerson" required="true">
+        <mat-option value="2022">2022</mat-option>
+        <mat-option value="2019">2019</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <mat-card class="example-card-A">
+      <mat-card-subtitle>Previsão de faturamento para maio - 2022</mat-card-subtitle>
+      <mat-divider inset></mat-divider>
+      <mat-card-content>
+        <p></p>
+        <p>Grafico</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div>
+    <mat-card class="example-card-B">
+      <mat-card-subtitle>Previsão de faturamento para maio - 2022</mat-card-subtitle>
+      <mat-divider inset></mat-divider>
+      <mat-card-content>
+        <p></p>
+        <p>Data atual: <b>{{ currentDate }}</b></p>
+        <p>Faturamento atual: <b>{{ invoicing }}</b></p>
+        <p>Data de fechamento: <b>{{ endDate }}</b></p>
+        <p>Estimativa de lucro visando o mês anterior: <b>{{ profitEstimate }}</b></p>
+      </mat-card-content>
+      <mat-progress-bar></mat-progress-bar>
+    </mat-card>
+
+  </div>
+</div>
