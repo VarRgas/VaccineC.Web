@@ -3,8 +3,7 @@ import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-visao-faturamento',
-  templateUrl: './visao-faturamento.component.html',
-  styleUrls: ['./visao-faturamento.component.scss']
+  templateUrl: './visao-faturamento.component.html'
 })
 export class VisaoFaturamentoComponent implements OnInit {
   longText = `Exemplo`;

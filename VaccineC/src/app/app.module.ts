@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { RouterModule } from '@angular/router';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
 import { SharedModule } from './shared/shared.module';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -23,10 +20,9 @@ import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
-import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
+import { AddScreensDialog, GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent } from './pages/recursos/recursos.component';
 import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
-
 import { MaterialExampleModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -46,6 +42,9 @@ import { EmpresaPesquisaComponent } from './pages/empresa/empresa-pesquisa/empre
 import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
 import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
+import { UsuariosPesquisaComponent } from './pages/gerenciar-usuarios/usuarios-pesquisa/usuarios-pesquisa.component';
+import { UsuariosCadastroComponent } from './pages/gerenciar-usuarios/usuarios-cadastro/usuarios-cadastro.component';
+import { UsuariosRecursosComponent } from './pages/gerenciar-usuarios/usuarios-recursos/usuarios-recursos.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +65,9 @@ import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/vis
     MovimentarEstoqueComponent,
     SituacaoEstoqueComponent,
     GerenciarUsuariosComponent,
+    UsuariosPesquisaComponent,
+    UsuariosCadastroComponent,
+    UsuariosRecursosComponent,
     RecursosComponent,
     MinhaContaComponent,
     VisaoFaturamentoPesquisaComponent,
@@ -85,7 +87,8 @@ import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/vis
     EmpresaPesquisaComponent,
     EmpresaParametrosComponent,
     EmpresaAgendaComponent,
-    DialogContentScheduleDialog
+    DialogContentScheduleDialog,
+    AddScreensDialog,
   ],
   imports: [
     BrowserModule,

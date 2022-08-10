@@ -11,6 +11,7 @@ import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     CollapseModule.forRoot(),
     ModalModule.forRoot(),
     MatCardModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatProgressBarModule,
+    MatFormFieldModule
   ],
   exports: [
     SideMenuComponent,
