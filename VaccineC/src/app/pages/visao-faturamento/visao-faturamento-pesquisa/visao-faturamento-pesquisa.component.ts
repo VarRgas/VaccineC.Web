@@ -19,4 +19,3 @@ export class VisaoFaturamentoPesquisaComponent implements OnInit {
   }
 
 }
-
