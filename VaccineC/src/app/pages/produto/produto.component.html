@@ -4,11 +4,22 @@
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Produto" containerPath="Cadastros">
             <mat-tab-group>
-                <mat-tab label="Pesquisa"> Pesquisa </mat-tab>
-                <mat-tab label="Cadastro"> Cadastro </mat-tab>
-                <mat-tab label="Aprazamento"> Aprazamento </mat-tab>
-                <mat-tab label="Resumo"> Resumo </mat-tab>
-              </mat-tab-group>
+                <mat-tab label="Pesquisa">
+                    <app-produto-pesquisa></app-produto-pesquisa>
+                </mat-tab>
+                <mat-tab label="Cadastro">
+                    <app-produto-cadastro></app-produto-cadastro>
+                </mat-tab>
+                <mat-tab label="Aprazamento">
+                    <app-produto-aprazamento></app-produto-aprazamento>
+                    <button mat-fab id="add-dose-btn" class="float-btn" color="primary" (click)="openDoseDialog()" aria-label="Add button" matTooltip="Inserir Dose" matTooltipPosition="above">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </mat-tab>
+                <mat-tab label="Resumo">
+                    <app-produto-resumo></app-produto-resumo>
+                </mat-tab>
+            </mat-tab-group>
         </app-container>
     </div>
 </div>

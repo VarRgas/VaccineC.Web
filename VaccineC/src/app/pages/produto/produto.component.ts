@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-produto',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProdutoComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
 
+  openDoseDialog() {
+    const dialogRef = this.dialog.open(DialogContentDose, {
+      width: '40vw'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
 }
+
+@Component({
+  selector: 'dialog-content-dose',
+  templateUrl: 'dialog-content-dose.html',
+})
+export class DialogContentDose { }
+

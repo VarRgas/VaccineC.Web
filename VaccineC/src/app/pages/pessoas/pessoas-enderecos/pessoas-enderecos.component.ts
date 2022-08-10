@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 
 export interface AddressElement {
   type: string;
@@ -17,7 +16,7 @@ export class PessoasEnderecosComponent implements OnInit {
   displayedColumns: string[] = ['type', 'address'];
   dataSource = ELEMENT_DATA;
 
-  constructor(public dialog: MatDialog) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

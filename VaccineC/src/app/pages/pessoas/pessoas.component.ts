@@ -9,7 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 
 export class PessoasComponent implements OnInit {
 
-
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {

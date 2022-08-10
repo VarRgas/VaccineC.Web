@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { HttpClientModule } from '@angular/common/http';
+import { MaterialExampleModule } from './material.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,7 +20,7 @@ import { InternalServerErrorComponent } from './pages/error/internal-server-erro
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog } from './pages/pessoas/pessoas.component';
 import { EmpresasComponent, DialogContentScheduleDialog } from './pages/empresa/empresas.component';
-import { ProdutoComponent } from './pages/produto/produto.component';
+import { ProdutoComponent, DialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
@@ -26,11 +29,6 @@ import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-esto
 import { GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent } from './pages/recursos/recursos.component';
 import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
-
-import { MaterialExampleModule } from './material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
-import { HttpClientModule } from '@angular/common/http';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { PessoasPesquisaComponent } from './pages/pessoas/pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pessoas-cadastro.component';
@@ -46,6 +44,10 @@ import { EmpresaPesquisaComponent } from './pages/empresa/empresa-pesquisa/empre
 import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
 import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
+import { ProdutoPesquisaComponent } from './pages/produto/produto-pesquisa/produto-pesquisa.component';
+import { ProdutoCadastroComponent } from './pages/produto/produto-cadastro/produto-cadastro.component';
+import { ProdutoAprazamentoComponent } from './pages/produto/produto-aprazamento/produto-aprazamento.component';
+import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-resumo.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +87,12 @@ import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/vis
     EmpresaPesquisaComponent,
     EmpresaParametrosComponent,
     EmpresaAgendaComponent,
-    DialogContentScheduleDialog
+    DialogContentScheduleDialog,
+    ProdutoPesquisaComponent,
+    ProdutoCadastroComponent,
+    ProdutoAprazamentoComponent,
+    ProdutoResumoComponent,
+    DialogContentDose
   ],
   imports: [
     BrowserModule,

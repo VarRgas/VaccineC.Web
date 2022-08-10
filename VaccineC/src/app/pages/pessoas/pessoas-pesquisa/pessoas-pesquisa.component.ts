@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-
 export interface PersonElement {
   name: string;
   document: string;
@@ -20,7 +19,6 @@ const ELEMENT_DATA: PersonElement[] = [
 
 export class PessoasPesquisaComponent implements OnInit {
   value = '';
-  value2 = '';
 
   displayedColumns: string[] = ['name', 'document', 'birthDate'];
   dataSource = ELEMENT_DATA;
