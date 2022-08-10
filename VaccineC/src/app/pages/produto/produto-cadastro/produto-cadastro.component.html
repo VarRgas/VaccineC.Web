@@ -1,0 +1,75 @@
+<form>
+    <div class="registration-group">
+        <div class="offset-sm-1 col-sm-11 p-0">
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-11">
+                    <mat-label>Vacina SBIM</mat-label>
+                    <input type="text" id="sbimVaccineId" placeholder="Selecione a Vacina" aria-label="Number" matInput
+                        [formControl]="myControl" [matAutocomplete]="auto">
+                    <span matSuffix><img src="../../../../assets/img/logo-sbim.png" style="height:15px;width:50px;"
+                            title="Sociedade Brasileira de Imunizações"></span>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+                <div class="div-row-input">
+                    <mat-form-field appearance="fill" class="col-sm-11">
+                        <mat-label>Produto</mat-label>
+                        <input matInput #input id="name" required="true">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" class="col-sm-6">
+                    <mat-label>Situação</mat-label>
+                    <mat-select id="situation" required="true">
+                        <mat-option value="A" selected>Ativo</mat-option>
+                        <mat-option value="I">Inativo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+                <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
+                    <mat-label>Valor de Compra</mat-label>
+                    <input matInput type="text" class="example-right-align" placeholder="0,00" id="purchasePrice"
+                        required="true">
+                    <span matPrefix>R$&nbsp;</span>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" floatLabel="always" class="col-sm-3">
+                    <mat-label>Lucro</mat-label>
+                    <input matInput type="text" class="example-right-align" placeholder="0,00" id="profitPercentage"
+                        required="true">
+                    <span matPrefix>R$&nbsp;</span>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
+                    <mat-label>Valor de Venda</mat-label>
+                    <input matInput type="text" class="example-right-align" placeholder="0,00" id="saleValue"
+                        required="true">
+                    <span matPrefix>R$&nbsp;</span>
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+                <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
+                    <mat-label>Detalhes</mat-label>
+                    <textarea matInput placeholder="Informações complementares" id="details"></textarea>
+                </mat-form-field>
+            </div>
+
+            <div class="div-row-input registration-button-row">
+                <button mat-raised-button color="primary">Salvar</button>
+                <button mat-raised-button color="warn">Excluir</button>
+            </div>
+
+        </div>
+    </div>
+</form>

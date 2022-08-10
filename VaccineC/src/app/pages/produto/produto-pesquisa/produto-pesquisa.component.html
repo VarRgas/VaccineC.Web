@@ -1,0 +1,30 @@
+<div class="search-group">
+    <div class="col-sm-11 p-0">
+        <mat-form-field class="search-form-field col-sm-10" appearance="fill">
+            <mat-label>Digite o nome do produto</mat-label>
+            <input id="organicSearch" matInput type="text" [(ngModel)]="value" placeholder="(mínimo 3 caracteres)">
+            <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+        <button id="mat-search-button" mat-raised-button color="primary">Pesquisar</button>
+    </div>
+</div>
+
+<div id="search-table">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z3 col-sm-11">
+
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="saleValue">
+            <mat-header-cell *matHeaderCellDef> R$ Venda </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.saleValue}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

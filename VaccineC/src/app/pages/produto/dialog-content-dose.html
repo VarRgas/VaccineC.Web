@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Dose</h2>
+<mat-dialog-content class="mat-typography">
+    <form>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Tipo de Dose</mat-label>
+                <mat-select id="doseType" required="true">
+                    <mat-option value="D1">DOSE 1</mat-option>
+                    <mat-option value="D2">DOSE 2</mat-option>
+                    <mat-option value="D3">DOSE 3</mat-option>
+                    <mat-option value="DU">DOSE ÚNICA</mat-option>
+                    <mat-option value="DR">DOSE DE REFORÇO</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Intervalo</mat-label>
+                <input type="number" matInput #input maxlength="15" placeholder="Quantidade de meses de espera para aplicação"
+                    id="doseRangeMonth">
+                <span matSuffix>mês</span>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>
