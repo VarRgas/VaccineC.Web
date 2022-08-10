@@ -25,7 +25,7 @@ import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
-import { AddScreensDialog, GerenciarUsuariosComponent } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
+import { GerenciarUsuariosComponent, ScreensDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent } from './pages/recursos/recursos.component';
 import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
@@ -98,7 +98,7 @@ import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-r
     ProdutoAprazamentoComponent,
     ProdutoResumoComponent,
     DialogContentDose,
-    AddScreensDialog
+    ScreensDialog
   ],
   imports: [
     BrowserModule,

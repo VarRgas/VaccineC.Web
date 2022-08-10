@@ -1,16 +1,3 @@
-<div class="search-group">
-  <div class="col-sm-11 p-0">
-      <mat-form-field class="search-form-field col-sm-10" appearance="fill">
-          <mat-label>Digite o nome do usuário ou o CPF</mat-label>
-          <input id="organicSearch" matInput type="text" [(ngModel)]="value" placeholder="(mínimo 3 caracteres)">
-          <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
-              <mat-icon>close</mat-icon>
-          </button>
-      </mat-form-field>
-      <button id="mat-search-button" mat-raised-button color="primary">Pesquisar</button>
-  </div>
-</div>
-
 <div id="search-table">
   <mat-table [dataSource]="dataSource" class="mat-elevation-z3 col-sm-11">
 

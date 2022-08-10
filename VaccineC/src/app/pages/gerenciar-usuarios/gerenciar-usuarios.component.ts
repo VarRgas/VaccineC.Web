@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-gerenciar-usuarios',
@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./gerenciar-usuarios.component.scss']
 })
 export class GerenciarUsuariosComponent implements OnInit {
+  public dialogRef?: MatDialogRef<any>;
 
   constructor(public dialog: MatDialog) { }
 
@@ -14,15 +15,37 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   public openAddScreensDialog(): void {
-    const dialogRef = this.dialog.open(AddScreensDialog);
+    this.dialogRef = this.dialog.open(ScreensDialog, {
+      height: '45%',
+      width: '55%'
+    });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
   }
 }
+
 @Component({
-  selector: 'add-screens-dialog',
-  templateUrl: 'add-screens-dialog.html',
+  selector: 'screens-dialog',
+  templateUrl: 'screens-dialog.html',
 })
-export class AddScreensDialog { }
+
+export class ScreensDialog {
+  value = '';
+  value2 = '';
+
+  displayedColumns: string[] = ['screens'];
+  dataSource = ELEMENT_DATA;
+
+}
+
+export interface screensElement {
+
+  screens: string;
+}
+
+const ELEMENT_DATA: screensElement[] = [
+  { screens: 'PESSOAS' },
+  { screens: 'OUTRA TELA DE EXEMPLO' }
+];
