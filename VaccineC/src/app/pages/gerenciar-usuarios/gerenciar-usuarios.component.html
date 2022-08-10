@@ -2,11 +2,28 @@
     <app-side-menu></app-side-menu>
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
-        <app-container containerTitle="Gerenciar Usuários" containerPath="Gerencial">
+        <app-container containerTitle="Gerenciar Usuários"
+                       containerPath="Gerencial">
             <mat-tab-group>
-                <mat-tab label="Pesquisa"> Pesquisa </mat-tab>
-                <mat-tab label="Cadastro"> Cadastro </mat-tab>
-                <mat-tab label="Recursos"> Recursos </mat-tab>
+                <mat-tab label="Pesquisa">
+                  <app-usuarios-pesquisa></app-usuarios-pesquisa>
+                </mat-tab>
+                <mat-tab label="Cadastro">
+                  <app-usuarios-cadastro></app-usuarios-cadastro>
+                </mat-tab>
+                <mat-tab label="Recursos">
+                  <app-usuarios-recursos></app-usuarios-recursos>
+                  <button mat-fab
+                          id="add-phone-btn"
+                          class="float-btn"
+                          color="primary"
+                          (click)="openAddScreensDialog()"
+                          aria-label="Add button"
+                          matTooltip="Inserir Telas"
+                          matTooltipPosition="above">
+                    <mat-icon>add</mat-icon>
+                </button>
+                </mat-tab>
             </mat-tab-group>
         </app-container>
     </div>

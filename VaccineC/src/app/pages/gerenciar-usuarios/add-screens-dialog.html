@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Telefone</h2>
+<mat-dialog-content class="mat-typography">
+    <form>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Telas</mat-label>
+                <input matInput #input maxlength="2" id="phoneArea" required="true">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions allign="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>
