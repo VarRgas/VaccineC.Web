@@ -97,7 +97,8 @@ import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-r
     ProdutoCadastroComponent,
     ProdutoAprazamentoComponent,
     ProdutoResumoComponent,
-    DialogContentDose
+    DialogContentDose,
+    AddScreensDialog
   ],
   imports: [
     BrowserModule,
@@ -109,7 +110,7 @@ import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-r
     HttpClientModule,
     MatNativeDateModule,
     MaterialExampleModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
