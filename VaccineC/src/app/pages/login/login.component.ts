@@ -18,8 +18,9 @@ export class LoginComponent implements OnInit {
 
   public validateLogin(): void {
     let login = new LoginModel();
-    login.email = 'teste';
-    login.password = 'teste'
+    login.email = 'guilherme';
+    login.password = '12345'
+
     this.loginDispatcherService.Login(login).subscribe(a => {
     })
   }
