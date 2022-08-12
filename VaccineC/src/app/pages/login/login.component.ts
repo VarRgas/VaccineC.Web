@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginModel } from 'src/app/models/login-model';
 import { LoginDispatcherService } from 'src/app/services/login-dispatcher.service';
 
@@ -9,7 +10,14 @@ import { LoginDispatcherService } from 'src/app/services/login-dispatcher.servic
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private loginDispatcherService: LoginDispatcherService) {
+
+  loginForm: FormGroup = this.formBuilder.group({
+    email: [null, [Validators.required]],
+    password: [null, [Validators.required]]
+  });
+
+  constructor(private loginDispatcherService: LoginDispatcherService,
+    private formBuilder: FormBuilder,) {
 
   }
 
