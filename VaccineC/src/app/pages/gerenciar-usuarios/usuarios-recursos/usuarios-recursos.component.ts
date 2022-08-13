@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 
 export class UsuariosRecursosComponent implements OnInit {
   value = '';
-  value2 = '';
 
   displayedColumns: string[] = ['screens'];
   dataSource = ELEMENT_DATA;
@@ -25,6 +24,7 @@ export interface resourcesElement {
 }
 
 const ELEMENT_DATA: resourcesElement[] = [
+  { screens: 'AGENDAMENTO' },
+  { screens: 'APLICAÇÃO' },
   { screens: 'PESSOAS' },
-  { screens: 'OUTRA TELA DE EXEMPLO' }
 ];

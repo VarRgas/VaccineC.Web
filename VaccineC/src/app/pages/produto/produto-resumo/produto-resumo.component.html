@@ -1,5 +1,5 @@
 <div id="search-table" class="offset-sm-1 col-sm-11 p-0">
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z3 col-sm-11 offset-sm-1">
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="col-sm-11 offset-sm-1">
         <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
             <th mat-header-cell *matHeaderCellDef> {{column}} </th>
             <td mat-cell *matCellDef="let element"> {{element[column]}} </td>

@@ -50,6 +50,7 @@ import { ProdutoPesquisaComponent } from './pages/produto/produto-pesquisa/produ
 import { ProdutoCadastroComponent } from './pages/produto/produto-cadastro/produto-cadastro.component';
 import { ProdutoAprazamentoComponent } from './pages/produto/produto-aprazamento/produto-aprazamento.component';
 import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-resumo.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-r
     HttpClientModule,
     MatNativeDateModule,
     MaterialExampleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

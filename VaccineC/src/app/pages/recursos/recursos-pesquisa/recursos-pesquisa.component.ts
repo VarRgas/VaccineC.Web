@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 export class RecursosPesquisaComponent implements OnInit {
   
   public value = '';
-  public value2 = '';
   public displayedColumns: string[] = ['resourceName', 'resourceUrl'];
   public dataSource = ELEMENT_DATA;
 

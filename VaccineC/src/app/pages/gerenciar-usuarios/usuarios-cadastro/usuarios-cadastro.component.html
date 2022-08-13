@@ -2,79 +2,46 @@
   <div class="registration-group">
     <div class="offset-sm-1 col-sm-11 p-0">
       <div class="div-row-input">
-          <mat-form-field appearance="fill"
-                          class="col-sm-6">
-            <mat-label>Usuário</mat-label>
-            <input matInput
-                   #input
-                   maxlength="10"
-                   placeholder="Ex. Pedro Auberto"
-                   id="userName"
-                   required="true">
-          </mat-form-field>
-        <mat-form-field appearance="fill"
-                        class="col-sm-4 ml-0"
-                        placeholder="Selecione a pessoa">
-          <mat-label>Pessoa</mat-label>
-            <input matInput
-                   #input
-                   maxlength="10"
-                   placeholder="Selecione a pessoa"
-                   id="person"
-                   required="true">
+        <mat-form-field appearance="fill" class="col-sm-11">
+          <mat-label>Usuário</mat-label>
+          <input type="text" id="personId" placeholder="Selecione o Usuário" aria-label="Number" matInput
+            [formControl]="myControl" [matAutocomplete]="auto" required>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
-
-        <button class="search-button"
-                mat-icon-button
-                id="add-search-btn"
-                aria-label="Search button"
-                matTooltip="Pesquisar"
-                matTooltipPosition="above">
-          <mat-icon>search</mat-icon>
-        </button>
-        <button class="edit-button"
-                mat-icon-button
-                id="add-edit-btn"
-                aria-label="Edit button"
-                matTooltip="Editar"
-                matTooltipPosition="above">
-          <mat-icon>edit</mat-icon>
-        </button>
       </div>
 
       <div class="div-row-input">
-        <mat-form-field appearance="fill"
-                        class="col-sm-11">
+        <mat-form-field appearance="fill" class="col-sm-11">
           <mat-label>E-mail</mat-label>
-          <input matInput
-                 #input
-                 maxlength="10"
-                 placeholder="email@exemplo.com.br"
-                 id="email">
+          <input matInput #input maxlength="255" placeholder="email@exemplo.com.br" id="email" required="true">
         </mat-form-field>
       </div>
 
       <div class="div-row-input">
-        <mat-form-field appearance="fill"
-                        class="col-sm-6">
-            <mat-label>Senha</mat-label>
-            <input matInput
-                   #input
-                   maxlength="10"
-                   placeholder="Informe uma senha"
-                   id="password"
-                   required="true">
+        <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Situação</mat-label>
+            <mat-select id="situation" required="true">
+                <mat-option value="A" selected>Ativo</mat-option>
+                <mat-option value="I">Inativo</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+      <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-6">
+          <mat-label>Senha</mat-label>
+          <input type="password" matInput #input maxlength="255" placeholder="Informe uma senha" id="password"
+            required="true">
         </mat-form-field>
 
-        <mat-form-field appearance="fill"
-                        class="col-sm-5 ml-0">
-            <mat-label>Confirmação</mat-label>
-            <input matInput
-                   #input
-                   maxlength="10"
-                   placeholder="Confirme sua senha"
-                   id="confirm"
-                   required="true">
+        <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+          <mat-label>Confirmação de Senha</mat-label>
+          <input type="password" matInput #input maxlength="255" placeholder="Confirme sua senha" id="confirm"
+            required="true">
         </mat-form-field>
       </div>
       <div class="div-row-input registration-button-row">

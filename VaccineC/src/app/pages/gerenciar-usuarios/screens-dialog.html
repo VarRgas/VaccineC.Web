@@ -1,18 +1,21 @@
-<h2 mat-dialog-title>Telas</h2>
+<h2 mat-dialog-title>Recurso</h2>
 <mat-dialog-content class="mat-typography">
-  <div id="search-table">
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z3 col-sm-11">
-
-        <ng-container matColumnDef="screens">
-            <mat-header-cell *matHeaderCellDef> Telas </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{ element.screens }} </mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-  </div>
+  <form>
+    <div class="div-row-input">
+      <mat-form-field appearance="fill" class="col-sm-12">
+        <mat-label>Recurso</mat-label>
+        <input type="text" id="resourceId" placeholder="Selecione o Recurso" aria-label="Number" matInput
+          [formControl]="myControl" [matAutocomplete]="auto" required>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Fechar</button>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
 </mat-dialog-actions>

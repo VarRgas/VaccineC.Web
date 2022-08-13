@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-gerenciar-usuarios',
@@ -7,6 +10,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./gerenciar-usuarios.component.scss']
 })
 export class GerenciarUsuariosComponent implements OnInit {
+
   public dialogRef?: MatDialogRef<any>;
 
   constructor(public dialog: MatDialog) { }
@@ -15,10 +19,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   public openAddScreensDialog(): void {
-    this.dialogRef = this.dialog.open(ScreensDialog, {
-      height: '45%',
-      width: '55%'
-    });
+    this.dialogRef = this.dialog.open(ScreensDialog, {width: '40vw'});
 
     this.dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -31,21 +32,22 @@ export class GerenciarUsuariosComponent implements OnInit {
   templateUrl: 'screens-dialog.html',
 })
 
-export class ScreensDialog {
-  value = '';
-  value2 = '';
+export class ScreensDialog implements OnInit{
+  
+  myControl = new FormControl('');
+  options: string[] = ['EMPRESA', 'GERENCIAR USUÁRIOS', 'FORMAS PAGAMENTO'];
+  filteredOptions: Observable<string[]> | undefined;
+  
+  ngOnInit(): void {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
+  }
 
-  displayedColumns: string[] = ['screens'];
-  dataSource = ELEMENT_DATA;
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
 
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
 }
-
-export interface screensElement {
-
-  screens: string;
-}
-
-const ELEMENT_DATA: screensElement[] = [
-  { screens: 'PESSOAS' },
-  { screens: 'OUTRA TELA DE EXEMPLO' }
-];

@@ -8,7 +8,6 @@ import { Component, OnInit } from '@angular/core';
 
 export class UsuariosPesquisaComponent implements OnInit {
   value = '';
-  value2 = '';
 
   displayedColumns: string[] = ['userEmail', 'userName', 'situation'];
   dataSource = ELEMENT_DATA;
@@ -27,6 +26,6 @@ export interface UserElement {
 }
 
 const ELEMENT_DATA: UserElement[] = [
-  { userEmail: 'alinesantos@empresa.com', userName: 'Aline Santos', situation: 'Ativa' },
-  { userEmail: 'pedroauberto@empresa.com', userName: 'Pedro Auberto', situation: 'Inativa' }
+  { userEmail: 'alinesantos@empresa.com', userName: 'ALINE SANTOS', situation: 'Ativa' },
+  { userEmail: 'pedroalberto@empresa.com', userName: 'PEDRO ALBERTO', situation: 'Inativa' }
 ];
