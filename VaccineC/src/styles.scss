@@ -116,7 +116,17 @@ select[readonly] {
 
 }
 
-body, html{
+body,
+html {
   height: 100%;
   margin: 0;
+}
+
+.fc .fc-button-group>.fc-button {
+  background-color: #5099dd !important;
+  border-color: #5099dd !important;
+}
+
+.fc {
+  font-size: 14px !important;
 }
