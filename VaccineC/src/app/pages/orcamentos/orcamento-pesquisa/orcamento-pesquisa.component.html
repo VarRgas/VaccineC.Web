@@ -1,7 +1,7 @@
 <div class="search-group">
     <div class="col-sm-11 p-0 d-flex">
         <mat-form-field class="search-form-field col-sm-10" appearance="outline">
-            <mat-label>Digite o nome do produto ou o nº do movimento</mat-label>
+            <mat-label>Digite o nome do responsável ou o nº do orçamento</mat-label>
             <input id="organicSearch" matInput type="text" [(ngModel)]="value">
             <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
                 <mat-icon>close</mat-icon>
@@ -14,19 +14,14 @@
 <div id="search-table">
     <mat-table [dataSource]="dataSource" class="col-sm-11">
 
-        <ng-container matColumnDef="movement">
-            <mat-header-cell *matHeaderCellDef> Movimento </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.movement}} </mat-cell>
+        <ng-container matColumnDef="budgetNumber">
+            <mat-header-cell *matHeaderCellDef> Orçamento nº </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.budgetNumber}} </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="product">
-            <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.product}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="operation">
-            <mat-header-cell *matHeaderCellDef> Operação </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.operation}} </mat-cell>
+        <ng-container matColumnDef="person">
+            <mat-header-cell *matHeaderCellDef> Pessoa </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.person}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="date">
@@ -35,7 +30,7 @@
         </ng-container>
 
         <ng-container matColumnDef="amount">
-            <mat-header-cell *matHeaderCellDef> R$ </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> R$ Total </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.amount}} </mat-cell>
         </ng-container>
 

@@ -4,8 +4,12 @@
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Orçamentos" containerPath="Operacional">
             <mat-tab-group>
-                <mat-tab label="Pesquisa"> Pesquisa </mat-tab>
-                <mat-tab label="Orçamento"> Orçamento </mat-tab>
+                <mat-tab label="Pesquisa">
+                    <app-orcamento-pesquisa></app-orcamento-pesquisa>
+                </mat-tab>
+                <mat-tab label="Orçamento">
+                    <app-orcamento-cadastro></app-orcamento-cadastro>
+                </mat-tab>
               </mat-tab-group>
         </app-container>
     </div>

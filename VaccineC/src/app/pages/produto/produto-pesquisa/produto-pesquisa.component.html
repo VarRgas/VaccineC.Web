@@ -1,6 +1,6 @@
 <div class="search-group">
-    <div class="col-sm-11 p-0">
-        <mat-form-field class="search-form-field col-sm-10" appearance="fill">
+    <div class="col-sm-11 p-0 d-flex">
+        <mat-form-field class="search-form-field col-sm-10" appearance="outline">
             <mat-label>Digite o nome do produto</mat-label>
             <input id="organicSearch" matInput type="text" [(ngModel)]="value" placeholder="(mínimo 3 caracteres)">
             <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">

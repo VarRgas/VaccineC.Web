@@ -24,6 +24,17 @@
 
       <div class="div-row-input">
         <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Função</mat-label>
+            <mat-select id="userFunction" required="true">
+                <mat-option value="S" selected>Administrador</mat-option>
+                <mat-option value="A" selected>Aplicador</mat-option>
+                <mat-option value="G" selected>Gerente</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+      <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-6">
             <mat-label>Situação</mat-label>
             <mat-select id="situation" required="true">
                 <mat-option value="A" selected>Ativo</mat-option>

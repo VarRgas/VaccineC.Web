@@ -56,6 +56,8 @@ import { MovimentarEstoqueCadastroComponent, ProductDialog } from './pages/movim
 import { SituacaoEstoqueLotesComponent } from './pages/situacao-estoque/situacao-estoque-lotes/situacao-estoque-lotes.component';
 import { SituacaoEstoqueMinimoComponent } from './pages/situacao-estoque/situacao-estoque-minimo/situacao-estoque-minimo.component';
 import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situacao-estoque-projecao/situacao-estoque-projecao.component';
+import { OrcamentoPesquisaComponent } from './pages/orcamentos/orcamento-pesquisa/orcamento-pesquisa.component';
+import { OrcamentoCadastroComponent, BudgetProductDialog } from './pages/orcamentos/orcamento-cadastro/orcamento-cadastro.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +113,10 @@ import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situa
     ProductDialog,
     SituacaoEstoqueLotesComponent,
     SituacaoEstoqueMinimoComponent,
-    SituacaoEstoqueProjecaoComponent
+    SituacaoEstoqueProjecaoComponent,
+    OrcamentoPesquisaComponent,
+    OrcamentoCadastroComponent,
+    BudgetProductDialog
   ],
   imports: [
     BrowserModule,

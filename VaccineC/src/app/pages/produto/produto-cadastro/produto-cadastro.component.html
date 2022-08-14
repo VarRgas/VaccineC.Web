@@ -17,12 +17,10 @@
             </div>
 
             <div class="div-row-input">
-                <div class="div-row-input">
-                    <mat-form-field appearance="fill" class="col-sm-11">
-                        <mat-label>Produto</mat-label>
-                        <input matInput #input id="name" required="true">
-                    </mat-form-field>
-                </div>
+                <mat-form-field appearance="fill" class="col-sm-11">
+                    <mat-label>Produto</mat-label>
+                    <input matInput #input id="name" required="true">
+                </mat-form-field>
             </div>
 
             <div class="div-row-input">
@@ -33,23 +31,14 @@
                         <mat-option value="I">Inativo</mat-option>
                     </mat-select>
                 </mat-form-field>
+
+                <mat-form-field appearance="fill" class="col-sm-5">
+                    <mat-label>Estoque Mínimo</mat-label>
+                    <input type="number" matInput #input id="minimumStock" placeholder="Ex. 20" required="true">
+                </mat-form-field>
             </div>
 
             <div class="div-row-input">
-                <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
-                    <mat-label>Valor de Compra</mat-label>
-                    <input matInput type="text" class="example-right-align" placeholder="0,00" id="purchasePrice"
-                        required="true">
-                    <span matPrefix>R$&nbsp;</span>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill" floatLabel="always" class="col-sm-3">
-                    <mat-label>Lucro</mat-label>
-                    <input matInput type="text" class="example-right-align" placeholder="0,00" id="profitPercentage"
-                        required="true">
-                    <span matPrefix>R$&nbsp;</span>
-                </mat-form-field>
-
                 <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                     <mat-label>Valor de Venda</mat-label>
                     <input matInput type="text" class="example-right-align" placeholder="0,00" id="saleValue"

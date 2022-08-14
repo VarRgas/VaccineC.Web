@@ -24,11 +24,8 @@
     <mat-step [stepControl]="secondFormGroup" label="Produtos">
         <form [formGroup]="secondFormGroup" class="mt-3">
             <div class="demo-button-container offset-sm-1 col-sm-11 p-0">
-                <button mat-raised-button color="primary" class="demo-button me-2" (click)="openProductDialog()">
-                    Novo
-                </button>
-                <button mat-raised-button color="accent" class="demo-button">
-                    Excluir
+                <button mat-mini-fab color="primary" class="demo-button me-2" (click)="openProductDialog()" matTooltip="Inserir Produto" matTooltipPosition="right">
+                    <mat-icon>add</mat-icon>
                 </button>
             </div>
             <div id="search-table" class="offset-sm-1 col-sm-11 p-0">

@@ -1,0 +1,86 @@
+<h2 mat-dialog-title>Produto</h2>
+<mat-dialog-content class="mat-typography">
+    <form>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Produto</mat-label>
+                <input type="text" id="productId" placeholder="Selecione o Produto" aria-label="Number" matInput
+                    [formControl]="myControl" [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
+                <mat-label>R$ Estimado</mat-label>
+                <input matInput type="text" class="example-right-align" placeholder="0,00" id="productSaleValue"
+                    required="true">
+                <span matPrefix>R$&nbsp;</span>
+            </mat-form-field>
+        </div>
+
+        <mat-divider class="mb-3"></mat-divider>
+
+        <div id="doses-table" class="search-table col-sm-12 p-0">
+            <table mat-table [dataSource]="dataSource3" class="col-sm-11">
+
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                            [checked]="selection3.hasValue() && isAllSelected()"
+                            [indeterminate]="selection3.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection3.toggle(row) : null" [checked]="selection3.isSelected(row)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="product">
+                    <th mat-header-cell *matHeaderCellDef> Produto </th>
+                    <td mat-cell *matCellDef="let element"> {{element.product}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dose">
+                    <th mat-header-cell *matHeaderCellDef> Dose </th>
+                    <td mat-cell *matCellDef="let element"> {{element.dose}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns3;" (click)="selection3.toggle(row)">
+                </tr>
+            </table>
+        </div>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>
+
+<style>
+    #doses-table {
+        margin: 1rem;
+    }
+
+    :host ::ng-deep .mat-table {
+        border-radius: 0.75rem !important;
+        box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 10%), 0px 3px 4px 0px rgb(0 0 0 / 10%), 0px 1px 8px 0px rgb(0 0 0 / 10%);
+    }
+
+    .search-table {
+        display: flex;
+        justify-content: center;
+        overflow-x: initial;
+        margin: 0.5rem;
+        border: none
+    }
+</style>
