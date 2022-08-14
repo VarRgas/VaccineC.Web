@@ -4,13 +4,14 @@
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Pessoa</mat-label>
-                    <input type="text" id="personId" placeholder="Selecione a Pessoa Jurídica" aria-label="Number" matInput [formControl]="myControl"
-                        [matAutocomplete]="auto" required>
+                    <input type="text" id="personId" placeholder="Selecione a Pessoa Jurídica" aria-label="Number"
+                        matInput [formControl]="myControl" [matAutocomplete]="auto" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                             {{option}}
                         </mat-option>
                     </mat-autocomplete>
+                    <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
             </div>
 

@@ -10,6 +10,8 @@ import { LoginDispatcherService } from 'src/app/services/login-dispatcher.servic
 })
 export class LoginComponent implements OnInit {
 
+  public exampleInputEmail!: string; 
+  public exampleInputPassword!: string; 
 
   loginForm: FormGroup = this.formBuilder.group({
     email: [null, [Validators.required]],
@@ -25,9 +27,10 @@ export class LoginComponent implements OnInit {
   }
 
   public validateLogin(): void {
+
     let login = new LoginModel();
-    login.email = 'amanda@bla.com';
-    login.password = 'amanda123'
+    login.email = this.exampleInputEmail;
+    login.password = this.exampleInputPassword;
 
     this.loginDispatcherService.Login(login).subscribe(a => {
     })

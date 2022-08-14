@@ -19,7 +19,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   public openAddScreensDialog(): void {
-    this.dialogRef = this.dialog.open(ScreensDialog, {width: '40vw'});
+    this.dialogRef = this.dialog.open(ScreensDialog, { width: '40vw' });
 
     this.dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -32,12 +32,12 @@ export class GerenciarUsuariosComponent implements OnInit {
   templateUrl: 'screens-dialog.html',
 })
 
-export class ScreensDialog implements OnInit{
-  
+export class ScreensDialog implements OnInit {
+
   myControl = new FormControl('');
   options: string[] = ['EMPRESA', 'GERENCIAR USUÁRIOS', 'FORMAS PAGAMENTO'];
   filteredOptions: Observable<string[]> | undefined;
-  
+
   ngOnInit(): void {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),

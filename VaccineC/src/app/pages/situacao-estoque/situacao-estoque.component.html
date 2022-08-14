@@ -2,5 +2,48 @@
     <app-side-menu></app-side-menu>
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
+        <section id="center" class="section-main">
+            <div id="is-content" class="flex-1 is-content is-content-grow">
+                <div class="row">
+                    <div class="col-sm-6 expired-lots">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-gray-600">Lotes a Vencer</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-area">
+                                    <app-situacao-estoque-lotes></app-situacao-estoque-lotes>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 minimum-stock">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-gray-600">Abaixo do estoque Mínimo</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-area">
+                                    <app-situacao-estoque-minimo></app-situacao-estoque-minimo>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 schedule-projection">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-gray-600">Projeção de Agendamentos: Agosto/2022</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-area">
+                                    <app-situacao-estoque-projecao></app-situacao-estoque-projecao>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </div>

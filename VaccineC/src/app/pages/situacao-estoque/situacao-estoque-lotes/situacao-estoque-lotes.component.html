@@ -1,0 +1,22 @@
+<div id="search-table">
+    <mat-table [dataSource]="dataSource" class="col-sm-12">
+
+        <ng-container matColumnDef="product">
+            <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.product}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="batch">
+            <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.batch}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="validity">
+            <mat-header-cell *matHeaderCellDef> Validade </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.validity}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

@@ -1,0 +1,33 @@
+<div id="search-table">
+    <mat-table [dataSource]="dataSource" class="col-sm-12">
+ <!--   displayedColumns: string[] = ['scheduling', 'date', 'product', 'quantityInStock', 'quantityAfterApplication'];
+-->
+        <ng-container matColumnDef="scheduling">
+            <mat-header-cell *matHeaderCellDef> Agendamento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.scheduling}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+            <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="product">
+            <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.product}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="quantityInStock">
+            <mat-header-cell *matHeaderCellDef> Qtd em Estoque </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.quantityInStock}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="quantityAfterApplication">
+            <mat-header-cell *matHeaderCellDef> Qtd após Aplic.</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.quantityAfterApplication}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

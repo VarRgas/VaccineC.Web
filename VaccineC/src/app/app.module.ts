@@ -27,7 +27,7 @@ import { MovimentarEstoqueComponent } from './pages/movimentar-estoque/movimenta
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent, ScreensDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent } from './pages/recursos/recursos.component';
-import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
+import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { PessoasPesquisaComponent } from './pages/pessoas/pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pessoas-cadastro.component';
@@ -51,6 +51,11 @@ import { ProdutoCadastroComponent } from './pages/produto/produto-cadastro/produ
 import { ProdutoAprazamentoComponent } from './pages/produto/produto-aprazamento/produto-aprazamento.component';
 import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-resumo.component';
 import { NgChartsModule } from 'ng2-charts';
+import { MovimentarEstoquePesquisaComponent } from './pages/movimentar-estoque/movimentar-estoque-pesquisa/movimentar-estoque-pesquisa.component';
+import { MovimentarEstoqueCadastroComponent, ProductDialog } from './pages/movimentar-estoque/movimentar-estoque-cadastro/movimentar-estoque-cadastro.component';
+import { SituacaoEstoqueLotesComponent } from './pages/situacao-estoque/situacao-estoque-lotes/situacao-estoque-lotes.component';
+import { SituacaoEstoqueMinimoComponent } from './pages/situacao-estoque/situacao-estoque-minimo/situacao-estoque-minimo.component';
+import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situacao-estoque-projecao/situacao-estoque-projecao.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +104,14 @@ import { NgChartsModule } from 'ng2-charts';
     ProdutoAprazamentoComponent,
     ProdutoResumoComponent,
     DialogContentDose,
-    ScreensDialog
+    ScreensDialog,
+    PasswordDialog,
+    MovimentarEstoquePesquisaComponent,
+    MovimentarEstoqueCadastroComponent,
+    ProductDialog,
+    SituacaoEstoqueLotesComponent,
+    SituacaoEstoqueMinimoComponent,
+    SituacaoEstoqueProjecaoComponent
   ],
   imports: [
     BrowserModule,

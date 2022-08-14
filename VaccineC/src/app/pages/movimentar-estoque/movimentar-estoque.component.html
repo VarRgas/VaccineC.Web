@@ -4,8 +4,12 @@
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Movimentar Estoque" containerPath="Estoque">
             <mat-tab-group>
-                <mat-tab label="Pesquisa"> Pesquisa </mat-tab>
-                <mat-tab label="Movimento"> Movimento </mat-tab>
+                <mat-tab label="Pesquisa"> 
+                    <app-movimentar-estoque-pesquisa></app-movimentar-estoque-pesquisa>
+                </mat-tab>
+                <mat-tab label="Movimento">
+                    <app-movimentar-estoque-cadastro></app-movimentar-estoque-cadastro>
+                </mat-tab>
             </mat-tab-group>
         </app-container>
     </div>

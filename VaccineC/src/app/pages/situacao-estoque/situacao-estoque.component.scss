@@ -1,0 +1,21 @@
+#is-content {
+    padding: 5.5rem;
+    padding-bottom: 0;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    transition: width 0.3s, margin 0.3s;
+}
+
+#is-content.is-content-grow {
+    margin-left: -11.5em !important;
+    padding-right: 2rem !important;
+}
+
+.card-header {
+    background-color: #ffffff !important;
+}
+
+.card-area {
+    height: 20rem;
+}
