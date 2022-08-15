@@ -17,7 +17,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class ProdutoResumoComponent implements OnInit {
   
   dataSource = ELEMENT_DATA;
-  columnsToDisplay = ['inventory', 'numberOfUnits'];
+  columnsToDisplay = ['Inventário', 'Unidades'];
   columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
   expandedElement: ProductSummaryElement | null | undefined;
 
@@ -29,20 +29,20 @@ export class ProdutoResumoComponent implements OnInit {
 }
 
 export interface ProductSummaryElement {
-  inventory: string;
-  numberOfUnits: number;
+  Inventário: string;
+  Unidades: number;
   description: string
 }
 
 const ELEMENT_DATA: ProductSummaryElement[] = [
   {
-    inventory: 'LOCAL',
-    numberOfUnits: 20,
+    Inventário: 'LOCAL',
+    Unidades: 20,
     description: `Lote ABC12345 | Data de Fabricação 27/06/2022 | Data de Validade 30/10/2022 | Fabricante FLUARIX | Unidades 20`,
   },
   {
-    inventory: 'LOCAL',
-    numberOfUnits: 12,
+    Inventário: 'LOCAL',
+    Unidades: 12,
     description: `Lote DEF678910 | Data de Fabricação 30/07/2022 | Data de Validade 30/10/2024 | Fabricante BUTANTAN | Unidades 12`,
  },
 ];

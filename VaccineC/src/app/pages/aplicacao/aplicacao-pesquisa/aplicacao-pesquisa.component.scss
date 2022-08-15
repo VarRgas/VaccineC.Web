@@ -1,0 +1,35 @@
+.search-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 2rem;
+}
+
+#search-table {
+    display: flex;
+    justify-content: center;
+    overflow-x: initial;
+    margin: 0.5rem;
+    border: none
+}
+
+:host ::ng-deep .mat-table {
+    border-radius: 0.75rem;
+    box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 10%), 0px 3px 4px 0px rgb(0 0 0 / 10%), 0px 1px 8px 0px rgb(0 0 0 / 10%);
+}
+
+:host ::ng-deep .mat-form-field-wrapper {
+    padding: 0px;
+}
+
+#mat-search-button {
+    margin-bottom: 0px;
+    align-self: center;
+}
+
+img {
+    width: 30px;
+    height: 30px;
+}

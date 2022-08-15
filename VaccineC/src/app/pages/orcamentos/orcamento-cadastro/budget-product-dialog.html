@@ -19,7 +19,7 @@
             <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                 <mat-label>R$ Estimado</mat-label>
                 <input matInput type="text" class="example-right-align" placeholder="0,00" id="productSaleValue"
-                    required="true">
+                    required="true" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
             </mat-form-field>
         </div>

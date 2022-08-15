@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Informações Lote</h2>
+<mat-dialog-content class="mat-typography">
+    <form>
+        <div class="div-row-input mt-3">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Lote</mat-label>
+                <input matInput #input id="batch" readonly="true">
+            </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Fabricante</mat-label>
+                <input matInput #input id="manufacturerId" readonly="true">
+            </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Data de Fabricação</mat-label>
+                <input matInput [matDatepicker]="picker" id="batchManufacturingDate" readonly="true"
+                    ng-model="cad.batchManufacturingDate" mask="00/00/0009">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Data de Validade</mat-label>
+                <input matInput [matDatepicker]="picker2" id="batchExpirationDate" readonly="true"
+                    ng-model="cad.batchExpirationDate" mask="00/00/0009">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>

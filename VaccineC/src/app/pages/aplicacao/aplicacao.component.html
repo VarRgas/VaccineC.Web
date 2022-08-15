@@ -3,7 +3,14 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Aplicação" containerPath="Operacional">
-
+            <mat-tab-group>
+                <mat-tab label="Pesquisa">
+                    <app-aplicacao-pesquisa></app-aplicacao-pesquisa>
+                </mat-tab>
+                <mat-tab label="Aplicação">
+                    <app-aplicacao-cadastro></app-aplicacao-cadastro>
+                </mat-tab>
+            </mat-tab-group>
         </app-container>
     </div>
 </div>

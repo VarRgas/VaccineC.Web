@@ -25,13 +25,16 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
                 <mat-label>R$ Unitário</mat-label>
-                <input matInput #input id="totalUnityValue" placeholder="0,00" required="true" readonly="true">
+                <input matInput #input id="totalUnityValue" placeholder="0,00" required="true" readonly="true"
+                    placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'"
+                    [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
                 <mat-label>R$ Total</mat-label>
-                <input matInput #input id="amount" placeholder="0,00" required="true" readonly="true">
+                <input matInput #input id="amount" placeholder="0,00" required="true" readonly="true" placeholder="0,00"
+                    mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
             </mat-form-field>
         </div>
@@ -54,14 +57,16 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Data de Fabricação</mat-label>
-                <input matInput [matDatepicker]="picker" id="batchManufacturingDate" required="true">
+                <input matInput [matDatepicker]="picker" id="batchManufacturingDate" required="true"
+                    ng-model="cad.batchManufacturingDate" mask="00/00/0009">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Data de Validade</mat-label>
-                <input matInput [matDatepicker]="picker2" id="batchExpirationDate" required="true">
+                <input matInput [matDatepicker]="picker2" id="batchExpirationDate" required="true"
+                    ng-model="cad.batchExpirationDate" mask="00/00/0009">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>

@@ -28,7 +28,7 @@
 
                 <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                     <mat-label>Data de Nascimento</mat-label>
-                    <input matInput [matDatepicker]="picker" id="commemorativeDate">
+                    <input matInput [matDatepicker]="picker" id="commemorativeDate" mask="00/00/0009">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>

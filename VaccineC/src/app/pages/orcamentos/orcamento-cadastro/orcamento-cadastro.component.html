@@ -30,7 +30,7 @@
 
                 <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                     <mat-label>Validade</mat-label>
-                    <input matInput [matDatepicker]="picker" id="validity">
+                    <input matInput [matDatepicker]="picker" id="validity" mask="00/00/0009">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -95,7 +95,8 @@
                 <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                     <mat-label>R$ Produtos Orçados</mat-label>
                     <input matInput type="text" class="example-right-align" placeholder="0,00" id="saleValue"
-                        required="true" readonly="true">
+                        required="true" readonly="true" mask="separator.2" [thousandSeparator]="'.'"
+                        [decimalMarker]="','">
                     <span matPrefix>R$&nbsp;</span>
                 </mat-form-field>
             </div>
@@ -103,14 +104,15 @@
                 <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                     <mat-label>R$ Desconto</mat-label>
                     <input matInput type="text" class="example-right-align" placeholder="0,00" id="discount"
-                        required="true">
+                        required="true" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
                     <span matPrefix>R$&nbsp;</span>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4" style="font-weight:bold">
                     <mat-label>R$ Total Orçamento</mat-label>
                     <input matInput type="text" class="example-right-align" placeholder="0,00" id="finalValue"
-                        required="true" readonly="true">
+                        required="true" readonly="true" mask="separator.2" [thousandSeparator]="'.'"
+                        [decimalMarker]="','">
                     <span matPrefix>R$&nbsp;</span>
                 </mat-form-field>
             </div>
@@ -134,13 +136,14 @@
 
                 <mat-form-field appearance="fill" class="col-sm-3">
                     <mat-label>Nº Parcelas</mat-label>
-                    <input matInput #input maxlength="10" placeholder="Ex. 2" id="name">
+                    <input matInput #input type="number" maxlength="10" placeholder="Ex. 2" id="name">
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" floatLabel="always" class="col-sm-3">
                     <mat-label>R$ Negociado</mat-label>
                     <input matInput type="text" class="example-right-align" placeholder="0,00" id="negotiatedValue"
-                        required="true" readonly="true">
+                        required="true" readonly="true" mask="separator.2" [thousandSeparator]="'.'"
+                        [decimalMarker]="','">
                     <span matPrefix>R$&nbsp;</span>
                 </mat-form-field>
 

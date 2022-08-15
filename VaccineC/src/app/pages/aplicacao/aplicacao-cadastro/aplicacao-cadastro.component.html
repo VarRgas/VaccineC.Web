@@ -1,0 +1,124 @@
+<div class="row first-card">
+    <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
+        <div class="card-resumo-paciente shadow-sm ms-0">
+            <div class="row ms-0">
+                <div class="col-xxl-5 col-sm-5 shadow-sm main-content-resumo-paciente">
+                    <div class="dados-principais-paciente">
+                        <img class="mouse-pointer img-paciente" id="imgPaciente"
+                            style="display: block; border-radius: 18%;"
+                            src="../../../assets/img/bg-profile-default.png">
+                        <div class="informacoes-complementares-paciente">
+                            <span id="nmPessoaPaciente" class="informacao-principal fw-bold">JOHN
+                                DOE</span>
+                            <span id="nmIdadeExtenso" class="informacao-secundaria d-block">25
+                                anos</span>
+                            <span id="nmCidadeEstado" class="informacao-secundaria">54991223344</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-7 col-sm-7 secondary-content-resumo-paciente ps-0">
+                    <div class="w-100">
+                        <div class="row col-sm-10 offset-sm-1 mb-4">
+                            <div class="col-sm-8">
+                                <span class="informacao-secundaria-auxiliar">Endereço</span>
+                                <span class="informacao-principal-auxiliar" id="nmOcupacao">Rua
+                                    Sinimbu,
+                                    1010 - Centro - Caxias do Sul/RS</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span class="informacao-secundaria-auxiliar">Atendimentos</span>
+                                <span class="informacao-principal-auxiliar" id="nrAtendimento">1º
+                                    atendimento</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row second-card">
+    <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
+        <div class="card mb-4 shadow-sm right-border-product">
+            <mat-tab-group>
+                <mat-tab label="Aplicações Disponíveis">
+                    <div id="search-table">
+                        <mat-table [dataSource]="dataSource" class="col-sm-11">
+
+                            <ng-container matColumnDef="product">
+                                <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.product}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="scheduling">
+                                <mat-header-cell *matHeaderCellDef> Agendamento </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.scheduling}}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="date">
+                                <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
+                                <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="action">
+                                <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                <mat-cell *matCellDef="let element">
+                                    <button mat-icon-button color="primary" title="Realizar Aplicação"
+                                        (click)="openAplicationDialog()"><i class="fa-solid fa-syringe"></i></button>
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        </mat-table>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Histórico">
+                    <div class="container py-5">
+                        <div class="main-timeline-2">
+                            <div class="timeline-2 left-2">
+                                <div class="card">
+                                    <div class="card-body p-4">
+                                        <h4 class="fw-bold mb-2 titulo-historico">VACINA BCG</h4>
+                                        <p class="text-muted mb-4 horario-historico"><i class="fas fa-calendar me-1"
+                                                aria-hidden="true"></i>
+                                            10/01/2022 10:32</p>
+                                        <p class="mb-0 texto-historico">
+                                            DOSE 1
+                                        </p>
+                                        <p class="mb-0 texto-historico">
+                                            Aplicador Fulano
+                                        </p>
+                                        <p title="Informações do Lote" class="mb-0 texto-historico"
+                                            style="float:right;"><a (click)="openBatchDialog()"><i
+                                                    class="fa-solid fa-box-open me-1"></i>F1G2H3</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-2 right-2">
+                                <div class="card">
+                                    <div class="card-body p-4">
+                                        <h4 class="fw-bold mb-2 titulo-historico">VACINA
+                                            TETRAVALENTE</h4>
+                                        <p class="text-muted mb-4 horario-historico"><i class="fas fa-calendar me-1"
+                                                aria-hidden="true"></i>
+                                            15/05/2022 14:41</p>
+                                        <p class="mb-0 texto-historico">
+                                            DOSE 1
+                                        </p>
+                                        <p class="mb-0 texto-historico">Aplicador Ciclano</p>
+                                        <p title="Informações do Lote" class="mb-0 texto-historico"
+                                            style="float:right;"><a (click)="openBatchDialog()"><i
+                                                    class="fa-solid fa-box-open me-1"></i>A1B2C3</a></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>

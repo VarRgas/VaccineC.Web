@@ -31,7 +31,7 @@ import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-fatur
 import { PessoasPesquisaComponent } from './pages/pessoas/pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pessoas-cadastro.component';
 import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
-import { PessoasTelefonesComponent} from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
+import { PessoasTelefonesComponent } from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
 import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
 import { FormasPagamentoPesquisaComponent } from './pages/formas-pagamento/formas-pagamento-pesquisa/formas-pagamento-pesquisa.component';
 import { FormasPagamentoCadastroComponent } from './pages/formas-pagamento/formas-pagamento-cadastro/formas-pagamento-cadastro.component';
@@ -57,6 +57,10 @@ import { SituacaoEstoqueMinimoComponent } from './pages/situacao-estoque/situaca
 import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situacao-estoque-projecao/situacao-estoque-projecao.component';
 import { OrcamentoPesquisaComponent } from './pages/orcamentos/orcamento-pesquisa/orcamento-pesquisa.component';
 import { OrcamentoCadastroComponent, BudgetProductDialog } from './pages/orcamentos/orcamento-cadastro/orcamento-cadastro.component';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { AplicacaoCadastroComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao-cadastro/aplicacao-cadastro.component';
+import { AplicacaoPesquisaComponent } from './pages/aplicacao/aplicacao-pesquisa/aplicacao-pesquisa.component';
 
 @NgModule({
   declarations: [
@@ -115,7 +119,11 @@ import { OrcamentoCadastroComponent, BudgetProductDialog } from './pages/orcamen
     SituacaoEstoqueProjecaoComponent,
     OrcamentoPesquisaComponent,
     OrcamentoCadastroComponent,
-    BudgetProductDialog
+    BudgetProductDialog,
+    AplicacaoCadastroComponent,
+    AplicacaoPesquisaComponent,
+    AplicationDialog,
+    BatchDialog
   ],
   imports: [
     BrowserModule,
@@ -129,8 +137,9 @@ import { OrcamentoCadastroComponent, BudgetProductDialog } from './pages/orcamen
     MaterialExampleModule,
     ReactiveFormsModule,
     NgChartsModule,
+    NgxMaskModule.forRoot()
   ],
-  providers: [],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
