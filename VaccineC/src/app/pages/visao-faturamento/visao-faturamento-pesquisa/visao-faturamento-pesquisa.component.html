@@ -1,6 +1,6 @@
 <div>
   <div>
-    <mat-form-field class="margin-form" appearance="fill" style="font-size:14px">
+    <mat-form-field class="margin-form" appearance="outline" style="font-size:14px; margin-left: 3rem;">
       <mat-label>Selecione o ano</mat-label>
       <mat-select id="year">
         <mat-option value="2022">2022</mat-option>
@@ -9,26 +9,38 @@
     </mat-form-field>
   </div>
   <mat-divider></mat-divider>
-  <div class="d-flex justify-content-around m-2 mt-3">
-    <mat-card class="card-bar-chart">
-      <canvas height="300" width="500" baseChart [data]="barChartData" [options]="barChartOptions"
-        [plugins]="barChartPlugins" [type]="barChartType" (chartHover)="chartHovered($event)"
-        (chartClick)="chartClicked($event)">
-      </canvas>
-    </mat-card>
-    <div class="d-flex">
-      <mat-card class="card-info">
-        <mat-card-subtitle>Previsão de faturamento para maio - 2022</mat-card-subtitle>
-        <mat-divider inset></mat-divider>
-        <mat-card-content>
-          <p></p>
-          <p>Data atual: <b>{{ currentDate }}</b></p>
-          <p>Faturamento atual: <b>{{ invoicing }}</b></p>
-          <p>Data de fechamento: <b>{{ endDate }}</b></p>
-          <p>Estimativa de lucro visando o mês anterior: <b>{{ profitEstimate }}</b></p>
-        </mat-card-content>
-        <mat-progress-bar></mat-progress-bar>
-      </mat-card>
+
+  <div id="is-content" class="flex-1 is-content is-content-grow">
+    <div class="row" style="align-items:center;">
+      <div class="col-sm-6 expired-lots">
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <div class="card-area">
+              <canvas height="300" width="500" baseChart [data]="barChartData" [options]="barChartOptions"
+                [plugins]="barChartPlugins" [type]="barChartType" (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 minimum-stock">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-gray-600">Previsão de faturamento para maio - 2022</h6>
+          </div>
+          <div class="card-body">
+            <div class="card-area">
+              <p></p>
+              <p>Data atual: <b>{{ currentDate }}</b></p>
+              <p>Faturamento atual: <b>{{ invoicing }}</b></p>
+              <p>Data de fechamento: <b>{{ endDate }}</b></p>
+              <p>Estimativa de lucro visando o mês anterior: <b>{{ profitEstimate }}</b></p>
+              <mat-progress-bar></mat-progress-bar>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

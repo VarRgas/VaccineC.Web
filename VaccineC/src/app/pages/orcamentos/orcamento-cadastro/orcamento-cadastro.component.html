@@ -44,7 +44,7 @@
             </div>
             <div>
                 <div class="mt-5" style="float:right;">
-                    <button mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
+                    <button color="primary" mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
                         matTooltip="Próximo" matTooltipPosition="above">
                         <mat-icon>chevron_right</mat-icon>
                     </button>
@@ -55,7 +55,7 @@
     <mat-step [stepControl]="secondFormGroup" label="Produtos">
         <form [formGroup]="secondFormGroup" class="mt-3">
             <div class="demo-button-container offset-sm-1 col-sm-11 p-0">
-                <button mat-mini-fab color="primary" class="demo-button me-2" matTooltip="Inserir Produto"
+                <button mat-mini-fab class="demo-button me-2 create-button" matTooltip="Inserir Produto"
                     matTooltipPosition="right" (click)="openProductDialog()">
                     <mat-icon>add</mat-icon>
                 </button>
@@ -89,12 +89,12 @@
 
             </div>
             <div class="mt-5" style="float:right;">
-                <button mat-mini-fab matStepperPrevious aria-label="Example icon button with a menu icon"
+                <button color="primary" mat-mini-fab matStepperPrevious aria-label="Example icon button with a menu icon"
                     matTooltip="Anterior" matTooltipPosition="above" class="me-2">
                     <mat-icon>chevron_left</mat-icon>
                 </button>
 
-                <button mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
+                <button color="primary" mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
                     matTooltip="Próximo" matTooltipPosition="above">
                     <mat-icon>chevron_right</mat-icon>
                 </button>
@@ -131,11 +131,11 @@
             </div>
             <div class="mt-5" style="float:right;">
                 <button mat-mini-fab matStepperPrevious aria-label="Example icon button with a menu icon"
-                    matTooltip="Anterior" matTooltipPosition="above" class="me-2">
+                    matTooltip="Anterior" matTooltipPosition="above" color="primary" class="me-2">
                     <mat-icon>chevron_left</mat-icon>
                 </button>
                 <button mat-mini-fab matStepperNext color="primary" aria-label="Example icon button with a menu icon"
-                    matTooltip="Definir Pagamento" matTooltipPosition="above">
+                    matTooltip="Definir Pagamento" matTooltipPosition="above" class="create-button">
                     <mat-icon>attach_money</mat-icon>
                 </button>
             </div>
@@ -166,7 +166,7 @@
                     <span matPrefix>R$&nbsp;</span>
                 </mat-form-field>
 
-                <button mat-mini-fab color="primary" class="demo-button" matTooltip="Inserir Negociação"
+                <button mat-mini-fab class="demo-button create-button" matTooltip="Inserir Negociação"
                     matTooltipPosition="above">
                     <mat-icon>add</mat-icon>
                 </button>
@@ -202,8 +202,8 @@
                 <button mat-mini-fab matTooltip="Cancelar" color="warn" matTooltipPosition="above" class="me-2">
                     <mat-icon>close</mat-icon>
                 </button>
-                <button mat-mini-fab matStepperNext color="primary" aria-label="Example icon button with a menu icon"
-                    matTooltip="Aprovar" matTooltipPosition="above">
+                <button mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
+                    matTooltip="Aprovar" matTooltipPosition="above" class="create-button">
                     <mat-icon>done</mat-icon>
                 </button>
             </div>
