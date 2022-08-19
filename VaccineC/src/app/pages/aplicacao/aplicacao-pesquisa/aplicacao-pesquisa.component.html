@@ -7,7 +7,8 @@
                 <mat-icon>close</mat-icon>
             </button>
         </mat-form-field>
-        <button id="mat-search-button" mat-raised-button color="primary"><span class="fa-solid fa-magnifying-glass me-1 w-20px"></span><span>Pesquisar</span></button>
+        <button id="mat-search-button" mat-raised-button color="primary" class="mat-button-entry me-2"><span
+                class="fa-solid fa-magnifying-glass me-1 w-20px"></span><span>Pesquisar</span></button>
     </div>
 </div>
 
@@ -28,7 +29,7 @@
             <mat-header-cell *matHeaderCellDef> Data e Hora </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
         </ng-container>
-        
+
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>

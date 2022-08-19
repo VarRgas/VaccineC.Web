@@ -1,13 +1,17 @@
 <div class="search-group">
   <div class="col-sm-11 p-0 d-flex">
-    <mat-form-field class="search-form-field col-sm-10" appearance="outline">
+    <mat-form-field class="search-form-field col-sm-9" appearance="outline">
       <mat-label>Digite o e-mail do usuário ou o nome da pessoa</mat-label>
       <input id="organicSearch" matInput type="text" [(ngModel)]="value" placeholder="(mínimo 3 caracteres)">
       <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
-    <button id="mat-search-button" mat-raised-button color="primary"><span class="fa-solid fa-magnifying-glass me-1 w-20px"></span><span>Pesquisar</span></button>
+    <button id="mat-search-button" mat-raised-button color="primary" class="mat-button-entry me-2"><span
+        class="fa-solid fa-magnifying-glass me-1 w-20px"></span><span>Pesquisar</span></button>
+    <button id="mat-add-button" mat-raised-button class="mat-button-entry create-button" matTooltip="Novo Usuário"
+    matTooltipPosition="above"><span
+        class="fa-solid fa-plus w-20px"></span></button>
   </div>
 </div>
 <div id="search-table">
