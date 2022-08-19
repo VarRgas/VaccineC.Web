@@ -16,15 +16,19 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div>
-                <button mat-button matStepperNext>Próximo</button>
+            <div class="mt-5" style="float:right;">
+                <button mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
+                    matTooltip="Próximo" matTooltipPosition="above">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
             </div>
         </form>
     </mat-step>
     <mat-step [stepControl]="secondFormGroup" label="Produtos">
         <form [formGroup]="secondFormGroup" class="mt-3">
             <div class="demo-button-container offset-sm-1 col-sm-11 p-0">
-                <button mat-mini-fab color="primary" class="demo-button me-2" (click)="openProductDialog()" matTooltip="Inserir Produto" matTooltipPosition="right">
+                <button mat-mini-fab color="primary" class="demo-button me-2" (click)="openProductDialog()"
+                    matTooltip="Inserir Produto" matTooltipPosition="right">
                     <mat-icon>add</mat-icon>
                 </button>
             </div>
@@ -61,9 +65,15 @@
                 </table>
 
             </div>
-            <div class="mt-5">
-                <button mat-button matStepperPrevious>Anterior</button>
-                <button mat-button matStepperNext>Finalizar</button>
+            <div class="mt-5" style="float:right;">
+                <button mat-mini-fab matStepperPrevious aria-label="Example icon button with a menu icon"
+                    matTooltip="Anterior" matTooltipPosition="above" class="me-2">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+                <button mat-mini-fab matStepperNext color="primary" aria-label="Example icon button with a menu icon"
+                    matTooltip="Finalizar" matTooltipPosition="above">
+                    <mat-icon>done</mat-icon>
+                </button>
             </div>
         </form>
     </mat-step>

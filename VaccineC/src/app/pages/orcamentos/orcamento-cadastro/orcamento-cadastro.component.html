@@ -43,7 +43,12 @@
                 </mat-form-field>
             </div>
             <div>
-                <button mat-button matStepperNext>Próximo</button>
+                <div class="mt-5" style="float:right;">
+                    <button mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
+                        matTooltip="Próximo" matTooltipPosition="above">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+                </div>
             </div>
         </form>
     </mat-step>
@@ -83,9 +88,17 @@
                 </table>
 
             </div>
-            <div class="mt-5">
-                <button mat-button matStepperPrevious>Anterior</button>
-                <button mat-button matStepperNext>Próximo</button>
+            <div class="mt-5" style="float:right;">
+                <button mat-mini-fab matStepperPrevious aria-label="Example icon button with a menu icon"
+                    matTooltip="Anterior" matTooltipPosition="above" class="me-2">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+
+                <button mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
+                    matTooltip="Próximo" matTooltipPosition="above">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+
             </div>
         </form>
     </mat-step>
@@ -116,9 +129,15 @@
                     <span matPrefix>R$&nbsp;</span>
                 </mat-form-field>
             </div>
-            <div class="mt-5">
-                <button mat-button matStepperPrevious>Anterior</button>
-                <button mat-button matStepperNext>Definir Pagamento</button>
+            <div class="mt-5" style="float:right;">
+                <button mat-mini-fab matStepperPrevious aria-label="Example icon button with a menu icon"
+                    matTooltip="Anterior" matTooltipPosition="above" class="me-2">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+                <button mat-mini-fab matStepperNext color="primary" aria-label="Example icon button with a menu icon"
+                    matTooltip="Definir Pagamento" matTooltipPosition="above">
+                    <mat-icon>attach_money</mat-icon>
+                </button>
             </div>
         </form>
     </mat-step>
@@ -176,10 +195,17 @@
                 </table>
 
             </div>
-            <div class="mt-5">
-                <button mat-button matStepperPrevious>Reabrir</button>
-                <button mat-button>Cancelar</button>
-                <button mat-button matStepperNext>Aprovar</button>
+            <div class="mt-5" style="float:right;">
+                <button mat-mini-fab matStepperPrevious matTooltip="Reabrir" matTooltipPosition="above" class="me-2">
+                    <mat-icon>reply_all</mat-icon>
+                </button>
+                <button mat-mini-fab matTooltip="Cancelar" color="warn" matTooltipPosition="above" class="me-2">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <button mat-mini-fab matStepperNext color="primary" aria-label="Example icon button with a menu icon"
+                    matTooltip="Aprovar" matTooltipPosition="above">
+                    <mat-icon>done</mat-icon>
+                </button>
             </div>
         </form>
     </mat-step>
