@@ -139,3 +139,30 @@ html {
 .w-20px {
   width: 20px;
 }
+
+.success-snackbar {
+  background: #3d9f3d;
+  color: white;
+
+  .mat-simple-snackbar-action {
+    color: white !important;
+  }
+}
+
+.danger-snackbar {
+  background: #f44336;
+  color: white;
+
+  .mat-simple-snackbar-action {
+    color: white !important;
+  }
+}
+
+.warning-snackbar {
+  background: #ffc107;
+  color: black;
+
+  .mat-simple-snackbar-action {
+    color: black !important;
+  }
+}

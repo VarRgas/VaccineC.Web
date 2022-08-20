@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   public userEmail!: string;
   public userPassword!: string;
-  
+
   loginForm: FormGroup = this.formBuilder.group({
     email: [null, [Validators.required]],
     password: [null, [Validators.required]]
@@ -39,17 +39,29 @@ export class LoginComponent implements OnInit {
     this.loginDispatcherService.Login(login).subscribe(
       response => {
         console.log(response);
+        login.email = response.Email;
+        login.id = response.ID;
+        login.personId = response.PersonID;
+        login.personName = response.PersonName;
+
         this.snackBar.open("Logado com sucesso!", 'Ok', {
-          duration: 5000
+          horizontalPosition: 'right',
+          verticalPosition: 'bottom',
+          duration: 5000,
+          panelClass: ['success-snackbar']
         });
-        this.router.navigate(['/', 'home']);
+
+        this.router.navigateByUrl('/home', {
+          state: { login: login }
+        });
       },
       error => {
         console.log(error);
         this.snackBar.open('Usuário ou senha inválidos, verifique e tente novamente!', 'Ok', {
           horizontalPosition: 'center',
           verticalPosition: 'top',
-          duration: 5000
+          duration: 5000,
+          panelClass: ['danger-snackbar']
         });
         this.userEmail = '';
         this.userPassword = '';
