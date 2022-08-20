@@ -10,9 +10,10 @@ const baseURL = 'http://localhost:5000/api/Login';
 })
 
 export class LoginDispatcherService {
-    constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-    public Login(loginModel: LoginModel): Observable<any> {
-      return this.httpClient.post(baseURL, loginModel);
-    }
+  public Login(loginModel: LoginModel): Observable<any> {
+    return this.httpClient.post(baseURL, loginModel);
   }
+}
+
