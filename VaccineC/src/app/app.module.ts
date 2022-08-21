@@ -62,6 +62,9 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AplicacaoCadastroComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao-cadastro/aplicacao-cadastro.component';
 import { AplicacaoPesquisaComponent } from './pages/aplicacao/aplicacao-pesquisa/aplicacao-pesquisa.component';
 import { GlobalErrorDialog } from './shared/components/global-error-dialog/global-error-dialog.component';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -140,7 +143,10 @@ import { GlobalErrorDialog } from './shared/components/global-error-dialog/globa
     NgChartsModule,
     NgxMaskModule.forRoot()
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    { provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl() }
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
