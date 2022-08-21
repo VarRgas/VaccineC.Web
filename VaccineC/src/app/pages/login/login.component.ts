@@ -1,15 +1,17 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginModel } from 'src/app/models/login-model';
 import { LoginDispatcherService } from 'src/app/services/login-dispatcher.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
 
   public userEmail!: string;
@@ -25,6 +27,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router,
+    private errorHandler: ErrorHandlerService
   ) { }
 
   ngOnInit(): void {
@@ -57,12 +60,7 @@ export class LoginComponent implements OnInit {
       },
       error => {
         console.log(error);
-        this.snackBar.open('Usuário ou senha inválidos, verifique e tente novamente!', 'Ok', {
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          duration: 5000,
-          panelClass: ['danger-snackbar']
-        });
+        this.errorHandler.handleError(error);
         this.userEmail = '';
         this.userPassword = '';
       });

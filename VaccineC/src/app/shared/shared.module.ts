@@ -20,7 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FooterComponent,
     ContainerComponent,
     ConfirmModalComponent
-  ],
+    ],
   imports: [
     CommonModule,
     MatIconModule,
@@ -38,7 +38,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FooterComponent,
     ContainerComponent,
     ConfirmModalComponent
-  ],
+    ],
   bootstrap: [ConfirmModalComponent]
 })
 export class SharedModule { }

@@ -61,7 +61,7 @@ import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AplicacaoCadastroComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao-cadastro/aplicacao-cadastro.component';
 import { AplicacaoPesquisaComponent } from './pages/aplicacao/aplicacao-pesquisa/aplicacao-pesquisa.component';
-
+import { GlobalErrorDialog } from './shared/components/global-error-dialog/global-error-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -123,7 +123,8 @@ import { AplicacaoPesquisaComponent } from './pages/aplicacao/aplicacao-pesquisa
     AplicacaoCadastroComponent,
     AplicacaoPesquisaComponent,
     AplicationDialog,
-    BatchDialog
+    BatchDialog,
+    GlobalErrorDialog
   ],
   imports: [
     BrowserModule,
