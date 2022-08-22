@@ -64,6 +64,7 @@ import { AplicacaoPesquisaComponent } from './pages/aplicacao/aplicacao-pesquisa
 import { GlobalErrorDialog } from './shared/components/global-error-dialog/global-error-dialog.component';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
+import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
     MaterialExampleModule,
     ReactiveFormsModule,
     NgChartsModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    NgxLoadingButtonsModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
