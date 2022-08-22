@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IPaymentForm } from 'src/app/interfaces/i-payment-form';
 import { PaymentFormsService } from 'src/app/services/payment-form.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-formas-pagamento-pesquisa',
@@ -13,6 +14,8 @@ import { PaymentFormsService } from 'src/app/services/payment-form.service';
 })
 
 export class FormasPagamentoPesquisaComponent implements OnInit {
+
+  public searchNamePaymentForm!: string;
 
   public displayedColumns: string[] = ['Name', 'MaximumInstallments', 'Options'];
   public value = '';
@@ -23,24 +26,46 @@ export class FormasPagamentoPesquisaComponent implements OnInit {
 
   constructor(
     private paymentFormsService: PaymentFormsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private errorHandler: ErrorHandlerService
   ) { }
 
   ngOnInit(): void {
   }
 
   loadPaymentFormData() {
-    this.paymentFormsService.getAll().subscribe(
-      paymentForms => {
-        this.dataSource = new MatTableDataSource(paymentForms);
 
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    if (this.searchNamePaymentForm == "" || this.searchNamePaymentForm == null || this.searchNamePaymentForm == undefined) {
 
-        console.log(paymentForms);
-      },
-      error => {
-        console.log(error);
-      });
+      this.paymentFormsService.getAll().subscribe(
+        paymentForms => {
+          this.dataSource = new MatTableDataSource(paymentForms);
+
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+
+          console.log(paymentForms);
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
+
+    } else {
+
+      this.paymentFormsService.getByName(this.searchNamePaymentForm).subscribe(
+        resources => {
+          this.dataSource = new MatTableDataSource(resources);
+
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+
+          console.log(resources);
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
+    }
   }
 }

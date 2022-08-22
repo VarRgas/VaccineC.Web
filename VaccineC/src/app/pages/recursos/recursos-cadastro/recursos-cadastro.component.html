@@ -1,31 +1,29 @@
-<form>
+<form [formGroup]="resourceForm">
     <div class="registration-group">
         <div class="offset-sm-1 col-sm-11 p-0">
+
+            <mat-form-field [hidden]="true">
+                <input matInput #NameIdResource formControlName="IdResource" id="IdResource" [(ngModel)]="IdResource">
+            </mat-form-field>
 
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Recurso</mat-label>
-                    <input matInput #input maxlength="10" placeholder="Ex. Pessoas" id="name" required="true">
+                    <input matInput #NameInput formControlName="Name" maxlength="255" placeholder="Ex. Pessoas" id="name" required>
                 </mat-form-field>
             </div>
 
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>URL</mat-label>
-                    <input matInput #input maxlength="10" placeholder="Ex. https://vaccinec.com.br/pessoas" id="urlName"
+                    <input matInput #UrlNameInput formControlName="UrlName" maxlength="255" placeholder="Ex. https://vaccinec.com.br/pessoas" id="urlName"
                         required="true">
                 </mat-form-field>
-
-                <mat-form-field appearance="fill" class="col-sm-5 ml-0">
-                    <mat-label>Letra de Atalho</mat-label>
-                    <input matInput #input maxlength="1" id="shortcutLetter">
-                </mat-form-field>
-
             </div>
 
             <div class="div-row-input registration-button-row">
-                <button mat-raised-button class="create-button"><span class="fa-solid fa-floppy-disk me-1 w-20px"></span><span>Salvar</span></button>
-                <button mat-raised-button color="warn"><span class="fa-solid fa-trash me-1 w-20px"></span><span>Excluir</span></button>
+                <button mat-raised-button class="create-button" (click)="createResource()" type="submit"><span class="fa-solid fa-floppy-disk me-1 w-20px"></span><span>Salvar</span></button>
+                <button mat-raised-button color="warn" (click)="deleteResource()" type="submit"><span class="fa-solid fa-trash me-1 w-20px"></span><span>Excluir</span></button>
             </div>
 
         </div>

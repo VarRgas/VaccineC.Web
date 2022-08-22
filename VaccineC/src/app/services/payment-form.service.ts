@@ -16,9 +16,14 @@ export class PaymentFormsService {
         return this.httpClient.get(baseURL);
     }
 
-    getById(id: number): Observable<any> {
+    getById(id: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${id}`);
     }
+
+    getByName(name: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${name}/GetByName`);
+    }
+
     create(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }
@@ -27,7 +32,7 @@ export class PaymentFormsService {
         return this.httpClient.put(`${baseURL}/${id}/Update`, data);
     }
 
-    delete(id: number): Observable<any> {
+    delete(id: string): Observable<any> {
         return this.httpClient.delete(`${baseURL}/${id}/Delete`);
     }
 }

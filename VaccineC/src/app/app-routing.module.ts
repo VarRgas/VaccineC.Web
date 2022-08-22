@@ -25,6 +25,7 @@ import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
+import { RecursosCadastroComponent } from './pages/recursos/recursos-cadastro/recursos-cadastro.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },

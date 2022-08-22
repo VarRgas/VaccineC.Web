@@ -1,25 +1,29 @@
-<form>
+<form [formGroup]="paymentFormForm">
     <div class="registration-group">
         <div class="offset-sm-1 col-sm-11 p-0">
 
+            <mat-form-field [hidden]="true">
+                <input matInput #NameIdPaymentForm formControlName="IdPaymentForm" id="IdPaymentForm" [(ngModel)]="IdPaymentForm">
+            </mat-form-field>
+
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-11">
-                    <mat-label>Forma de pagamento</mat-label>
-                    <input matInput #input maxlength="10" placeholder="Ex. Cartão de Crédito" id="paymentForm"
-                        required="true">
+                    <mat-label>Forma de Pagamento</mat-label>
+                    <input matInput #NameInput formControlName="Name" maxlength="255" placeholder="Ex. Cartão de Crédito" id="name"
+                        required>
                 </mat-form-field>
             </div>
 
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Máximo de parcelas</mat-label>
-                    <input type="number" matInput #input maxlength="10" id="parcels" required="true">
+                    <input type="number" matInput #MaximumInstallmentsInput formControlName="MaximumInstallments" maxlength="10" id="maximumInstallments" required>
                 </mat-form-field>
             </div>
             
             <div class="div-row-input registration-button-row">
-                <button mat-raised-button class="create-button"><span class="fa-solid fa-floppy-disk me-1 w-20px"></span><span>Salvar</span></button>
-                <button mat-raised-button color="warn"><span class="fa-solid fa-trash me-1 w-20px"></span><span>Excluir</span></button>
+                <button mat-raised-button class="create-button" (click)="createPaymentForm()" type="submit"><span class="fa-solid fa-floppy-disk me-1 w-20px"></span><span>Salvar</span></button>
+                <button mat-raised-button color="warn" (click)="deletePaymentForm()" type="submit"><span class="fa-solid fa-trash me-1 w-20px"></span><span>Excluir</span></button>
             </div>
 
         </div>
