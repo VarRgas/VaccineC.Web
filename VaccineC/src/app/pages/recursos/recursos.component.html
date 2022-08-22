@@ -3,9 +3,9 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Recursos" containerPath="Gerencial">
-            <mat-tab-group>
+            <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
                 <mat-tab label="Pesquisa">
-                    <app-recursos-pesquisa></app-recursos-pesquisa>
+                    <app-recursos-pesquisa (changeIndex)="selected.setValue($event)"></app-recursos-pesquisa>
                 </mat-tab>
 
                 <mat-tab label="Cadastro">

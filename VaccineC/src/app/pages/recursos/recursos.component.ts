@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-recursos',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 
 export class RecursosComponent implements OnInit {
 
+  selected = new FormControl(0)
+  
   constructor() { }
 
   ngOnInit(): void {

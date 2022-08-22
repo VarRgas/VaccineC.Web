@@ -9,21 +9,29 @@
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Recurso</mat-label>
-                    <input matInput #NameInput formControlName="Name" maxlength="255" placeholder="Ex. Pessoas" id="name" required>
+                    <input matInput #NameInput formControlName="Name" maxlength="255" placeholder="Ex. Pessoas" id="name" [(ngModel)]="Name" required>
                 </mat-form-field>
             </div>
 
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>URL</mat-label>
-                    <input matInput #UrlNameInput formControlName="UrlName" maxlength="255" placeholder="Ex. https://vaccinec.com.br/pessoas" id="urlName"
-                        required="true">
+                    <input matInput #UrlNameInput formControlName="UrlName" maxlength="255" placeholder="Ex. https://vaccinec.com.br/pessoas" id="UrlName"
+                    [(ngModel)]="UrlName" required>
                 </mat-form-field>
             </div>
 
             <div class="div-row-input registration-button-row">
-                <button mat-raised-button class="create-button" (click)="createResource()" type="submit"><span class="fa-solid fa-floppy-disk me-1 w-20px"></span><span>Salvar</span></button>
-                <button mat-raised-button color="warn" (click)="deleteResource()" type="submit"><span class="fa-solid fa-trash me-1 w-20px"></span><span>Excluir</span></button>
+                
+                <button mat-raised-button class="create-button" (click)="createUpdateResource()" type="submit">
+                    <span class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                    <span>Salvar</span>
+                </button>
+                
+                <button mat-raised-button color="warn" (click)="deleteResource()" type="submit">
+                    <span class="fa-solid fa-trash me-1 w-20px"></span>
+                    <span>Excluir</span>
+                </button>
             </div>
 
         </div>

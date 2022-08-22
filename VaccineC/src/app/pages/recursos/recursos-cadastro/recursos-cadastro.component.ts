@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourcesService } from 'src/app/services/resources.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MatDialog } from '@angular/material/dialog';
+import { ResourceModel } from 'src/app/models/resource-model';
 
 @Component({
   selector: 'app-recursos-cadastro',
@@ -13,6 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class RecursosCadastroComponent implements OnInit {
 
   public IdResource!: string;
+  public Name!: string;
+  public UrlName!: string;
 
   resourceForm: FormGroup = this.formBuilder.group({
     IdResource: [null],
@@ -29,6 +32,15 @@ export class RecursosCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  createUpdateResource(): void {
+
+    if (this.IdResource == "" || this.IdResource == null || this.IdResource == undefined) {
+      this.createResource();
+    } else {
+      this.updateResource();
+    }
   }
 
   createResource(): void {
@@ -53,10 +65,43 @@ export class RecursosCadastroComponent implements OnInit {
             panelClass: ['success-snackbar']
           });
           this.IdResource = response;
+
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
+
+        });
+  }
+
+  updateResource(): void {
+
+    let resource = new ResourceModel();
+    resource.id = this.IdResource;
+    resource.name = this.Name;
+    resource.urlName = this.UrlName;
+
+    if (!this.resourceForm.valid) {
+      console.log(this.resourceForm);
+      return;
+    }
+
+    this.resourcesService.update(this.IdResource, resource)
+      .subscribe(
+        response => {
+          console.log(response);
+          this.snackBar.open("Recurso alterado com sucesso!", 'Ok', {
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          });
+          this.IdResource = response;
+
+        },
+        error => {
+          this.errorHandler.handleError(error);
+          console.log(error);
         });
   }
 

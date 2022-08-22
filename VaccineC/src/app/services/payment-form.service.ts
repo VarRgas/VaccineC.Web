@@ -28,7 +28,7 @@ export class PaymentFormsService {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }
 
-    update(id: number, data: object): Observable<any> {
+    update(id: string, data: object): Observable<any> {
         return this.httpClient.put(`${baseURL}/${id}/Update`, data);
     }
 

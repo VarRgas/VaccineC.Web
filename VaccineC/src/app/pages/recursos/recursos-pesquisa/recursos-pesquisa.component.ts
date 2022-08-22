@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,10 +14,15 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 })
 export class RecursosPesquisaComponent implements OnInit {
 
+  loading = false;
+  @Output() changeIndex = new EventEmitter();
+
   public searchNameResource!: string;
 
+  show: boolean = true;
+
   public value = '';
-  public displayedColumns: string[] = ['Name', 'UrlName', 'Options'];
+  public displayedColumns: string[] = ['Name', 'UrlName', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IResource>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -31,7 +36,17 @@ export class RecursosPesquisaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public addNewResource() {
+    this.changeIndex.emit(1);
+  }
+
+  public updateResource() {
+    this.changeIndex.emit(1);
+  }
+
   loadResourceData() {
+
+    this.loading = true;
 
     if (this.searchNameResource == "" || this.searchNameResource == null || this.searchNameResource == undefined) {
 
@@ -43,10 +58,14 @@ export class RecursosPesquisaComponent implements OnInit {
           this.dataSource.sort = this.sort;
 
           console.log(resources);
+
+          this.loading = false;
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
+
+          this.loading = false;
         });
 
     } else {
@@ -59,10 +78,13 @@ export class RecursosPesquisaComponent implements OnInit {
           this.dataSource.sort = this.sort;
 
           console.log(resources);
+
+          this.loading = false;
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
+          this.loading = false;
         });
     }
 

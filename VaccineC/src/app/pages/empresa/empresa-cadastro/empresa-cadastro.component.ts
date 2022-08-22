@@ -1,7 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { tap, startWith, debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class Service {
+  constructor(private http: HttpClient) { }
+
+  opts = [];
+
+  getData() {
+    return this.opts.length ?
+      of(this.opts) :
+      this.http.get<any>('http://localhost:5000/api/Resources').pipe(tap(data => this.opts = data))
+    }
+}
+
 
 @Component({
   selector: 'app-empresa-cadastro',
@@ -10,22 +27,32 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class EmpresaCadastroComponent implements OnInit {
 
-  myControl = new FormControl('');
-  options: string[] = ['EMPRESA 1 LTDA', 'EMPRESA 2 LTDA', 'EMPRESA 3 LTDA'];
-  filteredOptions: Observable<string[]> | undefined;
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<any[]> | undefined;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private service: Service) {
     this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+     startWith(''),
+     debounceTime(400),
+     distinctUntilChanged(),
+     switchMap(val => {
+           return this.filter(val || '')
+      }) 
+   )
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+ ngOnInit() {
+  
+ }
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
+ filter(val: string): Observable<any[]> {
+   // call the service which makes the http-request
+   return this.service.getData()
+    .pipe(
+      map(response => response.filter((option: { Name: string; }) => { 
+        return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
+      }))
+    )
+  }  
 }
