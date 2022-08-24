@@ -16,7 +16,7 @@ export class Service {
     return this.opts.length ?
       of(this.opts) :
       this.http.get<any>('http://localhost:5000/api/Resources').pipe(tap(data => this.opts = data))
-    }
+  }
 }
 
 
@@ -31,28 +31,32 @@ export class EmpresaCadastroComponent implements OnInit {
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
-  constructor(private service: Service) {
+  constructor(
+    private service: Service
+  ) { }
+
+  searchPersonByAutoComplete() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
-     startWith(''),
-     debounceTime(400),
-     distinctUntilChanged(),
-     switchMap(val => {
-           return this.filter(val || '')
-      }) 
-   )
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filter(val || '')
+      })
+    )
   }
 
- ngOnInit() {
-  
- }
+  ngOnInit() {
 
- filter(val: string): Observable<any[]> {
-   // call the service which makes the http-request
-   return this.service.getData()
-    .pipe(
-      map(response => response.filter((option: { Name: string; }) => { 
-        return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
-      }))
-    )
-  }  
+  }
+
+  filter(val: string): Observable<any[]> {
+    // call the service which makes the http-request
+    return this.service.getData()
+      .pipe(
+        map(response => response.filter((option: { Name: string; }) => {
+          return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
+        }))
+      )
+  }
 }

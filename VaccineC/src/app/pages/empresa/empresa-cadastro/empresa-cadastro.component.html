@@ -4,7 +4,7 @@
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Pessoa</mat-label>
-                    <input type="text" id="personId" placeholder="Selecione a Pessoa Jurídica" aria-label="Number"
+                    <input (click)="searchPersonByAutoComplete()" type="text" id="personId" placeholder="Selecione a Pessoa Jurídica" aria-label="Number"
                         matInput [formControl]="myControl" [matAutocomplete]="auto" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptions | async" [value]="option.Name">

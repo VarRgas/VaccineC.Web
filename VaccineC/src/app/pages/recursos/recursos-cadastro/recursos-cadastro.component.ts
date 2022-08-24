@@ -114,6 +114,8 @@ export class RecursosCadastroComponent implements OnInit {
         this.resourcesService.delete(this.IdResource).subscribe(
           success => {
             this.resourceForm.reset();
+            this.resourceForm.clearValidators();
+            this.resourceForm.updateValueAndValidity();
 
             this.snackBar.open("Recurso removido com sucesso!", 'Ok!', {
               horizontalPosition: 'right',

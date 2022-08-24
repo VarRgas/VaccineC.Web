@@ -112,6 +112,8 @@ export class FormasPagamentoCadastroComponent implements OnInit {
         this.paymentFormService.delete(this.IdPaymentForm).subscribe(
           success => {
             this.paymentFormForm.reset();
+            this.paymentFormForm.clearValidators();
+            this.paymentFormForm.updateValueAndValidity();
 
             this.snackBar.open("Forma de Pagamento removida com sucesso!", 'Ok!', {
               horizontalPosition: 'right',

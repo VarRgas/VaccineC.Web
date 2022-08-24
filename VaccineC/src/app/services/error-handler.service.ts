@@ -65,8 +65,8 @@ export class ErrorHandlerService {
 
     private createErrorMessage = (error: HttpErrorResponse) => {
         this.snackBar.open(this.errorMessage, 'Ok', {
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
             duration: 8000,
             panelClass: ['danger-snackbar']
         });
