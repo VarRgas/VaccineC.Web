@@ -8,7 +8,12 @@
             </button>
         </mat-form-field>
 
-        <button (click)="loadPaymentFormData()" id="mat-search-button" mat-raised-button color="primary" class="mat-button-entry me-2" [disabled]="loading">
+        <button (click)="loadPaymentFormData()"
+                id="mat-search-button"
+                mat-raised-button
+                color="primary"
+                class="mat-button-entry me-2"
+                [disabled]="loading">
             <div class="spinner">
                 <mat-spinner *ngIf="loading" [diameter]="15"></mat-spinner>
                 <span *ngIf="!loading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
@@ -16,7 +21,12 @@
             </div>
         </button>
 
-        <button id="mat-add-button" mat-raised-button class="mat-button-entry create-button" matTooltip="Nova Forma Pagamento" matTooltipPosition="above" (click)="addNewPaymentForm()">
+        <button id="mat-add-button"
+                mat-raised-button
+                class="mat-button-entry create-button"
+                matTooltip="Nova Forma Pagamento"
+                matTooltipPosition="above"
+                (click)="addNewPaymentForm()">
             <span class="fa-solid fa-plus w-20px"></span>
         </button>
     </div>

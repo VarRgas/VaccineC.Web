@@ -34,60 +34,63 @@ export class RecursosPesquisaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadResourceData();
   }
 
-  public addNewResource() {
+  public addNewResource(): void {
     this.changeIndex.emit(1);
   }
 
-  public updateResource() {
+  public updateResource(): void {
     this.changeIndex.emit(1);
   }
 
-  loadResourceData() {
-
+  public loadResourceData(): void {
     this.loading = true;
 
-    if (this.searchNameResource == "" || this.searchNameResource == null || this.searchNameResource == undefined) {
+    if (this.searchNameResource == "" || !this.searchNameResource)
+      this.getAllResources();
+    else
+      this.getResourceByName();
+  }
 
-      this.resourcesService.getAll().subscribe(
-        resources => {
-          this.dataSource = new MatTableDataSource(resources);
+  public getAllResources(): void {
+    this.resourcesService.getAll()
+      .subscribe(resources => {
+        this.dataSource = new MatTableDataSource(resources);
 
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-          console.log(resources);
+        console.log(resources);
 
-          this.loading = false;
-        },
+        this.loading = false;
+      },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
 
           this.loading = false;
         });
+  }
 
-    } else {
+  public getResourceByName(): void {
+    this.resourcesService.getByName(this.searchNameResource)
+      .subscribe(resources => {
+        this.dataSource = new MatTableDataSource(resources);
 
-      this.resourcesService.getByName(this.searchNameResource).subscribe(
-        resources => {
-          this.dataSource = new MatTableDataSource(resources);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+        console.log(resources);
 
-          console.log(resources);
-
-          this.loading = false;
-        },
+        this.loading = false;
+      },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
           this.loading = false;
         });
-    }
-
   }
 
 }

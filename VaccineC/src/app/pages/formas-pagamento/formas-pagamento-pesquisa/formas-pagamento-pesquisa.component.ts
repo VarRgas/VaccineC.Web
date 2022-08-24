@@ -4,8 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IPaymentForm } from 'src/app/interfaces/i-payment-form';
-import { PaymentFormsService } from 'src/app/services/payment-form.service';
+import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import FormasPagamentoCadastroComponent from '../formas-pagamento-cadastro/formas-pagamento-cadastro.component';
 
 @Component({
   selector: 'app-formas-pagamento-pesquisa',
@@ -15,45 +16,65 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 export class FormasPagamentoPesquisaComponent implements OnInit {
 
-  loading = false;
-
-  @Output() changeIndex = new EventEmitter();
-
-  show: boolean = true;
-
+  public loading = false;
+  public show: boolean = true;
   public searchNamePaymentForm!: string;
-
   public displayedColumns: string[] = ['Name', 'MaximumInstallments', 'Options', 'ID'];
   public value = '';
   public dataSource = new MatTableDataSource<IPaymentForm>();
 
+  @Output() changeIndex = new EventEmitter();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(FormasPagamentoCadastroComponent, { static: true }) paymentFormRegisterComponent!: FormasPagamentoCadastroComponent;
 
   constructor(
-    private paymentFormsService: PaymentFormsService,
+    private paymentFormsDispatcherService: PaymentFormsDispatcherService,
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandlerService
   ) { }
 
   ngOnInit(): void {
+    this.loadPaymentFormData();
   }
 
   public addNewPaymentForm() {
     this.changeIndex.emit(1);
+    this.paymentFormRegisterComponent.resetFields();
   }
 
   public updatePaymentForm() {
     this.changeIndex.emit(1);
   }
 
-  loadPaymentFormData() {
-
+  public loadPaymentFormData(): void {
     this.loading = true;
 
-    if (this.searchNamePaymentForm == "" || this.searchNamePaymentForm == null || this.searchNamePaymentForm == undefined) {
+    if (this.searchNamePaymentForm == "" || !this.searchNamePaymentForm)
+      this.getAllPaymentForms();
+    else
+      this.getPaymentFormByName();
+  }
 
-      this.paymentFormsService.getAll().subscribe(
+  public getPaymentFormByName(): void {
+    this.paymentFormsDispatcherService.getByName(this.searchNamePaymentForm)
+      .subscribe(resources => {
+        this.dataSource = new MatTableDataSource(resources);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        console.log(resources);
+        this.loading = false;
+      }, error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.loading = false;
+      });
+  }
+
+  public getAllPaymentForms(): void {
+    this.paymentFormsDispatcherService.getAll()
+      .subscribe(
         paymentForms => {
           this.dataSource = new MatTableDataSource(paymentForms);
 
@@ -68,24 +89,5 @@ export class FormasPagamentoPesquisaComponent implements OnInit {
           this.errorHandler.handleError(error);
           this.loading = false;
         });
-
-    } else {
-
-      this.paymentFormsService.getByName(this.searchNamePaymentForm).subscribe(
-        resources => {
-          this.dataSource = new MatTableDataSource(resources);
-
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-
-          console.log(resources);
-          this.loading = false;
-        },
-        error => {
-          console.log(error);
-          this.errorHandler.handleError(error);
-          this.loading = false;
-        });
-    }
   }
 }
