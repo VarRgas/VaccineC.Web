@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,7 +11,7 @@ import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-di
   templateUrl: './formas-pagamento-cadastro.component.html',
   styleUrls: ['./formas-pagamento-cadastro.component.scss']
 })
-export default class FormasPagamentoCadastroComponent implements OnInit {
+export class FormasPagamentoCadastroComponent implements OnInit {
 
   public IdPaymentForm!: string;
   public Name!: string;
@@ -32,16 +32,20 @@ export default class FormasPagamentoCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
   }
 
   public createUpdatePaymentForm(): void {
-    if (this.IdPaymentForm == "" || !this.IdPaymentForm == null)
+
+    if (this.IdPaymentForm == "" || this.IdPaymentForm == null || this.IdPaymentForm == undefined) {
       this.createPaymentForm();
-    else
+    } else {
       this.updatePaymentForm();
+    }
   }
 
   public createPaymentForm(): void {
+
     if (!this.paymentFormForm.valid) {
       console.log(this.paymentFormForm);
       return;
@@ -52,16 +56,17 @@ export default class FormasPagamentoCadastroComponent implements OnInit {
     console.log(data);
 
     this.paymentFormDispatcherService.create(data)
-      .subscribe(response => {
-        console.log(response);
-        this.snackBar.open("Forma de Pagamento criada com sucesso!", 'Ok', {
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          duration: 5000,
-          panelClass: ['success-snackbar']
-        });
-        this.IdPaymentForm = response;
-      },
+      .subscribe(
+        response => {
+          console.log(response);
+          this.snackBar.open("Forma de Pagamento criada com sucesso!", 'Ok', {
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          });
+          this.IdPaymentForm = response;
+        },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
@@ -81,23 +86,26 @@ export default class FormasPagamentoCadastroComponent implements OnInit {
     }
 
     this.paymentFormDispatcherService.update(this.IdPaymentForm, paymentForm)
-      .subscribe(response => {
-        console.log(response);
-        this.snackBar.open("Forma de Pagamento alterada com sucesso!", 'Ok', {
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          duration: 5000,
-          panelClass: ['success-snackbar']
-        });
-        this.IdPaymentForm = response;
+      .subscribe(
+        response => {
+          console.log(response);
+          this.snackBar.open("Forma de Pagamento alterada com sucesso!", 'Ok', {
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          });
+          this.IdPaymentForm = response;
 
-      }, error => {
-        this.errorHandler.handleError(error);
-        console.log(error);
-      });
+        },
+        error => {
+          this.errorHandler.handleError(error);
+          console.log(error);
+        });
   }
 
   public deletePaymentForm(): void {
+
     const dialogRef = this.dialog.open(ConfirmPaymentFormRemoveDialog);
 
     dialogRef.afterClosed().subscribe(result => {
@@ -122,12 +130,6 @@ export default class FormasPagamentoCadastroComponent implements OnInit {
       }
     });
 
-  }
-
-  public resetFields(): void {
-    this.Name = " ";
-    this.MaximumInstallments = 0;
-    console.log("resetou os campos");
   }
 
 }

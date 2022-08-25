@@ -6,8 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IPaymentForm } from 'src/app/interfaces/i-payment-form';
 import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
-import FormasPagamentoCadastroComponent from '../formas-pagamento-cadastro/formas-pagamento-cadastro.component';
-
 @Component({
   selector: 'app-formas-pagamento-pesquisa',
   templateUrl: './formas-pagamento-pesquisa.component.html',
@@ -26,7 +24,6 @@ export class FormasPagamentoPesquisaComponent implements OnInit {
   @Output() changeIndex = new EventEmitter();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(FormasPagamentoCadastroComponent, { static: true }) paymentFormRegisterComponent!: FormasPagamentoCadastroComponent;
 
   constructor(
     private paymentFormsDispatcherService: PaymentFormsDispatcherService,
@@ -40,7 +37,6 @@ export class FormasPagamentoPesquisaComponent implements OnInit {
 
   public addNewPaymentForm() {
     this.changeIndex.emit(1);
-    this.paymentFormRegisterComponent.resetFields();
   }
 
   public updatePaymentForm() {
@@ -50,7 +46,7 @@ export class FormasPagamentoPesquisaComponent implements OnInit {
   public loadPaymentFormData(): void {
     this.loading = true;
 
-    if (this.searchNamePaymentForm == "" || !this.searchNamePaymentForm)
+    if (this.searchNamePaymentForm == "" || this.searchNamePaymentForm == null || this.searchNamePaymentForm == undefined)
       this.getAllPaymentForms();
     else
       this.getPaymentFormByName();

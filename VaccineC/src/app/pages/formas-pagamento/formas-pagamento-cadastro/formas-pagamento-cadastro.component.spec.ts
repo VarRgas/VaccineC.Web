@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import FormasPagamentoCadastroComponent from './formas-pagamento-cadastro.component';
+import { FormasPagamentoCadastroComponent } from './formas-pagamento-cadastro.component';
 
 describe('FormasPagamentoCadastroComponent', () => {
   let component: FormasPagamentoCadastroComponent;

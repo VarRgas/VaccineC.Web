@@ -34,7 +34,6 @@ import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento
 import { PessoasTelefonesComponent } from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
 import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
 import { FormasPagamentoPesquisaComponent } from './pages/formas-pagamento/formas-pagamento-pesquisa/formas-pagamento-pesquisa.component';
-import FormasPagamentoCadastroComponent, { ConfirmPaymentFormRemoveDialog } from './pages/formas-pagamento/formas-pagamento-cadastro/formas-pagamento-cadastro.component';
 import { RecursosPesquisaComponent } from './pages/recursos/recursos-pesquisa/recursos-pesquisa.component';
 import { RecursosCadastroComponent, ConfirmResourceRemoveDialog } from './pages/recursos/recursos-cadastro/recursos-cadastro.component';
 import { EmpresaCadastroComponent } from './pages/empresa/empresa-cadastro/empresa-cadastro.component';
@@ -65,6 +64,7 @@ import { GlobalErrorDialog } from './shared/components/global-error-dialog/globa
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
 import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
+import { ConfirmPaymentFormRemoveDialog, FormasPagamentoCadastroComponent } from './pages/formas-pagamento/formas-pagamento-cadastro/formas-pagamento-cadastro.component';
 
 @NgModule({
   declarations: [
