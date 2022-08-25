@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IPaymentForm } from 'src/app/interfaces/i-payment-form';
 import { PaymentFormModel } from 'src/app/models/payment-form-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
-import { PaymentFormsService } from 'src/app/services/payment-form.service';
+import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 
 @Component({
   selector: 'app-formas-pagamento',
@@ -45,11 +45,10 @@ export class FormasPagamentoComponent implements OnInit {
   });
 
   constructor(
-    private paymentFormsService: PaymentFormsService,
+    private paymentFormsService: PaymentFormsDispatcherService,
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandlerService,
     private formBuilder: FormBuilder,
-    private paymentFormService: PaymentFormsService,
     private dialog: MatDialog,
   ) { }
 
@@ -125,7 +124,7 @@ export class FormasPagamentoComponent implements OnInit {
     data.HasPending = false;
     console.log(data);
 
-    this.paymentFormService.create(data)
+    this.paymentFormsService.create(data)
       .subscribe(
         response => {
           console.log(response);
@@ -156,7 +155,7 @@ export class FormasPagamentoComponent implements OnInit {
       return;
     }
 
-    this.paymentFormService.update(this.IdPaymentForm, paymentForm)
+    this.paymentFormsService.update(this.IdPaymentForm, paymentForm)
       .subscribe(
         response => {
           console.log(response);
@@ -181,7 +180,7 @@ export class FormasPagamentoComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!!result) {
-        this.paymentFormService.delete(this.IdPaymentForm).subscribe(
+        this.paymentFormsService.delete(this.IdPaymentForm).subscribe(
           success => {
             this.paymentFormForm.reset();
             this.paymentFormForm.clearValidators();
@@ -207,7 +206,7 @@ export class FormasPagamentoComponent implements OnInit {
 
   editPaymentForm(id: string): void {
 
-    this.paymentFormService.getById(id).subscribe(
+    this.paymentFormsService.getById(id).subscribe(
       paymentForm => {
 
         this.IdPaymentForm = paymentForm.ID;

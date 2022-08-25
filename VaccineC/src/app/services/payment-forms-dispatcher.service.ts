@@ -8,7 +8,7 @@ const baseURL = 'http://localhost:5000/api/PaymentForms';
     providedIn: 'root'
 })
 
-export class PaymentFormsService {
+export class PaymentFormsDispatcherService {
 
     constructor(private httpClient: HttpClient) { }
 
