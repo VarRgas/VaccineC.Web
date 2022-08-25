@@ -1,0 +1,50 @@
+.search-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 2rem;
+}
+
+
+.search-table-content {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+:host ::ng-deep .search-group .mat-form-field-wrapper {
+    padding: 0px;
+}
+
+.mat-button-entry {
+    margin-bottom: 0px !important;
+    align-self: center !important;
+}
+
+
+.spinner-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-container {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 0px !important;
+    align-self: center !important;
+}
+
+.spinner {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}

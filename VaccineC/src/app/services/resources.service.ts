@@ -16,7 +16,7 @@ export class ResourcesService {
         return this.httpClient.get(baseURL);
     }
 
-    getById(id: number): Observable<any> {
+    getById(id: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${id}`);
     }
 
