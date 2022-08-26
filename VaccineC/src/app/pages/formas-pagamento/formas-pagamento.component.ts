@@ -118,6 +118,15 @@ export class FormasPagamentoComponent implements OnInit {
     if (!this.paymentFormForm.valid) {
       console.log(this.paymentFormForm);
       this.createButtonLoading = false;
+
+      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
+        horizontalPosition: 'right',
+        verticalPosition: 'bottom',
+        duration: 5000,
+        panelClass: ['warning-snackbar']
+      });
+      this.paymentFormForm.markAllAsTouched();
+
       return;
     }
 
@@ -156,6 +165,15 @@ export class FormasPagamentoComponent implements OnInit {
     if (!this.paymentFormForm.valid) {
       console.log(this.paymentFormForm);
       this.createButtonLoading = false;
+
+      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
+        horizontalPosition: 'right',
+        verticalPosition: 'bottom',
+        duration: 5000,
+        panelClass: ['warning-snackbar']
+      });
+      this.paymentFormForm.markAllAsTouched();
+
       return;
     }
 

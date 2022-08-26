@@ -121,6 +121,17 @@ export class RecursosComponent implements OnInit {
 
     if (!this.resourceForm.valid) {
       console.log(this.resourceForm);
+
+      this.createButtonLoading = false;
+
+      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
+        horizontalPosition: 'right',
+        verticalPosition: 'bottom',
+        duration: 5000,
+        panelClass: ['warning-snackbar']
+      });
+      this.resourceForm.markAllAsTouched();
+
       return;
     }
 
@@ -158,6 +169,17 @@ export class RecursosComponent implements OnInit {
 
     if (!this.resourceForm.valid) {
       console.log(this.resourceForm);
+
+      this.createButtonLoading = false;
+      
+      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
+        horizontalPosition: 'right',
+        verticalPosition: 'bottom',
+        duration: 5000,
+        panelClass: ['warning-snackbar']
+      });
+      this.resourceForm.markAllAsTouched();
+
       return;
     }
 
