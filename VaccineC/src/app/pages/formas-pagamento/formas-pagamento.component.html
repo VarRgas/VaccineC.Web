@@ -3,7 +3,7 @@
   <div id="content-wrapper" class="d-flex flex-column">
     <app-toolbar></app-toolbar>
     <app-container containerTitle="Formas Pagamento" containerPath="Cadastros">
-     
+
       <mat-tab-group #tabGroup>
 
         <!-- TAB PESQUISA -->
@@ -19,16 +19,17 @@
               </mat-form-field>
 
               <button (click)="loadPaymentFormData()" id="mat-search-button" mat-raised-button color="primary"
-                class="mat-button-entry me-2" [disabled]="loading">
+                class="mat-button-entry me-2" [disabled]="searchButtonLoading">
                 <div class="spinner">
-                  <mat-spinner *ngIf="loading" [diameter]="15"></mat-spinner>
-                  <span *ngIf="!loading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
+                  <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
+                  <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
                   Pesquisar
                 </div>
               </button>
 
-              <button id="mat-add-button" (click)="tabGroup.selectedIndex=1" (click)="addNewPaymentForm()" mat-raised-button class="mat-button-entry create-button"
-                matTooltip="Nova Forma Pagamento" matTooltipPosition="above">
+              <button id="mat-add-button" (click)="tabGroup.selectedIndex=1" (click)="addNewPaymentForm()"
+                mat-raised-button class="mat-button-entry create-button" matTooltip="Nova Forma Pagamento"
+                matTooltipPosition="above">
                 <span class="fa-solid fa-plus w-20px"></span>
               </button>
             </div>
@@ -60,8 +61,8 @@
                 <ng-container matColumnDef="Options">
                   <th mat-header-cell *matHeaderCellDef> </th>
                   <td mat-cell *matCellDef="let row">
-                    <button mat-icon-button color="primary" title="Visualizar"><i
-                        class="fa-solid fa-pen-to-square" (click)="tabGroup.selectedIndex=1" (click)="editPaymentForm(row.ID)"></i></button>
+                    <button mat-icon-button color="primary" title="Visualizar"><i class="fa-solid fa-pen-to-square"
+                        (click)="tabGroup.selectedIndex=1" (click)="editPaymentForm(row.ID)"></i></button>
 
                   </td>
                 </ng-container>
@@ -75,7 +76,7 @@
                 </tr>
               </table>
 
-              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+              <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
             </div>
           </div>
         </mat-tab>
@@ -96,6 +97,13 @@
                     <mat-label>Forma de Pagamento</mat-label>
                     <input matInput #NameInput formControlName="Name" maxlength="255"
                       placeholder="Ex. Cartão de Crédito" id="name" [(ngModel)]="Name" required>
+                    <mat-hint align="end">{{NameInput.value?.length || 0}}/255</mat-hint>
+                    <mat-error *ngIf="paymentFormForm.controls.Name.touched && paymentFormForm.controls.Name.invalid">
+                      <span *ngIf="paymentFormForm.controls.Name.errors?.required">A Forma de Pagamento é
+                        obrigatória.</span>
+                      <span *ngIf="paymentFormForm.controls.Name.errors?.maxlength">A Forma de Pagamento deve ter menos
+                        de 255 caracteres.</span>
+                    </mat-error>
                   </mat-form-field>
                 </div>
 
@@ -104,14 +112,29 @@
                     <mat-label>Máximo de parcelas</mat-label>
                     <input type="number" matInput #MaximumInstallmentsInput formControlName="MaximumInstallments"
                       maxlength="10" id="maximumInstallments" [(ngModel)]="MaximumInstallments" required>
+                    <mat-error
+                      *ngIf="paymentFormForm.controls.MaximumInstallments.touched && paymentFormForm.controls.MaximumInstallments.invalid">
+                      <span *ngIf="paymentFormForm.controls.MaximumInstallments.errors?.required">O Máximo de Parcelas é
+                        obrigatório.</span>
+                    </mat-error>
                   </mat-form-field>
                 </div>
 
-                <div class="div-row-input registration-button-row">
-                  <button mat-raised-button class="create-button" (click)="createUpdatePaymentForm()"
-                    type="button"><span class="fa-solid fa-floppy-disk me-1 w-20px"></span><span>Salvar</span></button>
-                  <button mat-raised-button color="warn" (click)="deletePaymentForm()" type="button"><span
-                      class="fa-solid fa-trash me-1 w-20px"></span><span>Excluir</span></button>
+                <div class="div-row-input registration-button-row d-flex">
+                  <button mat-raised-button class="create-button" (click)="createUpdatePaymentForm()" type="button"
+                    [disabled]="createButtonLoading">
+                    <div class="spinner">
+                      <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
+                      <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                      Salvar
+                    </div>
+                  </button>
+
+                  <button mat-raised-button color="warn" (click)="deletePaymentForm()" type="button"
+                    [disabled]="!IdPaymentForm">
+                    <span class="fa-solid fa-trash me-1 w-20px"></span>
+                    <span>Excluir</span>
+                  </button>
                 </div>
 
               </div>
@@ -120,7 +143,7 @@
         </mat-tab>
 
       </mat-tab-group>
-      
+
     </app-container>
   </div>
 </div>

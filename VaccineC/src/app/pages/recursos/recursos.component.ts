@@ -19,7 +19,8 @@ import { ResourcesService } from 'src/app/services/resources.service';
 export class RecursosComponent implements OnInit {
 
   //Controle para o spinner do button
-  loading = false;
+  searchButtonLoading = false;
+  createButtonLoading = false;
 
   //Controle de exibição dos IDs na Table
   show: boolean = true;
@@ -59,7 +60,7 @@ export class RecursosComponent implements OnInit {
 
   loadResourceData() {
 
-    this.loading = true;
+    this.searchButtonLoading = true;
 
     if (this.searchNameResource == "" || this.searchNameResource == null || this.searchNameResource == undefined) {
       this.getAllResources();
@@ -74,18 +75,17 @@ export class RecursosComponent implements OnInit {
     this.resourcesService.getAll().subscribe(
       resources => {
         this.dataSource = new MatTableDataSource(resources);
-
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         console.log(resources);
+        this.searchButtonLoading = false;
       },
       error => {
         console.log(error);
         this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
       });
 
-    this.loading = false;
   }
 
   getResourcesByName(): void {
@@ -93,21 +93,22 @@ export class RecursosComponent implements OnInit {
     this.resourcesService.getByName(this.searchNameResource).subscribe(
       resources => {
         this.dataSource = new MatTableDataSource(resources);
-
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         console.log(resources);
+        this.searchButtonLoading = false;
       },
       error => {
         console.log(error);
         this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
       });
 
-    this.loading = false;
   }
 
   createUpdateResource(): void {
+
+    this.createButtonLoading = true;
 
     if (this.IdResource == "" || this.IdResource == null || this.IdResource == undefined) {
       this.createResource();
@@ -138,12 +139,13 @@ export class RecursosComponent implements OnInit {
             panelClass: ['success-snackbar']
           });
           this.IdResource = response;
+          this.createButtonLoading = false;
           this.getAllResources();
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
-
+          this.createButtonLoading = false;
         });
   }
 
@@ -170,11 +172,13 @@ export class RecursosComponent implements OnInit {
             panelClass: ['success-snackbar']
           });
           this.IdResource = response;
+          this.createButtonLoading = false;
           this.getAllResources();
         },
         error => {
           this.errorHandler.handleError(error);
           console.log(error);
+          this.createButtonLoading = false;
         });
   }
 
@@ -196,7 +200,6 @@ export class RecursosComponent implements OnInit {
               duration: 5000,
               panelClass: ['success-snackbar']
             });
-
             this.getAllResources();
           },
           error => {

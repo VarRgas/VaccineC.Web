@@ -36,7 +36,7 @@ export class ErrorHandlerService {
     }
 
     private handle0Error = (error: HttpErrorResponse) => {
-        this.errorMessage = error.statusText;
+        this.errorMessage = "Não foi possível conectar-se ao servidor."
         this.createErrorMessage(error);
     }
 
@@ -54,7 +54,7 @@ export class ErrorHandlerService {
     }
 
     private handle500Error = (error: HttpErrorResponse) => {
-        this.errorMessage = "Ocorreu um erro inesperado! Por favor, tente novamente em alguns instantes."
+        this.errorMessage = "Ocorreu um erro inesperado!"
         this.createErrorMessage(error);
     }
 

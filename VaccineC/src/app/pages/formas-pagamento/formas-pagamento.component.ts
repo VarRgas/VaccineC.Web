@@ -18,7 +18,8 @@ import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-di
 export class FormasPagamentoComponent implements OnInit {
 
   //Controle para o spinner do button
-  loading = false;
+  searchButtonLoading = false;
+  createButtonLoading = false;
 
   //Controle de exibição dos IDs na Table
   show: boolean = true;
@@ -58,7 +59,7 @@ export class FormasPagamentoComponent implements OnInit {
 
   loadPaymentFormData() {
 
-    this.loading = true;
+    this.searchButtonLoading = true;
 
     if (this.searchNamePaymentForm == "" || this.searchNamePaymentForm == null || this.searchNamePaymentForm == undefined) {
       this.getAllPaymentForms();
@@ -68,6 +69,8 @@ export class FormasPagamentoComponent implements OnInit {
   }
 
   createUpdatePaymentForm(): void {
+
+    this.createButtonLoading = true;
 
     if (this.IdPaymentForm == "" || this.IdPaymentForm == null || this.IdPaymentForm == undefined) {
       this.createPaymentForm();
@@ -83,15 +86,14 @@ export class FormasPagamentoComponent implements OnInit {
         this.dataSource = new MatTableDataSource(paymentForms);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
+        this.searchButtonLoading = false;
         console.log(paymentForms);
       },
       error => {
         console.log(error);
         this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
       });
-
-    this.loading = false;
   }
 
   getPaymentFormsByName(): void {
@@ -99,24 +101,23 @@ export class FormasPagamentoComponent implements OnInit {
     this.paymentFormsService.getByName(this.searchNamePaymentForm).subscribe(
       resources => {
         this.dataSource = new MatTableDataSource(resources);
-
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
+        this.searchButtonLoading = false;
         console.log(resources);
       },
       error => {
         console.log(error);
         this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
       });
-
-    this.loading = false;
   }
 
   createPaymentForm(): void {
 
     if (!this.paymentFormForm.valid) {
       console.log(this.paymentFormForm);
+      this.createButtonLoading = false;
       return;
     }
 
@@ -135,11 +136,13 @@ export class FormasPagamentoComponent implements OnInit {
             panelClass: ['success-snackbar']
           });
           this.IdPaymentForm = response;
+          this.createButtonLoading = false;
           this.getAllPaymentForms();
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
+          this.createButtonLoading = false;
         });
   }
 
@@ -152,6 +155,7 @@ export class FormasPagamentoComponent implements OnInit {
 
     if (!this.paymentFormForm.valid) {
       console.log(this.paymentFormForm);
+      this.createButtonLoading = false;
       return;
     }
 
@@ -166,11 +170,13 @@ export class FormasPagamentoComponent implements OnInit {
             panelClass: ['success-snackbar']
           });
           this.IdPaymentForm = response;
+          this.createButtonLoading = false;
           this.getAllPaymentForms();
         },
         error => {
           this.errorHandler.handleError(error);
           console.log(error);
+          this.createButtonLoading = false;
         });
   }
 
