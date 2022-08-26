@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GlobalErrorDialog } from '../shared/components/global-error-dialog/global-error-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -12,7 +11,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ErrorHandlerService {
     public errorMessage: string = '';
 
-    constructor(private router: Router, public dialog: MatDialog, private snackBar: MatSnackBar) { }
+    constructor(
+        private router: Router,
+        public dialog: MatDialog,
+        private snackBar: MatSnackBar
+    ) { }
 
     public handleError = (error: HttpErrorResponse) => {
         if (error.status === 0) {

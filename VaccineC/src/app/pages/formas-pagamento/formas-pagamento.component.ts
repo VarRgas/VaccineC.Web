@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IPaymentForm } from 'src/app/interfaces/i-payment-form';
 import { PaymentFormModel } from 'src/app/models/payment-form-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 
 @Component({
@@ -49,6 +50,7 @@ export class FormasPagamentoComponent implements OnInit {
     private paymentFormsService: PaymentFormsDispatcherService,
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
   ) { }
@@ -82,7 +84,6 @@ export class FormasPagamentoComponent implements OnInit {
   getAllPaymentForms(): void {
     this.paymentFormsService.getAll().subscribe(
       paymentForms => {
-        
         this.dataSource = new MatTableDataSource(paymentForms);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -118,15 +119,8 @@ export class FormasPagamentoComponent implements OnInit {
     if (!this.paymentFormForm.valid) {
       console.log(this.paymentFormForm);
       this.createButtonLoading = false;
-
-      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
-        horizontalPosition: 'right',
-        verticalPosition: 'bottom',
-        duration: 5000,
-        panelClass: ['warning-snackbar']
-      });
       this.paymentFormForm.markAllAsTouched();
-
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }
 
@@ -138,12 +132,7 @@ export class FormasPagamentoComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.snackBar.open("Forma de Pagamento criada com sucesso!", 'Ok', {
-            horizontalPosition: 'right',
-            verticalPosition: 'bottom',
-            duration: 5000,
-            panelClass: ['success-snackbar']
-          });
+          this.messageHandler.showMessage("Forma de Pagamento criada com sucesso!", "success-snackbar")
           this.IdPaymentForm = response;
           this.createButtonLoading = false;
           this.getAllPaymentForms();
@@ -165,15 +154,8 @@ export class FormasPagamentoComponent implements OnInit {
     if (!this.paymentFormForm.valid) {
       console.log(this.paymentFormForm);
       this.createButtonLoading = false;
-
-      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
-        horizontalPosition: 'right',
-        verticalPosition: 'bottom',
-        duration: 5000,
-        panelClass: ['warning-snackbar']
-      });
       this.paymentFormForm.markAllAsTouched();
-
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }
 
@@ -181,12 +163,7 @@ export class FormasPagamentoComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.snackBar.open("Forma de Pagamento alterada com sucesso!", 'Ok', {
-            horizontalPosition: 'right',
-            verticalPosition: 'bottom',
-            duration: 5000,
-            panelClass: ['success-snackbar']
-          });
+          this.messageHandler.showMessage("Forma de Pagamento alterada com sucesso!", "success-snackbar")
           this.IdPaymentForm = response;
           this.createButtonLoading = false;
           this.getAllPaymentForms();
@@ -209,15 +186,8 @@ export class FormasPagamentoComponent implements OnInit {
             this.paymentFormForm.reset();
             this.paymentFormForm.clearValidators();
             this.paymentFormForm.updateValueAndValidity();
-
-            this.snackBar.open("Forma de Pagamento removida com sucesso!", 'Ok!', {
-              horizontalPosition: 'right',
-              verticalPosition: 'bottom',
-              duration: 5000,
-              panelClass: ['success-snackbar']
-            });
-
             this.getAllPaymentForms();
+            this.messageHandler.showMessage("Forma de Pagamento removida com sucesso!", "success-snackbar")
           },
           error => {
             console.log(error);
@@ -236,7 +206,6 @@ export class FormasPagamentoComponent implements OnInit {
         this.IdPaymentForm = paymentForm.ID;
         this.Name = paymentForm.Name;
         this.MaximumInstallments = paymentForm.MaximumInstallments;
-
         console.log(paymentForm)
         this.getAllPaymentForms();
       },

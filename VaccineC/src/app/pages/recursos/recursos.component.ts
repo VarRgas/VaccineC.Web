@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IResource } from 'src/app/interfaces/i-resource';
 import { ResourceModel } from 'src/app/models/resource-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ResourcesService } from 'src/app/services/resources.service';
 
 @Component({
@@ -49,6 +50,7 @@ export class RecursosComponent implements OnInit {
   constructor(
     private resourcesService: ResourcesService,
     private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -121,17 +123,9 @@ export class RecursosComponent implements OnInit {
 
     if (!this.resourceForm.valid) {
       console.log(this.resourceForm);
-
       this.createButtonLoading = false;
-
-      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
-        horizontalPosition: 'right',
-        verticalPosition: 'bottom',
-        duration: 5000,
-        panelClass: ['warning-snackbar']
-      });
       this.resourceForm.markAllAsTouched();
-
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }
 
@@ -142,16 +136,10 @@ export class RecursosComponent implements OnInit {
     this.resourcesService.create(data)
       .subscribe(
         response => {
-          console.log(response);
-          this.snackBar.open("Recurso criado com sucesso!", 'Ok', {
-            horizontalPosition: 'right',
-            verticalPosition: 'bottom',
-            duration: 5000,
-            panelClass: ['success-snackbar']
-          });
           this.IdResource = response;
           this.createButtonLoading = false;
           this.getAllResources();
+          this.messageHandler.showMessage("Recurso criado com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
@@ -169,17 +157,9 @@ export class RecursosComponent implements OnInit {
 
     if (!this.resourceForm.valid) {
       console.log(this.resourceForm);
-
       this.createButtonLoading = false;
-      
-      this.snackBar.open("Campos obrigatórios não preenchidos, verifique!", 'Ok', {
-        horizontalPosition: 'right',
-        verticalPosition: 'bottom',
-        duration: 5000,
-        panelClass: ['warning-snackbar']
-      });
       this.resourceForm.markAllAsTouched();
-
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }
 
@@ -187,15 +167,10 @@ export class RecursosComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.snackBar.open("Recurso alterado com sucesso!", 'Ok', {
-            horizontalPosition: 'right',
-            verticalPosition: 'bottom',
-            duration: 5000,
-            panelClass: ['success-snackbar']
-          });
           this.IdResource = response;
           this.createButtonLoading = false;
           this.getAllResources();
+          this.messageHandler.showMessage("Recurso alterado com sucesso!", "success-snackbar")
         },
         error => {
           this.errorHandler.handleError(error);
@@ -215,14 +190,8 @@ export class RecursosComponent implements OnInit {
             this.resourceForm.reset();
             this.resourceForm.clearValidators();
             this.resourceForm.updateValueAndValidity();
-
-            this.snackBar.open("Recurso removido com sucesso!", 'Ok!', {
-              horizontalPosition: 'right',
-              verticalPosition: 'bottom',
-              duration: 5000,
-              panelClass: ['success-snackbar']
-            });
             this.getAllResources();
+            this.messageHandler.showMessage("Recurso removido com sucesso!", "success-snackbar")
           },
           error => {
             console.log(error);
@@ -234,13 +203,12 @@ export class RecursosComponent implements OnInit {
   }
 
   editResource(id: string): void {
+
     this.resourcesService.getById(id).subscribe(
       resource => {
-
         this.IdResource = resource.ID;
         this.Name = resource.Name;
         this.UrlName = resource.UrlName;
-
         console.log(resource);
       },
       error => {
