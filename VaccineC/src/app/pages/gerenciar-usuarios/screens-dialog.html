@@ -6,8 +6,8 @@
         <mat-label>Recurso</mat-label>
         <input type="text" (click)="searchResourceByAutoComplete()" id="resourceId" placeholder="Selecione o Recurso"
           aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" required>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option.Name">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="checkValue" (optionSelected)='getResourceData($event.option.value)'>
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{option.Name}}
           </mat-option>
         </mat-autocomplete>
