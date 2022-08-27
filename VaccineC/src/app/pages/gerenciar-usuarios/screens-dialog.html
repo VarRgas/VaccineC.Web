@@ -4,11 +4,11 @@
     <div class="div-row-input">
       <mat-form-field appearance="fill" class="col-sm-12">
         <mat-label>Recurso</mat-label>
-        <input type="text" id="resourceId" placeholder="Selecione o Recurso" aria-label="Number" matInput
-          [formControl]="myControl" [matAutocomplete]="auto" required>
+        <input type="text" (click)="searchResourceByAutoComplete()" id="resourceId" placeholder="Selecione o Recurso"
+          aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" required>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option}}
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option.Name">
+            {{option.Name}}
           </mat-option>
         </mat-autocomplete>
         <mat-icon matSuffix>search</mat-icon>

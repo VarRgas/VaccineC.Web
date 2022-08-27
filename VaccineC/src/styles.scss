@@ -94,6 +94,14 @@ select[readonly] {
   border: none
 }
 
+.search-table{
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
 #mat-search-button {
   margin-bottom: 1rem;
 }

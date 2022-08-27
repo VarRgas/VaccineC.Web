@@ -38,9 +38,6 @@ import { EmpresaPesquisaComponent } from './pages/empresa/empresa-pesquisa/empre
 import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
 import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
-import { UsuariosPesquisaComponent } from './pages/gerenciar-usuarios/usuarios-pesquisa/usuarios-pesquisa.component';
-import { UsuariosCadastroComponent } from './pages/gerenciar-usuarios/usuarios-cadastro/usuarios-cadastro.component';
-import { UsuariosRecursosComponent } from './pages/gerenciar-usuarios/usuarios-recursos/usuarios-recursos.component';
 import { ProdutoPesquisaComponent } from './pages/produto/produto-pesquisa/produto-pesquisa.component';
 import { ProdutoCadastroComponent } from './pages/produto/produto-cadastro/produto-cadastro.component';
 import { ProdutoAprazamentoComponent } from './pages/produto/produto-aprazamento/produto-aprazamento.component';
@@ -81,9 +78,6 @@ import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
     MovimentarEstoqueComponent,
     SituacaoEstoqueComponent,
     GerenciarUsuariosComponent,
-    UsuariosPesquisaComponent,
-    UsuariosCadastroComponent,
-    UsuariosRecursosComponent,
     RecursosComponent,
     MinhaContaComponent,
     VisaoFaturamentoPesquisaComponent,
