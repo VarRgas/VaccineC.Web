@@ -153,11 +153,25 @@
                       Salvar
                     </div>
                   </button>
-                  <button mat-raised-button class="create-button" id="btn-activate-user"><span
-                      class="fa-solid fa-user-check me-1 w-20px"></span><span>Ativar</span></button>
-                  <button mat-raised-button color="warn" id="btn-disable-user"><span
-                      class="fa-solid fa-user-slash me-1 w-20px"></span><span>Desativar</span></button>
-                  <button mat-raised-button color="primary" id="btn-reset-password-user"><span
+
+                  <button mat-raised-button class="create-button" (click)="activateUserSituation()" type="button"
+                    id="btn-activate-user" [disabled]="activateUserButtonLoading">
+                    <div class="spinner">
+                      <mat-spinner *ngIf="activateUserButtonLoading" [diameter]="15"></mat-spinner>
+                      <span *ngIf="!activateUserButtonLoading" class="fa-solid fa-user-check me-1 w-20px"></span>
+                      Ativar
+                    </div>
+                  </button>
+
+                  <button mat-raised-button color="warn" (click)="deactivateUserSituation()" type="button" id="btn-disable-user" [disabled]="deactivateUserButtonLoading">
+                    <div class="spinner">
+                      <mat-spinner *ngIf="deactivateUserButtonLoading" [diameter]="15"></mat-spinner>
+                      <span *ngIf="!deactivateUserButtonLoading" class="fa-solid fa-user-slash me-1 w-20px"></span>
+                      Desativar
+                    </div>
+                  </button>
+
+                  <button mat-raised-button color="primary" id="btn-reset-password-user" (click)="openResetPasswordDialog()"><span
                       class="fa-solid fa-retweet me-1 w-20px"></span><span>Redefinir Senha</span></button>
                 </div>
               </div>

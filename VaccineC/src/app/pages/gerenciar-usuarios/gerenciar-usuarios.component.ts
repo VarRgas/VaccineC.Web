@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { IUser } from 'src/app/interfaces/i-user';
@@ -25,6 +25,8 @@ export class GerenciarUsuariosComponent implements OnInit {
   //Controle para o spinner do button
   searchButtonLoading = false;
   createButtonLoading = false;
+  activateUserButtonLoading = false;
+  deactivateUserButtonLoading = false;
 
   //Controle de exibição dos IDs na Table
   show: boolean = true;
@@ -81,10 +83,11 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
+      console.log(document.getElementById('btn-activate-user'));
       document.getElementById('btn-activate-user')?.setAttribute('hidden', '');
       document.getElementById('btn-disable-user')?.setAttribute('hidden', '');
       document.getElementById('btn-reset-password-user')?.setAttribute('hidden', '');
-    }, 100);
+    }, 1500);
   }
 
   loadUserData() {
@@ -163,6 +166,7 @@ export class GerenciarUsuariosComponent implements OnInit {
         response => {
           this.UserId = response;
           this.createButtonLoading = false;
+          this.getAllUsers();
           this.messageHandler.showMessage("Usuário criado com sucesso!", "success-snackbar")
         },
         error => {
@@ -171,7 +175,6 @@ export class GerenciarUsuariosComponent implements OnInit {
           this.createButtonLoading = false;
         });
   }
-
 
   updateUser(): void {
 
@@ -197,13 +200,75 @@ export class GerenciarUsuariosComponent implements OnInit {
           console.log(response);
           this.UserId = response;
           this.createButtonLoading = false;
-
+          this.getAllUsers();
           this.messageHandler.showMessage("Usuário alterado com sucesso!", "success-snackbar")
         },
         error => {
           this.errorHandler.handleError(error);
           console.log(error);
           this.createButtonLoading = false;
+        });
+  }
+
+  activateUserSituation(): void {
+
+    this.activateUserButtonLoading = true;
+
+    this.userService.activateSituation(this.UserId)
+      .subscribe(
+        response => {
+          console.log(response);
+
+          this.UserId = response.ID;
+          this.Email = response.Email;
+          this.FunctionUser = response.FunctionUser;
+          this.Password = response.Password;
+          this.ConfirmPassword = response.Password;
+          this.Situation = response.Situation;
+
+          this.activateUserButtonLoading = false;
+
+          document.getElementById('btn-activate-user')?.setAttribute('hidden', '');
+          document.getElementById('btn-disable-user')?.removeAttribute('hidden');
+          document.getElementById('btn-reset-password-user')?.removeAttribute('hidden');
+
+          this.messageHandler.showMessage("Usuário ativado com sucesso!", "success-snackbar")
+        },
+        error => {
+          this.errorHandler.handleError(error);
+          console.log(error);
+          this.activateUserButtonLoading = false;
+        });
+  }
+
+  deactivateUserSituation(): void {
+
+    this.deactivateUserButtonLoading = true;
+
+    this.userService.deactivateSituation(this.UserId)
+      .subscribe(
+        response => {
+          console.log(response);
+
+          this.UserId = response.ID;
+          this.Email = response.Email;
+          this.FunctionUser = response.FunctionUser;
+          this.Password = response.Password;
+          this.ConfirmPassword = response.Password;
+          this.Situation = response.Situation;
+
+          this.deactivateUserButtonLoading = false;
+
+          document.getElementById('btn-activate-user')?.removeAttribute('hidden');
+          document.getElementById('btn-disable-user')?.setAttribute('hidden', '');
+          document.getElementById('btn-reset-password-user')?.setAttribute('hidden', '');
+
+          this.messageHandler.showMessage("Usuário desativado com sucesso!", "success-snackbar")
+        },
+        error => {
+          this.errorHandler.handleError(error);
+          console.log(error);
+          this.deactivateUserButtonLoading = false;
         });
   }
 
@@ -279,13 +344,18 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   public openAddScreensDialog(): void {
     this.dialogRef = this.dialog.open(ScreensDialog, { width: '40vw' });
+  }
 
-    this.dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+  public openResetPasswordDialog(): void {
+    this.dialogRef = this.dialog.open(ResetPasswordDialog, {
+      data: {
+        id: this.UserId,
+      },
     });
   }
 }
 
+//MODAL NOVO RECURSO
 @Component({
   selector: 'screens-dialog',
   templateUrl: 'screens-dialog.html',
@@ -335,4 +405,19 @@ export class ScreensDialog implements OnInit {
     this.resourceId = value.ID;
     console.log(this.resourceId);
   }
+}
+
+//MODAL ALTERAR SENHA
+@Component({
+  selector: 'reset-password-dialog',
+  templateUrl: 'reset-password-dialog.html',
+})
+
+export class ResetPasswordDialog implements OnInit {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  ngOnInit(): void {
+    console.log(this.data)
+  }
+
 }

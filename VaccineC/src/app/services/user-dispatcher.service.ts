@@ -27,7 +27,7 @@ export class UsersService {
     getByName(name: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${name}/GetByEmail`);
     }
-    
+
     create(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }
@@ -38,5 +38,13 @@ export class UsersService {
 
     delete(id: string): Observable<any> {
         return this.httpClient.delete(`${baseURL}/${id}/Delete`);
+    }
+
+    activateSituation(id: string): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${id}/ActivateSituation`, id);
+    }
+
+    deactivateSituation(id: string): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${id}/DeactivateSituation`, id);
     }
 }
