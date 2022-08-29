@@ -94,15 +94,11 @@
                                 <div class="div-row-input">
                                     <mat-form-field appearance="fill" class="col-sm-11">
                                         <mat-label>Recurso</mat-label>
-                                        <input matInput #NameInput formControlName="Name" [maxlength]="255"
-                                            placeholder="Ex. Pessoas" id="name" [(ngModel)]="Name" required>
+                                        <input matInput #NameInput formControlName="Name" [maxlength]="255" placeholder="Ex. Pessoas" id="name" [(ngModel)]="Name" required>
                                         <mat-hint align="end">{{NameInput.value?.length || 0}}/255</mat-hint>
-                                        <mat-error
-                                            *ngIf="resourceForm.controls.Name.touched && resourceForm.controls.Name.invalid">
-                                            <span *ngIf="resourceForm.controls.Name.errors?.required">O Nome é
-                                                obrigatório.</span>
-                                            <span *ngIf="resourceForm.controls.Name.errors?.maxlength">O Nome deve ter
-                                                menos de 255 caracteres.</span>
+                                        <mat-error *ngIf="resourceForm.controls.Name.touched && resourceForm.controls.Name.invalid">
+                                            <span *ngIf="resourceForm.controls.Name.errors?.required">O Nome é obrigatório.</span>
+                                            <span *ngIf="resourceForm.controls.Name.errors?.maxlength">O Nome deve ter menos de 255 caracteres.</span>
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
