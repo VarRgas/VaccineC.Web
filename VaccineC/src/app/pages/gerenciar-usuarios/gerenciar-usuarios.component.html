@@ -32,7 +32,7 @@
           </div>
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
-              <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
+              <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Email"
                 matSortDirection="asc">
 
                 <!-- Email Column -->
@@ -41,10 +41,16 @@
                   <td mat-cell *matCellDef="let row"> {{row.Email}} </td>
                 </ng-container>
 
+                <!-- Person Column -->
+                <ng-container matColumnDef="Name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Pessoa </th>
+                  <td mat-cell *matCellDef="let row"> {{row.Person.Name}} </td>
+                </ng-container>
+
                 <!-- Situation Column -->
                 <ng-container matColumnDef="Situation">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Situação </th>
-                  <td mat-cell *matCellDef="let row"> {{row.Situation}} </td>
+                  <td mat-cell *matCellDef="let row"> {{row.Situation == 'A' ? 'Ativo' : 'Inativo'}} </td>
                 </ng-container>
 
                 <!-- Id Hidden Column -->
@@ -88,10 +94,11 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Usuário</mat-label>
-                    <input type="text" (click)="searchPersonByAutoComplete()" id="PersonId"
-                      placeholder="Selecione a Pessoa" aria-label="Number" matInput formControlName="PersonId"
-                      [matAutocomplete]="auto" [(ngModel)]="PersonId" required>
-                    <mat-autocomplete #auto="matAutocomplete">
+                    <input type="text" (click)="searchPersonByAutoComplete()" id="PersonId" placeholder="Selecione a Pessoa" aria-label="Number" matInput #PersonIdinput formControlName="PersonId" [matAutocomplete]="auto" [(ngModel)]="PersonId" required>
+                      <mat-error *ngIf="userForm.controls.PersonId.touched && userForm.controls.PersonId.invalid">
+                          <span *ngIf="userForm.controls.PersonId.errors?.required">O Usuário é obrigatório.</span>
+                      </mat-error>
+                      <mat-autocomplete #auto="matAutocomplete">
                       <mat-option *ngFor="let option of filteredOptions | async" [value]="option.ID">
                         {{option.Name}}
                       </mat-option>
@@ -103,44 +110,60 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>E-mail</mat-label>
-                    <input matInput #Emailinput formControlName="Email" [maxlength]="255"
-                      placeholder="email@exemplo.com.br" id="Email" [(ngModel)]="Email" required>
+                    <input matInput #Emailinput formControlName="Email" [maxlength]="255" placeholder="email@exemplo.com.br" id="Email" [(ngModel)]="Email" required>
+                    <mat-hint align="end">{{Emailinput.value?.length || 0}}/255</mat-hint>
+                    <mat-error *ngIf="userForm.controls.Email.touched && userForm.controls.Email.invalid">
+                        <span *ngIf="userForm.controls.Email.errors?.required || userForm.controls.Email.errors?.email">Informe um e-mail válido.</span>
+                      </mat-error>
                   </mat-form-field>
                 </div>
 
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Função</mat-label>
-                    <mat-select formControlName="FunctionUser" id="FunctionUser" [(ngModel)]="FunctionUser" required>
+                    <mat-select formControlName="FunctionUser" #FunctionUserInput id="FunctionUser" [(ngModel)]="FunctionUser" required>
                       <mat-option value="A" selected>Administrador</mat-option>
                       <mat-option value="E" selected>Aplicador</mat-option>
                       <mat-option value="G" selected>Gerente</mat-option>
                     </mat-select>
+                    <mat-error *ngIf="userForm.controls.FunctionUser.touched && userForm.controls.FunctionUser.invalid">
+                        <span *ngIf="userForm.controls.FunctionUser.errors?.required">A Função é obrigatória.</span>
+                    </mat-error>
                   </mat-form-field>
                 </div>
 
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Situação</mat-label>
-                    <mat-select formControlName="Situation" id="Situation" [(ngModel)]="Situation" required>
+                    <mat-select formControlName="Situation" #SituationInput id="Situation" [(ngModel)]="Situation" required>
                       <mat-option value="A" selected>Ativo</mat-option>
                       <mat-option value="I">Inativo</mat-option>
                     </mat-select>
+                    <mat-error *ngIf="userForm.controls.Situation.touched && userForm.controls.Situation.invalid">
+                      <span *ngIf="userForm.controls.Situation.errors?.required">A Situação é obrigatória.</span>
+                  </mat-error>
                   </mat-form-field>
                 </div>
 
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Senha</mat-label>
-                    <input type="password" matInput formControlName="Password" #PasswordInput [maxlength]="255"
-                      placeholder="Informe uma senha" id="Password" [(ngModel)]="Password" required>
+                    <input type="password" matInput #PasswordInput formControlName="Password" [maxlength]="255" placeholder="Informe uma senha" id="Password" [(ngModel)]="Password" required>
+                    <mat-hint align="end">{{PasswordInput.value?.length || 0}}/255</mat-hint>
+                    <mat-error *ngIf="userForm.controls.Password.touched && userForm.controls.Password.invalid">
+                        <span *ngIf="userForm.controls.Password.errors?.required">A Senha é obrigatória.</span>
+                        <span *ngIf="userForm.controls.Password.errors?.maxlength">A Senha deve ter no máximo 255 caracteres.</span>
+                    </mat-error>
                   </mat-form-field>
 
                   <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                     <mat-label>Confirmação de Senha</mat-label>
-                    <input type="password" matInput formControlName="ConfirmPassword" #ConfirmPasswordInput
-                      [maxlength]="255" placeholder="Confirme sua senha" id="ConfirmPassword"
-                      [(ngModel)]="ConfirmPassword" required>
+                    <input type="password" matInput #ConfirmPasswordInput formControlName="ConfirmPassword" [maxlength]="255" placeholder="Confirme sua senha" id="ConfirmPassword" [(ngModel)]="ConfirmPassword" required>
+                      <mat-hint align="end">{{ConfirmPasswordInput.value?.length || 0}}/255</mat-hint>
+                      <mat-error *ngIf="userForm.controls.ConfirmPassword.touched && userForm.controls.ConfirmPassword.invalid">
+                          <span *ngIf="userForm.controls.ConfirmPassword.errors?.required">É necessário confirmar a senha.</span>
+                          <span *ngIf="userForm.controls.ConfirmPassword.errors?.maxlength">A Senha deve ter no máximo 255 caracteres.</span>
+                      </mat-error>
                   </mat-form-field>
                 </div>
 
@@ -155,7 +178,7 @@
                   </button>
 
                   <button mat-raised-button class="create-button" (click)="activateUserSituation()" type="button"
-                    id="btn-activate-user" [disabled]="activateUserButtonLoading">
+                    id="btn-activate-user" [disabled]="activateUserButtonLoading" [hidden]="isActivateButtonHidden">
                     <div class="spinner">
                       <mat-spinner *ngIf="activateUserButtonLoading" [diameter]="15"></mat-spinner>
                       <span *ngIf="!activateUserButtonLoading" class="fa-solid fa-user-check me-1 w-20px"></span>
@@ -163,7 +186,8 @@
                     </div>
                   </button>
 
-                  <button mat-raised-button color="warn" (click)="deactivateUserSituation()" type="button" id="btn-disable-user" [disabled]="deactivateUserButtonLoading">
+                  <button mat-raised-button color="warn" (click)="deactivateUserSituation()" type="button"
+                    id="btn-disable-user" [disabled]="deactivateUserButtonLoading" [hidden]="isDeactivateButtonHidden">
                     <div class="spinner">
                       <mat-spinner *ngIf="deactivateUserButtonLoading" [diameter]="15"></mat-spinner>
                       <span *ngIf="!deactivateUserButtonLoading" class="fa-solid fa-user-slash me-1 w-20px"></span>
@@ -171,7 +195,8 @@
                     </div>
                   </button>
 
-                  <button mat-raised-button color="primary" id="btn-reset-password-user" (click)="openResetPasswordDialog()"><span
+                  <button mat-raised-button color="primary" id="btn-reset-password-user"
+                    (click)="openResetPasswordDialog()" [hidden]="isResetPasswordButtonHidden"><span
                       class="fa-solid fa-retweet me-1 w-20px"></span><span>Redefinir Senha</span></button>
                 </div>
               </div>
@@ -180,7 +205,7 @@
         </mat-tab>
 
         <!-- RESOURCE TAB -->
-        <mat-tab label="Recursos">
+        <mat-tab label="Recursos" [disabled]="isResourceDisabled">
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
               <table class="col-sm-12" mat-table [dataSource]="dataSource2" matSort matSortActive="Name"
@@ -201,8 +226,8 @@
                 <ng-container matColumnDef="Options">
                   <th mat-header-cell *matHeaderCellDef> </th>
                   <td mat-cell *matCellDef="let row">
-                    <button mat-icon-button color="primary" title="Editar"><i
-                        class="fa-solid fa-pen-to-square"></i></button>
+                    <button mat-icon-button color="warn" title="Excluir" style="float:right;"><i class="fa-solid fa-trash"></i></button>
+                    <button mat-icon-button color="primary" title="Editar" style="float:right;"><i class="fa-solid fa-pen-to-square"></i></button>
                   </td>
                 </ng-container>
 

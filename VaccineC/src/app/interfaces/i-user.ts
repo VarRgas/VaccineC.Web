@@ -1,7 +1,11 @@
+import { IPerson } from "./i-person";
+
 export interface IUser {
-    ID: string,
-    PersonID: string,
+    UserId: string,
+    PersonId: string,
     Email: string,
     Password: string,
-    Situation: string
+    Situation: string,
+    FunctionUser: string,
+    Person: IPerson
 }

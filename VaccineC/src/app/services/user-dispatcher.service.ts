@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UserModel } from '../models/user-model';
 
 const baseURL = 'http://localhost:5000/api/Users';
 
@@ -46,5 +47,9 @@ export class UsersService {
 
     deactivateSituation(id: string): Observable<any> {
         return this.httpClient.post(`${baseURL}/${id}/DeactivateSituation`, id);
+    }
+
+    resetPassword(id: string, userModel: UserModel): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${id}/ResetPassword`, userModel);
     }
 }

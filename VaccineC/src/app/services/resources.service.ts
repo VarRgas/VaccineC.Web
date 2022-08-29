@@ -24,6 +24,10 @@ export class ResourcesService {
         return this.httpClient.get(`${baseURL}/${name}/GetByName`);
     }
 
+    getByUser(id: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${id}/GetByUser`);
+    }
+
     create(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }

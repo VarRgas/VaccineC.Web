@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
 import { ResourceAutocompleteService } from 'src/app/services/resource-autocomplete.service';
 import { UserModel } from 'src/app/models/user-model';
+import { ResourcesService } from 'src/app/services/resources.service';
 
 @Component({
   selector: 'app-gerenciar-usuarios',
@@ -21,6 +22,14 @@ import { UserModel } from 'src/app/models/user-model';
   styleUrls: ['./gerenciar-usuarios.component.scss']
 })
 export class GerenciarUsuariosComponent implements OnInit {
+
+  //Controle de exibição dos botões
+  isActivateButtonHidden = true;
+  isDeactivateButtonHidden = true;
+  isResetPasswordButtonHidden = true;
+
+  //Controle de tabs
+  isResourceDisabled = true;
 
   //Controle para o spinner do button
   searchButtonLoading = false;
@@ -48,7 +57,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   //Table Usuários
   public value = '';
-  public displayedColumns: string[] = ['Email', 'Situation', 'ID', 'Options'];
+  public displayedColumns: string[] = ['Email', 'Name', 'Situation', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IUser>();
 
   //Table Recursos
@@ -72,22 +81,16 @@ export class GerenciarUsuariosComponent implements OnInit {
   });
 
   constructor(
-    private usersService: UsersService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private personAutocompleteService: PersonAutocompleteService,
-    private userService: UsersService
+    private usersService: UsersService,
+    private resourcesService: ResourcesService
   ) { }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      console.log(document.getElementById('btn-activate-user'));
-      document.getElementById('btn-activate-user')?.setAttribute('hidden', '');
-      document.getElementById('btn-disable-user')?.setAttribute('hidden', '');
-      document.getElementById('btn-reset-password-user')?.setAttribute('hidden', '');
-    }, 1500);
   }
 
   loadUserData() {
@@ -157,16 +160,34 @@ export class GerenciarUsuariosComponent implements OnInit {
       return;
     }
 
+    if (this.Password != this.ConfirmPassword) {
+      this.createButtonLoading = false;
+      this.messageHandler.showMessage("As senhas não coincidem, verifique!", "warning-snackbar")
+      return;
+    }
+
     const data = this.userForm.value;
     data.HasPending = false;
     console.log(data);
 
-    this.userService.create(data)
+    this.usersService.create(data)
       .subscribe(
         response => {
-          this.UserId = response;
+          console.log(response)
+
+          this.UserId = response.ID;
+          this.Email = response.Email;
+          this.FunctionUser = response.FunctionUser;
+          this.Password = response.Password;
+          this.ConfirmPassword = response.Password;
+          this.Situation = response.Situation;
+
           this.createButtonLoading = false;
+          this.isResourceDisabled = false;
+
           this.getAllUsers();
+          this.treatButtons(this.Situation);
+
           this.messageHandler.showMessage("Usuário criado com sucesso!", "success-snackbar")
         },
         error => {
@@ -194,13 +215,22 @@ export class GerenciarUsuariosComponent implements OnInit {
       return;
     }
 
-    this.userService.update(this.UserId, user)
+    this.usersService.update(this.UserId, user)
       .subscribe(
         response => {
-          console.log(response);
-          this.UserId = response;
+
+          this.UserId = response.ID;
+          this.Email = response.Email;
+          this.FunctionUser = response.FunctionUser;
+          this.Password = response.Password;
+          this.ConfirmPassword = response.Password;
+          this.Situation = response.Situation;
+
           this.createButtonLoading = false;
+
           this.getAllUsers();
+          this.treatButtons(this.Situation);
+
           this.messageHandler.showMessage("Usuário alterado com sucesso!", "success-snackbar")
         },
         error => {
@@ -214,7 +244,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     this.activateUserButtonLoading = true;
 
-    this.userService.activateSituation(this.UserId)
+    this.usersService.activateSituation(this.UserId)
       .subscribe(
         response => {
           console.log(response);
@@ -228,9 +258,8 @@ export class GerenciarUsuariosComponent implements OnInit {
 
           this.activateUserButtonLoading = false;
 
-          document.getElementById('btn-activate-user')?.setAttribute('hidden', '');
-          document.getElementById('btn-disable-user')?.removeAttribute('hidden');
-          document.getElementById('btn-reset-password-user')?.removeAttribute('hidden');
+          this.getAllUsers();
+          this.treatButtons(this.Situation);
 
           this.messageHandler.showMessage("Usuário ativado com sucesso!", "success-snackbar")
         },
@@ -245,7 +274,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     this.deactivateUserButtonLoading = true;
 
-    this.userService.deactivateSituation(this.UserId)
+    this.usersService.deactivateSituation(this.UserId)
       .subscribe(
         response => {
           console.log(response);
@@ -259,9 +288,8 @@ export class GerenciarUsuariosComponent implements OnInit {
 
           this.deactivateUserButtonLoading = false;
 
-          document.getElementById('btn-activate-user')?.removeAttribute('hidden');
-          document.getElementById('btn-disable-user')?.setAttribute('hidden', '');
-          document.getElementById('btn-reset-password-user')?.setAttribute('hidden', '');
+          this.getAllUsers();
+          this.treatButtons(this.Situation);
 
           this.messageHandler.showMessage("Usuário desativado com sucesso!", "success-snackbar")
         },
@@ -273,19 +301,22 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   addNewUser(): void {
+
     this.userForm.reset();
     this.userForm.clearValidators();
     this.userForm.updateValueAndValidity();
-    setTimeout(() => {
-      document.getElementById('btn-activate-user')?.setAttribute('hidden', '');
-      document.getElementById('btn-disable-user')?.setAttribute('hidden', '');
-      document.getElementById('btn-reset-password-user')?.setAttribute('hidden', '');
-    }, 100);
+
+    this.isResourceDisabled = true;
+    this.isActivateButtonHidden = true;
+    this.isDeactivateButtonHidden = true;
+    this.isResetPasswordButtonHidden = true;
+
   }
 
   editUser(id: string): void {
     this.usersService.getById(id).subscribe(
       user => {
+
         this.UserId = user.ID;
         this.PersonId = user.PersonId;
         this.Email = user.Email;
@@ -294,22 +325,27 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.Password = user.Password;
         this.ConfirmPassword = user.Password;
 
-        if (this.Situation == "A") {
-          document.getElementById('btn-activate-user')?.setAttribute('hidden', '');
-          document.getElementById('btn-disable-user')?.removeAttribute('hidden');
-          document.getElementById('btn-reset-password-user')?.removeAttribute('hidden');
+        this.isResourceDisabled = false;
 
-        } else if (this.Situation == "I") {
-          document.getElementById('btn-activate-user')?.removeAttribute('hidden');
-          document.getElementById('btn-disable-user')?.setAttribute('hidden', '');
-          document.getElementById('btn-reset-password-user')?.setAttribute('hidden', '');
+        this.treatButtons(this.Situation);
 
-        }
         console.log(user);
       },
       error => {
         console.log(error);
       });
+
+    this.resourcesService.getByUser(id).subscribe(
+      resources => {
+        console.log(resources);
+        this.dataSource2 = new MatTableDataSource(resources);
+        this.dataSource2.paginator = this.paginator;
+        this.dataSource2.sort = this.sort;
+      },
+      error => {
+        console.log(error);
+      });
+
   }
 
   searchPersonByAutoComplete() {
@@ -324,22 +360,26 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   filter(val: string): Observable<any[]> {
-    // call the service which makes the http-request
     return this.personAutocompleteService.getPersonPhysicalData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
         }))
       )
   }
 
-  checkValuePerson(value: any) {
-    return value.Name;
-  }
+  treatButtons(situation: string) {
 
-  getPersonData(value: any) {
-    this.PersonId = value.ID;
-    console.log(this.PersonId);
+    if (situation == "A") {
+      this.isActivateButtonHidden = true;
+      this.isDeactivateButtonHidden = false;
+      this.isResetPasswordButtonHidden = false;
+    } else if (situation == "I") {
+      this.isActivateButtonHidden = false;
+      this.isDeactivateButtonHidden = true;
+      this.isResetPasswordButtonHidden = true;
+    }
+
   }
 
   public openAddScreensDialog(): void {
@@ -348,11 +388,22 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   public openResetPasswordDialog(): void {
     this.dialogRef = this.dialog.open(ResetPasswordDialog, {
+      width: '50vw',
       data: {
-        id: this.UserId,
+        ID: this.UserId,
       },
     });
+
+    this.dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.Password = res;
+          this.ConfirmPassword = res;
+        }
+      }
+    );
   }
+
 }
 
 //MODAL NOVO RECURSO
@@ -392,18 +443,9 @@ export class ScreensDialog implements OnInit {
     return this.resourceAutocompleteService.getResourceData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
         }))
       )
-  }
-
-  checkValue(value: any) {
-    return value.Name;
-  }
-
-  getResourceData(value: any) {
-    this.resourceId = value.ID;
-    console.log(this.resourceId);
   }
 }
 
@@ -414,10 +456,56 @@ export class ScreensDialog implements OnInit {
 })
 
 export class ResetPasswordDialog implements OnInit {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  public UserId!: string;
+  public Password!: string;
+  public ConfirmPassword!: string;
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private usersService: UsersService,
+    private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<ResetPasswordDialog>,
+
+  ) { }
+
+  //Form
+  userPasswordForm: FormGroup = this.formBuilder.group({
+    UserId: [null],
+    Password: [null, [Validators.required, Validators.maxLength(255)]],
+    ConfirmPassword: [null, [Validators.required, Validators.maxLength(255)]]
+  });
 
   ngOnInit(): void {
-    console.log(this.data)
+    this.UserId = this.data.ID;
+    console.log(this.UserId);
+  }
+
+  resetPassword(): void {
+
+    let user = new UserModel();
+    user.id = this.UserId;
+    user.password = this.Password;
+
+    if (this.Password != this.ConfirmPassword) {
+      this.messageHandler.showMessage("As senhas não coincidem, verifique!", "warning-snackbar")
+      return;
+    }
+
+    this.usersService.resetPassword(this.UserId, user)
+      .subscribe(
+        response => {
+          console.log(response);
+          this.dialogRef.close(response.Password)
+          this.messageHandler.showMessage("Senha redefinida com sucesso!", "success-snackbar")
+        },
+        error => {
+          this.errorHandler.handleError(error);
+          console.log(error);
+        });
+
   }
 
 }
