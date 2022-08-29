@@ -79,7 +79,6 @@ export class RecursosComponent implements OnInit {
         this.dataSource = new MatTableDataSource(resources);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(resources);
         this.searchButtonLoading = false;
       },
       error => {
@@ -97,7 +96,6 @@ export class RecursosComponent implements OnInit {
         this.dataSource = new MatTableDataSource(resources);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(resources);
         this.searchButtonLoading = false;
       },
       error => {
@@ -131,7 +129,6 @@ export class RecursosComponent implements OnInit {
 
     const data = this.resourceForm.value;
     data.HasPending = false;
-    console.log(data);
 
     this.resourcesService.create(data)
       .subscribe(
@@ -166,7 +163,6 @@ export class RecursosComponent implements OnInit {
     this.resourcesService.update(this.IdResource, resource)
       .subscribe(
         response => {
-          console.log(response);
           this.IdResource = response;
           this.createButtonLoading = false;
           this.getAllResources();
@@ -209,7 +205,6 @@ export class RecursosComponent implements OnInit {
         this.IdResource = resource.ID;
         this.Name = resource.Name;
         this.UrlName = resource.UrlName;
-        console.log(resource);
       },
       error => {
         console.log(error);

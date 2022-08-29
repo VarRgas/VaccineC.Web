@@ -94,7 +94,7 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Usuário</mat-label>
-                    <input type="text" (click)="searchPersonByAutoComplete()" id="PersonId" placeholder="Selecione a Pessoa" aria-label="Number" matInput #PersonIdinput formControlName="PersonId" [matAutocomplete]="auto" [(ngModel)]="PersonId" required>
+                    <input type="text" (click)="searchPersonByAutoComplete()" [readonly]="isInputReadOnly" id="PersonId" placeholder="Selecione a Pessoa" aria-label="Number" matInput #PersonIdinput formControlName="PersonId" [matAutocomplete]="auto" [(ngModel)]="PersonId" required>
                       <mat-error *ngIf="userForm.controls.PersonId.touched && userForm.controls.PersonId.invalid">
                           <span *ngIf="userForm.controls.PersonId.errors?.required">O Usuário é obrigatório.</span>
                       </mat-error>
@@ -121,7 +121,7 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Função</mat-label>
-                    <mat-select formControlName="FunctionUser" #FunctionUserInput id="FunctionUser" [(ngModel)]="FunctionUser" required>
+                    <mat-select [disabled]="isInputDisabled" formControlName="FunctionUser" #FunctionUserInput id="FunctionUser" [(ngModel)]="FunctionUser" required>
                       <mat-option value="A" selected>Administrador</mat-option>
                       <mat-option value="E" selected>Aplicador</mat-option>
                       <mat-option value="G" selected>Gerente</mat-option>
@@ -135,7 +135,7 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Situação</mat-label>
-                    <mat-select [disabled]="isSituationDisabled" formControlName="Situation" #SituationInput id="Situation" [(ngModel)]="Situation" required>
+                    <mat-select [disabled]="isInputDisabled" formControlName="Situation" #SituationInput id="Situation" [(ngModel)]="Situation" required>
                       <mat-option value="A" selected>Ativo</mat-option>
                       <mat-option value="I">Inativo</mat-option>
                     </mat-select>
@@ -148,7 +148,7 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Senha</mat-label>
-                    <input type="password" [readonly]="isPasswordReadOnly" matInput #PasswordInput formControlName="Password" [maxlength]="255" placeholder="Informe uma senha" id="Password" [(ngModel)]="Password" required>
+                    <input type="password" [readonly]="isInputReadOnly" matInput #PasswordInput formControlName="Password" [maxlength]="255" placeholder="Informe uma senha" id="Password" [(ngModel)]="Password" required>
                     <mat-hint align="end">{{PasswordInput.value?.length || 0}}/255</mat-hint>
                     <mat-error *ngIf="userForm.controls.Password.touched && userForm.controls.Password.invalid">
                         <span *ngIf="userForm.controls.Password.errors?.required">A Senha é obrigatória.</span>
@@ -158,7 +158,7 @@
 
                   <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                     <mat-label>Confirmação de Senha</mat-label>
-                    <input type="password" [readonly]="isConfirmPasswordReadOnly" matInput #ConfirmPasswordInput formControlName="ConfirmPassword" [maxlength]="255" placeholder="Confirme sua senha" id="ConfirmPassword" [(ngModel)]="ConfirmPassword" required>
+                    <input type="password" [readonly]="isInputReadOnly" matInput #ConfirmPasswordInput formControlName="ConfirmPassword" [maxlength]="255" placeholder="Confirme sua senha" id="ConfirmPassword" [(ngModel)]="ConfirmPassword" required>
                       <mat-hint align="end">{{ConfirmPasswordInput.value?.length || 0}}/255</mat-hint>
                       <mat-error *ngIf="userForm.controls.ConfirmPassword.touched && userForm.controls.ConfirmPassword.invalid">
                           <span *ngIf="userForm.controls.ConfirmPassword.errors?.required">É necessário confirmar a senha.</span>

@@ -88,7 +88,6 @@ export class FormasPagamentoComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
-        console.log(paymentForms);
       },
       error => {
         console.log(error);
@@ -105,7 +104,6 @@ export class FormasPagamentoComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
-        console.log(resources);
       },
       error => {
         console.log(error);
@@ -126,12 +124,10 @@ export class FormasPagamentoComponent implements OnInit {
 
     const data = this.paymentFormForm.value;
     data.HasPending = false;
-    console.log(data);
 
     this.paymentFormsService.create(data)
       .subscribe(
         response => {
-          console.log(response);
           this.messageHandler.showMessage("Forma de Pagamento criada com sucesso!", "success-snackbar")
           this.IdPaymentForm = response;
           this.createButtonLoading = false;
@@ -162,7 +158,6 @@ export class FormasPagamentoComponent implements OnInit {
     this.paymentFormsService.update(this.IdPaymentForm, paymentForm)
       .subscribe(
         response => {
-          console.log(response);
           this.messageHandler.showMessage("Forma de Pagamento alterada com sucesso!", "success-snackbar")
           this.IdPaymentForm = response;
           this.createButtonLoading = false;
@@ -202,7 +197,6 @@ export class FormasPagamentoComponent implements OnInit {
 
     this.paymentFormsService.getById(id).subscribe(
       paymentForm => {
-
         this.IdPaymentForm = paymentForm.ID;
         this.Name = paymentForm.Name;
         this.MaximumInstallments = paymentForm.MaximumInstallments;

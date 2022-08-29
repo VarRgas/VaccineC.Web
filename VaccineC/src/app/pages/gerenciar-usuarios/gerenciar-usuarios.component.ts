@@ -33,9 +33,8 @@ export class GerenciarUsuariosComponent implements OnInit {
   isButtonAddResourceHidden = false;
 
   //Controle de habilitação de campos
-  isSituationDisabled = false;
-  isPasswordReadOnly = false;
-  isConfirmPasswordReadOnly = false;
+  isInputDisabled = false;
+  isInputReadOnly = false;
 
   //Controle de tabs
   isResourceDisabled = true;
@@ -122,7 +121,6 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.dataSource = new MatTableDataSource(users);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(users);
         this.searchButtonLoading = false;
       },
       error => {
@@ -139,7 +137,6 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.dataSource = new MatTableDataSource(users);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(users);
         this.searchButtonLoading = false;
       },
       error => {
@@ -178,13 +175,10 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     const data = this.userForm.value;
     data.HasPending = false;
-    console.log(data);
 
     this.usersService.create(data)
       .subscribe(
         response => {
-          console.log(response)
-
           this.UserId = response.ID;
           this.Email = response.Email;
           this.FunctionUser = response.FunctionUser;
@@ -195,9 +189,8 @@ export class GerenciarUsuariosComponent implements OnInit {
           this.createButtonLoading = false;
           this.isResourceDisabled = false;
 
-          this.isSituationDisabled = true;
-          this.isPasswordReadOnly = true;
-          this.isConfirmPasswordReadOnly = true;
+          this.isInputDisabled = true;
+          this.isInputReadOnly = true;
 
           this.isButtonDeleteResourceDisabled = false;
           this.isButtonAddResourceHidden = false;
@@ -264,8 +257,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.usersService.activateSituation(this.UserId)
       .subscribe(
         response => {
-          console.log(response);
-
           this.UserId = response.ID;
           this.Email = response.Email;
           this.FunctionUser = response.FunctionUser;
@@ -294,8 +285,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.usersService.deactivateSituation(this.UserId)
       .subscribe(
         response => {
-          console.log(response);
-
           this.UserId = response.ID;
           this.Email = response.Email;
           this.FunctionUser = response.FunctionUser;
@@ -328,9 +317,8 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.isDeactivateButtonHidden = true;
     this.isResetPasswordButtonHidden = true;
 
-    this.isSituationDisabled = false;
-    this.isPasswordReadOnly = false;
-    this.isConfirmPasswordReadOnly = false;
+    this.isInputDisabled = false;
+    this.isInputReadOnly = false;
 
   }
 
@@ -348,13 +336,10 @@ export class GerenciarUsuariosComponent implements OnInit {
 
         this.isResourceDisabled = false;
 
-        this.isSituationDisabled = true;
-        this.isPasswordReadOnly = true;
-        this.isConfirmPasswordReadOnly = true;
+        this.isInputDisabled = true;
+        this.isInputReadOnly = true;
 
         this.treatButtons(this.Situation);
-
-        console.log(user);
       },
       error => {
         console.log(error);
@@ -362,7 +347,6 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     this.resourcesService.getByUser(id).subscribe(
       resources => {
-        console.log(resources);
         this.dataSource2 = new MatTableDataSource(resources);
         this.dataSource2.paginator = this.paginator;
         this.dataSource2.sort = this.sort;
@@ -438,7 +422,6 @@ export class GerenciarUsuariosComponent implements OnInit {
       if (!!result) {
         this.userResourceService.delete(userResourceId).subscribe(
           success => {
-            console.log(success)
             this.dataSource2 = new MatTableDataSource(success);
             this.dataSource2.paginator = this.paginator;
             this.dataSource2.sort = this.sort;
@@ -464,7 +447,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(
       (res) => {
         if (res != "") {
-          console.log(res)
           this.dataSource2 = new MatTableDataSource(res);
           this.dataSource2.paginator = this.paginator;
           this.dataSource2.sort = this.sort;
@@ -526,7 +508,6 @@ export class UserResourceAddDialog implements OnInit {
 
   ngOnInit(): void {
     this.UsersId = this.data.ID;
-    console.log(this.UsersId);
   }
 
   saveUserResource(): void {
@@ -540,12 +521,10 @@ export class UserResourceAddDialog implements OnInit {
 
     const data = this.userResourceForm.value;
     data.HasPending = false;
-    console.log(data);
 
     this.userResourceService.create(data)
       .subscribe(
         response => {
-          console.log(response)
           this.dialogRef.close(response);
           this.messageHandler.showMessage("Recurso inserido com sucesso!", "success-snackbar");
         },
@@ -608,7 +587,6 @@ export class ResetPasswordDialog implements OnInit {
 
   ngOnInit(): void {
     this.UserId = this.data.ID;
-    console.log(this.UserId);
   }
 
   resetPassword(): void {
@@ -625,7 +603,6 @@ export class ResetPasswordDialog implements OnInit {
     this.usersService.resetPassword(this.UserId, user)
       .subscribe(
         response => {
-          console.log(response);
           this.dialogRef.close(response.Password)
           this.messageHandler.showMessage("Senha redefinida com sucesso!", "success-snackbar")
         },
