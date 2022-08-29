@@ -29,6 +29,13 @@ export class GerenciarUsuariosComponent implements OnInit {
   isActivateButtonHidden = true;
   isDeactivateButtonHidden = true;
   isResetPasswordButtonHidden = true;
+  isButtonDeleteResourceDisabled = false;
+  isButtonAddResourceHidden = false;
+
+  //Controle de habilitação de campos
+  isSituationDisabled = false;
+  isPasswordReadOnly = false;
+  isConfirmPasswordReadOnly = false;
 
   //Controle de tabs
   isResourceDisabled = true;
@@ -188,6 +195,13 @@ export class GerenciarUsuariosComponent implements OnInit {
           this.createButtonLoading = false;
           this.isResourceDisabled = false;
 
+          this.isSituationDisabled = true;
+          this.isPasswordReadOnly = true;
+          this.isConfirmPasswordReadOnly = true;
+
+          this.isButtonDeleteResourceDisabled = false;
+          this.isButtonAddResourceHidden = false;
+
           this.getAllUsers();
           this.treatButtons(this.Situation);
 
@@ -314,6 +328,10 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.isDeactivateButtonHidden = true;
     this.isResetPasswordButtonHidden = true;
 
+    this.isSituationDisabled = false;
+    this.isPasswordReadOnly = false;
+    this.isConfirmPasswordReadOnly = false;
+
   }
 
   editUser(id: string): void {
@@ -329,6 +347,10 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.ConfirmPassword = user.Password;
 
         this.isResourceDisabled = false;
+
+        this.isSituationDisabled = true;
+        this.isPasswordReadOnly = true;
+        this.isConfirmPasswordReadOnly = true;
 
         this.treatButtons(this.Situation);
 
@@ -377,10 +399,17 @@ export class GerenciarUsuariosComponent implements OnInit {
       this.isActivateButtonHidden = true;
       this.isDeactivateButtonHidden = false;
       this.isResetPasswordButtonHidden = false;
+
+      this.isButtonDeleteResourceDisabled = false;
+      this.isButtonAddResourceHidden = false;
+
     } else if (situation == "I") {
       this.isActivateButtonHidden = false;
       this.isDeactivateButtonHidden = true;
       this.isResetPasswordButtonHidden = true;
+
+      this.isButtonDeleteResourceDisabled = true;
+      this.isButtonAddResourceHidden = true;
     }
 
   }
