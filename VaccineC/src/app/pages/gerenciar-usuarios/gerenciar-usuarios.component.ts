@@ -15,6 +15,8 @@ import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.
 import { ResourceAutocompleteService } from 'src/app/services/resource-autocomplete.service';
 import { UserModel } from 'src/app/models/user-model';
 import { ResourcesService } from 'src/app/services/resources.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
+import { UserResourceModel } from 'src/app/models/user-resource-model';
 
 @Component({
   selector: 'app-gerenciar-usuarios',
@@ -87,7 +89,8 @@ export class GerenciarUsuariosComponent implements OnInit {
     private dialog: MatDialog,
     private personAutocompleteService: PersonAutocompleteService,
     private usersService: UsersService,
-    private resourcesService: ResourcesService
+    private resourcesService: ResourcesService,
+    private userResourceService: UserResourceService
   ) { }
 
   ngOnInit(): void {
@@ -382,8 +385,63 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   }
 
+  findUserResourceToDelete(resourceId: string): void {
+
+    let userResource = new UserResourceModel();
+    userResource.resourcesId = resourceId;
+    userResource.usersId = this.UserId;
+
+    this.userResourceService.getByUserResource(userResource).subscribe(
+      response => {
+        this.deleteUserResource(response.ID);
+      },
+      error => {
+        console.log(error);
+      });
+
+  }
+
+  deleteUserResource(userResourceId: string) {
+
+    const dialogRef = this.dialog.open(ConfirmUserResourceRemoveDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.userResourceService.delete(userResourceId).subscribe(
+          success => {
+            console.log(success)
+            this.dataSource2 = new MatTableDataSource(success);
+            this.dataSource2.paginator = this.paginator;
+            this.dataSource2.sort = this.sort;
+            this.messageHandler.showMessage("Recurso removido com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+      }
+    });
+
+  }
+
   public openAddScreensDialog(): void {
-    this.dialogRef = this.dialog.open(ScreensDialog, { width: '40vw' });
+    this.dialogRef = this.dialog.open(UserResourceAddDialog, {
+      width: '50vw',
+      data: {
+        ID: this.UserId,
+      },
+    });
+
+    this.dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          console.log(res)
+          this.dataSource2 = new MatTableDataSource(res);
+          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.sort = this.sort;
+        }
+      }
+    );
   }
 
   public openResetPasswordDialog(): void {
@@ -408,23 +466,64 @@ export class GerenciarUsuariosComponent implements OnInit {
 
 //MODAL NOVO RECURSO
 @Component({
-  selector: 'screens-dialog',
-  templateUrl: 'screens-dialog.html',
+  selector: 'user-resource-add-dialog',
+  templateUrl: 'user-resource-add-dialog.html',
 })
 
-export class ScreensDialog implements OnInit {
+export class UserResourceAddDialog implements OnInit {
 
   myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
-  resourceId!: string;
+  ResourcesId!: string;
+  UsersId!: string;
+
+  //Form
+  userResourceForm: FormGroup = this.formBuilder.group({
+    UsersId: [null],
+    ResourcesId: [null, [Validators.required]],
+  });
 
   constructor(
-    private resourceAutocompleteService: ResourceAutocompleteService
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private resourceAutocompleteService: ResourceAutocompleteService,
+    private formBuilder: FormBuilder,
+    private messageHandler: MessageHandlerService,
+    private userResourceService: UserResourceService,
+    private errorHandler: ErrorHandlerService,
+    public dialogRef: MatDialogRef<UserResourceAddDialog>
   ) { }
 
   ngOnInit(): void {
+    this.UsersId = this.data.ID;
+    console.log(this.UsersId);
+  }
+
+  saveUserResource(): void {
+
+    if (!this.userResourceForm.valid) {
+      console.log(this.userResourceForm);
+      this.userResourceForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    const data = this.userResourceForm.value;
+    data.HasPending = false;
+    console.log(data);
+
+    this.userResourceService.create(data)
+      .subscribe(
+        response => {
+          console.log(response)
+          this.dialogRef.close(response);
+          this.messageHandler.showMessage("Recurso inserido com sucesso!", "success-snackbar");
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
   }
 
   searchResourceByAutoComplete() {
@@ -509,3 +608,10 @@ export class ResetPasswordDialog implements OnInit {
   }
 
 }
+
+//MODAL CONFIRMAR REMOÇÃO DO USERRESOURCE
+@Component({
+  selector: 'confirm-user-resource-remove-dialog',
+  templateUrl: 'confirm-user-resource-remove-dialog.html',
+})
+export class ConfirmUserResourceRemoveDialog { }

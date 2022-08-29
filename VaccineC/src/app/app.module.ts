@@ -24,7 +24,7 @@ import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent } from './pages/situacao-estoque/situacao-estoque.component';
-import { GerenciarUsuariosComponent, ScreensDialog, ResetPasswordDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
+import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog, ConfirmUserResourceRemoveDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos/recursos.component';
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
@@ -99,7 +99,7 @@ import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
     ProdutoAprazamentoComponent,
     ProdutoResumoComponent,
     DialogContentDose,
-    ScreensDialog,
+    UserResourceAddDialog,
     PasswordDialog,
     ResetPasswordDialog,
     MovimentarEstoquePesquisaComponent,
@@ -117,7 +117,8 @@ import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
     BatchDialog,
     GlobalErrorDialog,
     ConfirmPaymentFormRemoveDialog,
-    ConfirmResourceRemoveDialog
+    ConfirmResourceRemoveDialog,
+    ConfirmUserResourceRemoveDialog
   ],
   imports: [
     BrowserModule,
