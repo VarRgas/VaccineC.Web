@@ -33,7 +33,11 @@ export class EmpresasComponent implements OnInit {
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
 
-    //Controle de tabs
+  //Controle de habilitação de campos
+  public isInputDisabled = false;
+  public isInputReadOnly = false;
+
+  //Controle de tabs
   public tabIsDisabled: boolean = true;
 
   //Variáveis dos inputs
@@ -45,7 +49,7 @@ export class EmpresasComponent implements OnInit {
 
   //Table
   public value = '';
-  public displayedColumns: string[] = ['Name', 'ID'];
+  public displayedColumns: string[] = ['Name', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<ICompany>();
 
   public scheduleColor: string = "#84d7b0";
@@ -54,15 +58,15 @@ export class EmpresasComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   //Parameter form
-	parameterForm: FormGroup = this.formBuilder.group({
-		ScheduleColor: [null]
-	});
+  parameterForm: FormGroup = this.formBuilder.group({
+    ScheduleColor: [null]
+  });
 
   //Company Form
   companyForm: FormGroup = this.formBuilder.group({
     CompanyID: [null],
     PersonId: [null, [Validators.required]],
-    Details:  [null],
+    Details: [null],
   });
 
   constructor(private companiesDispatcherService: CompaniesDispatcherService,
@@ -145,11 +149,13 @@ export class EmpresasComponent implements OnInit {
     this.companiesDispatcherService.createCompany(data)
       .subscribe(
         response => {
-          this.companyID = response;
-          this.details = response.details;
+          this.companyID = response.ID;
+          this.details = response.Details;
           this.createButtonLoading = false;
           this.tabIsDisabled = false;
+
           this.getAllCompanies();
+
           this.messageHandler.showMessage("Empresa criada com sucesso!", "success-snackbar")
         },
         error => {
@@ -178,7 +184,7 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.companyID = response;
+          this.companyID = response.ID;
           this.createButtonLoading = false;
           this.getAllCompanies();
           this.messageHandler.showMessage("Recurso alterado com sucesso!", "success-snackbar")
@@ -218,9 +224,19 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         company => {
           this.companyID = company.ID;
-          this.personId = company.personId;
-          this.details = company.details;
+          this.personId = company.PersonId;
+          this.details = company.Details;
           this.tabIsDisabled = false;
+          this.isInputReadOnly = true;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.companiesDispatcherService.getCompaniesParametersByCompanyID(this.companyID)
+      .subscribe(
+        result => {
+          console.log(result);
         },
         error => {
           console.log(error);
