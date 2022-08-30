@@ -12,3 +12,17 @@
     bottom: 24px;
     right: 36px;
 }
+
+.search-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 2rem;
+}
+
+.mat-button-entry {
+  margin-bottom: 0px !important;
+  align-self: center !important;
+}

@@ -17,7 +17,7 @@ import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog } from './pages/pessoas/pessoas.component';
-import { EmpresasComponent, DialogContentScheduleDialog } from './pages/empresa/empresas.component';
+import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDialog } from './pages/empresa/empresas.component';
 import { ProdutoComponent, DialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
@@ -94,6 +94,7 @@ import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
     EmpresaParametrosComponent,
     EmpresaAgendaComponent,
     DialogContentScheduleDialog,
+    ConfirmCompanyRemoveDialog,
     ProdutoPesquisaComponent,
     ProdutoCadastroComponent,
     ProdutoAprazamentoComponent,

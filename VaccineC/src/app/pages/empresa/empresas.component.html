@@ -3,19 +3,188 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Empresa" containerPath="Gerencial">
-            <mat-tab-group>
+            <mat-tab-group #tabGroup>
+
+              <!-- SEARCH TAB -->
                 <mat-tab label="Pesquisa">
-                    <app-empresa-pesquisa></app-empresa-pesquisa>
+                  <div class="search-group">
+                    <div class="col-sm-11 p-0 d-flex">
+                        <mat-form-field class="search-form-field col-sm-9"
+                                        appearance="outline">
+                            <mat-label>Digite o nome da Empresa</mat-label>
+                            <input matInput
+                                   id="searchCompanyName"
+                                   type="text"
+                                   [(ngModel)]="searchCompanyName"
+                                   placeholder="(mínimo 3 caracteres)">
+                            <button *ngIf="value"
+                                     matSuffix
+                                     mat-icon-button
+                                     aria-label="Clear"
+                                     (click)="value=''">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                        <button (click)="loadCompanyData()"
+                                id="mat-search-button"
+                                mat-raised-button
+                                color="primary"
+                                class="mat-button-entry me-2"
+                                [disabled]="searchButtonLoading">
+                                <div class="spinner">
+                                  <mat-spinner *ngIf="searchButtonLoading"
+                                                [diameter]="15"></mat-spinner>
+                                  <span *ngIf="!searchButtonLoading"
+                                      class="fa-solid fa-magnifying-glass me-1 w-20px">
+                                  </span>Pesquisar
+                              </div>
+                        </button>
+                        <button (click)="addNewCompany(); tabGroup.selectedIndex=1"
+                                id="mat-add-button"
+                                mat-raised-button
+                                class="mat-button-entry create-button"
+                                matTooltip="Nova Empresa"
+                                matTooltipPosition="above">
+                            <span class="fa-solid fa-plus w-20px"></span>
+                          </button>
+                    </div>
+                </div>
+
+                <div id="search-table">
+                  <div class="col-sm-11 search-table-content mat-elevation-z2">
+                    <table class="col-sm-12"
+                           mat-table
+                           [dataSource]="dataSource"
+                           matSort
+                           matSortActive="CompanyName"
+                           matSortDirection="asc">
+
+                        <!-- Company Name Column -->
+                        <ng-container matColumnDef="CompanyName">
+                            <th *matHeaderCellDef
+                                 mat-header-cell
+                                 mat-sort-header> Empresa </th>
+                            <td mat-cell
+                                *matCellDef="let row">
+                                {{row.CompanyName}} </td>
+                        </ng-container>
+
+                        <!-- Id Hidden Column -->
+                        <ng-container matColumnDef="CompanyID">
+                            <th *matHeaderCellDef
+                                 mat-header-cell
+                                 [hidden]="show"
+                                 mat-sort-header> ID </th>
+                            <td mat-cell
+                                [hidden]="show"
+                                *matCellDef="let row">
+                                {{row.CompanyID}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Options">
+                            <th mat-header-cell
+                                *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let row">
+                                <button (click)="editCompany(row.ID); tabGroup.selectedIndex=1"
+                                        mat-icon-button
+                                        color="primary"
+                                        title="Visualizar"><i
+                                        class="fa-solid fa-pen-to-square" ></i>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row
+                            *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row
+                            *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
+                        </tr>
+                    </table>
+
+                    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                </div>
+                </div>
                 </mat-tab>
+
+                  <!-- REGISTER TAB -->
                 <mat-tab label="Cadastro">
-                    <app-empresa-cadastro></app-empresa-cadastro>
+                  <form [formGroup]="companyForm">
+                    <div class="registration-group">
+                        <div class="offset-sm-1 col-sm-11 p-0">
+                            <div class="div-row-input">
+
+                                <mat-form-field appearance="fill"
+                                                class="col-sm-11">
+                                    <mat-label>Pessoa</mat-label>
+                                    <input (click)="searchPersonByAutoComplete()"
+                                           type="text"
+                                           id="PersonId"
+                                           placeholder="Selecione a Pessoa Jurídica"
+                                           aria-label="Number"
+                                           matInput
+                                           formControlName="PersonId"
+                                           [formControl]="myControl"
+                                           [matAutocomplete]="auto"
+                                           [(ngModel)]="personId"
+                                           required>
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let option of filteredOptions | async"
+                                                    [value]="option.Name">
+                                            {{option.Name}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-icon matSuffix>search</mat-icon>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="div-row-input">
+                                <mat-form-field class="example-full-width"
+                                                appearance="fill"
+                                                class="col-sm-11">
+                                    <mat-label>Detalhes</mat-label>
+                                    <textarea matInput placeholder="Informações complementares" id="details"></textarea>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="div-row-input registration-button-row">
+                                <button (click)="createUpdateCompany()"
+                                        mat-raised-button
+                                        class="create-button"
+                                        [disabled]="createButtonLoading">
+                                  <span class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                                  <span *ngIf="!createButtonLoading">Salvar</span></button>
+                                <button mat-raised-button
+                                        (click)="deleteCompany()"
+                                        type="button"
+                                        color="warn"
+                                        [disabled]="!companyID">
+                                  <span class="fa-solid fa-trash me-1 w-20px"></span>
+                                  <span>Excluir</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 </mat-tab>
+
+                  <!-- PARAMETERS TAB -->
                 <mat-tab label="Parâmetros">
                     <app-empresa-parametros></app-empresa-parametros>
                 </mat-tab>
+
+                  <!-- SCHEDULLE TAB -->
                 <mat-tab label="Agenda">
                     <app-empresa-agenda></app-empresa-agenda>
-                    <button mat-fab id="add-schedule-btn" class="float-btn create-button" (click)="openScheduleDialog()" aria-label="Add button" matTooltip="Inserir Horário" matTooltipPosition="above">
+                    <button (click)="openScheduleDialog()"
+                            class="float-btn create-button"
+                            mat-fab
+                            id="add-schedule-btn"
+                            aria-label="Add button"
+                            matTooltip="Inserir Horário"
+                            matTooltipPosition="above">
                     <mat-icon>add</mat-icon>
                 </button>
                 </mat-tab>
