@@ -27,11 +27,14 @@ export class EmpresasComponent implements OnInit {
   public filteredOptions: Observable<any[]> | undefined;
 
   //Controle para o spinner do button
-  public searchButtonLoading = false;
-  public createButtonLoading = false;
+  public searchButtonLoading: boolean = false;
+  public createButtonLoading: boolean = false;
 
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
+
+    //Controle de tabs
+  public tabIsDisabled: boolean = true;
 
   //Variáveis dos inputs
   public searchCompanyName!: string;
@@ -42,16 +45,24 @@ export class EmpresasComponent implements OnInit {
 
   //Table
   public value = '';
-  public displayedColumns: string[] = ['CompanyName', 'CompanyID'];
+  public displayedColumns: string[] = ['Name', 'ID'];
   public dataSource = new MatTableDataSource<ICompany>();
+
+  public scheduleColor: string = "#84d7b0";
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  //Form
+  //Parameter form
+	parameterForm: FormGroup = this.formBuilder.group({
+		ScheduleColor: [null]
+	});
+
+  //Company Form
   companyForm: FormGroup = this.formBuilder.group({
     CompanyID: [null],
     PersonId: [null, [Validators.required]],
+    Details:  [null],
   });
 
   constructor(private companiesDispatcherService: CompaniesDispatcherService,
@@ -135,9 +146,11 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         response => {
           this.companyID = response;
+          this.details = response.details;
           this.createButtonLoading = false;
+          this.tabIsDisabled = false;
           this.getAllCompanies();
-          this.messageHandler.showMessage("Recurso criado com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Empresa criada com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
@@ -206,6 +219,8 @@ export class EmpresasComponent implements OnInit {
         company => {
           this.companyID = company.ID;
           this.personId = company.personId;
+          this.details = company.details;
+          this.tabIsDisabled = false;
         },
         error => {
           console.log(error);
@@ -237,11 +252,11 @@ export class EmpresasComponent implements OnInit {
     )
   }
 
-  public filter(val: string): Observable<any[]> {
+  filter(val: string): Observable<any[]> {
     return this.personAutocompleteService.getPersonJuridicallData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
         }))
       )
   }

@@ -33,7 +33,6 @@ import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pesso
 import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
 import { PessoasTelefonesComponent } from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
 import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
-import { EmpresaParametrosComponent } from './pages/empresa/empresa-parametros/empresa-parametros.component';
 import { EmpresaAgendaComponent } from './pages/empresa/empresa-agenda/empresa-agenda.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
 import { ProdutoPesquisaComponent } from './pages/produto/produto-pesquisa/produto-pesquisa.component';
@@ -87,7 +86,6 @@ import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
     PessoasEnderecosComponent,
     DialogContentPhoneDialog,
     DialogContentAddressDialog,
-    EmpresaParametrosComponent,
     EmpresaAgendaComponent,
     DialogContentScheduleDialog,
     ConfirmCompanyRemoveDialog,
