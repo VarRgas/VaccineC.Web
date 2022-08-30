@@ -148,10 +148,10 @@ export class EmpresasComponent implements OnInit {
 
   public updateCompany(): void {
 
-    let resource = new CompanyModel();
-    resource.id = this.companyID;
-    resource.personId = this.personId;
-    resource.details = this.details;
+    let company = new CompanyModel();
+    company.id = this.companyID;
+    company.personId = this.personId;
+    company.details = this.details;
 
     if (!this.companyForm.valid) {
       console.log(this.companyForm);
@@ -161,7 +161,7 @@ export class EmpresasComponent implements OnInit {
       return;
     }
 
-    this.companiesDispatcherService.updateCompany(this.companyID, resource)
+    this.companiesDispatcherService.updateCompany(this.companyID, company)
       .subscribe(
         response => {
           console.log(response);
@@ -205,7 +205,7 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         company => {
           this.companyID = company.ID;
-          console.log(company);
+          this.personId = company.personId;
         },
         error => {
           console.log(error);
