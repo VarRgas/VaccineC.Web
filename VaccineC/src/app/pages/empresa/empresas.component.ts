@@ -52,13 +52,18 @@ export class EmpresasComponent implements OnInit {
   public displayedColumns: string[] = ['Name', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<ICompany>();
 
+  //parametros das companhias
+  public applicationTime = '';
+  public maximumDaysValidity = '';
   public scheduleColor: string = "#84d7b0";
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   //Parameter form
-  parameterForm: FormGroup = this.formBuilder.group({
+  companyParametersForm: FormGroup = this.formBuilder.group({
+    ApplicationTime: [null, [Validators.required]],
+    MaximumDaysValidity: [null, [Validators.required]],
     ScheduleColor: [null]
   });
 
@@ -68,6 +73,8 @@ export class EmpresasComponent implements OnInit {
     PersonId: [null, [Validators.required]],
     Details: [null],
   });
+
+
 
   constructor(private companiesDispatcherService: CompaniesDispatcherService,
     private errorHandler: ErrorHandlerService,
@@ -152,7 +159,6 @@ export class EmpresasComponent implements OnInit {
           this.companyID = response.ID;
           this.details = response.Details;
           this.createButtonLoading = false;
-          this.tabIsDisabled = false;
 
           this.getAllCompanies();
 
@@ -208,6 +214,11 @@ export class EmpresasComponent implements OnInit {
                 this.companyForm.reset();
                 this.companyForm.clearValidators();
                 this.companyForm.updateValueAndValidity();
+
+                this.companyParametersForm.reset();
+                this.companyParametersForm.clearValidators();
+                this.companyParametersForm.updateValueAndValidity();
+
                 this.getAllCompanies();
                 this.messageHandler.showMessage("Recurso removido com sucesso!", "success-snackbar")
               },
@@ -233,20 +244,34 @@ export class EmpresasComponent implements OnInit {
           console.log(error);
         });
 
-    this.companiesDispatcherService.getCompaniesParametersByCompanyID(this.companyID)
-      .subscribe(
-        result => {
-          console.log(result);
-        },
-        error => {
-          console.log(error);
-        });
+    // this.companiesDispatcherService.getCompaniesParametersByCompanyID(id)
+    //   .subscribe(
+    //     result => {
+    //       this.companyID = result.ID;
+    //       this.personId = result.PersonId;
+    //       this.details = result.Details;
+    //       this.applicationTime = result.ApplicationTime;
+    //       this.maximumDaysValidity = result.MaximumDaysValidity;
+    //     },
+    //     error => {
+    //       console.log(error);
+    //     });
+  }
+
+  public getParamsByCompanyID(id: string): void {
+
   }
 
   public addNewCompany(): void {
     this.companyForm.reset();
     this.companyForm.clearValidators();
     this.companyForm.updateValueAndValidity();
+
+    this.companyParametersForm.reset();
+    this.companyParametersForm.clearValidators();
+    this.companyParametersForm.updateValueAndValidity();
+
+    this.tabIsDisabled = true;
   }
 
   public openScheduleDialog(): void {

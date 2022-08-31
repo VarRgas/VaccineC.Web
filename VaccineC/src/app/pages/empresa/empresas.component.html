@@ -159,12 +159,12 @@
                                                 class="col-sm-11">
                                     <mat-label>Detalhes</mat-label>
                                     <textarea matInput
-                                              #UrlNameInput
+                                              #UrlDetailsInput
                                               formControlName="Details"
-                                              placeholder="Informações complementares"
+                                              [(ngModel)]="details"
                                               id="details"
-                                              maxlength="255"
-                                              [(ngModel)]="details"></textarea>
+                                              placeholder="Informações complementares"
+                                              maxlength="255"></textarea>
                                 </mat-form-field>
                             </div>
 
@@ -191,7 +191,7 @@
                   <!-- PARAMETERS TAB -->
                 <mat-tab label="Parâmetros" [disabled]="tabIsDisabled">
 
-                  <form>
+                  <form [formGroup]="companyParametersForm">
                     <div class="parameter-group">
                         <div class="offset-sm-1 col-sm-11 p-0">
                             <div class="div-row-input">
@@ -200,13 +200,14 @@
                                     <mat-label>Tempo de Aplicação</mat-label>
                                     <input type="number"
                                            matInput
-                                           #input
+                                           #ApplicationTimeInput
+                                           formControlName="ApplicationTime"
+                                           [(ngModel)]="applicationTime"
+                                           id="applicationTime"
                                            maxlength="2"
                                            placeholder="Ex. 10"
-                                           id="applicationTimePerMinute"
                                            required="true">
                                     <span matSuffix>min</span>
-
                                 </mat-form-field>
                             </div>
 
@@ -216,10 +217,12 @@
                                     <mat-label>Validade do Orçamento</mat-label>
                                     <input type="number"
                                            matInput
-                                           #input
+                                           #MaximumDaysValidityInput
+                                           formControlName="MaximumDaysValidity"
+                                           [(ngModel)]="maximumDaysValidity"
+                                           id="maximumDaysValidity"
                                            maxlength="15"
                                            placeholder="Ex. 30"
-                                           id="maximumDaysBudgetValidity"
                                            required="true">
                                     <span matSuffix>dias</span>
                                 </mat-form-field>
