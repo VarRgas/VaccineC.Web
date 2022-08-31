@@ -5,265 +5,266 @@
         <app-container containerTitle="Empresa" containerPath="Gerencial">
             <mat-tab-group #tabGroup>
 
-              <!-- SEARCH TAB -->
+                <!-- SEARCH TAB -->
                 <mat-tab label="Pesquisa">
-                  <div class="search-group">
-                    <div class="col-sm-11 p-0 d-flex">
-                        <mat-form-field class="search-form-field col-sm-9"
-                                        appearance="outline">
-                            <mat-label>Digite o nome da Empresa</mat-label>
-                            <input matInput
-                                   [(ngModel)]="searchCompanyName"
-                                   id="searchCompanyName"
-                                   type="text"
-                                   placeholder="(mínimo 3 caracteres)">
-                            <button *ngIf="value"
-                                     matSuffix
-                                     mat-icon-button
-                                     aria-label="Clear"
-                                     (click)="value=''">
-                                <mat-icon>close</mat-icon>
-                            </button>
-                        </mat-form-field>
-                        <button (click)="loadCompanyData()"
-                                id="mat-search-button"
-                                mat-raised-button
-                                color="primary"
-                                class="mat-button-entry me-2"
-                                [disabled]="searchButtonLoading">
-                                <div class="spinner">
-                                  <mat-spinner *ngIf="searchButtonLoading"
-                                                [diameter]="15"></mat-spinner>
-                                  <span *ngIf="!searchButtonLoading"
-                                      class="fa-solid fa-magnifying-glass me-1 w-20px">
-                                  </span>Pesquisar
-                              </div>
-                        </button>
-                        <button (click)="addNewCompany(); tabGroup.selectedIndex=1"
-                                id="mat-add-button"
-                                mat-raised-button
-                                class="mat-button-entry create-button"
-                                matTooltip="Nova Empresa"
-                                matTooltipPosition="above">
-                            <span class="fa-solid fa-plus w-20px"></span>
-                          </button>
-                    </div>
-                </div>
-
-                <div id="search-table">
-                  <div class="col-sm-11 search-table-content mat-elevation-z2">
-                    <table class="col-sm-12"
-                           mat-table
-                           [dataSource]="dataSource"
-                           matSort
-                           matSortActive="CompanyName"
-                           matSortDirection="asc">
-
-                        <!-- Company Name Column -->
-                        <ng-container matColumnDef="Name">
-                            <th *matHeaderCellDef
-                                 mat-header-cell
-                                 mat-sort-header> Empresa </th>
-                            <td mat-cell
-                                *matCellDef="let row">
-                                {{row.Person.Name}} </td>
-                        </ng-container>
-
-                        <!-- Id Hidden Column -->
-                        <ng-container matColumnDef="ID">
-                            <th *matHeaderCellDef
-                                 mat-header-cell
-                                 [hidden]="show"
-                                 mat-sort-header> ID </th>
-                            <td mat-cell
-                                [hidden]="show"
-                                *matCellDef="let row">
-                                {{row.ID}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="Options">
-                            <th mat-header-cell
-                                *matHeaderCellDef> </th>
-                            <td mat-cell
-                                *matCellDef="let row">
-                                <button (click)="editCompany(row.ID); tabGroup.selectedIndex=1"
-                                        mat-icon-button
-                                        color="primary"
-                                        title="Visualizar"><i
-                                        class="fa-solid fa-pen-to-square"></i>
+                    <div class="search-group">
+                        <div class="col-sm-11 p-0 d-flex">
+                            <mat-form-field class="search-form-field col-sm-9" appearance="outline">
+                                <mat-label>Digite o nome da Empresa</mat-label>
+                                <input matInput [(ngModel)]="searchCompanyName" id="searchCompanyName" type="text"
+                                    placeholder="(mínimo 3 caracteres)">
+                                <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                                    <mat-icon>close</mat-icon>
                                 </button>
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row
-                            *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row
-                            *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                        <!-- Row shown when there is no matching data. -->
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
-                        </tr>
-                    </table>
-
-                    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
-                </div>
-                </div>
-                </mat-tab>
-
-                  <!-- REGISTER TAB -->
-                <mat-tab label="Cadastro">
-                  <form [formGroup]="companyForm">
-                    <div class="registration-group">
-                        <div class="offset-sm-1 col-sm-11 p-0">
-
-                          <mat-form-field [hidden]="true">
-                            <input matInput
-                                   #NameCompanyID
-                                   formControlName="CompanyID"
-                                   id="companyID"
-                                   [(ngModel)]="companyID">
-                          </mat-form-field>
-
-                            <div class="div-row-input">
-                                <mat-form-field appearance="fill"
-                                                class="col-sm-11">
-                                    <mat-label>Pessoa</mat-label>
-                                    <input (click)="searchPersonByAutoComplete()"
-                                           type="text"
-                                           id="personId"
-                                           #PersonIdinput
-                                           placeholder="Selecione a Pessoa Jurídica"
-                                           aria-label="Number"
-                                           matInput
-                                           formControlName="PersonId"
-                                           [formControl]="myControl"
-                                           [matAutocomplete]="auto"
-                                           [(ngModel)]="personId"
-                                           required>
-                                        <mat-error *ngIf="companyForm.controls.PersonId.touched && companyForm.controls.PersonId.invalid">
-                                            <span *ngIf="companyForm.controls.PersonId.errors?.required">O campo é obrigatório.</span>
-                                        </mat-error>
-                                    <mat-autocomplete #auto="matAutocomplete">
-                                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.ID">
-                                        {{option.Name}}
-                                      </mat-option>
-                                    </mat-autocomplete>
-                                    <mat-icon matSuffix>search</mat-icon>
-                                </mat-form-field>
-                            </div>
-
-                            <div class="div-row-input">
-                                <mat-form-field class="example-full-width"
-                                                appearance="fill"
-                                                class="col-sm-11">
-                                    <mat-label>Detalhes</mat-label>
-                                    <textarea matInput
-                                              #UrlDetailsInput
-                                              formControlName="Details"
-                                              [(ngModel)]="details"
-                                              id="details"
-                                              placeholder="Informações complementares"
-                                              maxlength="255"></textarea>
-                                </mat-form-field>
-                            </div>
-
-                            <div class="div-row-input registration-button-row">
-                                <button (click)="createUpdateCompany()"
-                                        mat-raised-button
-                                        class="create-button"
-                                        [disabled]="createButtonLoading">
-                                  <span class="fa-solid fa-floppy-disk me-1 w-20px"></span>
-                                  <span *ngIf="!createButtonLoading">Salvar</span></button>
-                                <button mat-raised-button
-                                        (click)="deleteCompany()"
-                                        type="button"
-                                        color="warn"
-                                        [disabled]="!companyID">
-                                  <span class="fa-solid fa-trash me-1 w-20px"></span>
-                                  <span>Excluir</span></button>
-                            </div>
+                            </mat-form-field>
+                            <button (click)="loadCompanyData()" id="mat-search-button" mat-raised-button color="primary"
+                                class="mat-button-entry me-2" [disabled]="searchButtonLoading">
+                                <div class="spinner">
+                                    <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
+                                    <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px">
+                                    </span>Pesquisar
+                                </div>
+                            </button>
+                            <button (click)="addNewCompany(); tabGroup.selectedIndex=1" id="mat-add-button"
+                                mat-raised-button class="mat-button-entry create-button" matTooltip="Nova Empresa"
+                                matTooltipPosition="above">
+                                <span class="fa-solid fa-plus w-20px"></span>
+                            </button>
                         </div>
                     </div>
-                </form>
+
+                    <div id="search-table">
+                        <div class="col-sm-11 search-table-content mat-elevation-z2">
+                            <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort
+                                matSortActive="CompanyName" matSortDirection="asc">
+
+                                <!-- Company Name Column -->
+                                <ng-container matColumnDef="Name">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Empresa </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{row.Person.Name}} </td>
+                                </ng-container>
+
+                                <!-- Id Hidden Column -->
+                                <ng-container matColumnDef="ID">
+                                    <th *matHeaderCellDef mat-header-cell [hidden]="show" mat-sort-header> ID </th>
+                                    <td mat-cell [hidden]="show" *matCellDef="let row">
+                                        {{row.ID}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Options">
+                                    <th mat-header-cell *matHeaderCellDef> </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <button (click)="editCompany(row.ID); tabGroup.selectedIndex=1" mat-icon-button
+                                            color="primary" title="Visualizar"><i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                <!-- Row shown when there is no matching data. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
+                                </tr>
+                            </table>
+
+                            <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                        </div>
+                    </div>
                 </mat-tab>
 
-                  <!-- PARAMETERS TAB -->
+                <!-- REGISTER TAB -->
+                <mat-tab label="Cadastro">
+                    <form [formGroup]="companyForm">
+                        <div class="registration-group">
+                            <div class="offset-sm-1 col-sm-11 p-0">
+
+                                <mat-form-field [hidden]="true">
+                                    <input matInput #NameCompanyID formControlName="CompanyID" id="companyID"
+                                        [(ngModel)]="companyID">
+                                </mat-form-field>
+
+                                <div class="div-row-input">
+                                    <mat-form-field appearance="fill" class="col-sm-11">
+                                        <mat-label>Pessoa</mat-label>
+                                        <input (click)="searchPersonByAutoComplete()" [readonly]="isInputReadOnly" type="text" id="personId"
+                                            #PersonIdinput placeholder="Selecione a Pessoa Jurídica" aria-label="Number"
+                                            matInput formControlName="PersonId"
+                                            [matAutocomplete]="auto" [(ngModel)]="personId" required>
+                                        <mat-error
+                                            *ngIf="companyForm.controls.PersonId.touched && companyForm.controls.PersonId.invalid">
+                                            <span *ngIf="companyForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
+                                        </mat-error>
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option *ngFor="let option of filteredOptions | async"
+                                                [value]="option.ID">
+                                                {{option.Name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-icon matSuffix>search</mat-icon>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="div-row-input">
+                                    <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
+                                        <mat-label>Detalhes</mat-label>
+                                        <textarea matInput #UrlDetailsInput formControlName="Details"
+                                            [(ngModel)]="details" id="details" placeholder="Informações complementares"
+                                            maxlength="255"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="div-row-input registration-button-row d-flex">
+                                    <button mat-raised-button class="create-button" (click)="createUpdateCompany()"
+                                        type="button" [disabled]="createButtonLoading">
+                                        <div class="spinner">
+                                            <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
+                                            <span *ngIf="!createButtonLoading"
+                                                class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                                            Salvar
+                                        </div>
+                                    </button>
+
+
+                                    <button mat-raised-button color="warn" (click)="deleteCompany()" type="button"
+                                        [disabled]="!companyID">
+                                        <div>
+                                            <span class="fa-solid fa-trash me-1 w-20px"></span>
+                                            Excluir
+                                        </div>
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </mat-tab>
+
+                <!-- PARAMETERS TAB -->
                 <mat-tab label="Parâmetros" [disabled]="tabIsDisabled">
 
-                  <form [formGroup]="companyParametersForm">
-                    <div class="parameter-group">
-                        <div class="offset-sm-1 col-sm-11 p-0">
-                            <div class="div-row-input">
-                                <mat-form-field appearance="fill"
-                                                class="col-sm-6">
-                                    <mat-label>Tempo de Aplicação</mat-label>
-                                    <input type="number"
-                                           matInput
-                                           #ApplicationTimeInput
-                                           formControlName="ApplicationTime"
-                                           [(ngModel)]="applicationTime"
-                                           id="applicationTime"
-                                           maxlength="2"
-                                           placeholder="Ex. 10"
-                                           required="true">
-                                    <span matSuffix>min</span>
+                    <form [formGroup]="companyParametersForm">
+                        <div class="parameter-group">
+                            <div class="offset-sm-1 col-sm-11 p-0">
+
+                                <mat-form-field [hidden]="true">
+                                    <input matInput #NameCompanyParameterID formControlName="CompanyParameterID"
+                                        id="CompanyParameterID" [(ngModel)]="CompanyParameterID">
                                 </mat-form-field>
-                            </div>
 
-                            <div class="div-row-input">
-                                <mat-form-field appearance="fill"
-                                                class="col-sm-6">
-                                    <mat-label>Validade do Orçamento</mat-label>
-                                    <input type="number"
-                                           matInput
-                                           #MaximumDaysValidityInput
-                                           formControlName="MaximumDaysValidity"
-                                           [(ngModel)]="maximumDaysValidity"
-                                           id="maximumDaysValidity"
-                                           maxlength="15"
-                                           placeholder="Ex. 30"
-                                           required="true">
-                                    <span matSuffix>dias</span>
+                                <mat-form-field [hidden]="true">
+                                    <input matInput #NameCompanyID formControlName="CompanyID"
+                                        [(ngModel)]="CompanyIDParameter">
                                 </mat-form-field>
-                            </div>
 
-                            <div class="div-row-input">
-                              <mat-form-field appearance="fill" class="col-sm-2">
-                                <mat-label>Cor Horário Disponível</mat-label>
-                                <input type="color"
-                                       matInput
-                                       id="scheduleColor"
-                                       #ScheduleColorInput
-                                       formControlName="ScheduleColor"
-                                       [(ngModel)]="scheduleColor">
-                              </mat-form-field>
-                            </div>
+                                <div class="div-row-input">
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>Tempo de Aplicação</mat-label>
+                                        <input type="number" matInput #ApplicationTimePerMinuteInput
+                                            formControlName="ApplicationTimePerMinute"
+                                            [(ngModel)]="ApplicationTimePerMinute" id="ApplicationTimePerMinute"
+                                            placeholder="Ex. 10" required="true">
+                                            <mat-error *ngIf="companyParametersForm.controls.ApplicationTimePerMinute.touched && companyParametersForm.controls.ApplicationTimePerMinute.invalid">
+                                                <span *ngIf="companyParametersForm.controls.ApplicationTimePerMinute.errors?.required">O Tempo de Aplicação é obrigatório.</span>
+                                            </mat-error>
+                                        <span matSuffix>min</span>
+                                    </mat-form-field>
+                                </div>
 
-                            <div class="div-row-input registration-button-row">
-                                <button mat-raised-button
-                                        class="create-button">
-                                  <span class="fa-solid fa-floppy-disk me-1 w-20px"></span>
-                                  <span>Salvar</span>
-                                </button>
+                                <div class="div-row-input">
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>Validade do Orçamento</mat-label>
+                                        <input type="number" matInput #MaximumDaysBudgetValidityInput
+                                            formControlName="MaximumDaysBudgetValidity"
+                                            [(ngModel)]="MaximumDaysBudgetValidity" id="MaximumDaysBudgetValidity"
+                                            maxlength="15" placeholder="Ex. 30" required="true">
+                                            <mat-error *ngIf="companyParametersForm.controls.MaximumDaysBudgetValidity.touched && companyParametersForm.controls.MaximumDaysBudgetValidity.invalid">
+                                                <span *ngIf="companyParametersForm.controls.MaximumDaysBudgetValidity.errors?.required">A Validade do Orçamento é obrigatória.</span>
+                                            </mat-error>
+                                        <span matSuffix>dias</span>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="div-row-input">
+                                    <mat-form-field appearance="fill" class="col-sm-3">
+                                        <mat-label>Cor Horário Disponível</mat-label>
+                                        <input type="color" matInput id="scheduleColor" #ScheduleColorInput
+                                            formControlName="ScheduleColor" [(ngModel)]="scheduleColor">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="div-row-input registration-button-row">
+                                    <button mat-raised-button class="create-button"
+                                        (click)="createUpdateCompanyParameter()">
+                                        <span class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                                        <span>Salvar</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
                 </mat-tab>
 
-                  <!-- SCHEDULLE TAB -->
+                <!-- SCHEDULLE TAB -->
                 <mat-tab label="Agenda" [disabled]="tabIsDisabled">
-                    <app-empresa-agenda></app-empresa-agenda>
-                    <button (click)="openScheduleDialog()"
-                            class="float-btn create-button"
-                            mat-fab
-                            id="add-schedule-btn"
-                            aria-label="Add button"
-                            matTooltip="Inserir Horário"
-                            matTooltipPosition="above">
-                    <mat-icon>add</mat-icon>
-                </button>
+
+                    <div class="search-table">
+                        <div class="col-sm-11 search-table-content mat-elevation-z2">
+                            <table class="col-sm-12" mat-table [dataSource]="dataSource2" matSort matSortActive="Name"
+                                matSortDirection="asc">
+
+                                <!-- Day Column -->
+                                <ng-container matColumnDef="Day">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Dia </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.Day}} </td>
+                                </ng-container>
+
+                                <!-- StartTime Column -->
+                                <ng-container matColumnDef="StartTime">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Inicial </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.StartTime}} </td>
+                                </ng-container>
+
+                                <!-- Day Column -->
+                                <ng-container matColumnDef="FinalTime">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Final </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.FinalTime}} </td>
+                                </ng-container>
+
+                                <!-- Id Hidden Column -->
+                                <ng-container matColumnDef="ID">
+                                    <th mat-header-cell [hidden]="show" *matHeaderCellDef mat-sort-header> ID </th>
+                                    <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Options">
+                                    <th mat-header-cell *matHeaderCellDef> </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <button mat-icon-button color="warn" title="Remover" style="float:right;"><i
+                                                class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+
+                                <!-- Row shown when there is no matching data. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
+                                </tr>
+                            </table>
+
+                            <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                        </div>
+                    </div>
+
+                    <button (click)="openScheduleDialog()" class="float-btn create-button" mat-fab id="add-schedule-btn"
+                        aria-label="Add button" matTooltip="Inserir Horário" matTooltipPosition="above">
+                        <mat-icon>add</mat-icon>
+                    </button>
                 </mat-tab>
             </mat-tab-group>
         </app-container>

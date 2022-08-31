@@ -372,7 +372,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   filter(val: string): Observable<any[]> {
-    return this.personAutocompleteService.getPersonPhysicalData()
+    return this.personAutocompleteService.getPersonUserAutocomplete()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
           return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0

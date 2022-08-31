@@ -22,4 +22,16 @@ export class PersonAutocompleteService {
             of(this.opts) :
             this.http.get<any>(`http://localhost:5000/api/Persons/${"J"}/GetAllByType`).pipe(tap(data => this.opts = data))
     }
+
+    getPersonUserAutocomplete() {
+        return this.opts.length ?
+            of(this.opts) :
+            this.http.get<any>(`http://localhost:5000/api/Persons/GetAllUserAutocomplete`).pipe(tap(data => this.opts = data))
+    }
+
+    getPersonCompanyAutocomplete() {
+        return this.opts.length ?
+            of(this.opts) :
+            this.http.get<any>(`http://localhost:5000/api/Persons/GetAllCompanyAutocomplete`).pipe(tap(data => this.opts = data))
+    }
 }

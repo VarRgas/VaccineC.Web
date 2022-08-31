@@ -12,6 +12,10 @@ import { CompaniesDispatcherService } from 'src/app/services/company-dispatcher.
 import { CompanyModel } from 'src/app/models/company-model';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
+import { CompaniesParametersDispatcherService } from 'src/app/services/company-parameter-dispatcher.service';
+import { CompanyParameterModel } from 'src/app/models/company-parameter-model';
+import { IResource } from 'src/app/interfaces/i-resource';
+import { ICompanyParameter } from 'src/app/interfaces/i-company-parameter';
 
 
 @Component({
@@ -52,18 +56,26 @@ export class EmpresasComponent implements OnInit {
   public displayedColumns: string[] = ['Name', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<ICompany>();
 
+  //Table Schedulles
+  public displayedColumns2: string[] = ['Day', 'StartTime', 'FinalTime', 'ID', 'Options'];
+  public dataSource2 = new MatTableDataSource<ICompanyParameter>();
+
   //parametros das companhias
-  public applicationTime = '';
-  public maximumDaysValidity = '';
+  public CompanyParameterID!: string;
+  public ApplicationTimePerMinute!: string;
+  public MaximumDaysBudgetValidity!: string;
   public scheduleColor: string = "#84d7b0";
+  public CompanyIDParameter!: string;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   //Parameter form
   companyParametersForm: FormGroup = this.formBuilder.group({
-    ApplicationTime: [null, [Validators.required]],
-    MaximumDaysValidity: [null, [Validators.required]],
+    CompanyParameterID: [null],
+    CompanyID: [null, [Validators.required]],
+    ApplicationTimePerMinute: [null, [Validators.required]],
+    MaximumDaysBudgetValidity: [null, [Validators.required]],
     ScheduleColor: [null]
   });
 
@@ -74,9 +86,9 @@ export class EmpresasComponent implements OnInit {
     Details: [null],
   });
 
-
-
-  constructor(private companiesDispatcherService: CompaniesDispatcherService,
+  constructor(
+    private companiesDispatcherService: CompaniesDispatcherService,
+    private companiesParametersDispatcherService: CompaniesParametersDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -104,7 +116,6 @@ export class EmpresasComponent implements OnInit {
         this.dataSource = new MatTableDataSource(companies);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(companies);
         this.searchButtonLoading = false;
       },
         error => {
@@ -120,7 +131,6 @@ export class EmpresasComponent implements OnInit {
         this.dataSource = new MatTableDataSource(companies);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(companies);
         this.searchButtonLoading = false;
       },
       error => {
@@ -131,6 +141,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   public createUpdateCompany(): void {
+
     this.createButtonLoading = true;
 
     if (this.companyID == "" || this.companyID == null || this.companyID == undefined) {
@@ -140,7 +151,17 @@ export class EmpresasComponent implements OnInit {
     }
   }
 
+  public createUpdateCompanyParameter(): void {
+
+    if (this.CompanyParameterID == "" || this.CompanyParameterID == null || this.CompanyParameterID == undefined) {
+      this.createCompanyParameter();
+    } else {
+      this.updateCompanyParameter();
+    }
+  }
+
   public createCompany(): void {
+
     if (!this.companyForm.valid) {
       console.log(this.companyForm);
       this.createButtonLoading = false;
@@ -156,10 +177,13 @@ export class EmpresasComponent implements OnInit {
     this.companiesDispatcherService.createCompany(data)
       .subscribe(
         response => {
+          console.log(response)
           this.companyID = response.ID;
+          this.CompanyIDParameter = response.ID;
           this.details = response.Details;
           this.createButtonLoading = false;
-
+          this.tabIsDisabled = false;
+          this.isInputReadOnly = true;
           this.getAllCompanies();
 
           this.messageHandler.showMessage("Empresa criada com sucesso!", "success-snackbar")
@@ -189,11 +213,11 @@ export class EmpresasComponent implements OnInit {
     this.companiesDispatcherService.updateCompany(this.companyID, company)
       .subscribe(
         response => {
-          console.log(response);
-          this.companyID = response.ID;
+          this.companyID = response;
+          this.CompanyIDParameter = response;
           this.createButtonLoading = false;
           this.getAllCompanies();
-          this.messageHandler.showMessage("Recurso alterado com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Empresa alterada com sucesso!", "success-snackbar")
         },
         error => {
           this.errorHandler.handleError(error);
@@ -218,9 +242,10 @@ export class EmpresasComponent implements OnInit {
                 this.companyParametersForm.reset();
                 this.companyParametersForm.clearValidators();
                 this.companyParametersForm.updateValueAndValidity();
-
+                this.isInputReadOnly = false;
+                this.tabIsDisabled = true;
                 this.getAllCompanies();
-                this.messageHandler.showMessage("Recurso removido com sucesso!", "success-snackbar")
+                this.messageHandler.showMessage("Empresa excluída com sucesso!", "success-snackbar")
               },
               error => {
                 console.log(error);
@@ -230,7 +255,76 @@ export class EmpresasComponent implements OnInit {
       });
   }
 
+  public createCompanyParameter(): void {
+
+    if (!this.companyParametersForm.valid) {
+      console.log(this.companyParametersForm);
+      this.companyParametersForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    const data = this.companyParametersForm.value;
+    data.HasPending = false;
+    console.log(data);
+
+    this.companiesParametersDispatcherService.createCompanyParameter(data)
+      .subscribe(
+        response => {
+          this.CompanyParameterID = response.ID;
+          this.CompanyIDParameter = response.CompanyId;
+          console.log(this.CompanyIDParameter)
+          this.ApplicationTimePerMinute = response.ApplicationTimePerMinute;
+          this.MaximumDaysBudgetValidity = response.MaximumDaysBudgetValidity;
+          this.scheduleColor = response.ScheduleColor;
+          this.messageHandler.showMessage("Parâmetros criados com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
+
+        console.log(this.CompanyIDParameter)
+  }
+
+  public updateCompanyParameter(): void {
+    let companyParameter = new CompanyParameterModel();
+    companyParameter.id = this.CompanyParameterID;
+    companyParameter.companyId = this.CompanyIDParameter;
+    companyParameter.applicationTimePerMinute = this.ApplicationTimePerMinute;
+    companyParameter.maximumDaysBudgetValidity = this.MaximumDaysBudgetValidity;
+    companyParameter.scheduleColor = this.scheduleColor;
+
+    if (!this.companyParametersForm.valid) {
+      console.log(this.companyParametersForm);
+      this.companyParametersForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    this.companiesParametersDispatcherService.updateCompanyParameter(this.CompanyParameterID, companyParameter)
+      .subscribe(
+        response => {
+          console.log(response)
+          this.messageHandler.showMessage("Parâmetros alterados com sucesso!", "success-snackbar")
+        },
+        error => {
+          this.errorHandler.handleError(error);
+          console.log(error);
+          this.createButtonLoading = false;
+        });
+  }
+
   public editCompany(id: string): void {
+
+    this.companyForm.reset();
+    this.companyForm.clearValidators();
+    this.companyForm.updateValueAndValidity();
+
+    this.companyParametersForm.reset();
+    this.companyParametersForm.clearValidators();
+    this.companyParametersForm.updateValueAndValidity();
+
     this.companiesDispatcherService.getCompanyById(id)
       .subscribe(
         company => {
@@ -244,18 +338,29 @@ export class EmpresasComponent implements OnInit {
           console.log(error);
         });
 
-    // this.companiesDispatcherService.getCompaniesParametersByCompanyID(id)
-    //   .subscribe(
-    //     result => {
-    //       this.companyID = result.ID;
-    //       this.personId = result.PersonId;
-    //       this.details = result.Details;
-    //       this.applicationTime = result.ApplicationTime;
-    //       this.maximumDaysValidity = result.MaximumDaysValidity;
-    //     },
-    //     error => {
-    //       console.log(error);
-    //     });
+    this.companiesDispatcherService.getCompaniesParametersByCompanyID(id)
+      .subscribe(
+        result => {
+          if (result.length == 0) {
+            this.CompanyParameterID = "";
+            this.ApplicationTimePerMinute = "";
+            this.MaximumDaysBudgetValidity = "";
+            this.scheduleColor = "#84d7b0";
+            this.companyParametersForm.clearValidators();
+            this.companyParametersForm.updateValueAndValidity();
+          } else {
+            this.CompanyParameterID = result[0].ID;
+            this.scheduleColor = result[0].ScheduleColor;
+            this.ApplicationTimePerMinute = result[0].ApplicationTimePerMinute;
+            this.MaximumDaysBudgetValidity = result[0].MaximumDaysBudgetValidity;
+          }
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.CompanyIDParameter = id;
+    console.log(this.CompanyIDParameter)
   }
 
   public getParamsByCompanyID(id: string): void {
@@ -270,7 +375,8 @@ export class EmpresasComponent implements OnInit {
     this.companyParametersForm.reset();
     this.companyParametersForm.clearValidators();
     this.companyParametersForm.updateValueAndValidity();
-
+    
+    this.isInputReadOnly = false;
     this.tabIsDisabled = true;
   }
 
@@ -294,7 +400,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   filter(val: string): Observable<any[]> {
-    return this.personAutocompleteService.getPersonJuridicallData()
+    return this.personAutocompleteService.getPersonCompanyAutocomplete()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
           return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
