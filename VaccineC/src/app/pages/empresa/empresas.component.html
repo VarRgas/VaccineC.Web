@@ -243,7 +243,7 @@
                                 <ng-container matColumnDef="Options">
                                     <th mat-header-cell *matHeaderCellDef> </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <button mat-icon-button color="warn" title="Remover" style="float:right;"><i
+                                        <button mat-icon-button color="warn" title="Remover" (click)="deleteCompanySchedule(row.ID)" style="float:right;"><i
                                                 class="fa-solid fa-trash"></i></button>
                                     </td>
                                 </ng-container>

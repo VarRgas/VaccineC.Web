@@ -16,6 +16,7 @@ import { CompaniesParametersDispatcherService } from 'src/app/services/company-p
 import { CompanyParameterModel } from 'src/app/models/company-parameter-model';
 import { IResource } from 'src/app/interfaces/i-resource';
 import { ICompanyParameter } from 'src/app/interfaces/i-company-parameter';
+import { CompaniesSchedulesDispatcherService } from 'src/app/services/company-schedule-dispatcher.service';
 
 
 @Component({
@@ -89,6 +90,7 @@ export class EmpresasComponent implements OnInit {
   constructor(
     private companiesDispatcherService: CompaniesDispatcherService,
     private companiesParametersDispatcherService: CompaniesParametersDispatcherService,
+    private companiesSchedulesDispatcherService: CompaniesSchedulesDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -359,8 +361,41 @@ export class EmpresasComponent implements OnInit {
           console.log(error);
         });
 
+        this.companiesSchedulesDispatcherService.getAllCompaniesSchedulesByCompanyId(id)
+        .subscribe(
+          result => {
+            this.dataSource2 = new MatTableDataSource(result);
+            this.dataSource2.paginator = this.paginator;
+            this.dataSource2.sort = this.sort;
+          },
+          error => {
+            console.log(error);
+          });
+
     this.CompanyIDParameter = id;
-    console.log(this.CompanyIDParameter)
+
+  }
+
+  deleteCompanySchedule(id: string) {
+
+    const dialogRef = this.dialog.open(ConfirmCompanyScheduleRemoveDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.companiesSchedulesDispatcherService.delete(id).subscribe(
+          success => {
+            this.dataSource2 = new MatTableDataSource(success);
+            this.dataSource2.paginator = this.paginator;
+            this.dataSource2.sort = this.sort;
+            this.messageHandler.showMessage("Horáro excluído com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+      }
+    });
+
   }
 
   public getParamsByCompanyID(id: string): void {
@@ -420,3 +455,9 @@ export class DialogContentScheduleDialog { }
   templateUrl: './confirm-company-remove-dialog.html',
 })
 export class ConfirmCompanyRemoveDialog { }
+
+@Component({
+  selector: 'confirm-company-schedule-remove-dialog',
+  templateUrl: 'confirm-company-schedule-remove-dialog.html',
+})
+export class ConfirmCompanyScheduleRemoveDialog { }
