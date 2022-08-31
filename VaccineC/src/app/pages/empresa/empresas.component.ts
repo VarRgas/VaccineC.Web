@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -17,6 +17,7 @@ import { CompanyParameterModel } from 'src/app/models/company-parameter-model';
 import { IResource } from 'src/app/interfaces/i-resource';
 import { ICompanyParameter } from 'src/app/interfaces/i-company-parameter';
 import { CompaniesSchedulesDispatcherService } from 'src/app/services/company-schedule-dispatcher.service';
+import { CompanyScheduleModel } from 'src/app/models/company-schedule-model';
 
 
 @Component({
@@ -70,7 +71,7 @@ export class EmpresasComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  public dialogRef?: MatDialogRef<any>;
   //Parameter form
   companyParametersForm: FormGroup = this.formBuilder.group({
     CompanyParameterID: [null],
@@ -416,11 +417,22 @@ export class EmpresasComponent implements OnInit {
   }
 
   public openScheduleDialog(): void {
-    const dialogRef = this.dialog.open(DialogContentScheduleDialog);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    this.dialogRef = this.dialog.open(DialogContentScheduleDialog, {
+      width: '50vw',
+      data: {
+        ID: this.companyID
+      },
     });
+
+    this.dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSource2 = new MatTableDataSource(res);
+          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.sort = this.sort;
+        }
+      }
+    );
   }
 
   public searchPersonByAutoComplete(): void {
@@ -448,7 +460,68 @@ export class EmpresasComponent implements OnInit {
   selector: 'dialog-content-schedule-dialog',
   templateUrl: 'dialog-content-schedule-dialog.html',
 })
-export class DialogContentScheduleDialog { }
+export class DialogContentScheduleDialog implements OnInit{ 
+
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<any[]> | undefined;
+
+  CompanyId!: string;
+  Day!: string;
+  StartTime!: string;
+  FinalTime!: string;
+
+  //Form
+  CompanyScheduleForm: FormGroup = this.formBuilder.group({
+    Day: [null],
+    StartTime: [null],
+    FinalTime: [null]
+  });
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    private companiesSchedulesDispatcherService: CompaniesSchedulesDispatcherService,
+    private messageHandler: MessageHandlerService,
+    public dialogRef: MatDialogRef<DialogContentScheduleDialog>
+  ) { }
+
+  ngOnInit(): void {
+    this.CompanyId = this.data.ID;
+  }
+
+  saveCompanySchedule():void {
+
+    let diasDaSemana = this.Day;
+    let horaInicial = this.StartTime;
+    let horaFinal = this.FinalTime
+
+    let lista = new Array<CompanyScheduleModel>();
+
+    for (var i = 0; i < diasDaSemana.length; i++) {
+      if(horaInicial != "" && horaFinal != ""){
+
+        let companySchedule = new CompanyScheduleModel();
+        companySchedule.day = diasDaSemana[i];
+        companySchedule.startTime = horaInicial;
+        companySchedule.finalTime = horaFinal;
+        companySchedule.companyId = this.CompanyId;
+        lista.push(companySchedule);
+        }
+      }
+
+    var myJsonString = JSON.stringify(lista);
+    console.log(lista)
+    this.companiesSchedulesDispatcherService.createOnDemand(lista).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Horário(s) incluído(s) com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+      });
+  }
+}
 
 @Component({
   selector: 'confirm-company-remove-dialog',

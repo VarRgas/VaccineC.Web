@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { CompanyScheduleModel } from '../models/company-schedule-model';
 
 const baseURL = 'http://localhost:5000/api/CompaniesSchedules';
 
@@ -24,8 +25,12 @@ export class CompaniesSchedulesDispatcherService {
     return this.httpClient.get(`${baseURL}/${id}/GetAllCompaniesSchedulesByCompanyID`);
   }
 
+  createOnDemand(data: CompanyScheduleModel[]): Observable<any> {
+    return this.httpClient.post(`${baseURL}/CreateOnDemand`, data);
+  }
+
   delete(id: string): Observable<any> {
     return this.httpClient.delete(`${baseURL}/${id}/Delete`);
-}
+  }
 
 }
