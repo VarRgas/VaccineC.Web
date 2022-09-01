@@ -343,20 +343,22 @@ export class EmpresasComponent implements OnInit {
 
     this.companiesDispatcherService.getCompaniesParametersByCompanyID(id)
       .subscribe(
-        result => {
-          if (result.length == 0) {
+        companyParameter => {
+
+          if(companyParameter.length == 0){
             this.CompanyParameterID = "";
             this.ApplicationTimePerMinute = "";
             this.MaximumDaysBudgetValidity = "";
             this.scheduleColor = "#84d7b0";
             this.companyParametersForm.clearValidators();
             this.companyParametersForm.updateValueAndValidity();
-          } else {
-            this.CompanyParameterID = result[0].ID;
-            this.scheduleColor = result[0].ScheduleColor;
-            this.ApplicationTimePerMinute = result[0].ApplicationTimePerMinute;
-            this.MaximumDaysBudgetValidity = result[0].MaximumDaysBudgetValidity;
+          }else{
+            this.CompanyParameterID = companyParameter.ID;
+            this.scheduleColor = companyParameter.ScheduleColor;
+            this.ApplicationTimePerMinute = companyParameter.ApplicationTimePerMinute;
+            this.MaximumDaysBudgetValidity = companyParameter.MaximumDaysBudgetValidity
           }
+          
         },
         error => {
           console.log(error);
