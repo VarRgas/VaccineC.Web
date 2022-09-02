@@ -52,7 +52,7 @@ export class FormasPagamentoComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {

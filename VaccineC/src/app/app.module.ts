@@ -54,6 +54,7 @@ import { GlobalErrorDialog } from './shared/components/global-error-dialog/globa
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
 import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
+import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
 
 @NgModule({
   declarations: [
@@ -127,7 +128,8 @@ import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
     ReactiveFormsModule,
     NgChartsModule,
     NgxMaskModule.forRoot(),
-    NgxLoadingButtonsModule
+    NgxLoadingButtonsModule,
+    NgxViacepModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },

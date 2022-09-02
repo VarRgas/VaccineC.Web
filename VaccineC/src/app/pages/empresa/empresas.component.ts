@@ -358,7 +358,7 @@ export class EmpresasComponent implements OnInit {
             this.ApplicationTimePerMinute = companyParameter.ApplicationTimePerMinute;
             this.MaximumDaysBudgetValidity = companyParameter.MaximumDaysBudgetValidity
           }
-          
+
         },
         error => {
           console.log(error);
@@ -416,6 +416,10 @@ export class EmpresasComponent implements OnInit {
     
     this.isInputReadOnly = false;
     this.tabIsDisabled = true;
+
+    this.dataSource2 = new MatTableDataSource();
+    this.dataSource2.paginator = this.paginator;
+    this.dataSource2.sort = this.sort;
   }
 
   public openScheduleDialog(): void {

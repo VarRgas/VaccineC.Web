@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Endereço</h2>
 <mat-dialog-content class="mat-typography">
-    <form>
+    <form [formGroup]="personAddressForm">
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>Tipo de Endereço</mat-label>
@@ -16,7 +16,7 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>CEP</mat-label>
-                <input matInput #input maxlength="8" placeholder="00000-000" id="addressCode" required="true">
+                <input (blur)="onBlurMethod()" matInput #inputAddressCode [(ngModel)]="AddressCode" formControlName="AddressCode" maxlength="9" placeholder="00000-000" mask="00000-000" required>
                 <span matSuffix><img src="../../../../assets/img/correios-logo.png"
                         style="height:15px;width:60px;"></span>
             </mat-form-field>
@@ -25,26 +25,26 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>Logradouro</mat-label>
-                <input matInput #input id="publicPlace" required="true" readonly>
+                <input matInput #inputPublicPlace [(ngModel)]="PublicPlace" formControlName="PublicPlace" required [readonly]="isPlaceDistrictReadonly">
             </mat-form-field>
         </div>
 
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>Bairro</mat-label>
-                <input matInput #input id="district" required="true" readonly>
+                <input matInput #inputDistrict [(ngModel)]="District" formControlName="District" required [readonly]="isPlaceDistrictReadonly">
             </mat-form-field>
         </div>
 
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-8">
                 <mat-label>Cidade</mat-label>
-                <input matInput #input id="city" required="true" readonly>
+                <input matInput #inputCity [(ngModel)]="City" formControlName="City" required [readonly]="isCityStateReadonly">
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-2">
                 <mat-label>UF</mat-label>
-                <input matInput #input id="state" required="true" readonly>
+                <input matInput #inputState [(ngModel)]="State" formControlName="State" required [readonly]="isCityStateReadonly">
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-2">
