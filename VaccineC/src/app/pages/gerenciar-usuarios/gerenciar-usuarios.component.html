@@ -121,7 +121,11 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Função</mat-label>
-                    <mat-select [disabled]="isInputDisabled" formControlName="FunctionUser" #FunctionUserInput id="FunctionUser" [(ngModel)]="FunctionUser" required>
+                    <mat-select [disabled]="isInputDisabled"
+                                formControlName="FunctionUser"
+                                #FunctionUserInput id="FunctionUser"
+                                [(ngModel)]="FunctionUser"
+                                required>
                       <mat-option value="A" selected>Administrador</mat-option>
                       <mat-option value="E" selected>Aplicador</mat-option>
                       <mat-option value="G" selected>Gerente</mat-option>

@@ -12,3 +12,58 @@
 :host ::ng-deep .mat-tab-group {
     height: 100% !important;
 }
+
+:host ::ng-deep .search-group .mat-form-field-wrapper {
+  padding: 0px;
+}
+
+.mat-button-entry {
+  margin-bottom: 0px !important;
+  align-self: center !important;
+}
+
+.spinner{
+  display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 2rem;
+}
+
+#search-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
+.search-table-content {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#profilePic {
+  background-image: url(../../../assets/img/default-profile-pic.png);
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: top center;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  margin-left: 0.75rem;
+}
+
+.div-row-input-table {
+  padding-bottom: 1.34375em;
+}
+
+
