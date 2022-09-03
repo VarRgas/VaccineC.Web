@@ -33,6 +33,7 @@ export class PessoasComponent implements OnInit {
   public commemorativeDate!: Date;
   public personType!: string;
   public details!: string;
+  public informationField!: string;
 
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
@@ -42,7 +43,7 @@ export class PessoasComponent implements OnInit {
 
   //Table
   public value = '';
-  public displayedColumns: string[] = ['Name', 'Email', 'PersonType', 'CommemorativeDate', 'ID', 'Options'];
+  public displayedColumns: string[] = ['Name', 'CommemorativeDate', 'PersonType', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IPerson>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -138,6 +139,7 @@ export class PessoasComponent implements OnInit {
           this.email = person.Email;
           this.commemorativeDate = person.CommemorativeDate;
           this.details = person.Details;
+          this.informationField = person.Name;
 
           this.tabIsDisabled = false;
           //this.isInputReadOnly = true;
@@ -151,6 +153,7 @@ export class PessoasComponent implements OnInit {
     this.personForm.reset();
     this.personForm.clearValidators();
     this.personForm.updateValueAndValidity();
+    this.informationField = "";
 
     //this.isInputReadOnly = false;
     this.tabIsDisabled = true;
@@ -177,6 +180,7 @@ export class PessoasComponent implements OnInit {
           this.personType = response.PersonType;
           this.commemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
+          this.informationField = response.Name;
 
           this.createButtonLoading = false;
           // this.isResourceDisabled = false;
@@ -188,7 +192,7 @@ export class PessoasComponent implements OnInit {
           this.getAllPersons();
           this.treatButtons(this.personType);
 
-          this.messageHandler.showMessage("Usuário criado com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Pessoa criada com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
@@ -207,6 +211,7 @@ export class PessoasComponent implements OnInit {
     person.commemorativeDate = this.commemorativeDate;
     // person.situation = this.document;
     person.details = this.details;
+    
 
     // if (!this.personForm.valid) {
     //   console.log(this.personForm);
@@ -225,6 +230,7 @@ export class PessoasComponent implements OnInit {
           this.personType = response.PersonType;
           this.commemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
+          this.informationField = response.Name;
 
           this.createButtonLoading = false;
 
@@ -249,6 +255,7 @@ export class PessoasComponent implements OnInit {
           this.personsDispatcherService.deletePerson(this.personId)
             .subscribe(
               success => {
+                this.informationField = "";
                 this.personForm.reset();
                 this.personForm.clearValidators();
                 this.personForm.updateValueAndValidity();

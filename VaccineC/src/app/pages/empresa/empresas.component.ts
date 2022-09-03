@@ -116,12 +116,13 @@ export class EmpresasComponent implements OnInit {
 
   public getAllCompanies(): void {
     this.companiesDispatcherService.getAllCompanies()
-      .subscribe(companies => {
-        this.dataSource = new MatTableDataSource(companies);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.searchButtonLoading = false;
-      },
+      .subscribe(
+        companies => {
+          this.dataSource = new MatTableDataSource(companies);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.searchButtonLoading = false;
+        },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
@@ -181,10 +182,10 @@ export class EmpresasComponent implements OnInit {
     this.companiesDispatcherService.createCompany(data)
       .subscribe(
         response => {
-          console.log(response)
           this.companyID = response.ID;
           this.CompanyIDParameter = response.ID;
           this.details = response.Details;
+          this.informationField = response.Person.Name;
           this.createButtonLoading = false;
           this.tabIsDisabled = false;
           this.isInputReadOnly = true;
@@ -217,8 +218,13 @@ export class EmpresasComponent implements OnInit {
     this.companiesDispatcherService.updateCompany(this.companyID, company)
       .subscribe(
         response => {
-          this.companyID = response;
-          this.CompanyIDParameter = response;
+          console.log(response)
+          this.companyID = response.ID;
+          this.CompanyIDParameter = response.ID;
+          this.personId = response.PersonId;
+          this.details = response.Details;
+          this.informationField = response.Person.Name;
+
           this.createButtonLoading = false;
           this.getAllCompanies();
           this.messageHandler.showMessage("Empresa alterada com sucesso!", "success-snackbar")
@@ -289,7 +295,7 @@ export class EmpresasComponent implements OnInit {
           this.errorHandler.handleError(error);
         });
 
-        console.log(this.CompanyIDParameter)
+    console.log(this.CompanyIDParameter)
   }
 
   public updateCompanyParameter(): void {
@@ -336,6 +342,7 @@ export class EmpresasComponent implements OnInit {
           this.companyID = company.ID;
           this.personId = company.PersonId;
           this.details = company.Details;
+          this.informationField = company.Person.Name;
           this.tabIsDisabled = false;
           this.isInputReadOnly = true;
         },
@@ -347,14 +354,14 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         companyParameter => {
 
-          if(companyParameter.length == 0){
+          if (companyParameter.length == 0) {
             this.CompanyParameterID = "";
             this.ApplicationTimePerMinute = "";
             this.MaximumDaysBudgetValidity = "";
             this.scheduleColor = "#84d7b0";
             this.companyParametersForm.clearValidators();
             this.companyParametersForm.updateValueAndValidity();
-          }else{
+          } else {
             this.CompanyParameterID = companyParameter.ID;
             this.scheduleColor = companyParameter.ScheduleColor;
             this.ApplicationTimePerMinute = companyParameter.ApplicationTimePerMinute;
@@ -366,16 +373,16 @@ export class EmpresasComponent implements OnInit {
           console.log(error);
         });
 
-        this.companiesSchedulesDispatcherService.getAllCompaniesSchedulesByCompanyId(id)
-        .subscribe(
-          result => {
-            this.dataSource2 = new MatTableDataSource(result);
-            this.dataSource2.paginator = this.paginator;
-            this.dataSource2.sort = this.sort;
-          },
-          error => {
-            console.log(error);
-          });
+    this.companiesSchedulesDispatcherService.getAllCompaniesSchedulesByCompanyId(id)
+      .subscribe(
+        result => {
+          this.dataSource2 = new MatTableDataSource(result);
+          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.sort = this.sort;
+        },
+        error => {
+          console.log(error);
+        });
 
     this.CompanyIDParameter = id;
 
@@ -403,10 +410,6 @@ export class EmpresasComponent implements OnInit {
 
   }
 
-  public getParamsByCompanyID(id: string): void {
-
-  }
-
   public addNewCompany(): void {
     this.companyForm.reset();
     this.companyForm.clearValidators();
@@ -415,7 +418,7 @@ export class EmpresasComponent implements OnInit {
     this.companyParametersForm.reset();
     this.companyParametersForm.clearValidators();
     this.companyParametersForm.updateValueAndValidity();
-    
+
     this.isInputReadOnly = false;
     this.tabIsDisabled = true;
 
@@ -431,6 +434,25 @@ export class EmpresasComponent implements OnInit {
       width: '50vw',
       data: {
         ID: this.companyID
+      },
+    });
+
+    this.dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSource2 = new MatTableDataSource(res);
+          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.sort = this.sort;
+        }
+      }
+    );
+  }
+
+  public openUpdateScheduleDialog(id: string): void {
+    this.dialogRef = this.dialog.open(UpdateCompanyScheduleDialog, {
+      width: '50vw',
+      data: {
+        ID: id
       },
     });
 
@@ -466,11 +488,12 @@ export class EmpresasComponent implements OnInit {
   }
 }
 
+//DIALOG ADD SCHEDULE
 @Component({
   selector: 'dialog-content-schedule-dialog',
   templateUrl: 'dialog-content-schedule-dialog.html',
 })
-export class DialogContentScheduleDialog implements OnInit{ 
+export class DialogContentScheduleDialog implements OnInit {
 
   myControl = new FormControl();
   options: string[] = [];
@@ -500,7 +523,7 @@ export class DialogContentScheduleDialog implements OnInit{
     this.CompanyId = this.data.ID;
   }
 
-  saveCompanySchedule():void {
+  saveCompanySchedule(): void {
 
     let diasDaSemana = this.Day;
     let horaInicial = this.StartTime;
@@ -509,7 +532,7 @@ export class DialogContentScheduleDialog implements OnInit{
     let lista = new Array<CompanyScheduleModel>();
 
     for (var i = 0; i < diasDaSemana.length; i++) {
-      if(horaInicial != "" && horaFinal != ""){
+      if (horaInicial != "" && horaFinal != "") {
 
         let companySchedule = new CompanyScheduleModel();
         companySchedule.day = diasDaSemana[i];
@@ -517,10 +540,9 @@ export class DialogContentScheduleDialog implements OnInit{
         companySchedule.finalTime = horaFinal;
         companySchedule.companyId = this.CompanyId;
         lista.push(companySchedule);
-        }
       }
+    }
 
-    var myJsonString = JSON.stringify(lista);
     console.log(lista)
     this.companiesSchedulesDispatcherService.createOnDemand(lista).subscribe(
       response => {
@@ -530,6 +552,80 @@ export class DialogContentScheduleDialog implements OnInit{
       error => {
         console.log(error);
       });
+  }
+}
+
+//DIALOG UPDATE SCHEDULE
+@Component({
+  selector: 'update-company-schedule-dialog',
+  templateUrl: 'update-company-schedule-dialog.html',
+})
+export class UpdateCompanyScheduleDialog implements OnInit {
+
+  myControl = new FormControl();
+
+  Id!: string;
+  CompanyId!: string;
+  Day!: string;
+  StartTime!: string;
+  FinalTime!: string;
+
+  //Form
+  CompanyScheduleForm: FormGroup = this.formBuilder.group({
+    Id: [null],
+    CompanyId: [null],
+    Day: [null],
+    StartTime: [null],
+    FinalTime: [null]
+  });
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    private companiesSchedulesDispatcherService: CompaniesSchedulesDispatcherService,
+    private messageHandler: MessageHandlerService,
+    public dialogRef: MatDialogRef<DialogContentScheduleDialog>
+  ) { }
+
+  ngOnInit(): void {
+    this.Id = this.data.ID;
+    this.getCompanyScheduleById(this.Id);
+  }
+
+  getCompanyScheduleById(id: string): void {
+    this.companiesSchedulesDispatcherService.getCompanyScheduleById(id).subscribe(
+      result => {
+        console.log(result)
+        this.Id = result.ID;
+        this.CompanyId = result.CompanyID;
+        this.Day = result.Day;
+        this.StartTime = result.StartTime;
+        this.FinalTime = result.FinalTime;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  updateCompanySchedule(): void {
+
+    let companySchedule = new CompanyScheduleModel();
+    companySchedule.id = this.Id;
+    companySchedule.companyId = this.CompanyId;
+    companySchedule.day = this.Day;
+    companySchedule.startTime = this.StartTime;
+    companySchedule.finalTime = this.FinalTime
+
+    this.companiesSchedulesDispatcherService.update(this.Id, companySchedule)
+      .subscribe(
+        response => {
+          this.dialogRef.close(response);
+          this.messageHandler.showMessage("Horário alterado com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+        });
+
   }
 }
 

@@ -12,6 +12,8 @@ export class VisaoFaturamentoComponent implements OnInit {
   invoicing = 'R$ 7.130,00';
   profitEstimate = 'R$ 7.870,00'
 
+  informationField!: string;
+
   constructor() { }
 
   ngOnInit(): void {

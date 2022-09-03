@@ -29,7 +29,11 @@ export class CompaniesSchedulesDispatcherService {
     return this.httpClient.post(`${baseURL}/CreateOnDemand`, data);
   }
 
-  delete(id: string): Observable<any> {
+  public update(id: string, data: object): Observable<any> {
+    return this.httpClient.put(`${baseURL}/${id}/Update`, data);
+  }
+
+  public delete(id: string): Observable<any> {
     return this.httpClient.delete(`${baseURL}/${id}/Delete`);
   }
 

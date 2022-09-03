@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MovimentarEstoqueComponent implements OnInit {
 
+  informationField!: string;
+
   constructor() { }
 
   ngOnInit(): void {

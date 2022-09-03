@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Horário</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="CompanyScheduleForm">
+        <mat-form-field appearance="fill" class="col-sm-12">
+            <mat-label>Dia</mat-label>
+            <mat-select formControlName="Day" #DayInput [(ngModel)]="Day" required>
+                <mat-option value="SEG">Segunda</mat-option>
+                <mat-option value="TER">Terça</mat-option>
+                <mat-option value="QUA">Quarta</mat-option>
+                <mat-option value="QUI">Quinta</mat-option>
+                <mat-option value="SEX">Sexta</mat-option>
+                <mat-option value="SAB">Sábado</mat-option>
+                <mat-option value="DOM">Domingo</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Horário Inicial</mat-label>
+                <input type="time" matInput formControlName="StartTime" id="StartTime" [(ngModel)]="StartTime"
+                    required="true">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Horário Final</mat-label>
+                <input type="time" matInput formControlName="FinalTime" id="FinalTime" [(ngModel)]="FinalTime"
+                    required="true">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button class="create-button" mat-button (click)="updateCompanySchedule()" cdkFocusInitial>Salvar</button>
+</mat-dialog-actions>

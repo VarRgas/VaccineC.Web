@@ -21,10 +21,9 @@ export class ContainerComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes.information)
-    if(changes.information.currentValue == ""){
+    if (changes.information.currentValue == "") {
       this.isInformationHidden = true;
-    }else{
+    } else {
       this.isInformationHidden = false;
     }
   }

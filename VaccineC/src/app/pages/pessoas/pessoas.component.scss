@@ -66,4 +66,7 @@
   padding-bottom: 1.34375em;
 }
 
-
+:host ::ng-deep .mat-chip {
+  font-size: 12px !important;
+  color: #858796 !important;
+}

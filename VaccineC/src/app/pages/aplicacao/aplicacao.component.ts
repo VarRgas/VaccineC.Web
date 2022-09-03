@@ -18,6 +18,9 @@ const ELEMENT_DATA: PersonElement[] = [
   styleUrls: ['./aplicacao.component.scss']
 })
 export class AplicacaoComponent implements OnInit {
+ 
+  informationField!: string;
+ 
   value = '';
 
   displayedColumns: string[] = ['product', 'scheduling', 'date'];

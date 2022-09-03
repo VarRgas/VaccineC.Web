@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ProdutoComponent implements OnInit {
 
+  informationField!: string;
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {

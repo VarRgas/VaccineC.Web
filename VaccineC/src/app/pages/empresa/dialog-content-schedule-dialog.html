@@ -16,12 +16,12 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Horário Inicial</mat-label>
-                <input matInput formControlName="StartTime" id="StartTime" [(ngModel)]="StartTime" required="true">
+                <input type="time" matInput formControlName="StartTime" id="StartTime" [(ngModel)]="StartTime" required="true">
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Horário Final</mat-label>
-                <input matInput formControlName="FinalTime" id="FinalTime" [(ngModel)]="FinalTime" required="true">
+                <input type="time" matInput formControlName="FinalTime" id="FinalTime" [(ngModel)]="FinalTime" required="true">
             </mat-form-field>
         </div>
     </form>
