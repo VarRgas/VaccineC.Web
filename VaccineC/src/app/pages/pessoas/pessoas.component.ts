@@ -11,6 +11,10 @@ import { PersonModel } from 'src/app/models/person-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
+import { IPersonPhone } from "src/app/interfaces/i-person-phone";
+import { PersonsPhonesDispatcherService } from "src/app/services/person-phone-dispatcher.service";
+import { IPersonAddress } from "src/app/interfaces/i-person-address";
+import { PersonsAddressesDispatcherService } from "src/app/services/person-address-dispatcher.service";
 
 @Component({
   selector: 'app-pessoas',
@@ -41,10 +45,19 @@ export class PessoasComponent implements OnInit {
   //Controle de tabs
   public tabIsDisabled: boolean = true;
 
-  //Table
+  //Table Search
   public value = '';
   public displayedColumns: string[] = ['Name', 'CommemorativeDate', 'PersonType', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IPerson>();
+
+  //Table Phones
+  public displayedColumnsPhone: string[] = ['PhoneType', 'NumberPhone', 'ID', 'Options'];
+  public dataSourcePhone = new MatTableDataSource<IPersonPhone>();
+
+  //Table Addresses
+  public displayedColumnsAddress: string[] = ['AddressType', 'Address', 'ID', 'Options'];
+  public dataSourceAddress = new MatTableDataSource<IPersonAddress>();
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -64,7 +77,10 @@ export class PessoasComponent implements OnInit {
     private formBuilder: FormBuilder,
     private personsDispatcherService: PersonDispatcherService,
     private errorHandler: ErrorHandlerService,
-    private messageHandler: MessageHandlerService,) { }
+    private messageHandler: MessageHandlerService,
+    private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
+    private personsAddressesDispatcherService: PersonsAddressesDispatcherService
+  ) { }
 
   ngOnInit(): void {
     this.getAllPersons();
@@ -147,6 +163,30 @@ export class PessoasComponent implements OnInit {
         error => {
           console.log(error);
         });
+
+
+    this.personsPhonesDispatcherService.getAllPersonsPhonesByPersonId(id)
+      .subscribe(
+        result => {
+          this.dataSourcePhone = new MatTableDataSource(result);
+          this.dataSourcePhone.paginator = this.paginator;
+          this.dataSourcePhone.sort = this.sort;
+        },
+        error => {
+          console.log(error);
+        });
+
+        this.personsAddressesDispatcherService.getAllPersonsAddressesByPersonId(id)
+        .subscribe(
+          result => {
+            this.dataSourceAddress = new MatTableDataSource(result);
+            this.dataSourceAddress.paginator = this.paginator;
+            this.dataSourceAddress.sort = this.sort;
+          },
+          error => {
+            console.log(error);
+          });
+
   }
 
   public addNewPerson(): void {
@@ -157,6 +197,14 @@ export class PessoasComponent implements OnInit {
 
     //this.isInputReadOnly = false;
     this.tabIsDisabled = true;
+
+    this.dataSourcePhone = new MatTableDataSource();
+    this.dataSourcePhone.paginator = this.paginator;
+    this.dataSourcePhone.sort = this.sort;
+
+    this.dataSourceAddress = new MatTableDataSource();
+    this.dataSourceAddress.paginator = this.paginator;
+    this.dataSourceAddress.sort = this.sort;
   }
 
   public createPerson(): void {
@@ -211,7 +259,7 @@ export class PessoasComponent implements OnInit {
     person.commemorativeDate = this.commemorativeDate;
     // person.situation = this.document;
     person.details = this.details;
-    
+
 
     // if (!this.personForm.valid) {
     //   console.log(this.personForm);
@@ -288,6 +336,36 @@ export class PessoasComponent implements OnInit {
       // this.isButtonAddResourceHidden = true;
     }
 
+  }
+
+  public resolveExibitionPhoneType(phoneType: string) {
+    if (phoneType == "P") {
+      return "Principal"
+    } else if (phoneType == "C") {
+      return "Celular"
+    } else if (phoneType == "E") {
+      return "Comercial"
+    } else if (phoneType == "R") {
+      return "Residencial"
+    } else if (phoneType == "O") {
+      return "Outro"
+    } else {
+      return ""
+    }
+  }
+
+  public resolveExibitionAddressType(addressType: string) {
+    if (addressType == "P") {
+      return "Principal"
+    } else if (addressType == "C") {
+      return "Comercial"
+    }else if (addressType == "R") {
+      return "Residencial"
+    } else if (addressType == "O") {
+      return "Outro"
+    } else {
+      return ""
+    }
   }
 
   public openPhoneDialog(): void {

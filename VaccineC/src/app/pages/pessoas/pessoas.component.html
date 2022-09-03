@@ -93,9 +93,9 @@
             </div>
           </div>
         </mat-tab>
-        <mat-tab label="Cadastro">
 
-          <!-- REGISTER TAB -->
+        <!-- REGISTER TAB -->
+        <mat-tab label="Cadastro">
           <form [formGroup]="personForm">
             <div class="registration-group">
               <div class="offset-sm-1 col-sm-11 p-0">
@@ -115,8 +115,8 @@
                         <!-- NOME DA PESSOA -->
                         <mat-form-field appearance="fill" class="col-sm-11 pl-0">
                           <mat-label>Nome</mat-label>
-                          <input matInput type="text" #PersonNameInput formControlName="Name"
-                            [(ngModel)]="name" id="name" placeholder="Ex. Maria da Silva" required="true">
+                          <input matInput type="text" #PersonNameInput formControlName="Name" [(ngModel)]="name"
+                            id="name" placeholder="Ex. Maria da Silva" required="true">
                           <!-- <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
                                                           <span *ngIf="personForm.controls.Name.errors?.required">A pessoa é obrigatória.</span>
                                                       </mat-error> -->
@@ -187,23 +187,123 @@
             </div>
           </form>
         </mat-tab>
+
+
         <mat-tab label="Complemento">
           <app-pessoas-complemento></app-pessoas-complemento>
         </mat-tab>
+
+
         <mat-tab label="Telefones">
-          <app-pessoas-telefones></app-pessoas-telefones>
+
+          <div class="search-table">
+            <div class="col-sm-11 search-table-content mat-elevation-z2">
+              <table class="col-sm-12" mat-table [dataSource]="dataSourcePhone" matSort matSortActive="Name"
+                matSortDirection="asc">
+
+                <!-- PhoneType Column -->
+                <ng-container matColumnDef="PhoneType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                  <td mat-cell *matCellDef="let row"> {{resolveExibitionPhoneType(row.PhoneType)}} </td>
+                </ng-container>
+
+                <!-- CodeArea + PhoneNumber Column -->
+                <ng-container matColumnDef="NumberPhone">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Número </th>
+                  <td mat-cell *matCellDef="let row"> ({{row.CodeArea}}){{row.NumberPhone}}</td>
+                </ng-container>
+
+                <!-- Id Hidden Column -->
+                <ng-container matColumnDef="ID">
+                  <th mat-header-cell [hidden]="show" *matHeaderCellDef mat-sort-header> ID </th>
+                  <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
+                </ng-container>
+
+                 <!-- Options Column -->
+                <ng-container matColumnDef="Options">
+                  <th mat-header-cell *matHeaderCellDef> </th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="warn" title="Remover" style="float:right;">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsPhone"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsPhone;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
+                </tr>
+              </table>
+
+              <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+            </div>
+          </div>
+
           <button mat-fab id="add-phone-btn" class="float-btn create-button" (click)="openPhoneDialog()"
             aria-label="Add button" matTooltip="Inserir Telefone" matTooltipPosition="above">
             <mat-icon>add</mat-icon>
           </button>
         </mat-tab>
+
+
         <mat-tab label="Endereços">
-          <app-pessoas-enderecos></app-pessoas-enderecos>
+
+          <div class="search-table">
+            <div class="col-sm-11 search-table-content mat-elevation-z2">
+              <table class="col-sm-12" mat-table [dataSource]="dataSourceAddress" matSort matSortActive="Name"
+                matSortDirection="asc">
+
+                <!-- PhoneType Column -->
+                <ng-container matColumnDef="AddressType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                  <td mat-cell *matCellDef="let row"> {{resolveExibitionAddressType(row.AddressType)}} </td>
+                </ng-container>
+
+                <!-- Address Column -->
+                <ng-container matColumnDef="Address">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Endereço </th>
+                  <td mat-cell *matCellDef="let row"> {{row.PublicPlace}}, {{row.AddressNumber}} - {{row.District}} - {{row.City}}/{{row.State}} - {{row.Country}}</td>
+                </ng-container>
+
+                <!-- Id Hidden Column -->
+                <ng-container matColumnDef="ID">
+                  <th mat-header-cell [hidden]="show" *matHeaderCellDef mat-sort-header> ID </th>
+                  <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
+                </ng-container>
+
+                 <!-- Options Column -->
+                <ng-container matColumnDef="Options">
+                  <th mat-header-cell *matHeaderCellDef> </th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="warn" title="Remover" style="float:right;">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAddress"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAddress;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
+                </tr>
+              </table>
+
+              <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+            </div>
+          </div>
+
+
           <button mat-fab id="add-address-btn" class="float-btn create-button" (click)="openAddressDialog()"
             aria-label="Add button" matTooltip="Inserir Endereço" matTooltipPosition="above">
             <mat-icon>add</mat-icon>
           </button>
         </mat-tab>
+
       </mat-tab-group>
     </app-container>
   </div>
