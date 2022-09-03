@@ -50,3 +50,8 @@ form {
     justify-content: space-between;
     align-items: center;
 }
+
+:host ::ng-deep .mat-chip {
+  font-size: 12px !important;
+  color: #858796 !important;
+}

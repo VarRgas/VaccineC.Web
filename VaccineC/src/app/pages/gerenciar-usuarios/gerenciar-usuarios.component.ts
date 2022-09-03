@@ -57,6 +57,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   public ConfirmPassword!: string;
   public FunctionUser!: string;
   public PersonId!: string;
+  public informationField!: string;
 
   //Autocomplete
   myControl = new FormControl();
@@ -185,6 +186,7 @@ export class GerenciarUsuariosComponent implements OnInit {
           this.Password = response.Password;
           this.ConfirmPassword = response.Password;
           this.Situation = response.Situation;
+          this.informationField = response.Email;
 
           this.createButtonLoading = false;
           this.isResourceDisabled = false;
@@ -235,6 +237,7 @@ export class GerenciarUsuariosComponent implements OnInit {
           this.Password = response.Password;
           this.ConfirmPassword = response.Password;
           this.Situation = response.Situation;
+          this.informationField = response.Email;
 
           this.createButtonLoading = false;
 
@@ -323,6 +326,8 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.dataSource2 = new MatTableDataSource();
     this.dataSource2.paginator = this.paginator;
     this.dataSource2.sort = this.sort;
+
+    this.informationField = "";
   }
 
   editUser(id: string): void {
@@ -336,6 +341,7 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.Situation = user.Situation;
         this.Password = user.Password;
         this.ConfirmPassword = user.Password;
+        this.informationField = user.Email;
 
         this.isResourceDisabled = false;
 

@@ -52,6 +52,7 @@ export class EmpresasComponent implements OnInit {
   public personId!: string;
   public details!: string;
   public register!: string;
+  public informationField!: string;
 
   //Table
   public value = '';
@@ -241,6 +242,7 @@ export class EmpresasComponent implements OnInit {
                 this.companyForm.reset();
                 this.companyForm.clearValidators();
                 this.companyForm.updateValueAndValidity();
+                this.informationField = "";
 
                 this.companyParametersForm.reset();
                 this.companyParametersForm.clearValidators();
@@ -420,6 +422,8 @@ export class EmpresasComponent implements OnInit {
     this.dataSource2 = new MatTableDataSource();
     this.dataSource2.paginator = this.paginator;
     this.dataSource2.sort = this.sort;
+
+    this.informationField = "";
   }
 
   public openScheduleDialog(): void {

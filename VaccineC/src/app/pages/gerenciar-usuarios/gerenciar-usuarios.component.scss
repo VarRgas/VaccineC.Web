@@ -77,3 +77,8 @@ form {
 :host ::ng-deep .mat-tab-group {
   height: 100% !important;
 }
+
+:host ::ng-deep .mat-chip {
+  font-size: 12px !important;
+  color: #858796 !important;
+}

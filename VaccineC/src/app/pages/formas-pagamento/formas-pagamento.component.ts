@@ -30,6 +30,7 @@ export class FormasPagamentoComponent implements OnInit {
   public IdPaymentForm!: string;
   public Name!: string;
   public MaximumInstallments!: number;
+  public informationField!: string;
 
   //Table
   public displayedColumns: string[] = ['Name', 'MaximumInstallments', 'Options', 'ID'];
@@ -130,6 +131,7 @@ export class FormasPagamentoComponent implements OnInit {
         response => {
           this.messageHandler.showMessage("Forma de Pagamento criada com sucesso!", "success-snackbar")
           this.IdPaymentForm = response;
+          this.informationField = this.Name;
           this.createButtonLoading = false;
           this.getAllPaymentForms();
         },
@@ -160,6 +162,7 @@ export class FormasPagamentoComponent implements OnInit {
         response => {
           this.messageHandler.showMessage("Forma de Pagamento alterada com sucesso!", "success-snackbar")
           this.IdPaymentForm = response;
+          this.informationField = this.Name;
           this.createButtonLoading = false;
           this.getAllPaymentForms();
         },
@@ -178,6 +181,7 @@ export class FormasPagamentoComponent implements OnInit {
       if (!!result) {
         this.paymentFormsService.delete(this.IdPaymentForm).subscribe(
           success => {
+            this.informationField = "";
             this.paymentFormForm.reset();
             this.paymentFormForm.clearValidators();
             this.paymentFormForm.updateValueAndValidity();
@@ -200,6 +204,7 @@ export class FormasPagamentoComponent implements OnInit {
         this.IdPaymentForm = paymentForm.ID;
         this.Name = paymentForm.Name;
         this.MaximumInstallments = paymentForm.MaximumInstallments;
+        this.informationField = paymentForm.Name;
         console.log(paymentForm)
         this.getAllPaymentForms();
       },
@@ -212,6 +217,7 @@ export class FormasPagamentoComponent implements OnInit {
     this.paymentFormForm.reset();
     this.paymentFormForm.clearValidators();
     this.paymentFormForm.updateValueAndValidity();
+    this.informationField = "";
   }
 
 }

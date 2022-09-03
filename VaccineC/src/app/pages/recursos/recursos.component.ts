@@ -31,6 +31,7 @@ export class RecursosComponent implements OnInit {
   public IdResource!: string;
   public Name!: string;
   public UrlName!: string;
+  public informationField!: string;
 
   //Table
   public value = '';
@@ -134,6 +135,7 @@ export class RecursosComponent implements OnInit {
       .subscribe(
         response => {
           this.IdResource = response;
+          this.informationField = this.Name;
           this.createButtonLoading = false;
           this.getAllResources();
           this.messageHandler.showMessage("Recurso criado com sucesso!", "success-snackbar")
@@ -164,6 +166,7 @@ export class RecursosComponent implements OnInit {
       .subscribe(
         response => {
           this.IdResource = response;
+          this.informationField = this.Name;
           this.createButtonLoading = false;
           this.getAllResources();
           this.messageHandler.showMessage("Recurso alterado com sucesso!", "success-snackbar")
@@ -183,6 +186,7 @@ export class RecursosComponent implements OnInit {
       if (!!result) {
         this.resourcesService.delete(this.IdResource).subscribe(
           success => {
+            this.informationField = "";
             this.resourceForm.reset();
             this.resourceForm.clearValidators();
             this.resourceForm.updateValueAndValidity();
@@ -205,6 +209,7 @@ export class RecursosComponent implements OnInit {
         this.IdResource = resource.ID;
         this.Name = resource.Name;
         this.UrlName = resource.UrlName;
+        this.informationField = resource.Name;
       },
       error => {
         console.log(error);
@@ -215,6 +220,7 @@ export class RecursosComponent implements OnInit {
     this.resourceForm.reset();
     this.resourceForm.clearValidators();
     this.resourceForm.updateValueAndValidity();
+    this.informationField = "";
   }
 
 }
