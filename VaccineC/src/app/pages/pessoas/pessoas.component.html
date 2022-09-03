@@ -3,12 +3,218 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Pessoas" containerPath="Cadastros">
-            <mat-tab-group>
+            <mat-tab-group #tabGroup>
+
+              <!-- SEARCH TAB -->
                 <mat-tab label="Pesquisa">
-                    <app-pessoas-pesquisa></app-pessoas-pesquisa>
+                  <div class="search-group">
+                    <div class="col-sm-11 p-0 d-flex">
+                        <mat-form-field class="search-form-field col-sm-9" appearance="outline">
+                            <mat-label>Digite o nome da pessoa ou o CPF</mat-label>
+                            <input id="searchPersonName" matInput type="text" [(ngModel)]="searchPersonName"
+                                   placeholder="(mínimo 3 caracteres)">
+                            <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+
+                        <button (click)="loadPersonData()" id="mat-search-button" mat-raised-button color="primary" class="mat-button-entry me-2">
+                          <div class="spinner">
+                            <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
+                            <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
+                            <span>Pesquisar</span>
+                          </div>
+                        </button>
+
+                        <button (click)="addNewPerson(); tabGroup.selectedIndex=1"
+                                id="mat-add-button" mat-raised-button class="mat-button-entry create-button" matTooltip="Nova Pessoa" matTooltipPosition="above">
+                          <span class="fa-solid fa-plus w-20px"></span>
+                        </button>
+                    </div>
+                </div>
+                <div id="search-table">
+                  <div class="col-sm-11 search-table-content mat-elevation-z2">
+                    <mat-table [dataSource]="dataSource"
+                           class="col-sm-11"
+                           matSort
+                           matSortActive="Name"
+                           matSortDirection="asc">
+
+                        <!-- Person Name -->
+                        <ng-container matColumnDef="Name">
+                          <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                          <mat-cell *matCellDef="let row"> {{row.Name}} </mat-cell>
+                        </ng-container>
+
+                        <!-- Email -->
+                        <ng-container matColumnDef="Email">
+                          <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+                          <mat-cell *matCellDef="let row"> {{row.Email}} </mat-cell>
+                        </ng-container>
+
+                        <!-- Person Type -->
+                        <ng-container matColumnDef="PersonType">
+                          <mat-header-cell *matHeaderCellDef> Tipo de pessoa </mat-header-cell>
+                          <mat-cell *matCellDef="let row"> {{ row.PersonType == 'F' ? 'Fisica' : 'Juridica' }} </mat-cell>
+                        </ng-container>
+
+                        <!-- CPF
+                        <ng-container matColumnDef="Document">
+                          <mat-header-cell *matHeaderCellDef mat-header-cell mat-sort-header> Document </mat-header-cell>
+                          <mat-cell *matCellDef="let row">
+                              {{ row.PersonType == 'F' ? row.PersonsPhysical.CpfNumber : row.PersonsPhysical.CnpjNumber }} </mat-cell>
+                        </ng-container> -->
+
+                        <!-- Aniver -->
+                        <ng-container matColumnDef="CommemorativeDate">
+                          <mat-header-cell *matHeaderCellDef> Data de Nascimento </mat-header-cell>
+                          <mat-cell *matCellDef="let row"> {{row.CommemorativeDate}} </mat-cell>
+                        </ng-container>
+
+                        <!-- Row Button -->
+                        <ng-container matColumnDef="Options">
+                          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                          <mat-cell *matCellDef="let row">
+                              <button (click)="editPerson(row.ID); tabGroup.selectedIndex=1" mat-icon-button
+                                  color="primary" title="Visualizar"><i class="fa-solid fa-pen-to-square"></i>
+                              </button>
+                          </mat-cell>
+                        </ng-container>
+
+                        <!-- Id Hidden Column -->
+                        <ng-container matColumnDef="ID">
+                          <th *matHeaderCellDef mat-header-cell [hidden]="show" mat-sort-header> ID </th>
+                          <td mat-cell [hidden]="show" *matCellDef="let row">
+                              {{row.ID}} </td>
+                      </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+
+                     <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                  </div>
+                </div>
                 </mat-tab>
                 <mat-tab label="Cadastro">
-                    <app-pessoas-cadastro></app-pessoas-cadastro>
+
+                  <!-- REGISTER TAB -->
+                    <form [formGroup]="personForm">
+                      <div class="registration-group">
+                          <div class="offset-sm-1 col-sm-11 p-0">
+                              <div class="div-row-input-table">
+
+                                <mat-form-field [hidden]="true">
+                                  <input matInput #PersonId formControlName="PersonId" id="PersonId" [(ngModel)]="personId">
+                                </mat-form-field>
+
+                                  <table class="example-full-width" cellspacing="0">
+                                      <tr>
+                                          <td>
+                                              <!-- Foto -->
+                                              <div id="profilePic"></div>
+                                          </td>
+                                          <td class="table-name col-sm-11">
+                                              <!-- NOME DA PESSOA -->
+                                            <mat-form-field appearance="fill" class="col-sm-11 pl-0">
+                                                  <mat-label>Nome</mat-label>
+                                                  <input matInput
+                                                         type="text"
+                                                         #PersonNameInput
+                                                         maxlength="10"
+                                                         formControlName="Name"
+                                                         [(ngModel)]="name"
+                                                         id="name"
+                                                         placeholder="Ex. Maria da Silva"
+                                                         required="true">
+                                                      <!-- <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
+                                                          <span *ngIf="personForm.controls.Name.errors?.required">A pessoa é obrigatória.</span>
+                                                      </mat-error> -->
+                                              </mat-form-field>
+                                          </td>
+                                      </tr>
+                                  </table>
+                              </div>
+                              <div class="div-row-input">
+                                <!-- TIPO DE PESSOA -->
+                                  <mat-form-field appearance="fill" class="col-sm-6">
+                                      <mat-label>Tipo de Pessoa</mat-label>
+                                      <mat-select id="kindOfPerson"
+                                                  formControlName="PersonType"
+                                                  #PersonTypeInput
+                                                  id="personType"
+                                                  [(ngModel)]="personType"
+                                                  required="true">
+                                          <mat-option value="F" selected>Física</mat-option>
+                                          <mat-option value="J" selected>Jurídica</mat-option>
+                                      </mat-select>
+                                      <!-- <mat-error *ngIf="personForm.controls.PersonType.touched && personForm.controls.PersonType.invalid">
+                                        <span *ngIf="personForm.controls.PersonType.errors?.required">A Função é obrigatória.</span>
+                                    </mat-error> -->
+                                  </mat-form-field>
+
+                                  <!-- DATA DE NASCIMENTO -->
+                                  <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                                      <mat-label>Data de Nascimento</mat-label>
+                                      <input matInput
+                                             [matDatepicker]="picker"
+                                             mask="00/00/0000">
+                                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                      <mat-datepicker #picker></mat-datepicker>
+                                  </mat-form-field>
+                              </div>
+
+                              <!-- EMAIL -->
+                              <div class="div-row-input">
+                                <mat-form-field appearance="fill" class="col-sm-11">
+                                  <mat-label>E-mail</mat-label>
+                                  <input matInput #Emailinput formControlName="Email" [maxlength]="255" placeholder="email@exemplo.com.br" id="email" [(ngModel)]="email">
+                                  <mat-hint align="end">{{Emailinput.value?.length || 0}}/255</mat-hint>
+                                </mat-form-field>
+                              </div>
+
+                              <!-- DETALHES -->
+                              <div class="div-row-input">
+                                  <mat-form-field class="example-full-width"
+                                                  appearance="fill"
+                                                  class="col-sm-11">
+                                      <mat-label>Detalhes</mat-label>
+                                      <textarea matInput
+                                                #DetailsInput
+                                                formControlName="Details"
+                                                [(ngModel)]="details"
+                                                id="details"
+                                                placeholder="Informações complementares"
+                                                maxlength="255"></textarea>
+                                  </mat-form-field>
+                              </div>
+
+                              <div class="div-row-input registration-button-row">
+                                <button mat-raised-button
+                                        class="create-button"
+                                        (click)="createUpdatePerson()"
+                                        type="button"
+                                        [disabled]="createButtonLoading">
+                                  <div class="spinner">
+                                    <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
+                                    <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                                    Salvar
+                                  </div>
+                                </button>
+                                <button mat-raised-button
+                                        color="warn"
+                                        (click)="deletePerson()"
+                                        type="button"
+                                        [disabled]="!personId">
+                                  <div>
+                                      <span class="fa-solid fa-trash me-1 w-20px"></span>
+                                      Excluir
+                                  </div>
+                                </button>
+                              </div>
+                          </div>
+                      </div>
+                    </form>
                 </mat-tab>
                 <mat-tab label="Complemento">
                     <app-pessoas-complemento></app-pessoas-complemento>

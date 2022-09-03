@@ -16,7 +16,7 @@ import { FormasPagamentoComponent, ConfirmPaymentFormRemoveDialog } from './page
 import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
-import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog } from './pages/pessoas/pessoas.component';
+import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog, ConfirmPersonRemoveDialog } from './pages/pessoas/pessoas.component';
 import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDialog, ConfirmCompanyScheduleRemoveDialog } from './pages/empresa/empresas.component';
 import { ProdutoComponent, DialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
@@ -28,8 +28,6 @@ import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog,
 import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos/recursos.component';
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
-import { PessoasPesquisaComponent } from './pages/pessoas/pessoas-pesquisa/pessoas-pesquisa.component';
-import { PessoasCadastroComponent } from './pages/pessoas/pessoas-cadastro/pessoas-cadastro.component';
 import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
 import { PessoasTelefonesComponent } from './pages/pessoas/pessoas-telefones/pessoas-telefones.component';
 import { PessoasEnderecosComponent } from './pages/pessoas/pessoas-enderecos/pessoas-enderecos.component';
@@ -79,8 +77,6 @@ import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
     MinhaContaComponent,
     VisaoFaturamentoPesquisaComponent,
     VisaoFaturamentoComponent,
-    PessoasPesquisaComponent,
-    PessoasCadastroComponent,
     PessoasComplementoComponent,
     PessoasTelefonesComponent,
     PessoasEnderecosComponent,
@@ -88,6 +84,7 @@ import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
     DialogContentAddressDialog,
     DialogContentScheduleDialog,
     ConfirmCompanyRemoveDialog,
+    ConfirmPersonRemoveDialog,
     ProdutoPesquisaComponent,
     ProdutoCadastroComponent,
     ProdutoAprazamentoComponent,
