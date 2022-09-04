@@ -11,18 +11,32 @@
                     <mat-option value="R">Residencial</mat-option>
                     <mat-option value="O">Outro</mat-option>
                 </mat-select>
+                <mat-error *ngIf="personPhoneForm.controls.phoneType.touched && personPhoneForm.controls.phoneType.invalid">
+                    <span *ngIf="personPhoneForm.controls.phoneType.errors?.required">O Tipo de Telefone é obrigatório.</span>
+                </mat-error>
             </mat-form-field>
         </div>
 
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Área</mat-label>
-                <input matInput #CodeAreaInput formControlName="codeArea" [(ngModel)]="codeArea"  maxlength="2" required>
+                <input matInput mask="00" #CodeAreaInput formControlName="codeArea" [(ngModel)]="codeArea"  maxlength="2" required>
+                <mat-hint align="end">{{CodeAreaInput.value?.length || 0}}/2</mat-hint>
+                <mat-error *ngIf="personPhoneForm.controls.codeArea.touched && personPhoneForm.controls.codeArea.invalid">
+                    <span *ngIf="personPhoneForm.controls.codeArea.errors?.required">A Área é obrigatória.</span>
+                    <span *ngIf="personPhoneForm.controls.codeArea.errors?.minlength">A Área deve ter no mínimo 2 caracteres.</span>
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Telefone</mat-label>
-                <input matInput #NumberPhoneInput formControlName="numberPhone" [(ngModel)]="numberPhone" maxlength="20" required>
+                <input matInput mask="000000009" #NumberPhoneInput formControlName="numberPhone" [(ngModel)]="numberPhone" required>
+                <mat-hint align="end">{{NumberPhoneInput.value?.length || 0}}/9</mat-hint>
+                <mat-error *ngIf="personPhoneForm.controls.numberPhone.touched && personPhoneForm.controls.numberPhone.invalid">
+                    <span *ngIf="personPhoneForm.controls.numberPhone.errors?.required">O Telefone é obrigatório.</span>
+                    <span *ngIf="personPhoneForm.controls.numberPhone.errors?.minlength">O Telefone deve ter no mínimo 8 caracteres.</span>
+                    <span *ngIf="personPhoneForm.controls.numberPhone.errors?.maxlength">O Telefone deve ter no máximo 9 caracteres.</span>
+                </mat-error>
             </mat-form-field>
         </div>
     </form>

@@ -41,11 +41,16 @@ export class LoginComponent implements OnInit {
 
     this.loginDispatcherService.Login(login).subscribe(
       response => {
-        console.log(response);
+
         login.email = response.Email;
         login.id = response.ID;
         login.personId = response.PersonID;
         login.personName = response.PersonName;
+        localStorage.clear();
+
+        localStorage.setItem('name', response.PersonName);
+        localStorage.setItem('profilePic', response.PersonProfilePic);
+        localStorage.setItem('userId', response.ID);
 
         this.snackBar.open("Logado com sucesso!", 'Ok', {
           horizontalPosition: 'right',

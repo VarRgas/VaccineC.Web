@@ -507,8 +507,8 @@ export class DialogContentPhoneDialog implements OnInit {
   personPhoneForm: FormGroup = this.formBuilder.group({
     personId: [null],
     phoneType: [null, [Validators.required]],
-    codeArea: [null, [Validators.required, Validators.maxLength(2)]],
-    numberPhone: [null, [Validators.required, Validators.maxLength(20)]],
+    codeArea: [null, [Validators.required, Validators.minLength(2)]],
+    numberPhone: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(9)]],
   });
 
   constructor(
@@ -526,6 +526,7 @@ export class DialogContentPhoneDialog implements OnInit {
   savePersonPhone(): void {
     if (!this.personPhoneForm.valid) {
       console.log(this.personPhoneForm);
+      this.personPhoneForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }
@@ -564,8 +565,8 @@ export class UpdatePersonPhoneDialog implements OnInit {
   personPhoneForm: FormGroup = this.formBuilder.group({
     personId: [null],
     phoneType: [null, [Validators.required]],
-    codeArea: [null, [Validators.required, Validators.maxLength(2)]],
-    numberPhone: [null, [Validators.required, Validators.maxLength(20)]],
+    codeArea: [null, [Validators.required, Validators.minLength(2)]],
+    numberPhone: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(9)]],
   });
 
   constructor(
@@ -600,6 +601,7 @@ export class UpdatePersonPhoneDialog implements OnInit {
 
     if (!this.personPhoneForm.valid) {
       console.log(this.personPhoneForm);
+      this.personPhoneForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }
@@ -641,15 +643,14 @@ export class UpdatePersonAddressDialog implements OnInit {
   Complement!: string;
   Country!: string;
 
-  isPlaceDistrictReadonly = false;
-  isCityStateReadonly = false;
+  isPlaceDistrictReadonly = true;
+  isCityStateReadonly = true;
 
   //Form
   personAddressForm: FormGroup = this.formBuilder.group({
     PersonId: [null],
     AddressType: [null, [Validators.required]],
-    AddressCode: [null, [Validators.required, Validators.maxLength(9)]],
-    PublicPlace: [null, [Validators.required, Validators.maxLength(255)]],
+    AddressCode: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],    PublicPlace: [null, [Validators.required, Validators.maxLength(255)]],
     City: [null, [Validators.required, Validators.maxLength(255)]],
     State: [null, [Validators.required, Validators.maxLength(2)]],
     District: [null, [Validators.required, Validators.maxLength(255)]],
@@ -725,6 +726,7 @@ export class UpdatePersonAddressDialog implements OnInit {
 
     if (!this.personAddressForm.valid) {
       console.log(this.personAddressForm);
+      this.personAddressForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }
@@ -773,8 +775,8 @@ export class DialogContentAddressDialog implements OnInit {
   Complement!: string;
   Country!: string;
 
-  isPlaceDistrictReadonly = false;
-  isCityStateReadonly = false;
+  isPlaceDistrictReadonly = true;
+  isCityStateReadonly = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -792,7 +794,7 @@ export class DialogContentAddressDialog implements OnInit {
   //Form
   personAddressForm: FormGroup = this.formBuilder.group({
     AddressType: [null, [Validators.required]],
-    AddressCode: [null, [Validators.required, Validators.maxLength(9)]],
+    AddressCode: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
     PublicPlace: [null, [Validators.required, Validators.maxLength(255)]],
     City: [null, [Validators.required, Validators.maxLength(255)]],
     State: [null, [Validators.required, Validators.maxLength(2)]],
@@ -833,6 +835,7 @@ export class DialogContentAddressDialog implements OnInit {
   savePersonPhone(): void {
     if (!this.personAddressForm.valid) {
       console.log(this.personAddressForm);
+      this.personAddressForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;
     }

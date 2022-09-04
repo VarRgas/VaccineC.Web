@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+ 
   constructor(private router: Router) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation!.extras.state as {
@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
       personId: string;
       personName: string;
     };
+
   }
 
   ngOnInit(): void {
