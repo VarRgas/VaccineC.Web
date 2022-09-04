@@ -543,7 +543,6 @@ export class DialogContentScheduleDialog implements OnInit {
       }
     }
 
-    console.log(lista)
     this.companiesSchedulesDispatcherService.createOnDemand(lista).subscribe(
       response => {
         this.dialogRef.close(response);
@@ -595,7 +594,6 @@ export class UpdateCompanyScheduleDialog implements OnInit {
   getCompanyScheduleById(id: string): void {
     this.companiesSchedulesDispatcherService.getCompanyScheduleById(id).subscribe(
       result => {
-        console.log(result)
         this.Id = result.ID;
         this.CompanyId = result.CompanyID;
         this.Day = result.Day;

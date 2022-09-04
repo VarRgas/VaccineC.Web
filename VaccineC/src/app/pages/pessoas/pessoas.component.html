@@ -219,16 +219,18 @@
                   <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
                 </ng-container>
 
-                 <!-- Options Column -->
+                <!-- Options Column -->
                 <ng-container matColumnDef="Options">
                   <th mat-header-cell *matHeaderCellDef> </th>
                   <td mat-cell *matCellDef="let row">
-                    <button mat-icon-button color="warn" title="Remover" style="float:right;">
+                    <button (click)="deletePersonPhone(row.ID)" mat-icon-button color="warn" title="Remover"
+                      style="float:right;">
                       <i class="fa-solid fa-trash"></i>
-                  </button>
-                  <button mat-icon-button color="primary" title="Editar" style="float:right;">
+                    </button>
+                    <button mat-icon-button color="primary" title="Editar" (click)="openUpdatePersonPhoneDialog(row.ID)"
+                      style="float:right;">
                       <i class="fa-solid fa-pen-to-square"></i>
-                  </button>
+                    </button>
                   </td>
                 </ng-container>
 
@@ -245,7 +247,7 @@
             </div>
           </div>
 
-          <button mat-fab id="add-phone-btn" class="float-btn create-button" (click)="openPhoneDialog()"
+          <button mat-fab id="add-phone-btn" class="float-btn create-button" (click)="openAddPhoneDialog()"
             aria-label="Add button" matTooltip="Inserir Telefone" matTooltipPosition="above">
             <mat-icon>add</mat-icon>
           </button>
@@ -268,7 +270,8 @@
                 <!-- Address Column -->
                 <ng-container matColumnDef="Address">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Endereço </th>
-                  <td mat-cell *matCellDef="let row"> {{row.PublicPlace}}, {{row.AddressNumber}} - {{row.District}} - {{row.City}}/{{row.State}} - {{row.Country}}</td>
+                  <td mat-cell *matCellDef="let row"> {{row.PublicPlace}}, {{row.AddressNumber}} - {{row.District}} -
+                    {{row.City}}/{{row.State}} - {{row.Country}}</td>
                 </ng-container>
 
                 <!-- Id Hidden Column -->
@@ -277,16 +280,16 @@
                   <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
                 </ng-container>
 
-                 <!-- Options Column -->
+                <!-- Options Column -->
                 <ng-container matColumnDef="Options">
                   <th mat-header-cell *matHeaderCellDef> </th>
                   <td mat-cell *matCellDef="let row">
-                    <button mat-icon-button color="warn" title="Remover" style="float:right;">
+                    <button mat-icon-button (click)="deleteAddressPhone(row.ID)" color="warn" title="Remover" style="float:right;">
                       <i class="fa-solid fa-trash"></i>
-                  </button>
-                  <button mat-icon-button color="primary" title="Editar" style="float:right;">
+                    </button>
+                    <button mat-icon-button (click)="openUpdatePersonAddressDialog(row.ID)" color="primary" title="Editar" style="float:right;">
                       <i class="fa-solid fa-pen-to-square"></i>
-                  </button>
+                    </button>
                   </td>
                 </ng-container>
 

@@ -25,4 +25,16 @@ export class PersonsPhonesDispatcherService {
     return this.httpClient.get(`${baseURL}/${personId}/GetAllPersonsPhonesByPersonId`);
   }
 
+  create(data: object): Observable<any> {
+    return this.httpClient.post(`${baseURL}/Create`, data);
+  }
+
+  update(id: string, data: object): Observable<any> {
+    return this.httpClient.put(`${baseURL}/${id}/Update`, data);
+  }
+
+  delete(id: string): Observable<any> {
+    return this.httpClient.delete(`${baseURL}/${id}/Delete`);
+  }
+
 }

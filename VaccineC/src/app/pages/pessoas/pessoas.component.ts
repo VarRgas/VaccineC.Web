@@ -1,8 +1,8 @@
 import { CEPError, Endereco, NgxViacepService } from "@brunoc/ngx-viacep";
 import { catchError, EMPTY } from 'rxjs';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,6 +15,8 @@ import { IPersonPhone } from "src/app/interfaces/i-person-phone";
 import { PersonsPhonesDispatcherService } from "src/app/services/person-phone-dispatcher.service";
 import { IPersonAddress } from "src/app/interfaces/i-person-address";
 import { PersonsAddressesDispatcherService } from "src/app/services/person-address-dispatcher.service";
+import { PersonPhoneModel } from "src/app/models/person-phone-model";
+import { PersonAddressModel } from "src/app/models/person-address-model";
 
 @Component({
   selector: 'app-pessoas',
@@ -58,6 +60,7 @@ export class PessoasComponent implements OnInit {
   public displayedColumnsAddress: string[] = ['AddressType', 'Address', 'ID', 'Options'];
   public dataSourceAddress = new MatTableDataSource<IPersonAddress>();
 
+  public dialogRef?: MatDialogRef<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -176,16 +179,16 @@ export class PessoasComponent implements OnInit {
           console.log(error);
         });
 
-        this.personsAddressesDispatcherService.getAllPersonsAddressesByPersonId(id)
-        .subscribe(
-          result => {
-            this.dataSourceAddress = new MatTableDataSource(result);
-            this.dataSourceAddress.paginator = this.paginator;
-            this.dataSourceAddress.sort = this.sort;
-          },
-          error => {
-            console.log(error);
-          });
+    this.personsAddressesDispatcherService.getAllPersonsAddressesByPersonId(id)
+      .subscribe(
+        result => {
+          this.dataSourceAddress = new MatTableDataSource(result);
+          this.dataSourceAddress.paginator = this.paginator;
+          this.dataSourceAddress.sort = this.sort;
+        },
+        error => {
+          console.log(error);
+        });
 
   }
 
@@ -338,6 +341,88 @@ export class PessoasComponent implements OnInit {
 
   }
 
+  public openUpdatePersonPhoneDialog(id: string): void {
+    this.dialogRef = this.dialog.open(UpdatePersonPhoneDialog, {
+      width: '50vw',
+      data: {
+        ID: id
+      },
+    });
+
+    this.dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourcePhone = new MatTableDataSource(res);
+          this.dataSourcePhone.paginator = this.paginator;
+          this.dataSourcePhone.sort = this.sort;
+        }
+      }
+    );
+  }
+
+  public openUpdatePersonAddressDialog(id: string): void {
+    this.dialogRef = this.dialog.open(UpdatePersonAddressDialog, {
+      width: '50vw',
+      data: {
+        ID: id
+      },
+    });
+
+    this.dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourceAddress = new MatTableDataSource(res);
+          this.dataSourceAddress.paginator = this.paginator;
+          this.dataSourceAddress.sort = this.sort;
+        }
+      }
+    );
+  }
+
+  deletePersonPhone(id: string) {
+
+    const dialogRef = this.dialog.open(ConfirmPersonPhoneRemoveDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.personsPhonesDispatcherService.delete(id).subscribe(
+          success => {
+            this.dataSourcePhone = new MatTableDataSource(success);
+            this.dataSourcePhone.paginator = this.paginator;
+            this.dataSourcePhone.sort = this.sort;
+            this.messageHandler.showMessage("Telefone removido com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+      }
+    });
+
+  }
+
+  deleteAddressPhone(id: string) {
+
+    const dialogRef = this.dialog.open(ConfirmAddressPhoneRemoveDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.personsAddressesDispatcherService.delete(id).subscribe(
+          success => {
+            this.dataSourceAddress = new MatTableDataSource(success);
+            this.dataSourceAddress.paginator = this.paginator;
+            this.dataSourceAddress.sort = this.sort;
+            this.messageHandler.showMessage("Endereço removido com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+      }
+    });
+
+  }
+
   public resolveExibitionPhoneType(phoneType: string) {
     if (phoneType == "P") {
       return "Principal"
@@ -359,7 +444,7 @@ export class PessoasComponent implements OnInit {
       return "Principal"
     } else if (addressType == "C") {
       return "Comercial"
-    }else if (addressType == "R") {
+    } else if (addressType == "R") {
       return "Residencial"
     } else if (addressType == "O") {
       return "Outro"
@@ -368,20 +453,40 @@ export class PessoasComponent implements OnInit {
     }
   }
 
-  public openPhoneDialog(): void {
-    const dialogRef = this.dialog.open(DialogContentPhoneDialog);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+  public openAddPhoneDialog(): void {
+    const dialogRef = this.dialog.open(DialogContentPhoneDialog, {
+      data: {
+        ID: this.personId
+      },
     });
+
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourcePhone = new MatTableDataSource(res);
+          this.dataSourcePhone.paginator = this.paginator;
+          this.dataSourcePhone.sort = this.sort;
+        }
+      }
+    );
   }
 
   public openAddressDialog(): void {
-    const dialogRef = this.dialog.open(DialogContentAddressDialog);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    const dialogRef = this.dialog.open(DialogContentAddressDialog, {
+      data: {
+        ID: this.personId
+      },
     });
+
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourceAddress = new MatTableDataSource(res);
+          this.dataSourceAddress.paginator = this.paginator;
+          this.dataSourceAddress.sort = this.sort;
+        }
+      }
+    );
   }
 }
 
@@ -390,39 +495,311 @@ export class PessoasComponent implements OnInit {
   selector: 'dialog-content-phone-dialog',
   templateUrl: 'dialog-content-phone-dialog.html',
 })
-export class DialogContentPhoneDialog { }
+export class DialogContentPhoneDialog implements OnInit {
 
+  id!: string;
+  personId!: string;
+  phoneType!: string;
+  codeArea!: string;
+  numberPhone!: string;
+
+  //Form
+  personPhoneForm: FormGroup = this.formBuilder.group({
+    personId: [null],
+    phoneType: [null, [Validators.required]],
+    codeArea: [null, [Validators.required, Validators.maxLength(2)]],
+    numberPhone: [null, [Validators.required, Validators.maxLength(20)]],
+  });
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<DialogContentPhoneDialog>,
+    private messageHandler: MessageHandlerService,
+    private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
+  ) { }
+
+  ngOnInit(): void {
+    this.personId = this.data.ID;
+  }
+
+  savePersonPhone(): void {
+    if (!this.personPhoneForm.valid) {
+      console.log(this.personPhoneForm);
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let personPhone = new PersonPhoneModel();
+    personPhone.personId = this.personId;
+    personPhone.phoneType = this.phoneType;
+    personPhone.codeArea = this.codeArea;
+    personPhone.numberPhone = this.numberPhone;
+
+    this.personsPhonesDispatcherService.create(personPhone).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Telefone inserido com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+}
+
+@Component({
+  selector: 'update-person-phone-dialog',
+  templateUrl: 'update-person-phone-dialog.html',
+})
+export class UpdatePersonPhoneDialog implements OnInit {
+
+  id!: string;
+  personId!: string;
+  phoneType!: string;
+  codeArea!: string;
+  numberPhone!: string;
+
+  //Form
+  personPhoneForm: FormGroup = this.formBuilder.group({
+    personId: [null],
+    phoneType: [null, [Validators.required]],
+    codeArea: [null, [Validators.required, Validators.maxLength(2)]],
+    numberPhone: [null, [Validators.required, Validators.maxLength(20)]],
+  });
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<DialogContentPhoneDialog>,
+    private messageHandler: MessageHandlerService,
+    private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
+  ) { }
+
+  ngOnInit(): void {
+    this.id = this.data.ID;
+    this.getPersonPhoneById(this.id);
+  }
+
+  getPersonPhoneById(id: string): void {
+    this.personsPhonesDispatcherService.getPersonPhoneById(id).subscribe(
+      result => {
+        console.log(result)
+        this.id = result.ID;
+        this.personId = result.PersonId;
+        this.phoneType = result.PhoneType;
+        this.codeArea = result.CodeArea;
+        this.numberPhone = result.NumberPhone;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  updatePersonPhone(): void {
+
+    if (!this.personPhoneForm.valid) {
+      console.log(this.personPhoneForm);
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let personPhone = new PersonPhoneModel();
+    personPhone.id = this.id;
+    personPhone.personId = this.personId;
+    personPhone.phoneType = this.phoneType;
+    personPhone.codeArea = this.codeArea;
+    personPhone.numberPhone = this.numberPhone;
+
+    this.personsPhonesDispatcherService.update(this.id, personPhone).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Telefone alterado com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+}
+
+@Component({
+  selector: 'update-person-address-dialog',
+  templateUrl: 'update-person-address-dialog.html',
+})
+export class UpdatePersonAddressDialog implements OnInit {
+
+  id!: string;
+  PersonId!: string;
+  AddressType!: string;
+  AddressCode!: string;
+  PublicPlace!: string;
+  City!: string;
+  State!: string;
+  District!: string;
+  AddressNumber!: string;
+  Complement!: string;
+  Country!: string;
+
+  isPlaceDistrictReadonly = false;
+  isCityStateReadonly = false;
+
+  //Form
+  personAddressForm: FormGroup = this.formBuilder.group({
+    PersonId: [null],
+    AddressType: [null, [Validators.required]],
+    AddressCode: [null, [Validators.required, Validators.maxLength(9)]],
+    PublicPlace: [null, [Validators.required, Validators.maxLength(255)]],
+    City: [null, [Validators.required, Validators.maxLength(255)]],
+    State: [null, [Validators.required, Validators.maxLength(2)]],
+    District: [null, [Validators.required, Validators.maxLength(255)]],
+    AddressNumber: [null, [Validators.required, Validators.maxLength(10)]],
+    Complement: [null, Validators.maxLength(255)],
+    Country: [null, [Validators.required, Validators.maxLength(255)]],
+  });
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<DialogContentPhoneDialog>,
+    private messageHandler: MessageHandlerService,
+    private personsAddressesDispatcherService: PersonsAddressesDispatcherService,
+    private viacep: NgxViacepService
+  ) { }
+
+  ngOnInit(): void {
+    this.id = this.data.ID;
+    this.getPersonAddressById(this.id);
+  }
+
+  onBlurMethod(): void {
+    this.viacep
+      .buscarPorCep(this.AddressCode)
+      .pipe(
+        catchError((error: CEPError) => {
+          console.log(error.message);
+          return EMPTY;
+        })
+      )
+      .subscribe((address: Endereco) => {
+        console.log(address);
+
+        this.PublicPlace = address.logradouro;
+        this.District = address.bairro;
+        this.City = address.localidade;
+        this.State = address.uf;
+        this.Country = "Brasil";
+
+        if (address.logradouro == "") {
+          this.isPlaceDistrictReadonly = false;
+        } else {
+          this.isPlaceDistrictReadonly = true;
+        }
+
+        this.isCityStateReadonly = true;
+      });
+  }
+
+  getPersonAddressById(id: string): void {
+    this.personsAddressesDispatcherService.getPersonAddressById(id).subscribe(
+      result => {
+        console.log(result)
+        this.id = result.ID;
+        this.PersonId = result.PersonId;
+        this.AddressCode = result.AddressCode;
+        this.AddressType = result.AddressType;
+        this.PublicPlace = result.PublicPlace;
+        this.District = result.District;
+        this.AddressNumber = result.AddressNumber;
+        this.Complement = result.Complement;
+        this.City = result.City;
+        this.State = result.State;
+        this.Country = result.Country;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  updatePersonAddress(): void {
+
+    if (!this.personAddressForm.valid) {
+      console.log(this.personAddressForm);
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let personAddress = new PersonAddressModel();
+    personAddress.id = this.id;
+    personAddress.personId = this.PersonId;
+    personAddress.addressCode = this.AddressCode;
+    personAddress.addressType = this.AddressType;
+    personAddress.publicPlace = this.PublicPlace;
+    personAddress.district = this.District;
+    personAddress.addressNumber = this.AddressNumber;
+    personAddress.complement = this.Complement;
+    personAddress.addressCode = this.AddressCode;
+    personAddress.city = this.City;
+    personAddress.state = this.State;
+    personAddress.country = this.Country;
+
+    this.personsAddressesDispatcherService.update(this.id, personAddress).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Endereço alterado com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+
+}
 
 @Component({
   selector: 'dialog-content-address-dialog',
   templateUrl: 'dialog-content-address-dialog.html',
 })
 export class DialogContentAddressDialog implements OnInit {
-
-  constructor(
-    private viacep: NgxViacepService,
-    private formBuilder: FormBuilder
-  ) { }
-
+ 
+  PersonId!: string;
+  AddressType!: string;
   AddressCode!: string;
   PublicPlace!: string;
   City!: string;
   State!: string;
   District!: string;
+  AddressNumber!: string;
+  Complement!: string;
+  Country!: string;
 
   isPlaceDistrictReadonly = false;
   isCityStateReadonly = false;
 
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private viacep: NgxViacepService,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<DialogContentPhoneDialog>,
+    private messageHandler: MessageHandlerService,
+    private personsAddressesDispatcherService: PersonsAddressesDispatcherService,
+  ) { }
+
   ngOnInit(): void {
+    this.PersonId = this.data.ID;
   }
 
   //Form
   personAddressForm: FormGroup = this.formBuilder.group({
-    AddressCode: [null],
-    PublicPlace: [null],
-    City: [null],
-    State: [null],
-    District: [null]
+    AddressType: [null, [Validators.required]],
+    AddressCode: [null, [Validators.required, Validators.maxLength(9)]],
+    PublicPlace: [null, [Validators.required, Validators.maxLength(255)]],
+    City: [null, [Validators.required, Validators.maxLength(255)]],
+    State: [null, [Validators.required, Validators.maxLength(2)]],
+    District: [null, [Validators.required, Validators.maxLength(255)]],
+    AddressNumber: [null, [Validators.required, Validators.maxLength(10)]],
+    Complement: [null, Validators.maxLength(255)],
+    Country: [null, [Validators.required, Validators.maxLength(255)]],
   });
 
   onBlurMethod(): void {
@@ -441,6 +818,7 @@ export class DialogContentAddressDialog implements OnInit {
         this.District = address.bairro;
         this.City = address.localidade;
         this.State = address.uf;
+        this.Country = "Brasil";
 
         if (address.logradouro == "") {
           this.isPlaceDistrictReadonly = false;
@@ -451,6 +829,36 @@ export class DialogContentAddressDialog implements OnInit {
         this.isCityStateReadonly = true;
       });
   }
+
+  savePersonPhone(): void {
+    if (!this.personAddressForm.valid) {
+      console.log(this.personAddressForm);
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let personAddress = new PersonAddressModel();
+    personAddress.personId = this.PersonId;
+    personAddress.addressCode = this.AddressCode;
+    personAddress.addressType = this.AddressType;
+    personAddress.publicPlace = this.PublicPlace;
+    personAddress.district = this.District;
+    personAddress.addressNumber = this.AddressNumber;
+    personAddress.complement = this.Complement;
+    personAddress.addressCode = this.AddressCode;
+    personAddress.city = this.City;
+    personAddress.state = this.State;
+    personAddress.country = this.Country;
+
+    this.personsAddressesDispatcherService.create(personAddress).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Endereço inserido com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+      });
+  }
 }
 
 @Component({
@@ -458,3 +866,17 @@ export class DialogContentAddressDialog implements OnInit {
   templateUrl: './confirm-person-remove-dialog.html',
 })
 export class ConfirmPersonRemoveDialog { }
+
+//MODAL CONFIRMAR REMOÇÃO DO USERPHONE
+@Component({
+  selector: 'confirm-person-phone-remove-dialog',
+  templateUrl: 'confirm-person-phone-remove-dialog.html',
+})
+export class ConfirmPersonPhoneRemoveDialog { }
+
+//MODAL CONFIRMAR REMOÇÃO DO USERADDRESS
+@Component({
+  selector: 'confirm-person-address-remove-dialog',
+  templateUrl: 'confirm-person-address-remove-dialog.html',
+})
+export class ConfirmAddressPhoneRemoveDialog { }
