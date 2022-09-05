@@ -17,7 +17,7 @@ export class PersonsPhysicalsDispatcherService {
     return this.httpClient.get(`${baseURL}/${personId}/GetPersonPhysicalByPersonId`);
   }
 
-  public createPhysicalComplements(data: object): Observable<any> {
+  public CreatePhysicalComplements(data: object): Observable<any> {
     return this.httpClient.post(`${baseURL}/Create`, data);
   }
 

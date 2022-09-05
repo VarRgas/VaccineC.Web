@@ -1,5 +1,5 @@
 import { CEPError, Endereco, NgxViacepService } from "@brunoc/ngx-viacep";
-import { catchError, EMPTY } from 'rxjs';
+import { catchError, empty, EMPTY } from 'rxjs';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -63,6 +63,7 @@ export class PessoasComponent implements OnInit {
 
   //Controle de tabs
   public tabIsDisabled: boolean = true;
+  public inputIsDisabled: boolean = false;
   public showPhysicalRegister: boolean = false;
   public showJuridicalRegister: boolean = false;
 
@@ -105,7 +106,6 @@ export class PessoasComponent implements OnInit {
   });
 
   public juridicalComplementForm: FormGroup = this.formBuilder.group({
-    PersonJuridicalId: [null],
     PersonId: [null],
     FantasyName: [null],
     CnpjNumber!: [null],
@@ -217,12 +217,10 @@ export class PessoasComponent implements OnInit {
           this.tabIsDisabled = false;
 
           this.treatButtons(this.personType, this.personId);
-          //this.isInputReadOnly = true;
         },
         error => {
           console.log(error);
         });
-
 
     this.personsPhonesDispatcherService.getAllPersonsPhonesByPersonId(id)
       .subscribe(
@@ -291,7 +289,7 @@ export class PessoasComponent implements OnInit {
 
           this.getAllPersons();
           this.treatButtons(this.personType, this.personId);
-
+          this.inputIsDisabled = false;
           this.messageHandler.showMessage("Pessoa criada com sucesso!", "success-snackbar")
         },
         error => {
@@ -310,25 +308,25 @@ export class PessoasComponent implements OnInit {
     //   return;
     // }
 
-    const data = this.personForm.value;
+    const data = this.physicalComplementForm.value;
     data.HasPending = false;
 
-    this.personsPhysicalsDispatcherService.createPhysicalComplements(data)
+    this.personsPhysicalsDispatcherService.CreatePhysicalComplements(data)
       .subscribe(
         response => {
-          this.personId = response.ID;
+          this.personPhysicalId = response.ID;
+          this.personId = response.Person.ID;
           this.cpfNumber = response.CpfNumber;
           this.cnsNumber = response.CnsNumber;
           this.maritalStatus = response.MaritalStatus;
           this.gender = response.Gender;
 
           this.tabIsDisabled = false;
+          this.inputIsDisabled = true;
           this.createButtonLoading = false;
 
           this.getAllPersons();
-          this.treatButtons(this.personType, this.personId);
-
-          this.messageHandler.showMessage("Pessoa criada com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Complementos criados com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
@@ -382,12 +380,12 @@ export class PessoasComponent implements OnInit {
   }
 
   public updatePhysicalComplement(): void {
-    let person = new PersonPhysicalModel();
-    person.id = this.personId;
-    person.cpf = this.cpfNumber;
-    person.cns = this.cnsNumber;
-    person.gender = this.gender;
-    person.deathDate= this.deathDate;
+    let physicalComplement = new PersonPhysicalModel();
+    physicalComplement.id = this.personPhysicalId;
+    physicalComplement.personId = this.personId;
+    physicalComplement.maritalStatus = this.maritalStatus;
+    physicalComplement.gender = this.gender;
+    physicalComplement.deathDate = this.deathDate;
 
     // if (!this.personForm.valid) {
     //   console.log(this.personForm);
@@ -397,16 +395,10 @@ export class PessoasComponent implements OnInit {
     //   return;
     // }
 
-    this.personsPhysicalsDispatcherService.updatePhysicalComplements(this.personId, person)
+    this.personsPhysicalsDispatcherService.updatePhysicalComplements(this.personPhysicalId, physicalComplement)
       .subscribe(
         response => {
-          this.personId = response.ID;
-          this.cpfNumber = response.CpfNumber;
-          this.cnsNumber = response.CnsNumber;
-          this.maritalStatus = response.MaritalStatus;
-          this.gender = response.Gender;
-          this.createButtonLoading = false;
-          this.treatButtons(this.personType, this.personId);
+          console.log(response)
           this.messageHandler.showMessage("Complemento de pessoa alterado com sucesso!", "success-snackbar")
         },
         error => {
@@ -459,14 +451,27 @@ export class PessoasComponent implements OnInit {
       this.showPhysicalRegister = true;
       this.showSavePhysicalComplementsButton = true;
       this.showSaveJuridicalComplementsButton = false;
+      this.inputIsDisabled = true;
 
       this.personsPhysicalsDispatcherService.GetPersonPhysicalByPersonId(personId)
         .subscribe(result => {
-          this.cpfNumber = result.CpfNumber;
-          this.cnsNumber = result.CnsNumber;
-          this.maritalStatus = result.MaritalStatus;
-          this.gender = result.Gender;
-          this.deathDate = result.DeathDate;
+          if (!result) {
+            this.personPhysicalId = "";
+            this.cpfNumber = "";
+            this.cnsNumber = "";
+            this.gender = "";
+            this.inputIsDisabled = false;
+            //this.deathDate = ;
+            this.physicalComplementForm.clearValidators();
+            this.physicalComplementForm.updateValueAndValidity();
+          } else {
+            this.personPhysicalId = result.ID;
+            this.cpfNumber = result.CpfNumber;
+            this.cnsNumber = result.CnsNumber;
+            this.maritalStatus = result.MaritalStatus;
+            this.gender = result.Gender;
+            this.deathDate = result.DeathDate;
+          }
         });
     }
     else if (personTypeSelected == "J" || personTypeSelected == "j") {
@@ -474,11 +479,20 @@ export class PessoasComponent implements OnInit {
       this.showJuridicalRegister = true;
       this.showSaveJuridicalComplementsButton = true;
       this.showSavePhysicalComplementsButton = false;
+      this.inputIsDisabled = true;
 
       this.personsJuridicalsDispatcherService.GetPersonJuridicalByPersonId(personId)
         .subscribe(result => {
-          this.cnpjNumber = result.CnpjNumber;
-          this.fantasyName = result.FantasyName;
+          if (!result) {
+            this.personJuridicalId = "";
+            this.cnpjNumber = "";
+            this.fantasyName = "";
+            this.inputIsDisabled = false;
+          } else {
+            this.personJuridicalId = result.ID;
+            this.cnpjNumber = result.CnpjNumber;
+            this.fantasyName = result.FantasyName;
+          }
         });
     }
   }

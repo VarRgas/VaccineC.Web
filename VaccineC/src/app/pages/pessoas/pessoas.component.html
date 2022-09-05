@@ -195,10 +195,15 @@
                           [(ngModel)]="personPhysicalId">
                       </mat-form-field>
 
+                      <mat-form-field [hidden]="true">
+                        <input matInput #NamePersonID formControlName="PersonId"
+                            [(ngModel)]="personId">
+                      </mat-form-field>
+
                       <!-- CPF -->
                       <mat-form-field appearance="fill" class="col-sm-6">
                         <mat-label>CPF</mat-label>
-                        <input type="text" [(ngModel)]="cpfNumber" formControlName="CpfNumber" matInput #input
+                        <input [readonly]="inputIsDisabled" type="text" [(ngModel)]="cpfNumber" formControlName="CpfNumber" matInput #input
                           maxlength="14" id="cpfNumber" required="true" mask="000.000.000-009"
                           placeholder="000.000.000-00">
                       </mat-form-field>
@@ -206,7 +211,7 @@
                       <!-- CNS -->
                       <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                         <mat-label>CNS</mat-label>
-                        <input type="text" [(ngModel)]="cnsNumber" formControlName="CnsNumber" matInput #input
+                        <input [readonly]="inputIsDisabled" type="text" [(ngModel)]="cnsNumber" formControlName="CnsNumber" matInput #input
                           maxlength="18" placeholder="000 0000 0000 0000" id="cnsNumber" mask="000 0000 0000 00009">
                       </mat-form-field>
                     </div>
