@@ -241,19 +241,6 @@
                     </div>
                   </div>
                   <div class="div-row-input">
-
-                    <!-- DATA DE OBITO -->
-                    <!-- <mat-form-field appearance="fill" class="col-sm-6">
-                              <mat-label>Data de Óbito</mat-label>
-                              <input matInput
-                                     [(ngModel)]="deathDate"
-                                     formControlName="DeathDate"
-                                     [matDatepicker]="picker2"
-                                     id="deathDate"
-                                     mask="00/00/0009">
-                              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                              <mat-datepicker #picker2></mat-datepicker>
-                          </mat-form-field> -->
                   </div>
                   <div *ngIf="showSavePhysicalComplementsButton" class="offset-sm-12 col-sm-5">
                     <button (click)="createUpdatePhysicalComplements()" mat-raised-button class="create-button">
@@ -285,7 +272,7 @@
                     <!-- CNPJ -->
                     <mat-form-field appearance="fill" class="col-sm-12">
                       <mat-label>CNPJ</mat-label>
-                      <input type="text" [(ngModel)]="cnpjNumber" formControlName="CnpjNumber" matInput #input maxlength="18" id="cnpjNumber" required="true"
+                      <input [readonly]="inputIsDisabled" type="text" [(ngModel)]="cnpjNumber" formControlName="CnpjNumber" matInput #input maxlength="18" id="cnpjNumber" required="true"
                         mask="00.000.000/0000-00" placeholder="00.000.000/0000-00">
                     </mat-form-field>
                   </div>

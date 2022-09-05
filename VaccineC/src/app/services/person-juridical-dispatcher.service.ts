@@ -16,11 +16,11 @@ export class PersonsJuridicalsDispatcherService {
     return this.httpClient.get(`${baseURL}/${personId}/GetPersonJuridicalByPersonId`);
   }
 
-  public create(data: object): Observable<any> {
+  public CreateJuridicalComplements(data: object): Observable<any> {
     return this.httpClient.post(`${baseURL}/Create`, data);
   }
 
-  public update(id: string, data: object): Observable<any> {
+  public UpdateJuridicalComplements(id: string, data: object): Observable<any> {
     return this.httpClient.put(`${baseURL}/${id}/Update`, data);
   }
 
