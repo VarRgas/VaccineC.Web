@@ -17,6 +17,9 @@ import { IPersonAddress } from "src/app/interfaces/i-person-address";
 import { PersonsAddressesDispatcherService } from "src/app/services/person-address-dispatcher.service";
 import { PersonPhoneModel } from "src/app/models/person-phone-model";
 import { PersonAddressModel } from "src/app/models/person-address-model";
+import { PersonsPhysicalsDispatcherService } from "src/app/services/person-physical-dispatcher.service";
+import { PersonsJuridicalsDispatcherService } from "src/app/services/person-juridical-dispatcher.service";
+import { PersonPhysicalModel } from "src/app/models/person-physical-model";
 
 @Component({
   selector: 'app-pessoas',
@@ -29,11 +32,14 @@ export class PessoasComponent implements OnInit {
   //Controle para o spinner do button
   public searchButtonLoading: boolean = false;
   public createButtonLoading: boolean = false;
+  public showSavePhysicalComplementsButton: boolean = false;
+  public showSaveJuridicalComplementsButton: boolean = false;
 
   //Variáveis dos inputs
   public searchPersonName!: string;
   public personId!: string;
   public name!: string;
+  public fantasyName!: string;
   public email!: string;
   public document!: string;
   public commemorativeDate!: Date;
@@ -41,11 +47,24 @@ export class PessoasComponent implements OnInit {
   public details!: string;
   public informationField!: string;
 
+  //Complementos
+  public personPhysicalId!: string;
+  public personJuridicalId!: string;
+  public cpfNumber!: string;
+  public cnpjNumber!: string;
+  public cnsNumber!: string;
+  public maritalStatus!: string;
+  public gender!: string;
+  public deathDate!: Date;
+
+
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
 
   //Controle de tabs
   public tabIsDisabled: boolean = true;
+  public showPhysicalRegister: boolean = false;
+  public showJuridicalRegister: boolean = false;
 
   //Table Search
   public value = '';
@@ -75,6 +94,23 @@ export class PessoasComponent implements OnInit {
     Details: [null],
   });
 
+  public physicalComplementForm: FormGroup = this.formBuilder.group({
+    PersonPhysicalId: [null],
+    PersonId: [null],
+    CpfNumber!: [null],
+    CnsNumber: [null],
+    MaritalStatus: [[Validators.required]],
+    Gender: [[Validators.required]],
+    DeathDate: [null],
+  });
+
+  public juridicalComplementForm: FormGroup = this.formBuilder.group({
+    PersonJuridicalId: [null],
+    PersonId: [null],
+    FantasyName: [null],
+    CnpjNumber!: [null],
+  });
+
   constructor(
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
@@ -82,7 +118,9 @@ export class PessoasComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
-    private personsAddressesDispatcherService: PersonsAddressesDispatcherService
+    private personsAddressesDispatcherService: PersonsAddressesDispatcherService,
+    private personsJuridicalsDispatcherService: PersonsJuridicalsDispatcherService,
+    private personsPhysicalsDispatcherService: PersonsPhysicalsDispatcherService,
   ) { }
 
   ngOnInit(): void {
@@ -107,6 +145,25 @@ export class PessoasComponent implements OnInit {
     } else {
       this.updatePerson();
     }
+  }
+
+  public createUpdatePhysicalComplements(): void {
+    this.createButtonLoading = true;
+
+    if (this.personPhysicalId == "" || this.personPhysicalId == null || this.personPhysicalId == undefined) {
+      this.createPhysicalComplement();
+    } else {
+      this.updatePhysicalComplement();
+    }
+  }
+
+  public createUpdateJuridicalComplements(): void {
+    this.createButtonLoading = true;
+    // if (this.personPhysicalId == "" || this.personId == null || this.personId == undefined) {
+    //   this.createJuridicalComplement();
+    // } else {
+    //   this.updateJuridicalComplement();
+    // }
   }
 
   getAddressViaCep(): void {
@@ -145,9 +202,7 @@ export class PessoasComponent implements OnInit {
   }
 
   public editPerson(id: string): void {
-    this.personForm.reset();
-    this.personForm.clearValidators();
-    this.personForm.updateValueAndValidity();
+    this.resetForms();
 
     this.personsDispatcherService.getPersonById(id)
       .subscribe(
@@ -159,8 +214,9 @@ export class PessoasComponent implements OnInit {
           this.commemorativeDate = person.CommemorativeDate;
           this.details = person.Details;
           this.informationField = person.Name;
-
           this.tabIsDisabled = false;
+
+          this.treatButtons(this.personType, this.personId);
           //this.isInputReadOnly = true;
         },
         error => {
@@ -193,9 +249,7 @@ export class PessoasComponent implements OnInit {
   }
 
   public addNewPerson(): void {
-    this.personForm.reset();
-    this.personForm.clearValidators();
-    this.personForm.updateValueAndValidity();
+    this.resetForms();
     this.informationField = "";
 
     //this.isInputReadOnly = false;
@@ -232,16 +286,47 @@ export class PessoasComponent implements OnInit {
           this.commemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
           this.informationField = response.Name;
-
+          this.tabIsDisabled = false;
           this.createButtonLoading = false;
-          // this.isResourceDisabled = false;
-          // this.isInputDisabled = true;
-          // this.isInputReadOnly = true;
-          // this.isButtonDeleteResourceDisabled = false;
-          // this.isButtonAddResourceHidden = false;
 
           this.getAllPersons();
-          this.treatButtons(this.personType);
+          this.treatButtons(this.personType, this.personId);
+
+          this.messageHandler.showMessage("Pessoa criada com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+          this.createButtonLoading = false;
+        });
+  }
+
+  public createPhysicalComplement(): void {
+    // if (!this.personForm.valid) {
+    //   console.log(this.personForm);
+    //   this.createButtonLoading = false;
+    //   this.personForm.markAllAsTouched();
+    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+    //   return;
+    // }
+
+    const data = this.personForm.value;
+    data.HasPending = false;
+
+    this.personsPhysicalsDispatcherService.createPhysicalComplements(data)
+      .subscribe(
+        response => {
+          this.personId = response.ID;
+          this.cpfNumber = response.CpfNumber;
+          this.cnsNumber = response.CnsNumber;
+          this.maritalStatus = response.MaritalStatus;
+          this.gender = response.Gender;
+
+          this.tabIsDisabled = false;
+          this.createButtonLoading = false;
+
+          this.getAllPersons();
+          this.treatButtons(this.personType, this.personId);
 
           this.messageHandler.showMessage("Pessoa criada com sucesso!", "success-snackbar")
         },
@@ -260,7 +345,6 @@ export class PessoasComponent implements OnInit {
     person.personType = this.personType;
     person.email = this.email;
     person.commemorativeDate = this.commemorativeDate;
-    // person.situation = this.document;
     person.details = this.details;
 
 
@@ -286,13 +370,47 @@ export class PessoasComponent implements OnInit {
           this.createButtonLoading = false;
 
           this.getAllPersons();
-          this.treatButtons(this.personType);
+          this.treatButtons(this.personType, this.personId);
 
           this.messageHandler.showMessage("Pessoa alterada com sucesso!", "success-snackbar")
         },
         error => {
           this.errorHandler.handleError(error);
           console.log(error);
+          this.createButtonLoading = false;
+        });
+  }
+
+  public updatePhysicalComplement(): void {
+    let person = new PersonPhysicalModel();
+    person.id = this.personId;
+    person.cpf = this.cpfNumber;
+    person.cns = this.cnsNumber;
+    person.gender = this.gender;
+    person.deathDate= this.deathDate;
+
+    // if (!this.personForm.valid) {
+    //   console.log(this.personForm);
+    //   this.createButtonLoading = false;
+    //   this.personForm.markAllAsTouched();
+    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+    //   return;
+    // }
+
+    this.personsPhysicalsDispatcherService.updatePhysicalComplements(this.personId, person)
+      .subscribe(
+        response => {
+          this.personId = response.ID;
+          this.cpfNumber = response.CpfNumber;
+          this.cnsNumber = response.CnsNumber;
+          this.maritalStatus = response.MaritalStatus;
+          this.gender = response.Gender;
+          this.createButtonLoading = false;
+          this.treatButtons(this.personType, this.personId);
+          this.messageHandler.showMessage("Complemento de pessoa alterado com sucesso!", "success-snackbar")
+        },
+        error => {
+          this.errorHandler.handleError(error);
           this.createButtonLoading = false;
         });
   }
@@ -307,9 +425,7 @@ export class PessoasComponent implements OnInit {
             .subscribe(
               success => {
                 this.informationField = "";
-                this.personForm.reset();
-                this.personForm.clearValidators();
-                this.personForm.updateValueAndValidity();
+                this.resetForms();
                 this.tabIsDisabled = true;
                 this.getAllPersons();
                 this.messageHandler.showMessage("Pessoa excluída com sucesso!", "success-snackbar")
@@ -322,23 +438,49 @@ export class PessoasComponent implements OnInit {
       });
   }
 
-  public treatButtons(personTypeSelected: string) {
+  public resetForms(): void {
+    this.personForm.reset();
+    this.personForm.clearValidators();
+    this.personForm.updateValueAndValidity();
 
-    if (personTypeSelected == "F") {
-      // this.isActivateButtonHidden = true;
-      // this.isDeactivateButtonHidden = false;
+    this.physicalComplementForm.reset();
+    this.physicalComplementForm.clearValidators();
+    this.physicalComplementForm.updateValueAndValidity();
 
-      // this.isButtonDeleteResourceDisabled = false;
-      // this.isButtonAddResourceHidden = false;
+    this.juridicalComplementForm.reset();
+    this.juridicalComplementForm.clearValidators();
+    this.juridicalComplementForm.updateValueAndValidity();
+  }
 
-    } else if (personTypeSelected == "j") {
-      // this.isActivateButtonHidden = false;
-      // this.isDeactivateButtonHidden = true;
+  public treatButtons(personTypeSelected: string, personId: string) {
 
-      // this.isButtonDeleteResourceDisabled = true;
-      // this.isButtonAddResourceHidden = true;
+    if (personTypeSelected == "F" || personTypeSelected == "f") {
+      this.showJuridicalRegister = false;
+      this.showPhysicalRegister = true;
+      this.showSavePhysicalComplementsButton = true;
+      this.showSaveJuridicalComplementsButton = false;
+
+      this.personsPhysicalsDispatcherService.GetPersonPhysicalByPersonId(personId)
+        .subscribe(result => {
+          this.cpfNumber = result.CpfNumber;
+          this.cnsNumber = result.CnsNumber;
+          this.maritalStatus = result.MaritalStatus;
+          this.gender = result.Gender;
+          this.deathDate = result.DeathDate;
+        });
     }
+    else if (personTypeSelected == "J" || personTypeSelected == "j") {
+      this.showPhysicalRegister = false;
+      this.showJuridicalRegister = true;
+      this.showSaveJuridicalComplementsButton = true;
+      this.showSavePhysicalComplementsButton = false;
 
+      this.personsJuridicalsDispatcherService.GetPersonJuridicalByPersonId(personId)
+        .subscribe(result => {
+          this.cnpjNumber = result.CnpjNumber;
+          this.fantasyName = result.FantasyName;
+        });
+    }
   }
 
   public openUpdatePersonPhoneDialog(id: string): void {
@@ -650,7 +792,7 @@ export class UpdatePersonAddressDialog implements OnInit {
   personAddressForm: FormGroup = this.formBuilder.group({
     PersonId: [null],
     AddressType: [null, [Validators.required]],
-    AddressCode: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],    PublicPlace: [null, [Validators.required, Validators.maxLength(255)]],
+    AddressCode: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]], PublicPlace: [null, [Validators.required, Validators.maxLength(255)]],
     City: [null, [Validators.required, Validators.maxLength(255)]],
     State: [null, [Validators.required, Validators.maxLength(2)]],
     District: [null, [Validators.required, Validators.maxLength(255)]],
@@ -763,7 +905,7 @@ export class UpdatePersonAddressDialog implements OnInit {
   templateUrl: 'dialog-content-address-dialog.html',
 })
 export class DialogContentAddressDialog implements OnInit {
- 
+
   PersonId!: string;
   AddressType!: string;
   AddressCode!: string;
