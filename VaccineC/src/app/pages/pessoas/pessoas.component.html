@@ -19,7 +19,7 @@
               </mat-form-field>
 
               <button (click)="loadPersonData()" id="mat-search-button" mat-raised-button color="primary"
-                class="mat-button-entry me-2">
+                class="mat-button-entry me-2" [disabled]="searchButtonLoading">
                 <div class="spinner">
                   <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
                   <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
@@ -102,7 +102,8 @@
                     <tr>
                       <td>
                         <!-- Foto -->
-                        <div id="profilePic"></div>
+                        <div id="profilePic">
+                        </div>
                       </td>
                       <td class="table-name col-sm-11">
                         <!-- NOME DA PESSOA -->
@@ -135,7 +136,8 @@
                   <!-- DATA DE NASCIMENTO -->
                   <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                     <mat-label>Data de Nascimento</mat-label>
-                    <input matInput [matDatepicker]="picker" mask="00/00/0000">
+                    <input matInput [matDatepicker]="picker" #CommemorativeDateInput [(ngModel)]="CommemorativeDate"
+                      formControlName="CommemorativeDate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -196,23 +198,22 @@
                       </mat-form-field>
 
                       <mat-form-field [hidden]="true">
-                        <input matInput #NamePersonID formControlName="PersonId"
-                            [(ngModel)]="personId">
+                        <input matInput #NamePersonID formControlName="PersonId" [(ngModel)]="personId">
                       </mat-form-field>
 
                       <!-- CPF -->
                       <mat-form-field appearance="fill" class="col-sm-6">
                         <mat-label>CPF</mat-label>
-                        <input [readonly]="inputIsDisabled" type="text" [(ngModel)]="cpfNumber" formControlName="CpfNumber" matInput #input
-                          maxlength="14" id="cpfNumber" required="true" mask="000.000.000-009"
-                          placeholder="000.000.000-00">
+                        <input type="text" [(ngModel)]="cpfNumber"
+                          formControlName="CpfNumber" matInput #input maxlength="14" id="cpfNumber" mask="000.000.000-009" placeholder="000.000.000-00">
                       </mat-form-field>
 
                       <!-- CNS -->
                       <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                         <mat-label>CNS</mat-label>
-                        <input [readonly]="inputIsDisabled" type="text" [(ngModel)]="cnsNumber" formControlName="CnsNumber" matInput #input
-                          maxlength="18" placeholder="000 0000 0000 0000" id="cnsNumber" mask="000 0000 0000 00009">
+                        <input type="text" [(ngModel)]="cnsNumber"
+                          formControlName="CnsNumber" matInput #input maxlength="18" placeholder="000 0000 0000 0000"
+                          id="cnsNumber" mask="000 0000 0000 00009">
                       </mat-form-field>
                     </div>
                     <div class="div-row-input">
@@ -220,13 +221,16 @@
                       <!-- ESTADO CIVIL -->
                       <mat-form-field appearance="fill" class="col-sm-6">
                         <mat-label>Estado Civil</mat-label>
-                        <mat-select id="maritalStatus" [(ngModel)]="maritalStatus" formControlName="MaritalStatus">
+                        <mat-select id="maritalStatus" #MaritalStatusInput [(ngModel)]="maritalStatus" formControlName="MaritalStatus" required>
                           <mat-option value="S" selected>Solteiro(a)</mat-option>
                           <mat-option value="C" selected>Casado(a)</mat-option>
                           <mat-option value="X" selected>Separado(a)</mat-option>
                           <mat-option value="D" selected>Divorciado(a)</mat-option>
                           <mat-option value="V" selected>Viúvo(a)</mat-option>
                         </mat-select>
+                        <mat-error *ngIf="physicalComplementForm.controls.MaritalStatus.touched && physicalComplementForm.controls.MaritalStatus.invalid">
+                          <span *ngIf="physicalComplementForm.controls.MaritalStatus.errors?.required">O Estado Civil é obrigatório.</span>
+                      </mat-error>
                       </mat-form-field>
 
                       <!-- GENERO -->
@@ -237,15 +241,22 @@
                           <mat-option value="F" selected>Feminino</mat-option>
                           <mat-option value="O" selected>Outro</mat-option>
                         </mat-select>
+                        <mat-error *ngIf="physicalComplementForm.controls.Gender.touched && physicalComplementForm.controls.Gender.invalid">
+                          <span *ngIf="physicalComplementForm.controls.Gender.errors?.required">O Gênero é obrigatório.</span>
+                      </mat-error>
                       </mat-form-field>
                     </div>
                   </div>
                   <div class="div-row-input">
                   </div>
                   <div *ngIf="showSavePhysicalComplementsButton" class="offset-sm-12 col-sm-5">
-                    <button (click)="createUpdatePhysicalComplements()" mat-raised-button class="create-button">
-                      <span class="fa-solid fa-floppy-disk me-1 w-20px"></span>
-                      <span>Salvar</span>
+                    <button (click)="createUpdatePhysicalComplements()" mat-raised-button class="create-button"
+                      [disabled]="createPfButtonLoading">
+                      <div class="spinner">
+                        <mat-spinner *ngIf="createPfButtonLoading" [diameter]="15"></mat-spinner>
+                        <span *ngIf="!createPfButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                        Salvar
+                      </div>
                     </button>
                   </div>
                 </div>
@@ -255,7 +266,7 @@
 
           <div *ngIf="showJuridicalRegister" class="complement-group">
             <form [formGroup]="juridicalComplementForm">
-              <div >
+              <div>
 
                 <!-- REGISTRO DE PESSOA JURIDICA -->
                 <div *ngIf="showJuridicalRegister" class="offset-sm-1 col-sm-11 p-0" id="person-juridical">
@@ -264,7 +275,8 @@
                     <!-- NOME FANTASIA -->
                     <mat-form-field appearance="fill" class="col-sm-12">
                       <mat-label>Nome Fantasia</mat-label>
-                      <input type="text" [(ngModel)]="fantasyName" formControlName="FantasyName" matInput #input maxlength="255" id="fantasyName">
+                      <input type="text" [(ngModel)]="fantasyName" formControlName="FantasyName" matInput #input
+                        maxlength="255" id="fantasyName">
                     </mat-form-field>
                   </div>
                   <div class="div-row-input">
@@ -272,15 +284,21 @@
                     <!-- CNPJ -->
                     <mat-form-field appearance="fill" class="col-sm-12">
                       <mat-label>CNPJ</mat-label>
-                      <input [readonly]="inputIsDisabled" type="text" [(ngModel)]="cnpjNumber" formControlName="CnpjNumber" matInput #input maxlength="18" id="cnpjNumber" required="true"
+                      <input type="text" [(ngModel)]="cnpjNumber"
+                        formControlName="CnpjNumber" matInput #input maxlength="18" id="cnpjNumber"
                         mask="00.000.000/0000-00" placeholder="00.000.000/0000-00">
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="offset-sm-12 col-sm-5">
+                <div class="div-row-input">
+                </div>
+                <div class="offset-sm-1 col-sm-5">
                   <button (click)="createUpdateJuridicalComplements()" mat-raised-button class="create-button">
-                    <span class="fa-solid fa-floppy-disk me-1 w-20px"></span>
-                    <span>Salvar</span>
+                    <div class="spinner">
+                      <mat-spinner *ngIf="createPjButtonLoading" [diameter]="15"></mat-spinner>
+                      <span *ngIf="!createPjButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                      Salvar
+                    </div>
                   </button>
                 </div>
               </div>
@@ -288,7 +306,7 @@
           </div>
         </mat-tab>
 
-        <mat-tab label="Telefones">
+        <mat-tab label="Telefones" [disabled]="tabIsDisabled">
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
               <table class="col-sm-12" mat-table [dataSource]="dataSourcePhone" matSort matSortActive="Name"
@@ -347,7 +365,7 @@
         </mat-tab>
 
 
-        <mat-tab label="Endereços">
+        <mat-tab label="Endereços" [disabled]="tabIsDisabled">
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
               <table class="col-sm-12" mat-table [dataSource]="dataSourceAddress" matSort matSortActive="Name"

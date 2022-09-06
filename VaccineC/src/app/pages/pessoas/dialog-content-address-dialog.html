@@ -72,7 +72,7 @@
 
             <mat-form-field appearance="fill" class="col-sm-2">
                 <mat-label>Nº</mat-label>
-                <input type="number" maxlength="10" mask="9999999999" matInput #AddressNumberInput formControlName="AddressNumber" [(ngModel)]="AddressNumber" required>
+                <input type="number" maxlength="10" matInput #AddressNumberInput formControlName="AddressNumber" [(ngModel)]="AddressNumber" required>
                 <mat-hint align="end">{{AddressNumberInput.value?.length || 0}}/10</mat-hint>
             </mat-form-field>
         </div>

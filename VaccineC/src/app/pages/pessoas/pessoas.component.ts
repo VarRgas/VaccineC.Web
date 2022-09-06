@@ -33,6 +33,8 @@ export class PessoasComponent implements OnInit {
   //Controle para o spinner do button
   public searchButtonLoading: boolean = false;
   public createButtonLoading: boolean = false;
+  public createPfButtonLoading: boolean = false;
+  public createPjButtonLoading: boolean = false;
   public showSavePhysicalComplementsButton: boolean = false;
   public showSaveJuridicalComplementsButton: boolean = false;
 
@@ -43,7 +45,6 @@ export class PessoasComponent implements OnInit {
   public fantasyName!: string;
   public email!: string;
   public document!: string;
-  public commemorativeDate!: Date;
   public personType!: string;
   public details!: string;
   public informationField!: string;
@@ -57,7 +58,7 @@ export class PessoasComponent implements OnInit {
   public maritalStatus!: string;
   public gender!: string;
   public deathDate!: Date;
-
+  public CommemorativeDate!: Date;
 
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
@@ -98,18 +99,18 @@ export class PessoasComponent implements OnInit {
 
   public physicalComplementForm: FormGroup = this.formBuilder.group({
     PersonPhysicalId: [null],
-    PersonId: [null],
-    CpfNumber!: [null],
-    CnsNumber: [null],
-    MaritalStatus: [[Validators.required]],
-    Gender: [[Validators.required]],
+    PersonId: [null, [Validators.required]],
+    CpfNumber: [null, Validators.minLength(11)],
+    CnsNumber: [null, Validators.minLength(15)],
+    MaritalStatus: [null, [Validators.required]],
+    Gender: [null, [Validators.required]],
     DeathDate: [null],
   });
 
   public juridicalComplementForm: FormGroup = this.formBuilder.group({
     PersonId: [null],
     FantasyName: [null],
-    CnpjNumber!: [null],
+    CnpjNumber: [null],
   });
 
   constructor(
@@ -149,7 +150,7 @@ export class PessoasComponent implements OnInit {
   }
 
   public createUpdatePhysicalComplements(): void {
-    this.createButtonLoading = true;
+    this.createPfButtonLoading = true;
 
     if (this.personPhysicalId == "" || this.personPhysicalId == null || this.personPhysicalId == undefined) {
       this.createPhysicalComplement();
@@ -159,7 +160,7 @@ export class PessoasComponent implements OnInit {
   }
 
   public createUpdateJuridicalComplements(): void {
-    this.createButtonLoading = true;
+    this.createPjButtonLoading = true;
 
     if (this.personJuridicalId == "" || this.personJuridicalId == null || this.personJuridicalId == undefined) {
       this.createJuridicalComplement();
@@ -213,7 +214,7 @@ export class PessoasComponent implements OnInit {
           this.name = person.Name;
           this.personType = person.PersonType;
           this.email = person.Email;
-          this.commemorativeDate = person.CommemorativeDate;
+          this.CommemorativeDate = person.CommemorativeDate;
           this.details = person.Details;
           this.informationField = person.Name;
           this.tabIsDisabled = false;
@@ -249,6 +250,7 @@ export class PessoasComponent implements OnInit {
   }
 
   public addNewPerson(): void {
+
     this.resetForms();
     this.informationField = "";
 
@@ -265,13 +267,14 @@ export class PessoasComponent implements OnInit {
   }
 
   public createPerson(): void {
-    // if (!this.personForm.valid) {
-    //   console.log(this.personForm);
-    //   this.createButtonLoading = false;
-    //   this.personForm.markAllAsTouched();
-    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-    //   return;
-    // }
+
+    if (!this.personForm.valid) {
+      console.log(this.personForm);
+      this.createButtonLoading = false;
+      this.personForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
 
     const data = this.personForm.value;
     data.HasPending = false;
@@ -283,7 +286,7 @@ export class PessoasComponent implements OnInit {
           this.name = response.Name;
           this.email = response.Email;
           this.personType = response.PersonType;
-          this.commemorativeDate = response.CommemorativeDate;
+          this.CommemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
           this.informationField = response.Name;
           this.tabIsDisabled = false;
@@ -303,22 +306,21 @@ export class PessoasComponent implements OnInit {
 
   public updatePerson(): void {
 
+    if (!this.personForm.valid) {
+      console.log(this.personForm);
+      this.createButtonLoading = false;
+      this.personForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
     let person = new PersonModel();
     person.id = this.personId;
     person.name = this.name;
     person.personType = this.personType;
     person.email = this.email;
-    person.commemorativeDate = this.commemorativeDate;
+    person.commemorativeDate = this.CommemorativeDate;
     person.details = this.details;
-
-
-    // if (!this.personForm.valid) {
-    //   console.log(this.personForm);
-    //   this.createButtonLoading = false;
-    //   this.personForm.markAllAsTouched();
-    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-    //   return;
-    // }
 
     this.personsDispatcherService.updatePerson(this.personId, person)
       .subscribe(
@@ -327,7 +329,7 @@ export class PessoasComponent implements OnInit {
           this.name = response.Name;
           this.email = response.Email;
           this.personType = response.PersonType;
-          this.commemorativeDate = response.CommemorativeDate;
+          this.CommemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
           this.informationField = response.Name;
 
@@ -346,22 +348,28 @@ export class PessoasComponent implements OnInit {
   }
 
   public createPhysicalComplement(): void {
-    // if (!this.personForm.valid) {
-    //   console.log(this.personForm);
-    //   this.createButtonLoading = false;
-    //   this.personForm.markAllAsTouched();
-    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-    //   return;
-    // }
 
-    const data = this.physicalComplementForm.value;
-    data.HasPending = false;
+    if (!this.physicalComplementForm.valid) {
+      console.log(this.physicalComplementForm);
+      this.createPfButtonLoading = false;
+      this.physicalComplementForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
 
-    this.personsPhysicalsDispatcherService.CreatePhysicalComplements(data)
+    let physicalComplement = new PersonPhysicalModel();
+    physicalComplement.personId = this.personId;
+    physicalComplement.maritalStatus = this.maritalStatus;
+    physicalComplement.gender = this.gender;
+    physicalComplement.deathDate = this.deathDate;
+    physicalComplement.cpfNumber = this.cpfNumber;
+    physicalComplement.cnsNumber = this.cnsNumber;
+
+    this.personsPhysicalsDispatcherService.CreatePhysicalComplements(physicalComplement)
       .subscribe(
         response => {
           this.personPhysicalId = response.ID;
-          this.personId = response.Person.ID;
+          this.personId = response.PersonID;
           this.cpfNumber = response.CpfNumber;
           this.cnsNumber = response.CnsNumber;
           this.maritalStatus = response.MaritalStatus;
@@ -369,104 +377,122 @@ export class PessoasComponent implements OnInit {
 
           this.tabIsDisabled = false;
           this.inputIsDisabled = true;
-          this.createButtonLoading = false;
+          this.createPfButtonLoading = false;
 
           this.getAllPersons();
-          this.messageHandler.showMessage("Complementos criados com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Complemento criado com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
-          this.createButtonLoading = false;
+          this.createPfButtonLoading = false;
         });
   }
 
   public updatePhysicalComplement(): void {
+
+    if (!this.physicalComplementForm.valid) {
+      console.log(this.physicalComplementForm);
+      this.createPfButtonLoading = false;
+      this.physicalComplementForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
     let physicalComplement = new PersonPhysicalModel();
     physicalComplement.id = this.personPhysicalId;
     physicalComplement.personId = this.personId;
     physicalComplement.maritalStatus = this.maritalStatus;
     physicalComplement.gender = this.gender;
     physicalComplement.deathDate = this.deathDate;
-
-    // if (!this.personForm.valid) {
-    //   console.log(this.personForm);
-    //   this.createButtonLoading = false;
-    //   this.personForm.markAllAsTouched();
-    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-    //   return;
-    // }
+    physicalComplement.cpfNumber = this.cpfNumber;
+    physicalComplement.cnsNumber = this.cnsNumber;
 
     this.personsPhysicalsDispatcherService.updatePhysicalComplements(this.personPhysicalId, physicalComplement)
       .subscribe(
         response => {
-          console.log(response)
-          this.messageHandler.showMessage("Complemento de pessoa alterado com sucesso!", "success-snackbar")
+          console.log(response);
+          this.personPhysicalId = response.ID;
+          this.personId = response.PersonID;
+          this.cpfNumber = response.CpfNumber;
+          this.cnsNumber = response.CnsNumber;
+          this.maritalStatus = response.MaritalStatus;
+          this.gender = response.Gender;
+          this.createPfButtonLoading = false;
+          this.messageHandler.showMessage("Complemento alterado com sucesso!", "success-snackbar")
         },
         error => {
           this.errorHandler.handleError(error);
-          this.createButtonLoading = false;
+          this.createPfButtonLoading = false;
         });
   }
 
   public createJuridicalComplement(): void {
-    // if (!this.personForm.valid) {
-    //   console.log(this.personForm);
-    //   this.createButtonLoading = false;
-    //   this.personForm.markAllAsTouched();
-    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-    //   return;
-    // }
+    if (!this.juridicalComplementForm.valid) {
+      console.log(this.juridicalComplementForm.valid);
+      this.createPjButtonLoading = false;
+      this.juridicalComplementForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
 
-    const data = this.juridicalComplementForm.value;
-    data.HasPending = false;
+    let juridicalComplement = new PersonJuridicalModel();
+    juridicalComplement.personId = this.personId;
+    juridicalComplement.fantasyName = this.fantasyName;
+    juridicalComplement.cnpjNumber = this.cnpjNumber;
 
-    this.personsJuridicalsDispatcherService.CreateJuridicalComplements(data)
+    this.personsJuridicalsDispatcherService.CreateJuridicalComplements(juridicalComplement)
       .subscribe(
         response => {
+          console.log(response)
           this.personJuridicalId = response.ID;
-          this.personId = response.Person.ID;
+          this.personId = response.PersonID;
           this.cnpjNumber = response.CnpjNumber;
           this.fantasyName = response.FantasyName;
 
           this.tabIsDisabled = false;
           this.inputIsDisabled = true;
-          this.createButtonLoading = false;
+          this.createPjButtonLoading = false;
 
           this.getAllPersons();
-          this.messageHandler.showMessage("Complementos criados com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Complemento criado com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
-          this.createButtonLoading = false;
+          this.createPjButtonLoading = false;
         });
   }
 
   public updateJuridicalComplement(): void {
+
+    if (!this.juridicalComplementForm.valid) {
+      console.log(this.juridicalComplementForm);
+      this.createPjButtonLoading = false;
+      this.juridicalComplementForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
     let juridicalComplement = new PersonJuridicalModel();
     juridicalComplement.id = this.personJuridicalId;
     juridicalComplement.personId = this.personId;
     juridicalComplement.fantasyName = this.fantasyName;
     juridicalComplement.cnpjNumber = this.cnpjNumber;
 
-    // if (!this.personForm.valid) {
-    //   console.log(this.personForm);
-    //   this.createButtonLoading = false;
-    //   this.personForm.markAllAsTouched();
-    //   this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-    //   return;
-    // }
-
     this.personsJuridicalsDispatcherService.UpdateJuridicalComplements(this.personJuridicalId, juridicalComplement)
       .subscribe(
         response => {
-          console.log(response)
-          this.messageHandler.showMessage("Complemento de pessoa juridica alterada com sucesso!", "success-snackbar")
+          this.personJuridicalId = response.ID;
+          this.personId = response.PersonID;
+          this.cnpjNumber = response.CnpjNumber;
+          this.fantasyName = response.FantasyName;
+          this.createPjButtonLoading = false;
+          this.messageHandler.showMessage("Complemento alterado com sucesso!", "success-snackbar")
         },
         error => {
           this.errorHandler.handleError(error);
-          this.createButtonLoading = false;
+          this.createPjButtonLoading = false;
         });
   }
 
@@ -991,7 +1017,7 @@ export class DialogContentAddressDialog implements OnInit {
   State!: string;
   District!: string;
   AddressNumber!: string;
-  Complement!: string;
+  Complement: string = '';
   Country!: string;
 
   isPlaceDistrictReadonly = true;
@@ -1019,7 +1045,7 @@ export class DialogContentAddressDialog implements OnInit {
     State: [null, [Validators.required, Validators.maxLength(2)]],
     District: [null, [Validators.required, Validators.maxLength(255)]],
     AddressNumber: [null, [Validators.required, Validators.maxLength(10)]],
-    Complement: [null, Validators.maxLength(255)],
+    Complement: [null],
     Country: [null, [Validators.required, Validators.maxLength(255)]],
   });
 

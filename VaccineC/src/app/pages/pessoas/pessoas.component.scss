@@ -60,6 +60,7 @@
   border-radius: 50%;
   margin-right: 0.75rem;
   margin-left: 0.75rem;
+  cursor: pointer;
 }
 
 .div-row-input-table {
@@ -75,9 +76,6 @@
   font-size: 14px;
 }
 
-.div-row-input .mat-form-field+.mat-form-field {
-  margin-left: 8px;
-}
 
 .div-row-input-table {
   padding-bottom: 1.34375em;
