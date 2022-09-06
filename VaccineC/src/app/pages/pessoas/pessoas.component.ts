@@ -21,6 +21,8 @@ import { PersonsPhysicalsDispatcherService } from "src/app/services/person-physi
 import { PersonsJuridicalsDispatcherService } from "src/app/services/person-juridical-dispatcher.service";
 import { PersonPhysicalModel } from "src/app/models/person-physical-model";
 import { PersonJuridicalModel } from "src/app/models/person-juridical-model";
+import { cpf } from 'cpf-cnpj-validator';
+import { cnpj } from 'cpf-cnpj-validator';
 
 @Component({
   selector: 'app-pessoas',
@@ -357,6 +359,12 @@ export class PessoasComponent implements OnInit {
       return;
     }
 
+    if (this.cpfNumber != "" && !cpf.isValid(this.cpfNumber)) {
+      this.createPfButtonLoading = false;
+      this.messageHandler.showMessage("CPF inválido, verifique!", "warning-snackbar")
+      return;
+    }
+
     let physicalComplement = new PersonPhysicalModel();
     physicalComplement.personId = this.personId;
     physicalComplement.maritalStatus = this.maritalStatus;
@@ -399,6 +407,12 @@ export class PessoasComponent implements OnInit {
       return;
     }
 
+    if (this.cpfNumber != "" && !cpf.isValid(this.cpfNumber)) {
+      this.createPfButtonLoading = false;
+      this.messageHandler.showMessage("CPF inválido, verifique!", "warning-snackbar");
+      return;
+    }
+
     let physicalComplement = new PersonPhysicalModel();
     physicalComplement.id = this.personPhysicalId;
     physicalComplement.personId = this.personId;
@@ -428,11 +442,18 @@ export class PessoasComponent implements OnInit {
   }
 
   public createJuridicalComplement(): void {
+
     if (!this.juridicalComplementForm.valid) {
       console.log(this.juridicalComplementForm.valid);
       this.createPjButtonLoading = false;
       this.juridicalComplementForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    if (this.cnpjNumber != "" && !cnpj.isValid(this.cnpjNumber)) {
+      this.createPjButtonLoading = false;
+      this.messageHandler.showMessage("CNPJ inválido, verifique!", "warning-snackbar")
       return;
     }
 
@@ -471,6 +492,12 @@ export class PessoasComponent implements OnInit {
       this.createPjButtonLoading = false;
       this.juridicalComplementForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    if (this.cnpjNumber != "" && !cnpj.isValid(this.cnpjNumber)) {
+      this.createPjButtonLoading = false;
+      this.messageHandler.showMessage("CNPJ inválido, verifique!", "warning-snackbar")
       return;
     }
 
