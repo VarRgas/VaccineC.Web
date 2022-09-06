@@ -111,9 +111,11 @@
                           <mat-label>Nome</mat-label>
                           <input matInput type="text" #PersonNameInput formControlName="Name" [(ngModel)]="name"
                             id="name" placeholder="Ex. Maria da Silva" required="true">
-                          <!-- <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
-                                                          <span *ngIf="personForm.controls.Name.errors?.required">A pessoa é obrigatória.</span>
-                                                      </mat-error> -->
+                            <mat-hint align="end">{{PersonNameInput.value?.length || 0}}/255</mat-hint>
+                            <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
+                                <span *ngIf="personForm.controls.Name.errors?.required">O Nome é obrigatório.</span>
+                                <span *ngIf="personForm.controls.Name.errors?.maxlength">O Nome deve ter menos de 255 caracteres.</span>
+                            </mat-error>
                         </mat-form-field>
                       </td>
                     </tr>
@@ -128,9 +130,9 @@
                       <mat-option value="F" selected>Física</mat-option>
                       <mat-option value="J" selected>Jurídica</mat-option>
                     </mat-select>
-                    <!-- <mat-error *ngIf="personForm.controls.PersonType.touched && personForm.controls.PersonType.invalid">
-                                        <span *ngIf="personForm.controls.PersonType.errors?.required">A Função é obrigatória.</span>
-                                    </mat-error> -->
+                    <mat-error *ngIf="personForm.controls.PersonType.touched && personForm.controls.PersonType.invalid">
+                      <span *ngIf="personForm.controls.PersonType.errors?.required">O Tipo da Pessoa é obrigatório.</span>
+                  </mat-error>
                   </mat-form-field>
 
                   <!-- DATA DE NASCIMENTO -->
