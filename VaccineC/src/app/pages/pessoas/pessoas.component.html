@@ -35,7 +35,7 @@
           </div>
           <div id="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
-              <mat-table [dataSource]="dataSource" class="col-sm-12" matSort matSortActive="Name"
+              <table [dataSource]="dataSource" mat-table class="col-sm-12" matSort matSortActive="Name"
                 matSortDirection="asc">
 
                 <!-- Person Name -->
@@ -78,9 +78,9 @@
 
                 <!-- Row shown when there is no matching data. -->
                 <tr class="mat-row" *matNoDataRow>
-                  <td class="mat-cell" colspan="5">Nenhum registro encontrado.</td>
+                  <td class="mat-cell" colspan="3">Nenhum registro encontrado.</td>
                 </tr>
-              </mat-table>
+              </table>
 
               <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
             </div>
@@ -111,11 +111,12 @@
                           <mat-label>Nome</mat-label>
                           <input matInput type="text" #PersonNameInput formControlName="Name" [(ngModel)]="name"
                             id="name" placeholder="Ex. Maria da Silva" required="true">
-                            <mat-hint align="end">{{PersonNameInput.value?.length || 0}}/255</mat-hint>
-                            <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
-                                <span *ngIf="personForm.controls.Name.errors?.required">O Nome é obrigatório.</span>
-                                <span *ngIf="personForm.controls.Name.errors?.maxlength">O Nome deve ter menos de 255 caracteres.</span>
-                            </mat-error>
+                          <mat-hint align="end">{{PersonNameInput.value?.length || 0}}/255</mat-hint>
+                          <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
+                            <span *ngIf="personForm.controls.Name.errors?.required">O Nome é obrigatório.</span>
+                            <span *ngIf="personForm.controls.Name.errors?.maxlength">O Nome deve ter menos de 255
+                              caracteres.</span>
+                          </mat-error>
                         </mat-form-field>
                       </td>
                     </tr>
@@ -131,8 +132,9 @@
                       <mat-option value="J" selected>Jurídica</mat-option>
                     </mat-select>
                     <mat-error *ngIf="personForm.controls.PersonType.touched && personForm.controls.PersonType.invalid">
-                      <span *ngIf="personForm.controls.PersonType.errors?.required">O Tipo da Pessoa é obrigatório.</span>
-                  </mat-error>
+                      <span *ngIf="personForm.controls.PersonType.errors?.required">O Tipo da Pessoa é
+                        obrigatório.</span>
+                    </mat-error>
                   </mat-form-field>
 
                   <!-- DATA DE NASCIMENTO -->
@@ -206,16 +208,15 @@
                       <!-- CPF -->
                       <mat-form-field appearance="fill" class="col-sm-6">
                         <mat-label>CPF</mat-label>
-                        <input type="text" [(ngModel)]="cpfNumber"
-                          formControlName="CpfNumber" matInput #input maxlength="14" id="cpfNumber" mask="000.000.000-009" placeholder="000.000.000-00">
+                        <input type="text" [(ngModel)]="cpfNumber" formControlName="CpfNumber" matInput #input
+                          maxlength="14" id="cpfNumber" mask="000.000.000-009" placeholder="000.000.000-00">
                       </mat-form-field>
 
                       <!-- CNS -->
                       <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                         <mat-label>CNS</mat-label>
-                        <input type="text" [(ngModel)]="cnsNumber"
-                          formControlName="CnsNumber" matInput #input maxlength="18" placeholder="000 0000 0000 0000"
-                          id="cnsNumber" mask="000 0000 0000 00009">
+                        <input type="text" [(ngModel)]="cnsNumber" formControlName="CnsNumber" matInput #input
+                          maxlength="18" placeholder="000 0000 0000 0000" id="cnsNumber" mask="000 0000 0000 00009">
                       </mat-form-field>
                     </div>
                     <div class="div-row-input">
@@ -223,16 +224,19 @@
                       <!-- ESTADO CIVIL -->
                       <mat-form-field appearance="fill" class="col-sm-6">
                         <mat-label>Estado Civil</mat-label>
-                        <mat-select id="maritalStatus" #MaritalStatusInput [(ngModel)]="maritalStatus" formControlName="MaritalStatus" required>
+                        <mat-select id="maritalStatus" #MaritalStatusInput [(ngModel)]="maritalStatus"
+                          formControlName="MaritalStatus" required>
                           <mat-option value="S" selected>Solteiro(a)</mat-option>
                           <mat-option value="C" selected>Casado(a)</mat-option>
                           <mat-option value="X" selected>Separado(a)</mat-option>
                           <mat-option value="D" selected>Divorciado(a)</mat-option>
                           <mat-option value="V" selected>Viúvo(a)</mat-option>
                         </mat-select>
-                        <mat-error *ngIf="physicalComplementForm.controls.MaritalStatus.touched && physicalComplementForm.controls.MaritalStatus.invalid">
-                          <span *ngIf="physicalComplementForm.controls.MaritalStatus.errors?.required">O Estado Civil é obrigatório.</span>
-                      </mat-error>
+                        <mat-error
+                          *ngIf="physicalComplementForm.controls.MaritalStatus.touched && physicalComplementForm.controls.MaritalStatus.invalid">
+                          <span *ngIf="physicalComplementForm.controls.MaritalStatus.errors?.required">O Estado Civil é
+                            obrigatório.</span>
+                        </mat-error>
                       </mat-form-field>
 
                       <!-- GENERO -->
@@ -243,9 +247,11 @@
                           <mat-option value="F" selected>Feminino</mat-option>
                           <mat-option value="O" selected>Outro</mat-option>
                         </mat-select>
-                        <mat-error *ngIf="physicalComplementForm.controls.Gender.touched && physicalComplementForm.controls.Gender.invalid">
-                          <span *ngIf="physicalComplementForm.controls.Gender.errors?.required">O Gênero é obrigatório.</span>
-                      </mat-error>
+                        <mat-error
+                          *ngIf="physicalComplementForm.controls.Gender.touched && physicalComplementForm.controls.Gender.invalid">
+                          <span *ngIf="physicalComplementForm.controls.Gender.errors?.required">O Gênero é
+                            obrigatório.</span>
+                        </mat-error>
                       </mat-form-field>
                     </div>
                   </div>
@@ -286,9 +292,8 @@
                     <!-- CNPJ -->
                     <mat-form-field appearance="fill" class="col-sm-12">
                       <mat-label>CNPJ</mat-label>
-                      <input type="text" [(ngModel)]="cnpjNumber"
-                        formControlName="CnpjNumber" matInput #input maxlength="18" id="cnpjNumber"
-                        mask="00.000.000/0000-00" placeholder="00.000.000/0000-00">
+                      <input type="text" [(ngModel)]="cnpjNumber" formControlName="CnpjNumber" matInput #input
+                        maxlength="18" id="cnpjNumber" mask="00.000.000/0000-00" placeholder="00.000.000/0000-00">
                     </mat-form-field>
                   </div>
                 </div>

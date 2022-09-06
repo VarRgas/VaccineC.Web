@@ -451,6 +451,13 @@ export class PessoasComponent implements OnInit {
       return;
     }
 
+    if(this.fantasyName == "" && this.cnpjNumber == ""){
+      this.createPjButtonLoading = false;
+      this.juridicalComplementForm.markAllAsTouched();
+      this.messageHandler.showMessage("Insira no mínimo uma informação para prosseguir com o cadastro!", "warning-snackbar")
+      return;
+    }
+
     if (this.cnpjNumber != "" && !cnpj.isValid(this.cnpjNumber)) {
       this.createPjButtonLoading = false;
       this.messageHandler.showMessage("CNPJ inválido, verifique!", "warning-snackbar")
