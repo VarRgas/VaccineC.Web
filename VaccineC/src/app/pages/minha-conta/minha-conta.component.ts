@@ -24,6 +24,9 @@ export class MinhaContaComponent implements OnInit {
   public userPersonAddress = "";
   public userPersonPhone = "";
 
+  public imagePathUrl = 'http://localhost:5000/';
+  public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
+
   public dialogRef?: MatDialogRef<any>;
 
   constructor(
@@ -42,8 +45,6 @@ export class MinhaContaComponent implements OnInit {
   getUserById(id: string): void {
     this.usersService.getById(id).subscribe(
       user => {
-        console.log(user);
-
         this.getPrincipalPersonAddress(user.Person.ID);
         this.getPrincipalPersonPhone(user.Person.ID);
 
@@ -60,9 +61,9 @@ export class MinhaContaComponent implements OnInit {
         }
 
         if (user.Person.ProfilePic == null) {
-          this.userPersonProfilePic = "../../../assets/img/default-profile-pic.png";
+          this.userPersonProfilePic = `${this.imagePathUrlDefault}`;
         } else {
-          this.userPersonProfilePic = user.Person.ProfilePic;
+          this.userPersonProfilePic = `${this.imagePathUrl}${user.Person.ProfilePic}`;
         }
       },
       error => {
@@ -87,7 +88,6 @@ export class MinhaContaComponent implements OnInit {
   getPrincipalPersonPhone(personId: string) {
     this.personsPhonesService.getPrincipalPersonPhoneByPersonId(personId).subscribe(
       personPhone => {
-        console.log(personPhone)
         if (personPhone == null) {
           this.userPersonPhone = "Não informado";
         } else {
@@ -162,7 +162,6 @@ export class PasswordDialog implements OnInit {
   resetPassword(): void {
 
     if (!this.userPasswordForm.valid) {
-      console.log(this.userPasswordForm);
       this.userPasswordForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
       return;

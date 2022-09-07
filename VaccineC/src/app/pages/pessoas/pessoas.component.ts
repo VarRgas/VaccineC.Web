@@ -31,6 +31,9 @@ import { cpf, cnpj } from 'cpf-cnpj-validator';
 
 export class PessoasComponent implements OnInit {
 
+  public imagePathUrl = 'http://localhost:5000/';
+  public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
+
   //Controle para o spinner do button
   public searchButtonLoading: boolean = false;
   public createButtonLoading: boolean = false;
@@ -45,7 +48,8 @@ export class PessoasComponent implements OnInit {
   public name!: string;
   public fantasyName!: string;
   public email!: string;
-  public profilePic!: { dbPath: '' };
+  public profilePic!: string;
+  public profilePicExhibition!: string;
   public document!: string;
   public personType!: string;
   public details!: string;
@@ -94,7 +98,7 @@ export class PessoasComponent implements OnInit {
   public personForm: FormGroup = this.formBuilder.group({
     PersonId: [null],
     Name: [null, [Validators.required, Validators.maxLength(255)]],
-    Email: [null],
+    Email: [null, [Validators.email]],
     PersonType: [[Validators.required]],
     CommemorativeDate: [null],
     Details: [null],
@@ -129,15 +133,16 @@ export class PessoasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getAllPersons();
+    //this.getAllPersons();
   }
 
   public uploadFinished = (event: any) => {
-    this.profilePic = event;
+    this.profilePicExhibition = `${this.imagePathUrl}${event.dbPath}`
+    this.profilePic = event.dbPath;
   }
 
   public createImgPath = (serverPath: any) => {
-    return `http://localhost:5000/${serverPath}`
+    return `${this.imagePathUrl}${serverPath}`
   }
 
   public loadPersonData(): void {
@@ -225,10 +230,12 @@ export class PessoasComponent implements OnInit {
           this.name = person.Name;
           this.personType = person.PersonType;
           this.email = person.Email;
-          this.profilePic = person.ProfilePic;
           this.CommemorativeDate = person.CommemorativeDate;
           this.details = person.Details;
           this.informationField = person.Name;
+          this.profilePic = person.ProfilePic;
+          this.treatProfilePicExhibition(person.ProfilePic);
+
           this.tabIsDisabled = false;
 
           this.treatButtons(this.personType, this.personId);
@@ -269,6 +276,9 @@ export class PessoasComponent implements OnInit {
     this.inputIsDisabled = false;
     this.tabIsDisabled = true;
 
+    this.profilePicExhibition = `${this.imagePathUrlDefault}`;
+    this.profilePic = '';
+
     this.dataSourcePhone = new MatTableDataSource();
     this.dataSourcePhone.paginator = this.paginator;
     this.dataSourcePhone.sort = this.sort;
@@ -288,10 +298,16 @@ export class PessoasComponent implements OnInit {
       return;
     }
 
-    const data = this.personForm.value;
-    data.HasPending = false;
+    let person = new PersonModel();
+    person.name = this.name;
+    person.personType = this.personType;
+    person.email = this.email;
+    person.profilePic = this.profilePic;
+    person.commemorativeDate = this.CommemorativeDate;
+    person.details = this.details;
 
-    this.personsDispatcherService.createPerson(data)
+
+    this.personsDispatcherService.createPerson(person)
       .subscribe(
         response => {
           this.personId = response.ID;
@@ -302,6 +318,9 @@ export class PessoasComponent implements OnInit {
           this.CommemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
           this.informationField = response.Name;
+
+          this.treatProfilePicExhibition(response.ProfilePic);
+
           this.tabIsDisabled = false;
           this.createButtonLoading = false;
 
@@ -346,6 +365,8 @@ export class PessoasComponent implements OnInit {
           this.CommemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
           this.informationField = response.Name;
+          this.profilePic = response.ProfilePic;
+          this.treatProfilePicExhibition(response.ProfilePic);
 
           this.createButtonLoading = false;
 
@@ -359,6 +380,17 @@ export class PessoasComponent implements OnInit {
           console.log(error);
           this.createButtonLoading = false;
         });
+  }
+
+
+  public treatProfilePicExhibition(profilePic: string): void {
+
+    if (profilePic != null && profilePic != "") {
+      this.profilePicExhibition = `${this.imagePathUrl}${profilePic}`;
+    } else {
+      this.profilePicExhibition = `${this.imagePathUrlDefault}`;
+    }
+
   }
 
   public createPhysicalComplement(): void {
@@ -463,7 +495,7 @@ export class PessoasComponent implements OnInit {
       return;
     }
 
-    if(this.fantasyName == "" && this.cnpjNumber == ""){
+    if (this.fantasyName == "" && this.cnpjNumber == "") {
       this.createPjButtonLoading = false;
       this.juridicalComplementForm.markAllAsTouched();
       this.messageHandler.showMessage("Insira no mínimo uma informação para prosseguir com o cadastro!", "warning-snackbar")
@@ -553,6 +585,7 @@ export class PessoasComponent implements OnInit {
               success => {
                 this.informationField = "";
                 this.resetForms();
+                this.profilePicExhibition = `${this.imagePathUrlDefault}`;
                 this.tabIsDisabled = true;
                 this.getAllPersons();
                 this.messageHandler.showMessage("Pessoa excluída com sucesso!", "success-snackbar")

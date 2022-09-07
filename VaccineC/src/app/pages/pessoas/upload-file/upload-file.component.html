@@ -1,6 +1,6 @@
 <div class="row" style="margin-bottom: 15px">
   <div class="col-md-3">
     <input type="file" #file placeholder="Escolha uma imagem" (change)="uploadFile(file.files)" style="display: none">
-    <button mat-raised-button type="button" class="btn btn-success" (click)="file.click()"> Importar uma imagem</button>
+    <button mat-raised-button color="primary" type="button" class="btn btn-success" (click)="file.click()" matTooltip="Inserir uma Foto" matTooltipPosition="right"><i class="fa-solid fa-cloud-arrow-up"></i></button>
   </div>
 </div>

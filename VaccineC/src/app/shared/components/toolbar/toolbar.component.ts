@@ -11,6 +11,9 @@ export class ToolbarComponent implements OnInit {
   public userPersonName = "";
   public userPersonProfilePic = "";
 
+  public imagePathUrl = 'http://localhost:5000/';
+  public imagePathUrlDefault = "../../../../assets/img/default-profile-pic.png";
+
   constructor() { }
 
   ngOnInit(): void {
@@ -20,9 +23,10 @@ export class ToolbarComponent implements OnInit {
     this.userPersonName = localStorage.getItem('name')!;
 
     if(localStorage.getItem('profilePic') == "null"){
-      this.userPersonProfilePic = "../../../../assets/img/default-profile-pic.png";
+      this.userPersonProfilePic = `${this.imagePathUrlDefault}`;
     }else{
-      this.userPersonProfilePic = localStorage.getItem('profilePic')!;
+      let profilePic = localStorage.getItem('profilePic')!;
+      this.userPersonProfilePic = `${this.imagePathUrl}${profilePic}`
     }
   }
 
