@@ -102,8 +102,14 @@
                     <tr>
                       <td>
                         <!-- Foto -->
-                        <div id="profilePic">
+                        <div *ngIf="!profilePic"
+                              id="profilePic"
+                              style="background-image: url(../../../assets/img/default-profile-pic.png)">
                         </div>
+                          <img id="profilePic"
+                               *ngIf="profilePic"
+                               src="{{profilePic}}"
+                               alt="foto de perfil">
                       </td>
                       <td class="table-name col-sm-11">
                         <!-- NOME DA PESSOA -->
@@ -167,6 +173,11 @@
                 </div>
 
                 <div class="div-row-input registration-button-row">
+
+                  <!-- IMPORTAR IMAGEM -->
+                  <app-upload-file (onUploadFinished)="uploadFinished($event)"></app-upload-file>
+
+                  <!-- SALVAR -->
                   <button mat-raised-button class="create-button" (click)="createUpdatePerson()" type="button"
                     [disabled]="createButtonLoading">
                     <div class="spinner">
@@ -175,6 +186,8 @@
                       Salvar
                     </div>
                   </button>
+
+                  <!-- EXCLUIR -->
                   <button mat-raised-button color="warn" (click)="deletePerson()" type="button" [disabled]="!personId">
                     <div>
                       <span class="fa-solid fa-trash me-1 w-20px"></span>

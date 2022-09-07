@@ -1,5 +1,5 @@
 import { CEPError, Endereco, NgxViacepService } from "@brunoc/ngx-viacep";
-import { catchError, empty, EMPTY } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -21,8 +21,7 @@ import { PersonsPhysicalsDispatcherService } from "src/app/services/person-physi
 import { PersonsJuridicalsDispatcherService } from "src/app/services/person-juridical-dispatcher.service";
 import { PersonPhysicalModel } from "src/app/models/person-physical-model";
 import { PersonJuridicalModel } from "src/app/models/person-juridical-model";
-import { cpf } from 'cpf-cnpj-validator';
-import { cnpj } from 'cpf-cnpj-validator';
+import { cpf, cnpj } from 'cpf-cnpj-validator';
 
 @Component({
   selector: 'app-pessoas',
@@ -46,6 +45,7 @@ export class PessoasComponent implements OnInit {
   public name!: string;
   public fantasyName!: string;
   public email!: string;
+  public profilePic!: { dbPath: '' };
   public document!: string;
   public personType!: string;
   public details!: string;
@@ -85,6 +85,7 @@ export class PessoasComponent implements OnInit {
   public dataSourceAddress = new MatTableDataSource<IPersonAddress>();
 
   public dialogRef?: MatDialogRef<any>;
+  public response?: { dbPath: '' };
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -129,6 +130,14 @@ export class PessoasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllPersons();
+  }
+
+  public uploadFinished = (event: any) => {
+    this.profilePic = event;
+  }
+
+  public createImgPath = (serverPath: any) => {
+    return `http://localhost:5000/${serverPath}`
   }
 
   public loadPersonData(): void {
@@ -216,6 +225,7 @@ export class PessoasComponent implements OnInit {
           this.name = person.Name;
           this.personType = person.PersonType;
           this.email = person.Email;
+          this.profilePic = person.ProfilePic;
           this.CommemorativeDate = person.CommemorativeDate;
           this.details = person.Details;
           this.informationField = person.Name;
@@ -287,6 +297,7 @@ export class PessoasComponent implements OnInit {
           this.personId = response.ID;
           this.name = response.Name;
           this.email = response.Email;
+          this.profilePic = response.ProfilePic;
           this.personType = response.PersonType;
           this.CommemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
@@ -321,6 +332,7 @@ export class PessoasComponent implements OnInit {
     person.name = this.name;
     person.personType = this.personType;
     person.email = this.email;
+    person.profilePic = this.profilePic;
     person.commemorativeDate = this.CommemorativeDate;
     person.details = this.details;
 

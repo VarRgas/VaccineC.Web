@@ -28,7 +28,6 @@ import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog,
 import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos/recursos.component';
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
-import { PessoasComplementoComponent } from './pages/pessoas/pessoas-complemento/pessoas-complemento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
 import { ProdutoPesquisaComponent } from './pages/produto/produto-pesquisa/produto-pesquisa.component';
 import { ProdutoCadastroComponent } from './pages/produto/produto-cadastro/produto-cadastro.component';
@@ -51,6 +50,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
 import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
 import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
+import { UploadFileComponent } from './pages/pessoas/upload-file/upload-file.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +75,6 @@ import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
     MinhaContaComponent,
     VisaoFaturamentoPesquisaComponent,
     VisaoFaturamentoComponent,
-    PessoasComplementoComponent,
     DialogContentPhoneDialog,
     DialogContentAddressDialog,
     DialogContentScheduleDialog,
@@ -100,6 +99,7 @@ import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
     BudgetProductDialog,
     AplicacaoCadastroComponent,
     AplicacaoPesquisaComponent,
+    UploadFileComponent,
     AplicationDialog,
     BatchDialog,
     GlobalErrorDialog,
@@ -127,7 +127,7 @@ import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
     NgChartsModule,
     NgxMaskModule.forRoot(),
     NgxLoadingButtonsModule,
-    NgxViacepModule
+    NgxViacepModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },

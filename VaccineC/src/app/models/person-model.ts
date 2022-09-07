@@ -3,6 +3,7 @@ export class PersonModel {
     public name: string = '';
     public personType: string = '';
     public email: string = '';
+    public profilePic!: { dbPath: '' };
     public commemorativeDate!: Date;
     public details: string = '';
 }
