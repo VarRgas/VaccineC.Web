@@ -98,8 +98,8 @@
                       <mat-error *ngIf="userForm.controls.PersonId.touched && userForm.controls.PersonId.invalid">
                           <span *ngIf="userForm.controls.PersonId.errors?.required">O Usuário é obrigatório.</span>
                       </mat-error>
-                      <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.ID">
+                      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                       </mat-option>
                     </mat-autocomplete>

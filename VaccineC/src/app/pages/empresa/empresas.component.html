@@ -97,9 +97,9 @@
                                             *ngIf="companyForm.controls.PersonId.touched && companyForm.controls.PersonId.invalid">
                                             <span *ngIf="companyForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
                                         </mat-error>
-                                        <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
                                             <mat-option *ngFor="let option of filteredOptions | async"
-                                                [value]="option.ID">
+                                                [value]="option">
                                                 {{option.Name}}
                                             </mat-option>
                                         </mat-autocomplete>

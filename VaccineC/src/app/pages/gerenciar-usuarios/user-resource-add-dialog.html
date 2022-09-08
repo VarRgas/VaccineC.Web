@@ -11,8 +11,8 @@
         <mat-label>Recurso</mat-label>
         <input type="text" (click)="searchResourceByAutoComplete()" [(ngModel)]="ResourcesId" formControlName="ResourcesId" id="ResourcesId" placeholder="Selecione o Recurso"
           aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" required>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option.ID">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{option.Name}}
           </mat-option>
         </mat-autocomplete>

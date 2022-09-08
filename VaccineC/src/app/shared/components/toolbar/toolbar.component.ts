@@ -19,7 +19,6 @@ export class ToolbarComponent implements OnInit {
   ngOnInit(): void {
     
     this.userId = localStorage.getItem('userId')!;
-    console.log(this.userId)
     this.userPersonName = localStorage.getItem('name')!;
 
     if(localStorage.getItem('profilePic') == "null"){

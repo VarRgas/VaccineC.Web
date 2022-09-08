@@ -173,11 +173,15 @@ export class GerenciarUsuariosComponent implements OnInit {
       this.messageHandler.showMessage("As senhas não coincidem, verifique!", "warning-snackbar")
       return;
     }
+   
+    let user = new UserModel();
+    user.personId = this.userForm.value.PersonId.ID;
+    user.email = this.Email;
+    user.password = this.Password;
+    user.situation = this.Situation;
+    user.functionUser = this.FunctionUser;
 
-    const data = this.userForm.value;
-    data.HasPending = false;
-
-    this.usersService.create(data)
+    this.usersService.create(user)
       .subscribe(
         response => {
           this.UserId = response.ID;
@@ -213,7 +217,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     let user = new UserModel();
     user.id = this.UserId;
-    user.personId = this.PersonId;
+    user.personId = this.userForm.value.PersonId.ID;
     user.email = this.Email;
     user.password = this.Password;
     user.situation = this.Situation;
@@ -230,7 +234,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.usersService.update(this.UserId, user)
       .subscribe(
         response => {
-
+          console.log(response)
           this.UserId = response.ID;
           this.Email = response.Email;
           this.FunctionUser = response.FunctionUser;
@@ -314,6 +318,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.userForm.reset();
     this.userForm.clearValidators();
     this.userForm.updateValueAndValidity();
+    this.PersonId = '';
 
     this.isResourceDisabled = true;
     this.isActivateButtonHidden = true;
@@ -333,9 +338,9 @@ export class GerenciarUsuariosComponent implements OnInit {
   editUser(id: string): void {
     this.usersService.getById(id).subscribe(
       user => {
-
+        
         this.UserId = user.ID;
-        this.PersonId = user.PersonId;
+        this.PersonId = user.Person;
         this.Email = user.Email;
         this.FunctionUser = user.FunctionUser;
         this.Situation = user.Situation;
@@ -381,9 +386,13 @@ export class GerenciarUsuariosComponent implements OnInit {
     return this.personAutocompleteService.getPersonUserAutocomplete()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
+          return option.Name.toLowerCase()
         }))
       )
+  }
+
+  displayState(state: any) {
+    return state.Name;
   }
 
   treatButtons(situation: string) {
@@ -498,6 +507,7 @@ export class UserResourceAddDialog implements OnInit {
 
   ResourcesId!: string;
   UsersId!: string;
+  teste!: string;
 
   //Form
   userResourceForm: FormGroup = this.formBuilder.group({
@@ -528,10 +538,11 @@ export class UserResourceAddDialog implements OnInit {
       return;
     }
 
-    const data = this.userResourceForm.value;
-    data.HasPending = false;
+    let userResource = new UserResourceModel();
+    userResource.resourcesId = this.userResourceForm.value.ResourcesId.ID;
+    userResource.usersId = this.UsersId;
 
-    this.userResourceService.create(data)
+    this.userResourceService.create(userResource)
       .subscribe(
         response => {
           this.dialogRef.close(response);
@@ -559,9 +570,14 @@ export class UserResourceAddDialog implements OnInit {
     return this.resourceAutocompleteService.getResourceData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
+          return option.Name.toLowerCase()
         }))
       )
+  }
+
+  displayState(state: any) {
+    console.log(state)
+    return state.Name;
   }
 }
 

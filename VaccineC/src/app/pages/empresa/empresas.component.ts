@@ -175,11 +175,11 @@ export class EmpresasComponent implements OnInit {
       return;
     }
 
-    const data = this.companyForm.value;
-    data.HasPending = false;
-    console.log(data);
+    let company = new CompanyModel();
+    company.personId = this.companyForm.value.PersonId.ID;
+    company.details = this.details;
 
-    this.companiesDispatcherService.createCompany(data)
+    this.companiesDispatcherService.createCompany(company)
       .subscribe(
         response => {
           this.companyID = response.ID;
@@ -204,7 +204,7 @@ export class EmpresasComponent implements OnInit {
 
     let company = new CompanyModel();
     company.id = this.companyID;
-    company.personId = this.personId;
+    company.personId = this.companyForm.value.PersonId.ID;
     company.details = this.details;
 
     if (!this.companyForm.valid) {
@@ -221,7 +221,6 @@ export class EmpresasComponent implements OnInit {
           console.log(response)
           this.companyID = response.ID;
           this.CompanyIDParameter = response.ID;
-          this.personId = response.PersonId;
           this.details = response.Details;
           this.informationField = response.Person.Name;
 
@@ -248,6 +247,7 @@ export class EmpresasComponent implements OnInit {
                 this.companyForm.reset();
                 this.companyForm.clearValidators();
                 this.companyForm.updateValueAndValidity();
+                this.personId = "";
                 this.informationField = "";
 
                 this.companyParametersForm.reset();
@@ -340,7 +340,7 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         company => {
           this.companyID = company.ID;
-          this.personId = company.PersonId;
+          this.personId = company.Person;
           this.details = company.Details;
           this.informationField = company.Person.Name;
           this.tabIsDisabled = false;
@@ -414,6 +414,7 @@ export class EmpresasComponent implements OnInit {
     this.companyForm.reset();
     this.companyForm.clearValidators();
     this.companyForm.updateValueAndValidity();
+    this.personId = '';
 
     this.companyParametersForm.reset();
     this.companyParametersForm.clearValidators();
@@ -482,9 +483,14 @@ export class EmpresasComponent implements OnInit {
     return this.personAutocompleteService.getPersonCompanyAutocomplete()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase().indexOf(val.toLowerCase()) === 0
+          return option.Name.toLowerCase()
         }))
       )
+  }
+
+  displayState(state: any) {
+    console.log(state)
+    return state.Name;
   }
 }
 
