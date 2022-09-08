@@ -667,6 +667,7 @@ export class PessoasComponent implements OnInit {
 
   public openUpdatePersonPhoneDialog(id: string): void {
     this.dialogRef = this.dialog.open(UpdatePersonPhoneDialog, {
+      disableClose: true,
       width: '50vw',
       data: {
         ID: id
@@ -686,6 +687,7 @@ export class PessoasComponent implements OnInit {
 
   public openUpdatePersonAddressDialog(id: string): void {
     this.dialogRef = this.dialog.open(UpdatePersonAddressDialog, {
+      disableClose: true,
       width: '50vw',
       data: {
         ID: id
@@ -779,6 +781,7 @@ export class PessoasComponent implements OnInit {
 
   public openAddPhoneDialog(): void {
     const dialogRef = this.dialog.open(DialogContentPhoneDialog, {
+      disableClose: true,
       data: {
         ID: this.personId
       },
@@ -797,6 +800,7 @@ export class PessoasComponent implements OnInit {
 
   public openAddressDialog(): void {
     const dialogRef = this.dialog.open(DialogContentAddressDialog, {
+      disableClose: true,
       data: {
         ID: this.personId
       },

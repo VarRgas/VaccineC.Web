@@ -456,6 +456,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   public openAddScreensDialog(): void {
     this.dialogRef = this.dialog.open(UserResourceAddDialog, {
+      disableClose: true,
       width: '50vw',
       data: {
         ID: this.UserId,

@@ -432,6 +432,7 @@ export class EmpresasComponent implements OnInit {
 
   public openScheduleDialog(): void {
     this.dialogRef = this.dialog.open(DialogContentScheduleDialog, {
+      disableClose: true,
       width: '50vw',
       data: {
         ID: this.companyID
@@ -451,6 +452,7 @@ export class EmpresasComponent implements OnInit {
 
   public openUpdateScheduleDialog(id: string): void {
     this.dialogRef = this.dialog.open(UpdateCompanyScheduleDialog, {
+      disableClose: true,
       width: '50vw',
       data: {
         ID: id
