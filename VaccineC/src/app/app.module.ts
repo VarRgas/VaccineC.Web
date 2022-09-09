@@ -18,7 +18,7 @@ import { InternalServerErrorComponent } from './pages/error/internal-server-erro
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog, ConfirmPersonRemoveDialog, ConfirmPersonPhoneRemoveDialog, UpdatePersonPhoneDialog, ConfirmAddressPhoneRemoveDialog, UpdatePersonAddressDialog } from './pages/pessoas/pessoas.component';
 import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDialog, ConfirmCompanyScheduleRemoveDialog, UpdateCompanyScheduleDialog } from './pages/empresa/empresas.component';
-import { ProdutoComponent, DialogContentDose } from './pages/produto/produto.component';
+import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
@@ -29,8 +29,6 @@ import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
-import { ProdutoPesquisaComponent } from './pages/produto/produto-pesquisa/produto-pesquisa.component';
-import { ProdutoCadastroComponent } from './pages/produto/produto-cadastro/produto-cadastro.component';
 import { ProdutoAprazamentoComponent } from './pages/produto/produto-aprazamento/produto-aprazamento.component';
 import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-resumo.component';
 import { NgChartsModule } from 'ng2-charts';
@@ -80,8 +78,6 @@ import { UploadFileComponent } from './pages/pessoas/upload-file/upload-file.com
     DialogContentScheduleDialog,
     ConfirmCompanyRemoveDialog,
     ConfirmPersonRemoveDialog,
-    ProdutoPesquisaComponent,
-    ProdutoCadastroComponent,
     ProdutoAprazamentoComponent,
     ProdutoResumoComponent,
     DialogContentDose,
@@ -111,7 +107,8 @@ import { UploadFileComponent } from './pages/pessoas/upload-file/upload-file.com
     ConfirmPersonPhoneRemoveDialog,
     UpdatePersonPhoneDialog,
     ConfirmAddressPhoneRemoveDialog,
-    UpdatePersonAddressDialog
+    UpdatePersonAddressDialog,
+    ConfirmProductRemoveDialog
   ],
   imports: [
     BrowserModule,
