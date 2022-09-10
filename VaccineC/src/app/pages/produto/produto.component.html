@@ -244,8 +244,66 @@
         </mat-tab>
 
         <!-- RESUMO -->
-        <mat-tab label="Resumo" [disabled]="tabIsDisabled">
-          <app-produto-resumo></app-produto-resumo>
+        <mat-tab label="Estoque" [disabled]="tabIsDisabled">
+          <div class="search-table">
+            <div class="col-sm-11 search-table-content mat-elevation-z2">
+              <table class="col-sm-12" mat-table [dataSource]="dataSourceBatches" matSort matSortActive="Batch"
+                matSortDirection="asc">
+
+                <!-- NOME DO LOTE -->
+                <ng-container matColumnDef="Batch">
+                  <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <div>
+                      <div>{{row.Batch}}</div>
+                      <div title="Fabricante" class="small-text">{{row.Manufacturer}}</div>
+                    </div>
+                  </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell>
+                </ng-container>
+
+                <!-- Nº DE UNIDADES -->
+                <ng-container matColumnDef="NumberOfUnitsBatch">
+                  <mat-header-cell *matHeaderCellDef> Unidades </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.NumberOfUnitsBatch}} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> {{getTotalUnits()}} </mat-footer-cell>
+                </ng-container>
+
+                <!-- DATA DE FABRICAÇÃO -->
+                <ng-container matColumnDef="ManufacturingDate">
+                  <mat-header-cell *matHeaderCellDef> Data de Fabricação </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.ManufacturingDate| date: 'dd/MM/yyyy'}} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                </ng-container>
+
+                <!-- DATA DE VALIDADE -->
+                <ng-container matColumnDef="ValidityBatchDate">
+                  <mat-header-cell *matHeaderCellDef> Data de Validade </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.ValidityBatchDate| date: 'dd/MM/yyyy'}} </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                </ng-container>
+
+                <!-- Row Button -->
+                <ng-container matColumnDef="Warning">
+                  <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <i class="fa-solid fa-circle-exclamation fa-beat" style="margin:3px;color:red;" title="Lote vencido" [hidden]=!isExpired(row.NumberOfUnitsBatch,row.ValidityBatchDate)></i>
+                  </mat-cell>
+                  <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumnsBatches"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsBatches;"></mat-row>
+                <mat-footer-row *matFooterRowDef="displayedColumnsBatches"></mat-footer-row>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
+                </tr>
+
+              </table>
+            </div>
+          </div>
         </mat-tab>
       </mat-tab-group>
     </app-container>

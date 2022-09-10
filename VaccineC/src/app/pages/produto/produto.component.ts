@@ -7,9 +7,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { IProduct } from 'src/app/interfaces/i-product';
 import { IProductDoses } from 'src/app/interfaces/i-product-doses';
+import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-batch';
 import { ProductModel } from 'src/app/models/product-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
 import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
 import { VaccinesAutocompleteDispatcherService } from 'src/app/services/vaccines-autocomplete-dispatcher.service';
@@ -65,6 +67,10 @@ export class ProdutoComponent implements OnInit {
   public displayedColumnsDoses: string[] = ['DoseType', 'DoseRangeMonth', 'ID'];
   public dataSourceDoses = new MatTableDataSource<IProductDoses>();
 
+  //Batches table
+  public displayedColumnsBatches: string[] = ['Batch', 'ManufacturingDate', 'ValidityBatchDate', 'NumberOfUnitsBatch', 'Warning'];
+  public dataSourceBatches = new MatTableDataSource<IProductSummariesBatches>();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public dialogRef?: MatDialogRef<any>;
@@ -93,6 +99,7 @@ export class ProdutoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private productsDispatcherService: ProductsDispatcherService,
     private productsDosesDispatcherService: ProductsDosesDispatcherService,
+    private productsSummariesBatchesDispatcherService: ProductsSummariesBatchesDispatcherService,
     private vaccinesAutocompleteDispatcherService: VaccinesAutocompleteDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,) { }
@@ -159,6 +166,10 @@ export class ProdutoComponent implements OnInit {
     this.dataSourceDoses.paginator = this.paginator;
     this.dataSourceDoses.sort = this.sort;
 
+    this.dataSourceBatches = new MatTableDataSource();
+    this.dataSourceBatches.paginator = this.paginator;
+    this.dataSourceBatches.sort = this.sort;
+
     this.sbimVaccinesId = '';
     this.informationField = "";
     this.inputIsDisabled = false;
@@ -201,6 +212,17 @@ export class ProdutoComponent implements OnInit {
           this.dataSourceDoses = new MatTableDataSource(result);
           this.dataSourceDoses.paginator = this.paginator;
           this.dataSourceDoses.sort = this.sort;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.productsSummariesBatchesDispatcherService.getProductsSummariesBatchesByProductId(id)
+      .subscribe(
+        result => {
+          this.dataSourceBatches = new MatTableDataSource(result);
+          this.dataSourceBatches.paginator = this.paginator;
+          this.dataSourceBatches.sort = this.sort;
         },
         error => {
           console.log(error);
@@ -402,6 +424,20 @@ export class ProdutoComponent implements OnInit {
     }
   }
 
+  public getTotalUnits() {
+    return this.dataSourceBatches.data.map(t => t.NumberOfUnitsBatch).reduce((acc, value) => acc + value, 0);
+  }
+
+  public isExpired(numberOfUnitsBatch: number, validityBatchDate: string) {
+    const validityDateStr = validityBatchDate.split("T")[0];
+    let validityDate = new Date(validityDateStr);
+    let dateNow = new Date();
+    if (numberOfUnitsBatch > 0 && validityDate.getTime() < dateNow.getTime()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 @Component({
