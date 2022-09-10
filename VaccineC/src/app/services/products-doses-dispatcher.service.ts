@@ -20,7 +20,7 @@ export class ProductsDosesDispatcherService {
         return this.httpClient.get(`${baseURL}/${id}`);
     }
 
-    public getProductsDosesByType(doseType: string): Observable<any> {
-        return this.httpClient.get(`${baseURL}/${doseType}/GetByType`);
+    public getProductsDosesByProductId(productsId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${productsId}/GetAllByProductId`);
     }
 }

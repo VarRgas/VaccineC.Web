@@ -48,6 +48,10 @@ import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
 import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
 import { NgxViacepModule } from "@brunoc/ngx-viacep"; // Importando o módulo
 import { UploadFileComponent } from './pages/pessoas/upload-file/upload-file.component';
+import { LOCALE_ID, DEFAULT_CURRENCY_CODE } from '@angular/core';
+import localePt from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localePt, 'pt');
 
 @NgModule({
   declarations: [
@@ -126,7 +130,14 @@ import { UploadFileComponent } from './pages/pessoas/upload-file/upload-file.com
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
-    { provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl() }
+    { provide: MatPaginatorIntl, useValue: getPortuguesePaginatorIntl() },
+    {
+      provide: LOCALE_ID,
+      useValue: 'pt'
+    }, {
+      provide: DEFAULT_CURRENCY_CODE,
+      useValue: 'BRL'
+    }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

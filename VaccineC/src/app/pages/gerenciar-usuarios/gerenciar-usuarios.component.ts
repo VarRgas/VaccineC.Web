@@ -392,7 +392,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   displayState(state: any) {
-    return state.Name;
+    return state && state.Name ? state.Name : '';
   }
 
   treatButtons(situation: string) {
@@ -577,8 +577,7 @@ export class UserResourceAddDialog implements OnInit {
   }
 
   displayState(state: any) {
-    console.log(state)
-    return state.Name;
+    return state && state.Name ? state.Name : '';
   }
 }
 

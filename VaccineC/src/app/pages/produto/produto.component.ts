@@ -11,7 +11,7 @@ import { ProductModel } from 'src/app/models/product-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
-import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher-service';
+import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
 import { VaccinesAutocompleteDispatcherService } from 'src/app/services/vaccines-autocomplete-dispatcher.service';
 
 @Component({
@@ -28,13 +28,10 @@ export class ProdutoComponent implements OnInit {
   //Controle para o spinner do button
   public searchButtonLoading: boolean = false;
   public createButtonLoading: boolean = false;
-  // public createPfButtonLoading: boolean = false;
-  // public createPjButtonLoading: boolean = false;
-  // public showSavePhysicalComplementsButton: boolean = false;
-  // public showSaveJuridicalComplementsButton: boolean = false;
 
   //Controle de tabs
   public tabIsDisabled: boolean = true;
+  public tabDoseIsDisabled: boolean = true;
   public inputIsDisabled: boolean = false;
 
   //Controle de exibição dos IDs na Table
@@ -74,7 +71,7 @@ export class ProdutoComponent implements OnInit {
 
   //Form de produtos
   public productForm: FormGroup = this.formBuilder.group({
-    ProductId: [null, [Validators.required]],
+    ProductId: [null],
     SbimVaccinesId: [null],
     Situation: [null, [Validators.required]],
     Details: [null],
@@ -166,6 +163,7 @@ export class ProdutoComponent implements OnInit {
     this.informationField = "";
     this.inputIsDisabled = false;
     this.tabIsDisabled = true;
+    this.tabDoseIsDisabled = true;
   }
 
   public editProduct(id: string): void {
@@ -183,24 +181,30 @@ export class ProdutoComponent implements OnInit {
           this.saleValue = product.SaleValue;
           this.details = product.Details;
           this.minimumStock = product.MinimumStock;
-
           this.tabIsDisabled = false;
+
+          if (product.SbimVaccinesId == null || product.SbimVaccinesId == "") {
+            this.tabDoseIsDisabled = true;
+          } else {
+            this.tabDoseIsDisabled = false;
+          }
+
           this.isInputReadOnly = true;
         },
         error => {
           console.log(error);
         });
 
-        this.productsDosesDispatcherService.getProductDosesById(id)
-        .subscribe(
-          result => {
-            this.dataSourceDoses = new MatTableDataSource(result);
-            this.dataSourceDoses.paginator = this.paginator;
-            this.dataSourceDoses.sort = this.sort;
-          },
-          error => {
-            console.log(error);
-          });
+    this.productsDosesDispatcherService.getProductsDosesByProductId(id)
+      .subscribe(
+        result => {
+          this.dataSourceDoses = new MatTableDataSource(result);
+          this.dataSourceDoses.paginator = this.paginator;
+          this.dataSourceDoses.sort = this.sort;
+        },
+        error => {
+          console.log(error);
+        });
   }
 
   public createProduct(): void {
@@ -213,7 +217,6 @@ export class ProdutoComponent implements OnInit {
     }
 
     let product = new ProductModel();
-    product.sbimVaccinesId = this.productForm.value.SbimVaccinesId.ID;
     product.name = this.name;
     product.saleValue = this.saleValue;
     product.situation = this.situation;
@@ -221,22 +224,32 @@ export class ProdutoComponent implements OnInit {
     product.register = this.register;
     product.minimumStock = this.minimumStock;
 
+    if (this.sbimVaccinesId != null) {
+      product.sbimVaccinesId = this.productForm.value.SbimVaccinesId.ID;
+
+    }
+
     this.productsDispatcherService.createProduct(product)
       .subscribe(
         response => {
+
           this.productId = response.ID;
-          this.sbimVaccinesId = response.SbimVaccinesId;
           this.name = response.Name;
           this.saleValue = response.SaleValue;
           this.situation = response.Situation;
           this.details = response.Details;
           this.minimumStock = response.MinimumStock;
 
+          if (response.SbimVaccinesId == "" || response.SbimVaccinesId == null) {
+            this.tabDoseIsDisabled = true;
+          } else {
+            this.tabDoseIsDisabled = false;
+          }
+
           this.informationField = this.name;
 
           this.isInputReadOnly = true;
           this.tabIsDisabled = false;
-          this.createButtonLoading = false;
 
           this.getAllProducts();
           this.inputIsDisabled = false;
@@ -253,12 +266,16 @@ export class ProdutoComponent implements OnInit {
 
     let product = new ProductModel();
     product.id = this.productId;
-    product.sbimVaccinesId = this.productForm.value.SbimVaccinesId.ID;
     product.name = this.name;
     product.saleValue = this.saleValue;
     product.details = this.details;
     product.situation = this.situation;
     product.minimumStock = this.minimumStock;
+
+    if (this.sbimVaccinesId != null) {
+      product.sbimVaccinesId = this.productForm.value.SbimVaccinesId.ID;
+
+    }
 
     if (!this.productForm.valid) {
       console.log(this.productForm);
@@ -271,14 +288,21 @@ export class ProdutoComponent implements OnInit {
     this.productsDispatcherService.updateProduct(this.productId, product)
       .subscribe(
         response => {
+          console.log(response)
           this.productId = response.ID;
-          this.sbimVaccinesId = response.SbimVaccinesId;
           this.name = response.Name;
           this.saleValue = response.SaleValue;
           this.details = response.Details;
           this.situation = response.Situation;
           this.minimumStock = response.MinimumStock;
 
+          if (response.SbimVaccinesId == "" || response.SbimVaccinesId == null) {
+            this.tabDoseIsDisabled = true;
+          } else {
+            this.tabDoseIsDisabled = false;
+          }
+
+          this.tabIsDisabled = false;
           this.informationField = this.name;
           this.createButtonLoading = false;
 
@@ -306,6 +330,7 @@ export class ProdutoComponent implements OnInit {
                 this.resetForms();
                 this.isInputReadOnly = false;
                 this.tabIsDisabled = true;
+                this.tabDoseIsDisabled = true;
                 this.getAllProducts();
                 this.messageHandler.showMessage("Produto excluído com sucesso!", "success-snackbar")
               },
@@ -358,8 +383,23 @@ export class ProdutoComponent implements OnInit {
   }
 
   public displayState(state: any) {
-    console.log(state)
-    return state.Name;
+    return state && state.Name ? state.Name : '';
+  }
+
+  public resolveExibitionDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "Dose Única"
+    } else if (doseType == "D1") {
+      return "Dose 1"
+    } else if (doseType == "D2") {
+      return "Dose 2"
+    } else if (doseType == "D3") {
+      return "Dose 3"
+    } else if (doseType == "DR") {
+      return "Dose de Reforço"
+    } else {
+      return ""
+    }
   }
 
 }

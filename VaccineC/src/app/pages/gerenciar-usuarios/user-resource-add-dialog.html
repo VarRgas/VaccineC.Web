@@ -5,12 +5,14 @@
 
       <mat-form-field [hidden]="true">
         <input matInput formControlName="UsersId" id="UsersId" [(ngModel)]="UsersId">
-    </mat-form-field>
+      </mat-form-field>
+
 
       <mat-form-field appearance="fill" class="col-sm-12">
-        <mat-label>Recurso</mat-label>
-        <input type="text" (click)="searchResourceByAutoComplete()" [(ngModel)]="ResourcesId" formControlName="ResourcesId" id="ResourcesId" placeholder="Selecione o Recurso"
-          aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" required>
+        <mat-label>Usuário</mat-label>
+        <input type="text" (click)="searchResourceByAutoComplete()" id="ResourcesId" placeholder="Selecione a Pessoa"
+          aria-label="Number" matInput #ResourcesIdinput formControlName="ResourcesId" [matAutocomplete]="auto"
+          [(ngModel)]="ResourcesId" required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
           <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{option.Name}}
@@ -18,6 +20,7 @@
         </mat-autocomplete>
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
+
     </div>
   </form>
 </mat-dialog-content>

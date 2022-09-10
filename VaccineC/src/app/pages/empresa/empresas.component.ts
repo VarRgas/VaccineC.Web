@@ -491,8 +491,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   displayState(state: any) {
-    console.log(state)
-    return state.Name;
+    return state && state.Name ? state.Name : '';
   }
 }
 

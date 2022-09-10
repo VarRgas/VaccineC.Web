@@ -39,25 +39,25 @@
 
                 <!-- Person Name -->
                 <ng-container matColumnDef="Name">
-                  <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
                   <mat-cell *matCellDef="let row"> {{row.Name}} </mat-cell>
                 </ng-container>
 
                 <!-- Aniver -->
                 <ng-container matColumnDef="CommemorativeDate">
-                  <mat-header-cell *matHeaderCellDef> Data de Nascimento </mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Data de Nascimento </mat-header-cell>
                   <mat-cell *matCellDef="let row"> {{row.CommemorativeDate| date: 'dd/MM/yyyy'}} </mat-cell>
                 </ng-container>
 
                 <!-- Person Type -->
                 <ng-container matColumnDef="PersonType">
-                  <mat-header-cell *matHeaderCellDef> Tipo de Pessoa </mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Pessoa </mat-header-cell>
                   <mat-cell *matCellDef="let row"> {{ row.PersonType == 'F' ? 'Física' : 'Jurídica' }} </mat-cell>
                 </ng-container>
 
                 <!-- Id Hidden Column -->
                 <ng-container matColumnDef="ID">
-                  <th *matHeaderCellDef mat-header-cell [hidden]="show" mat-sort-header> ID </th>
+                  <th *matHeaderCellDef mat-header-cell [hidden]="show"> ID </th>
                   <td mat-cell [hidden]="show" *matCellDef="let row">
                     {{row.ID}} </td>
                 </ng-container>
