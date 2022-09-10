@@ -251,10 +251,43 @@
                   </form>
                 </mat-tab>
 
-                <!-- APRAZAMENTO -->
-                <mat-tab label="Doses">
-                    <app-produto-aprazamento></app-produto-aprazamento>
-                    <button mat-fab id="add-dose-btn" class="float-btn create-button" (click)="openDoseDialog()" aria-label="Add button" matTooltip="Inserir Dose" matTooltipPosition="above">
+                <!-- DOSES -->
+                <mat-tab [disabled]="!sbimVaccinesId" label="Doses">
+                  <div class="next-dose-group">
+                    <div id="search-table" class="offset-sm-1 col-sm-11 p-0">
+                        <mat-table [dataSource]="dataSourceDoses"
+                               class="col-sm-11 offset-sm-1">
+
+                            <!-- TIPO DE DOSE -->
+                            <ng-container matColumnDef="DoseType">
+                              <mat-header-cell *matHeaderCellDef> Tipo de Dose </mat-header-cell>
+                              <mat-cell *matCellDef="let row"> {{row.DoseType}} </mat-cell>
+                            </ng-container>
+
+                            <!-- INTERVALO DE DIA -->
+                            <ng-container matColumnDef="DoseRangeMonth">
+                                <mat-header-cell *matHeaderCellDef> Intervalo por Mês </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.DoseRangeMonth}} </mat-cell>
+                            </ng-container>
+
+                            <!-- Id Hidden Column -->
+                            <ng-container matColumnDef="ID">
+                              <mat-header-cell *matHeaderCellDef mat-header-cell [hidden]="show"> ID </mat-header-cell>
+                              <mat-cell mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumnsDoses"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsDoses;"></mat-row>
+                        </mat-table>
+                    </div>
+                </div>
+                    <button mat-fab
+                            id="add-dose-btn"
+                            class="float-btn create-button"
+                            (click)="openDoseDialog()"
+                            aria-label="Add button"
+                            matTooltip="Inserir Dose"
+                            matTooltipPosition="above">
                         <mat-icon>add</mat-icon>
                     </button>
                 </mat-tab>

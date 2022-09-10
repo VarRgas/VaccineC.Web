@@ -6,10 +6,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { IProduct } from 'src/app/interfaces/i-product';
+import { IProductDoses } from 'src/app/interfaces/i-product-doses';
 import { ProductModel } from 'src/app/models/product-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
+import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher-service';
 import { VaccinesAutocompleteDispatcherService } from 'src/app/services/vaccines-autocomplete-dispatcher.service';
 
 @Component({
@@ -52,12 +54,19 @@ export class ProdutoComponent implements OnInit {
   public register!: Date;
   public name!: string;
   public minimumStock!: number;
+  public productDosesId!: string;
+  public doseType!: string;
+  public doseRangeMonth!: string;
   public informationField!: string;
 
   //Table search
   public value = '';
   public displayedColumns: string[] = ['Name', 'SaleValue', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IProduct>();
+
+  //Doses table
+  public displayedColumnsDoses: string[] = ['DoseType', 'DoseRangeMonth', 'ID'];
+  public dataSourceDoses = new MatTableDataSource<IProductDoses>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -74,10 +83,19 @@ export class ProdutoComponent implements OnInit {
     MinimumStock: [null, [Validators.required]],
   });
 
+  //Form de doses
+  public productDosesForm: FormGroup = this.formBuilder.group({
+    ProductDosesId: [null, [Validators.required]],
+    ProductsId: [null],
+    DoseType: [null, [Validators.required]],
+    DoseRangeMonth: [null]
+  });
+
   constructor(
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private productsDispatcherService: ProductsDispatcherService,
+    private productsDosesDispatcherService: ProductsDosesDispatcherService,
     private vaccinesAutocompleteDispatcherService: VaccinesAutocompleteDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,) { }
@@ -139,6 +157,11 @@ export class ProdutoComponent implements OnInit {
 
   public addNewProduct(): void {
     this.resetForms();
+
+    this.dataSourceDoses = new MatTableDataSource();
+    this.dataSourceDoses.paginator = this.paginator;
+    this.dataSourceDoses.sort = this.sort;
+
     this.sbimVaccinesId = '';
     this.informationField = "";
     this.inputIsDisabled = false;
@@ -167,6 +190,17 @@ export class ProdutoComponent implements OnInit {
         error => {
           console.log(error);
         });
+
+        this.productsDosesDispatcherService.getProductDosesById(id)
+        .subscribe(
+          result => {
+            this.dataSourceDoses = new MatTableDataSource(result);
+            this.dataSourceDoses.paginator = this.paginator;
+            this.dataSourceDoses.sort = this.sort;
+          },
+          error => {
+            console.log(error);
+          });
   }
 
   public createProduct(): void {
@@ -287,6 +321,10 @@ export class ProdutoComponent implements OnInit {
     this.productForm.reset();
     this.productForm.clearValidators();
     this.productForm.updateValueAndValidity();
+
+    this.productDosesForm.reset();
+    this.productDosesForm.clearValidators();
+    this.productDosesForm.updateValueAndValidity();
   }
 
   public openDoseDialog(): void {

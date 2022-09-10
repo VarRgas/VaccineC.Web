@@ -29,7 +29,6 @@ import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
-import { ProdutoAprazamentoComponent } from './pages/produto/produto-aprazamento/produto-aprazamento.component';
 import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-resumo.component';
 import { NgChartsModule } from 'ng2-charts';
 import { MovimentarEstoquePesquisaComponent } from './pages/movimentar-estoque/movimentar-estoque-pesquisa/movimentar-estoque-pesquisa.component';
@@ -78,7 +77,6 @@ import { UploadFileComponent } from './pages/pessoas/upload-file/upload-file.com
     DialogContentScheduleDialog,
     ConfirmCompanyRemoveDialog,
     ConfirmPersonRemoveDialog,
-    ProdutoAprazamentoComponent,
     ProdutoResumoComponent,
     DialogContentDose,
     UserResourceAddDialog,
