@@ -79,7 +79,11 @@
 
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                    </mat-table>
+
+                        <tr class="mat-row" *matNoDataRow>
+                          <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
+                        </tr>
+                      </mat-table>
                 </div>
                 </mat-tab>
 
@@ -90,21 +94,37 @@
 
                         <div class="offset-sm-1 col-sm-11 p-0">
 
-                          <!-- <mat-form-field [hidden]="true">
+                          <!-- HIDDEN PRODUCT ID -->
+                          <mat-form-field [hidden]="true">
                             <input matInput #productID formControlName="ProductId" id="productId"
                                 [(ngModel)]="productId">
-                          </mat-form-field> -->
+                          </mat-form-field>
 
                           <div class="div-row-input">
+
+                            <!-- VACINA SBIM -->
                             <mat-form-field appearance="fill" class="col-sm-11">
                                 <mat-label>Vacina SBIM</mat-label>
-                                <input type="text" id="sbimVaccineId" placeholder="Selecione a Vacina" aria-label="Number" matInput
-                                    [formControl]="myControl" [matAutocomplete]="auto">
-                                <span matSuffix><img src="../../../../assets/img/logo-sbim.png" style="height:15px;width:50px;"
-                                        title="Sociedade Brasileira de Imunizações"></span>
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                                        {{option}}
+                                <input type="text"
+                                       (click)="searchVaccineByAutoComplete()"
+                                       id="sbimVaccinesId"
+                                       #sbimVaccinesIdinput
+                                       formControlName="SbimVaccinesId"
+                                       placeholder="Selecione a Vacina"
+                                       aria-label="Number"
+                                       matInput
+                                       [formControl]="myControl"
+                                       [matAutocomplete]="auto"
+                                       [(ngModel)]="sbimVaccinesId">
+                                <span matSuffix>
+                                  <img src="../../../../assets/img/logo-sbim.png"
+                                       style="height:15px;width:50px;"
+                                       title="Sociedade Brasileira de Imunizações"></span>
+                                <mat-autocomplete #auto="matAutocomplete"
+                                                  [displayWith]="displayState">
+                                    <mat-option *ngFor="let option of filteredOptions | async"
+                                                [value]="option">
+                                        {{option.Name}}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
@@ -114,13 +134,18 @@
                             <div class="div-row-input">
                                 <mat-form-field appearance="fill" class="col-sm-11">
                                     <mat-label>Produto</mat-label>
-                                    <input matInput #productNameInput id="name" required="true"
-                                    [(ngModel)]="name" formControlName="Name">
-                                    <!-- <mat-hint align="end">{{productNameInput.value?.length || 0}}/255</mat-hint> -->
+                                    <input matInput
+                                           #productNameInput
+                                           id="name"
+                                           required="true"
+                                           [(ngModel)]="name"
+                                           formControlName="Name">
+                                    <mat-hint align="end">{{productNameInput.value?.length || 0}}/255</mat-hint>
                                     <mat-error *ngIf="productForm.controls.Name.touched && productForm.controls.Name.invalid">
-                                      <span *ngIf="productForm.controls.Name.errors?.required">O Nome é obrigatório.</span>
-                                      <span *ngIf="productForm.controls.Name.errors?.maxlength">O Nome deve ter menos de 255
-                                        caracteres.</span>
+                                      <span *ngIf="productForm.controls.Name.errors?.required">
+                                        O Nome é obrigatório.</span>
+                                      <span *ngIf="productForm.controls.Name.errors?.maxlength">
+                                        O Nome deve ter menos de 255 caracteres.</span>
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -138,19 +163,26 @@
                                   <mat-option value="I">Inativo</mat-option>
                                 </mat-select>
                                 <mat-error *ngIf="productForm.controls.Situation.touched && productForm.controls.Situation.invalid">
-                                  <span *ngIf="productForm.controls.Situation.errors?.required">A Situação é obrigatória.</span>
+                                  <span *ngIf="productForm.controls.Situation.errors?.required">
+                                    A Situação é obrigatória.</span>
                               </mat-error>
                               </mat-form-field>
 
                               <!-- Estoque mínimo -->
                                 <mat-form-field appearance="fill" class="col-sm-5">
                                     <mat-label>Estoque Mínimo</mat-label>
-                                    <input type="number"
+                                    <input formControlName="MinimumStock"
+                                           type="number"
                                            matInput
                                            #input
                                            id="minimumStock"
                                            placeholder="Ex. 20"
+                                           [(ngModel)]="minimumStock"
                                            required="true">
+                                    <mat-error *ngIf="productForm.controls.MinimumStock.touched && productForm.controls.MinimumStock.invalid">
+                                      <span *ngIf="productForm.controls.MinimumStock.errors?.required || productForm.controls.MinimumStock.errors?.email">
+                                        Informe o estoque minimo.</span>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
 
@@ -170,6 +202,10 @@
                                            [thousandSeparator]="'.'"
                                            [decimalMarker]="','">
                                     <span matPrefix>R$&nbsp;</span>
+                                    <mat-error *ngIf="productForm.controls.SaleValue.touched && productForm.controls.SaleValue.invalid">
+                                      <span *ngIf="productForm.controls.SaleValue.errors?.required || productForm.controls.SaleValue.errors?.email">
+                                        Informe um valor de venda.</span>
+                                    </mat-error>
                                 </mat-form-field>
                             </div>
 
@@ -186,18 +222,18 @@
                             </div>
 
                             <!-- Criar e excluir -->
-                            <div class="div-row-input registration-button-row">
-                              <button (click)="createUpdateProduct()"
-                                      mat-raised-button
-                                      class="create-button"
-                                      type="button"
-                                      [disabled]="createButtonLoading">
-                              <div class="spinner">
-                                <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
-                                <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
-                                Salvar
-                              </div>
-                            </button>
+                        <div class="div-row-input registration-button-row">
+                          <button (click)="createUpdateProduct()"
+                                  mat-raised-button
+                                  class="create-button"
+                                  type="button"
+                                  [disabled]="createButtonLoading">
+                          <div class="spinner">
+                            <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
+                            <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                            Salvar
+                          </div>
+                        </button>
 
                             <!-- EXCLUIR -->
                             <button (click)="deleteProduct()"
@@ -205,19 +241,18 @@
                                     color="warn"
                                     type="button"
                                     [disabled]="!productId">
-                              <div>
-                                <span class="fa-solid fa-trash me-1 w-20px"></span>
-                                Excluir
-                              </div>
-                            </button>
+                            <div><span class="fa-solid fa-trash me-1 w-20px"></span>
+                              Excluir
                             </div>
+                          </button>
                         </div>
+                      </div>
                     </div>
                   </form>
                 </mat-tab>
 
                 <!-- APRAZAMENTO -->
-                <mat-tab label="Aprazamento">
+                <mat-tab label="Doses">
                     <app-produto-aprazamento></app-produto-aprazamento>
                     <button mat-fab id="add-dose-btn" class="float-btn create-button" (click)="openDoseDialog()" aria-label="Add button" matTooltip="Inserir Dose" matTooltipPosition="above">
                         <mat-icon>add</mat-icon>

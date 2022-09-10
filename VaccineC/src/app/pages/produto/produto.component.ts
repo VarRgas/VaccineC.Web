@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,6 +20,7 @@ import { VaccinesAutocompleteDispatcherService } from 'src/app/services/vaccines
 export class ProdutoComponent implements OnInit {
 
   public myControl = new FormControl();
+  public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
 
   //Controle para o spinner do button
@@ -37,6 +38,10 @@ export class ProdutoComponent implements OnInit {
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
 
+  //Controle de habilitação de campos
+  public isInputDisabled = false;
+  public isInputReadOnly = false;
+
   //Variáveis dos inputs
   public searchProductName!: string;
   public productId!: string;
@@ -44,8 +49,9 @@ export class ProdutoComponent implements OnInit {
   public situation!: string;
   public details!: string;
   public saleValue!: number;
-  public register!: string;
+  public register!: Date;
   public name!: string;
+  public minimumStock!: number;
   public informationField!: string;
 
   //Table search
@@ -55,17 +61,18 @@ export class ProdutoComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  public dialogRef?: MatDialogRef<any>;
 
   //Form de produtos
   public productForm: FormGroup = this.formBuilder.group({
-    ProductId: [null],
+    ProductId: [null, [Validators.required]],
     SbimVaccinesId: [null],
-    Situation: [null, [Validators.email]],
+    Situation: [null, [Validators.required]],
     Details: [null],
-    SaleValue: [null, [Validators.email]],
+    SaleValue: [null, [Validators.required]],
     Name: [null, [Validators.required, Validators.maxLength(255)]],
+    MinimumStock: [null, [Validators.required]],
   });
-
 
   constructor(
     private dialog: MatDialog,
@@ -132,8 +139,8 @@ export class ProdutoComponent implements OnInit {
 
   public addNewProduct(): void {
     this.resetForms();
+    this.sbimVaccinesId = '';
     this.informationField = "";
-
     this.inputIsDisabled = false;
     this.tabIsDisabled = true;
   }
@@ -145,57 +152,20 @@ export class ProdutoComponent implements OnInit {
       .subscribe(
         product => {
           this.productId = product.ID;
+          this.sbimVaccinesId = product.SbimVaccines;
           this.name = product.Name;
           this.informationField = product.Name;
           this.situation = product.Situation;
           this.details = product.Details;
           this.saleValue = product.SaleValue;
           this.details = product.Details;
+          this.minimumStock = product.MinimumStock;
 
           this.tabIsDisabled = false;
+          this.isInputReadOnly = true;
         },
         error => {
           console.log(error);
-        });
-  }
-
-  public updateProduct(): void {
-
-    if (!this.productForm.valid) {
-      console.log(this.productForm);
-      this.createButtonLoading = false;
-      this.productForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-      return;
-    }
-
-    let product = new ProductModel();
-    product.id = this.productId;
-    product.name = this.name;
-    product.saleValue = this.saleValue;
-    product.details = this.details;
-    product.situation = this.situation;
-
-    this.productsDispatcherService.updateProduct(this.productId, product)
-      .subscribe(
-        response => {
-          this.productId = response.ID;
-          this.name = response.Name;
-          this.saleValue = response.SaleValue;
-          this.details = response.Details;
-          this.situation = response.Situation;
-
-          this.informationField = this.name;
-          this.createButtonLoading = false;
-
-          this.getAllProducts();
-
-          this.messageHandler.showMessage("Produto alterado com sucesso!", "success-snackbar")
-        },
-        error => {
-          this.errorHandler.handleError(error);
-          console.log(error);
-          this.createButtonLoading = false;
         });
   }
 
@@ -209,23 +179,28 @@ export class ProdutoComponent implements OnInit {
     }
 
     let product = new ProductModel();
+    product.sbimVaccinesId = this.productForm.value.SbimVaccinesId.ID;
     product.name = this.name;
     product.saleValue = this.saleValue;
     product.situation = this.situation;
     product.details = this.details;
-
+    product.register = this.register;
+    product.minimumStock = this.minimumStock;
 
     this.productsDispatcherService.createProduct(product)
       .subscribe(
         response => {
           this.productId = response.ID;
+          this.sbimVaccinesId = response.SbimVaccinesId;
           this.name = response.Name;
           this.saleValue = response.SaleValue;
           this.situation = response.Situation;
           this.details = response.Details;
+          this.minimumStock = response.MinimumStock;
 
           this.informationField = this.name;
 
+          this.isInputReadOnly = true;
           this.tabIsDisabled = false;
           this.createButtonLoading = false;
 
@@ -240,6 +215,49 @@ export class ProdutoComponent implements OnInit {
         });
   }
 
+  public updateProduct(): void {
+
+    let product = new ProductModel();
+    product.id = this.productId;
+    product.sbimVaccinesId = this.productForm.value.SbimVaccinesId.ID;
+    product.name = this.name;
+    product.saleValue = this.saleValue;
+    product.details = this.details;
+    product.situation = this.situation;
+    product.minimumStock = this.minimumStock;
+
+    if (!this.productForm.valid) {
+      console.log(this.productForm);
+      this.createButtonLoading = false;
+      this.productForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    this.productsDispatcherService.updateProduct(this.productId, product)
+      .subscribe(
+        response => {
+          this.productId = response.ID;
+          this.sbimVaccinesId = response.SbimVaccinesId;
+          this.name = response.Name;
+          this.saleValue = response.SaleValue;
+          this.details = response.Details;
+          this.situation = response.Situation;
+          this.minimumStock = response.MinimumStock;
+
+          this.informationField = this.name;
+          this.createButtonLoading = false;
+
+          this.getAllProducts();
+          this.messageHandler.showMessage("Produto alterado com sucesso!", "success-snackbar")
+        },
+        error => {
+          this.errorHandler.handleError(error);
+          console.log(error);
+          this.createButtonLoading = false;
+        });
+  }
+
   public deleteProduct(): void {
     const dialogRef = this.dialog.open(ConfirmProductRemoveDialog);
 
@@ -249,8 +267,10 @@ export class ProdutoComponent implements OnInit {
           this.productsDispatcherService.deleteProduct(this.productId)
             .subscribe(
               success => {
+                this.sbimVaccinesId = "";
                 this.informationField = "";
                 this.resetForms();
+                this.isInputReadOnly = false;
                 this.tabIsDisabled = true;
                 this.getAllProducts();
                 this.messageHandler.showMessage("Produto excluído com sucesso!", "success-snackbar")
@@ -299,7 +319,7 @@ export class ProdutoComponent implements OnInit {
       )
   }
 
-  public displayState(state: any): void {
+  public displayState(state: any) {
     console.log(state)
     return state.Name;
   }

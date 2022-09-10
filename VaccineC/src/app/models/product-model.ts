@@ -4,6 +4,7 @@ export class ProductModel {
   public situation!: string;
   public details!: String;
   public saleValue!: number;
+  public minimumStock!: number;
   public register!: Date;
   public name!: string;
 }
