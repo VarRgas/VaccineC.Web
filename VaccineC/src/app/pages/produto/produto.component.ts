@@ -376,6 +376,7 @@ export class ProdutoComponent implements OnInit {
 
   public openDoseDialog(): void {
     const dialogRef = this.dialog.open(DialogContentDose, {
+      disableClose: true,
       width: '40vw'
     });
 
