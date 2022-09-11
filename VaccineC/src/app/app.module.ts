@@ -51,6 +51,7 @@ import { UploadFileComponent } from './pages/pessoas/upload-file/upload-file.com
 import { LOCALE_ID, DEFAULT_CURRENCY_CODE } from '@angular/core';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
+import { MatSortModule } from '@angular/material/sort';
 registerLocaleData(localePt, 'pt');
 
 @NgModule({
@@ -127,6 +128,7 @@ registerLocaleData(localePt, 'pt');
     NgxMaskModule.forRoot(),
     NgxLoadingButtonsModule,
     NgxViacepModule,
+    MatSortModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },

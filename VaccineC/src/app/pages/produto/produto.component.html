@@ -3,7 +3,7 @@
   <div id="content-wrapper" class="d-flex flex-column">
     <app-toolbar></app-toolbar>
     <app-container containerTitle="Produto" containerPath="Cadastros" [information]="informationField">
-      <mat-tab-group #tabGroup>
+      <mat-tab-group #tabGroup animationDuration="0ms">
         <!-- SEARCH TAB -->
         <mat-tab label="Pesquisa">
           <div class="search-group">
@@ -203,8 +203,7 @@
         <mat-tab [disabled]="tabDoseIsDisabled" label="Doses">
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
-              <table class="col-sm-12" mat-table [dataSource]="dataSourceDoses" matSort matSortActive="Name"
-                matSortDirection="asc">
+              <table class="col-sm-12" mat-table [dataSource]="dataSourceDoses">
 
                 <!-- TIPO DE DOSE -->
                 <ng-container matColumnDef="DoseType">
@@ -247,12 +246,11 @@
         <mat-tab label="Estoque" [disabled]="tabIsDisabled">
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
-              <table class="col-sm-12" mat-table [dataSource]="dataSourceBatches" matSort matSortActive="Batch"
-                matSortDirection="asc">
+              <table class="col-sm-12" mat-table [dataSource]="dataSourceBatches">
 
                 <!-- NOME DO LOTE -->
                 <ng-container matColumnDef="Batch">
-                  <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef>Lote</mat-header-cell>
                   <mat-cell *matCellDef="let row">
                     <div>
                       <div>{{row.Batch}}</div>

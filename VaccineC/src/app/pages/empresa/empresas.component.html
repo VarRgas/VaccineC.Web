@@ -213,30 +213,29 @@
 
                     <div class="search-table">
                         <div class="col-sm-11 search-table-content mat-elevation-z2">
-                            <table class="col-sm-12" mat-table [dataSource]="dataSource2" matSort matSortActive="Name"
-                                matSortDirection="asc">
+                            <table class="col-sm-12" mat-table [dataSource]="dataSource2">
 
                                 <!-- Day Column -->
                                 <ng-container matColumnDef="Day">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Dia </th>
+                                    <th mat-header-cell *matHeaderCellDef> Dia </th>
                                     <td mat-cell *matCellDef="let row"> {{row.Day}} </td>
                                 </ng-container>
 
                                 <!-- StartTime Column -->
                                 <ng-container matColumnDef="StartTime">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Inicial </th>
+                                    <th mat-header-cell *matHeaderCellDef> Hora Inicial </th>
                                     <td mat-cell *matCellDef="let row"> {{row.StartTime}} </td>
                                 </ng-container>
 
                                 <!-- Day Column -->
                                 <ng-container matColumnDef="FinalTime">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Final </th>
+                                    <th mat-header-cell *matHeaderCellDef> Hora Final </th>
                                     <td mat-cell *matCellDef="let row"> {{row.FinalTime}} </td>
                                 </ng-container>
 
                                 <!-- Id Hidden Column -->
                                 <ng-container matColumnDef="ID">
-                                    <th mat-header-cell [hidden]="show" *matHeaderCellDef mat-sort-header> ID </th>
+                                    <th mat-header-cell [hidden]="show" *matHeaderCellDef> ID </th>
                                     <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
                                 </ng-container>
 
