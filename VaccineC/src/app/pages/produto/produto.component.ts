@@ -254,6 +254,7 @@ export class ProdutoComponent implements OnInit {
     this.productsDispatcherService.createProduct(product)
       .subscribe(
         response => {
+          this.createButtonLoading = false;
 
           this.productId = response.ID;
           this.name = response.Name;
@@ -310,7 +311,7 @@ export class ProdutoComponent implements OnInit {
     this.productsDispatcherService.updateProduct(this.productId, product)
       .subscribe(
         response => {
-          console.log(response)
+         
           this.productId = response.ID;
           this.name = response.Name;
           this.saleValue = response.SaleValue;
