@@ -24,4 +24,16 @@ export class MovementsDispatcherService {
         return this.httpClient.get(`${baseURL}/${id}`);
     }
 
+    create(data: object): Observable<any> {
+        return this.httpClient.post(`${baseURL}/Create`, data);
+    }
+
+    finish(id: string, data: object): Observable<any> {
+        return this.httpClient.put(`${baseURL}/${id}/FinishMovement`, data);
+    }
+
+    cancel(id: string, data: object): Observable<any> {
+        return this.httpClient.put(`${baseURL}/${id}/CancelMovement`, data);
+    }
+
 }
