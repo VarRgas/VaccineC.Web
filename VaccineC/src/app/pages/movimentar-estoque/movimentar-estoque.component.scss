@@ -96,3 +96,17 @@ form {
   margin: 0.5rem;
   border: none
 }
+
+.mat-footer-row {
+  font-weight: bold !important;
+}
+
+.mat-column-Select {
+  flex: 0 0 100px !important;
+  white-space: unset !important;
+}
+
+.mat-cell-Select {
+  flex: 0 0 100px !important;
+  white-space: unset !important;
+}
