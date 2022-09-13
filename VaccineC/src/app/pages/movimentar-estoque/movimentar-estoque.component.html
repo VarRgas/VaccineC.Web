@@ -128,12 +128,18 @@
                                                     <th mat-header-cell *matHeaderCellDef> Quantidade </th>
                                                     <td mat-cell *matCellDef="let element"> {{element.UnitsNumber}}
                                                     </td>
-                                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                                    <td mat-footer-cell *matFooterCellDef> Total </td>
                                                 </ng-container>
 
                                                 <ng-container matColumnDef="Name">
                                                     <th mat-header-cell *matHeaderCellDef> Produto </th>
-                                                    <td mat-cell *matCellDef="let element"> {{element.Product.Name}}
+                                                    <td mat-cell *matCellDef="let element"> 
+                                                        
+                                                        <div>
+                                                            <div>{{element.Product.Name}}</div>
+                                                            <div title="Fabricante" class="small-text">{{element.Batch}}</div>
+                                                          </div>
+                                                
                                                     </td>
                                                     <td mat-footer-cell *matFooterCellDef> </td>
                                                 </ng-container>
@@ -148,25 +154,25 @@
                                                 <ng-container matColumnDef="Amount">
                                                     <th mat-header-cell *matHeaderCellDef> R$ Total </th>
                                                     <td mat-cell *matCellDef="let element"> {{element.Amount | currency : 'R$' }} </td>
-                                                    <td mat-footer-cell *matFooterCellDef><b> </b></td>
+                                                    <td mat-footer-cell *matFooterCellDef> {{getTotalUnits()| currency : 'R$' }} </td>
                                                 </ng-container>
 
                                                 <!-- Id Hidden Column -->
                                                 <ng-container matColumnDef="ID">
                                                     <th mat-header-cell [hidden]="show" *matHeaderCellDef> ID </th>
                                                     <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
-                                                    <td mat-footer-cell *matFooterCellDef> </td>
+                                                    <td mat-footer-cell [hidden]="show" *matFooterCellDef> </td>
                                                 </ng-container>
 
                                                 <ng-container matColumnDef="Options">
                                                     <th mat-header-cell *matHeaderCellDef> </th>
                                                     <td mat-cell *matCellDef="let row">
                                                         <button mat-icon-button color="warn" title="Remover"
-                                                        style="float:right;" [disabled]="isButtonsTableDisabled">
+                                                        style="float:right;" [disabled]="isButtonsTableDisabled" (click)="deleteMovementProduct(row.ID)">
                                                         <i class="fa-solid fa-trash"></i>
                                                       </button>
                                                       <button mat-icon-button color="primary"
-                                                        title="Editar" style="float:right;" [disabled]="isButtonsTableDisabled">
+                                                        title="Editar" style="float:right;" [disabled]="isButtonsTableDisabled" (click)="openUpdateMovementProductEntryDialog(row.ID)">
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                       </button>
                                                     </td>

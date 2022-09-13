@@ -5,6 +5,6 @@ export interface IProductSummariesBatches {
     ManufacturingDate: Date,
     ValidityBatchDate: Date,
     Register: Date,
-    Manufacturer: String,
+    Manufacturer: string,
     ProductsId: string,
 }

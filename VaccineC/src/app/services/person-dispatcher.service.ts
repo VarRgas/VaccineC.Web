@@ -34,5 +34,5 @@ export class PersonDispatcherService {
 
   public updatePerson(id: string, data: object): Observable<any> {
     return this.httpClient.put(`${baseURL}/${id}/Update`, data);
-}
+  }
 }

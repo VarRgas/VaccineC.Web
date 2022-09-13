@@ -23,4 +23,8 @@ export class ProductsSummariesBatchesDispatcherService {
     public getProductsSummariesBatchesByProductId(productsId: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${productsId}/GetAllByProductId`);
     }
+
+    public getProductsSummariesBatchesByName(productId: string, name: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${productId}/${name}/GetProductSummaryBatchByName`);
+    }
 }
