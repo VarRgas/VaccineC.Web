@@ -151,6 +151,7 @@ export class MovimentarEstoqueComponent implements OnInit {
         this.MovementType = response.MovementType;
         this.ProductsAmount = response.ProductsAmount;
         this.Situation = response.Situation;
+        this.informationField = `Movimento nº ${response.MovementNumber}`
 
         this.getAllMovements();
 
@@ -193,6 +194,7 @@ export class MovimentarEstoqueComponent implements OnInit {
         this.MovementType = response.MovementType;
         this.ProductsAmount = response.ProductsAmount;
         this.Situation = response.Situation;
+        this.informationField = `Movimento nº ${response.MovementNumber}`
 
         this.getAllMovements();
 
@@ -240,6 +242,7 @@ export class MovimentarEstoqueComponent implements OnInit {
               this.MovementType = response.MovementType;
               this.ProductsAmount = response.ProductsAmount;
               this.Situation = response.Situation;
+              this.informationField = `Movimento nº ${response.MovementNumber}`
 
               this.getAllMovements();
 
@@ -274,6 +277,7 @@ export class MovimentarEstoqueComponent implements OnInit {
         this.MovementType = movement.MovementType;
         this.Situation = movement.Situation;
         this.ProductsAmount = movement.ProductsAmount;
+        this.informationField = `Movimento nº ${movement.MovementNumber}`
 
         this.treatButtons(movement.Situation)
 
@@ -334,7 +338,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   openAddMovementProductEntryDialog() {
     const dialogRef = this.dialog.open(AddMovementProductEntryDialog, {
       disableClose: true,
-      width: '50vw',
+      width: '80vw',
       data: {
         ID: this.Id,
       },
@@ -356,7 +360,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     if (this.MovementType == "E") {
       const dialogRef = this.dialog.open(UpdateMovementProductEntryDialog, {
         disableClose: true,
-        width: '50vw',
+        width: '80vw',
         data: {
           ID: id
         },
@@ -374,7 +378,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     } else {
       const dialogRef = this.dialog.open(UpdateMovementProductExitDialog, {
         disableClose: true,
-        width: '50vw',
+        width: '80vw',
         data: {
           ID: id
         },
@@ -397,7 +401,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   openAddMovementProductExitDialog() {
     const dialogRef = this.dialog.open(AddMovementProductExitDialog, {
       disableClose: true,
-      width: '50vw',
+      width: '80vw',
       data: {
         ID: this.Id,
       },
@@ -541,7 +545,6 @@ export class AddMovementProductEntryDialog implements OnInit {
     this.BatchExpirationDate = null;
     this.BatchManufacturingDate = null;
     this.Manufacturer = "";
-    this.UnitsNumber = 0;
     this.Amount = 0;
     this.isFieldReadonly = false;
   }
@@ -737,7 +740,6 @@ export class UpdateMovementProductEntryDialog implements OnInit {
     this.BatchExpirationDate = null;
     this.BatchManufacturingDate = null;
     this.Manufacturer = "";
-    this.UnitsNumber = 0;
     this.Amount = 0;
     this.isFieldReadonly = false;
   }
@@ -935,7 +937,6 @@ export class UpdateMovementProductExitDialog implements OnInit {
 
     this.ProductId = event.option.value.ID;
     this.UnitaryValue = event.option.value.SaleValue;
-    this.UnitsNumber = 0;
     this.Amount = 0;
     this.isFieldReadonly = false;
 
@@ -1103,7 +1104,6 @@ export class AddMovementProductExitDialog {
 
     this.ProductId = event.option.value.ID;
     this.UnitaryValue = event.option.value.SaleValue;
-    this.UnitsNumber = 0;
     this.Amount = 0;
     this.isFieldReadonly = false;
 

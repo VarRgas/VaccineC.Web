@@ -93,8 +93,8 @@
                     <mat-label>Vacina SBIM</mat-label>
                     <input type="text" (click)="searchVaccineByAutoComplete()" placeholder="Selecione a Vacina"
                       aria-label="Number" matInput #sbimVaccinesIdinput formControlName="SbimVaccinesId"
-                      [matAutocomplete]="auto" [(ngModel)]="sbimVaccinesId">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
+                      [matAutocomplete]="auto" [(ngModel)]="sbimVaccinesId" (ngModelChange)="onChanged($event)">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState" (optionSelected)="onSelectionChanged($event)">
                       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                       </mat-option>
@@ -110,11 +110,11 @@
                   <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Produto</mat-label>
                     <input matInput #productNameInput id="name" required="true" [(ngModel)]="name"
-                      formControlName="Name">
+                      formControlName="Name" [readonly]="isNameProductReadonly">
                     <mat-hint align="end">{{productNameInput.value?.length || 0}}/255</mat-hint>
                     <mat-error *ngIf="productForm.controls.Name.touched && productForm.controls.Name.invalid">
                       <span *ngIf="productForm.controls.Name.errors?.required">
-                        O Nome é obrigatório.</span>
+                        O Produto é obrigatório.</span>
                       <span *ngIf="productForm.controls.Name.errors?.maxlength">
                         O Nome deve ter menos de 255 caracteres.</span>
                     </mat-error>
@@ -145,7 +145,7 @@
                       *ngIf="productForm.controls.MinimumStock.touched && productForm.controls.MinimumStock.invalid">
                       <span
                         *ngIf="productForm.controls.MinimumStock.errors?.required || productForm.controls.MinimumStock.errors?.email">
-                        Informe o estoque minimo.</span>
+                        O Estoque Mínimo é obrigatório.</span>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -161,7 +161,7 @@
                     <mat-error *ngIf="productForm.controls.SaleValue.touched && productForm.controls.SaleValue.invalid">
                       <span
                         *ngIf="productForm.controls.SaleValue.errors?.required || productForm.controls.SaleValue.errors?.email">
-                        Informe um valor de venda.</span>
+                        O Valor de Venda é obrigatório.</span>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -227,13 +227,14 @@
                 <ng-container matColumnDef="Options">
                   <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                   <mat-cell *matCellDef="let row">
+                    <button mat-icon-button (click)="openUpdateProductDosesDialog(row.ID)" color="primary"
+                    title="Editar" style="float:right;">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </button>
+                    
                     <button mat-icon-button (click)="deleteProductDoses(row.ID)" color="warn" title="Remover"
                       style="float:right;">
                       <i class="fa-solid fa-trash"></i>
-                    </button>
-                    <button mat-icon-button (click)="openUpdateProductDosesDialog(row.ID)" color="primary"
-                      title="Editar" style="float:right;">
-                      <i class="fa-solid fa-pen-to-square"></i>
                     </button>
                   </mat-cell>
                 </ng-container>

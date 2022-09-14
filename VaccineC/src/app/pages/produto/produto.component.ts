@@ -1,7 +1,9 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSelectChange } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
@@ -43,6 +45,7 @@ export class ProdutoComponent implements OnInit {
   //Controle de habilitação de campos
   public isInputDisabled = false;
   public isInputReadOnly = false;
+  public isNameProductReadonly = false;
 
   //Variáveis dos inputs
   public searchProductName!: string;
@@ -73,6 +76,19 @@ export class ProdutoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public dialogRef?: MatDialogRef<any>;
+
+  onChanged(value: any): void {
+
+    if (value == "") {
+      this.isNameProductReadonly = false;
+      this.name = "";
+    }
+  }
+
+  onSelectionChanged(event: MatAutocompleteSelectedEvent) {
+    this.name = event.option.value.Name;
+    this.isNameProductReadonly = true;
+  }
 
   //Form de produtos
   public productForm: FormGroup = this.formBuilder.group({
@@ -166,6 +182,7 @@ export class ProdutoComponent implements OnInit {
     this.inputIsDisabled = false;
     this.tabIsDisabled = true;
     this.tabDoseIsDisabled = true;
+    this.isNameProductReadonly = false;
   }
 
   public editProduct(id: string): void {
@@ -184,6 +201,12 @@ export class ProdutoComponent implements OnInit {
           this.details = product.Details;
           this.minimumStock = product.MinimumStock;
           this.tabIsDisabled = false;
+
+          if(this.sbimVaccinesId == null || this.sbimVaccinesId == ""){
+            this.isNameProductReadonly = false;
+          }else{
+            this.isNameProductReadonly = true;
+          }
 
           if (product.SbimVaccinesId == null || product.SbimVaccinesId == "") {
             this.tabDoseIsDisabled = true;
@@ -449,15 +472,15 @@ export class ProdutoComponent implements OnInit {
 
   public resolveExibitionDoseType(doseType: string) {
     if (doseType == "DU") {
-      return "Dose Única"
+      return "DOSE ÚNICA"
     } else if (doseType == "D1") {
-      return "Dose 1"
+      return "DOSE 1"
     } else if (doseType == "D2") {
-      return "Dose 2"
+      return "DOSE 2"
     } else if (doseType == "D3") {
-      return "Dose 3"
+      return "DOSE 3"
     } else if (doseType == "DR") {
-      return "Dose de Reforço"
+      return "DOSE DE REFORÇO"
     } else {
       return ""
     }
@@ -490,6 +513,8 @@ export class DialogContentDose implements OnInit {
   public doseType!: string;
   public doseRangeMonth!: number;
 
+  public isDoseRangeMonthDisabled = false;
+
   //Form de doses
   public productDosesForm: FormGroup = this.formBuilder.group({
     DoseType: [null, [Validators.required]],
@@ -509,7 +534,26 @@ export class DialogContentDose implements OnInit {
     this.productsId = this.data.ID;
   }
 
+  onSelectionChanged(value: any) {
+    console.log(value)
+    if (value == "D1") {
+      this.isDoseRangeMonthDisabled = true;
+    } else if (value == "DU") {
+      this.isDoseRangeMonthDisabled = true;
+    } else {
+      this.isDoseRangeMonthDisabled = false;
+    }
+  }
+
   public saveProductDoses(): void {
+
+    if (!this.productDosesForm.valid) {
+      console.log(this.productDosesForm);
+      this.productDosesForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
     let productDoses = new ProductDosesModel();
     productDoses.doseType = this.doseType;;
     productDoses.doseRangeMonth = this.doseRangeMonth;
@@ -540,6 +584,8 @@ export class UpdateDialogContentDose implements OnInit {
   public doseType!: string;
   public doseRangeMonth!: number;
 
+  public isDoseRangeMonthDisabled = false;
+
   //Form de doses
   public productDosesForm: FormGroup = this.formBuilder.group({
     DoseType: [null, [Validators.required]],
@@ -554,6 +600,17 @@ export class UpdateDialogContentDose implements OnInit {
     private messageHandler: MessageHandlerService,
     public dialogRef: MatDialogRef<DialogContentDose>
   ) { }
+
+  onSelectionChanged(value: any) {
+    console.log(value)
+    if (value == "D1") {
+      this.isDoseRangeMonthDisabled = true;
+    } else if (value == "DU") {
+      this.isDoseRangeMonthDisabled = true;
+    } else {
+      this.isDoseRangeMonthDisabled = false;
+    }
+  }
 
   ngOnInit(): void {
     this.id = this.data.ID;

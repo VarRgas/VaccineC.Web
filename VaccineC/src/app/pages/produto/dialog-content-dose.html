@@ -9,7 +9,7 @@
                             formControlName="DoseType"
                             [(ngModel)]="doseType"
                             id="doseType"
-                            required="true">
+                            required (selectionChange)="onSelectionChanged($event.value)">
                     <mat-option selected value="D1">DOSE 1</mat-option>
                     <mat-option value="D2">DOSE 2</mat-option>
                     <mat-option value="D3">DOSE 3</mat-option>
@@ -29,7 +29,8 @@
                        #input
                        maxlength="15"
                        placeholder="Quantidade de meses de espera para aplicação"
-                       id="doseRangeMonth">
+                       id="doseRangeMonth"
+                       [readonly]="isDoseRangeMonthDisabled">
                 <span matSuffix>mês</span>
             </mat-form-field>
         </div>
@@ -37,5 +38,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button (click)="saveProductDoses()"cdkFocusInitial>Salvar</button>
+    <button mat-button class="create-button" (click)="saveProductDoses()"cdkFocusInitial>Salvar</button>
 </mat-dialog-actions>

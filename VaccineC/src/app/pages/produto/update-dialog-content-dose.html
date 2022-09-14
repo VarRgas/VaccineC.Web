@@ -29,7 +29,8 @@
                        #input
                        maxlength="15"
                        placeholder="Quantidade de meses de espera para aplicação"
-                       id="doseRangeMonth">
+                       id="doseRangeMonth"
+                       [readonly]="isDoseRangeMonthDisabled">
                 <span matSuffix>mês</span>
             </mat-form-field>
         </div>
@@ -37,5 +38,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button (click)="updateProductDoses()"cdkFocusInitial>Salvar</button>
+    <button mat-button  class="create-button" (click)="updateProductDoses()"cdkFocusInitial>Salvar</button>
 </mat-dialog-actions>
