@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Adicionar Dose</h2>
+<h2 mat-dialog-title>Editar Dose</h2>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="productDosesForm">
         <div class="div-row-input">
@@ -37,5 +37,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button (click)="saveProductDoses()"cdkFocusInitial>Salvar</button>
+    <button mat-button (click)="updateProductDoses()"cdkFocusInitial>Salvar</button>
 </mat-dialog-actions>

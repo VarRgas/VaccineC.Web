@@ -2,7 +2,9 @@
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="CompanyScheduleForm">
         <div class="div-row-input" style="padding-right: 0.75rem;padding-left: 0.75rem;padding-bottom: 1.34375em;">
-            <select class="form-select" formControlName="Day" id="Day" [(ngModel)]="Day"  multiple aria-label="multiple select example" size="7">
+            <select class="form-select"
+            formControlName="Day" id="Day"
+            [(ngModel)]="Day"  multiple aria-label="multiple select example" size="7">
                 <option selected value="SEG">Segunda</option>
                 <option value="TER">Terça</option>
                 <option value="QUA">Quarta</option>

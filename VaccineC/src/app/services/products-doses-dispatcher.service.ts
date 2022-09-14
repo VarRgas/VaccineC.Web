@@ -23,4 +23,15 @@ export class ProductsDosesDispatcherService {
     public getProductsDosesByProductId(productsId: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${productsId}/GetAllByProductId`);
     }
+
+    public createProductDoses(data: object): Observable<any> {
+      return this.httpClient.post(`${baseURL}/Create`, data);
+    }
+    public updateProductDoses(id: string, data: object): Observable<any> {
+      return this.httpClient.put(`${baseURL}/${id}/Update`, data);
+    }
+
+    public deleteProductDoses(id: string): Observable<any> {
+      return this.httpClient.delete(`${baseURL}/${id}/Delete`);
+    }
 }

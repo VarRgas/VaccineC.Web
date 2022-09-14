@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchM
 import { IProduct } from 'src/app/interfaces/i-product';
 import { IProductDoses } from 'src/app/interfaces/i-product-doses';
 import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-batch';
+import { ProductDosesModel } from 'src/app/models/product-doses-model';
 import { ProductModel } from 'src/app/models/product-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
@@ -54,8 +55,6 @@ export class ProdutoComponent implements OnInit {
   public name!: string;
   public minimumStock!: number;
   public productDosesId!: string;
-  public doseType!: string;
-  public doseRangeMonth!: string;
   public informationField!: string;
 
   //Table search
@@ -64,7 +63,7 @@ export class ProdutoComponent implements OnInit {
   public dataSource = new MatTableDataSource<IProduct>();
 
   //Doses table
-  public displayedColumnsDoses: string[] = ['DoseType', 'DoseRangeMonth', 'ID'];
+  public displayedColumnsDoses: string[] = ['DoseType', 'DoseRangeMonth', 'ID', 'Options'];
   public dataSourceDoses = new MatTableDataSource<IProductDoses>();
 
   //Batches table
@@ -84,14 +83,6 @@ export class ProdutoComponent implements OnInit {
     SaleValue: [null, [Validators.required]],
     Name: [null, [Validators.required, Validators.maxLength(255)]],
     MinimumStock: [null, [Validators.required]],
-  });
-
-  //Form de doses
-  public productDosesForm: FormGroup = this.formBuilder.group({
-    ProductDosesId: [null, [Validators.required]],
-    ProductsId: [null],
-    DoseType: [null, [Validators.required]],
-    DoseRangeMonth: [null]
   });
 
   constructor(
@@ -311,7 +302,7 @@ export class ProdutoComponent implements OnInit {
     this.productsDispatcherService.updateProduct(this.productId, product)
       .subscribe(
         response => {
-         
+
           this.productId = response.ID;
           this.name = response.Name;
           this.saleValue = response.SaleValue;
@@ -369,22 +360,68 @@ export class ProdutoComponent implements OnInit {
     this.productForm.reset();
     this.productForm.clearValidators();
     this.productForm.updateValueAndValidity();
-
-    this.productDosesForm.reset();
-    this.productDosesForm.clearValidators();
-    this.productDosesForm.updateValueAndValidity();
   }
 
   public openDoseDialog(): void {
     const dialogRef = this.dialog.open(DialogContentDose, {
       disableClose: true,
-      width: '40vw'
+      width: '40vw',
+      data: {
+        ID: this.productId
+      },
     });
 
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result != "") {
+          this.dataSourceDoses = new MatTableDataSource(result);
+          this.dataSourceDoses.paginator = this.paginator;
+          this.dataSourceDoses.sort = this.sort;
+        }
+      });
+  }
+
+  public openUpdateProductDosesDialog(id: string): void {
+    this.dialogRef = this.dialog.open(UpdateDialogContentDose, {
+      disableClose: true,
+      width: '40vw',
+      data: {
+        ID: id
+      },
+    });
+
+    this.dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourceDoses = new MatTableDataSource(res);
+          this.dataSourceDoses.paginator = this.paginator;
+          this.dataSourceDoses.sort = this.sort;
+        }
+      }
+    );
+  }
+
+  public deleteProductDoses(id: string) {
+
+    const dialogRef = this.dialog.open(ConfirmProductDosesRemoveDialog);
+
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      if (!!result) {
+        this.productsDosesDispatcherService.deleteProductDoses(id).subscribe(
+          success => {
+            this.dataSourceDoses = new MatTableDataSource(success);
+            this.dataSourceDoses.paginator = this.paginator;
+            this.dataSourceDoses.sort = this.sort;
+            this.messageHandler.showMessage("Dose removida com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+      }
     });
   }
+
 
   public searchVaccineByAutoComplete(): void {
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -442,14 +479,139 @@ export class ProdutoComponent implements OnInit {
   }
 }
 
+//DIALOG ADD DOSES
 @Component({
   selector: 'dialog-content-dose',
   templateUrl: 'dialog-content-dose.html',
 })
-export class DialogContentDose { }
+export class DialogContentDose implements OnInit {
+
+  public productsId!: string;
+  public doseType!: string;
+  public doseRangeMonth!: number;
+  public informationField!: string;
+
+  //Form de doses
+  public productDosesForm: FormGroup = this.formBuilder.group({
+    DoseType: [null, [Validators.required]],
+    DoseRangeMonth: [null]
+  });
+
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    private productsDosesDispatcherService: ProductsDosesDispatcherService,
+    private messageHandler: MessageHandlerService,
+    public dialogRef: MatDialogRef<DialogContentDose>
+  ) { }
+
+  ngOnInit(): void {
+    this.productsId = this.data.ID;
+  }
+
+  public saveProductDoses(): void {
+    let productDoses = new ProductDosesModel();
+    productDoses.doseType = this.doseType;;
+    productDoses.doseRangeMonth = this.doseRangeMonth;
+    productDoses.productsId = this.productsId;
+
+    this.productsDosesDispatcherService.createProductDoses(productDoses).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Doses incluídas com sucesso!", "success-snackbar")
+      },
+      error => {
+        this.dialogRef.close();
+        console.log(error);
+      });
+  }
+
+}
+
+//DIALOG UPDATE DOSES
+@Component({
+  selector: 'update-dialog-content-dose',
+  templateUrl: 'update-dialog-content-dose.html',
+})
+export class UpdateDialogContentDose implements OnInit {
+
+  public id!: string;
+  public productsId!: string;
+  public doseType!: string;
+  public doseRangeMonth!: number;
+  public informationField!: string;
+
+  //Form de doses
+  public productDosesForm: FormGroup = this.formBuilder.group({
+    DoseType: [null, [Validators.required]],
+    DoseRangeMonth: [null]
+  });
+
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    private productsDosesDispatcherService: ProductsDosesDispatcherService,
+    private messageHandler: MessageHandlerService,
+    public dialogRef: MatDialogRef<DialogContentDose>
+  ) { }
+
+  ngOnInit(): void {
+    this.id = this.data.ID;
+    this.getProductDosesById(this.id);
+  }
+
+  getProductDosesById(id: string): void {
+    this.productsDosesDispatcherService.getProductDosesById(id).subscribe(
+      result => {
+        console.log(result)
+        this.id = result.ID;
+        this.productsId = result.ProductsId;
+        this.doseType = result.DoseType;
+        this.doseRangeMonth = result.DoseRangeMonth;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  public updateProductDoses(): void {
+
+    if (!this.productDosesForm.valid) {
+      this.productDosesForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let productDoses = new ProductDosesModel();
+    productDoses.id = this.id;
+    productDoses.productsId = this.productsId;
+    productDoses.doseType = this.doseType;;
+    productDoses.doseRangeMonth = this.doseRangeMonth;
+
+    this.productsDosesDispatcherService.updateProductDoses(this.id, productDoses)
+      .subscribe(
+        response => {
+          this.dialogRef.close(response);
+          this.messageHandler.showMessage("Doses alteradas com sucesso!", "success-snackbar")
+        },
+        error => {
+          this.dialogRef.close();
+          console.log(error);
+        });
+  }
+
+}
 
 @Component({
   selector: 'confirm-product-remove-dialog',
   templateUrl: './confirm-product-remove-dialog.html',
 })
 export class ConfirmProductRemoveDialog { }
+
+@Component({
+  selector: 'confirm-product-doses-remove-dialog',
+  templateUrl: './confirm-product-doses-remove-dialog.html',
+})
+export class ConfirmProductDosesRemoveDialog { }

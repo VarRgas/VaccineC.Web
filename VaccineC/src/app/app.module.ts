@@ -18,7 +18,7 @@ import { InternalServerErrorComponent } from './pages/error/internal-server-erro
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog, ConfirmPersonRemoveDialog, ConfirmPersonPhoneRemoveDialog, UpdatePersonPhoneDialog, ConfirmAddressPhoneRemoveDialog, UpdatePersonAddressDialog } from './pages/pessoas/pessoas.component';
 import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDialog, ConfirmCompanyScheduleRemoveDialog, UpdateCompanyScheduleDialog } from './pages/empresa/empresas.component';
-import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog } from './pages/produto/produto.component';
+import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, ConfirmProductDosesRemoveDialog, UpdateDialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
@@ -117,7 +117,9 @@ registerLocaleData(localePt, 'pt');
     ConfirmCancelMovementDialog,
     ConfirmCancelMovementProductDialog,
     UpdateMovementProductEntryDialog,
-    UpdateMovementProductExitDialog
+    UpdateMovementProductExitDialog,
+    ConfirmProductDosesRemoveDialog,
+    UpdateDialogContentDose
   ],
   imports: [
     BrowserModule,

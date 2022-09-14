@@ -223,6 +223,21 @@
                   <mat-cell mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </mat-cell>
                 </ng-container>
 
+                <!-- Options Column -->
+                <ng-container matColumnDef="Options">
+                  <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button mat-icon-button (click)="deleteProductDoses(row.ID)" color="warn" title="Remover"
+                      style="float:right;">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                    <button mat-icon-button (click)="openUpdateProductDosesDialog(row.ID)" color="primary"
+                      title="Editar" style="float:right;">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
                 <mat-header-row *matHeaderRowDef="displayedColumnsDoses"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumnsDoses;"></mat-row>
 
@@ -236,8 +251,13 @@
               <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
             </div>
           </div>
-          <button mat-fab id="add-dose-btn" class="float-btn create-button" (click)="openDoseDialog()"
-            aria-label="Add button" matTooltip="Inserir Dose" matTooltipPosition="above">
+          <button mat-fab
+                  id="add-dose-btn"
+                  class="float-btn create-button"
+                  (click)="openDoseDialog()"
+                  aria-label="Add button"
+                  matTooltip="Inserir Dose"
+                  matTooltipPosition="above">
             <mat-icon>add</mat-icon>
           </button>
         </mat-tab>
