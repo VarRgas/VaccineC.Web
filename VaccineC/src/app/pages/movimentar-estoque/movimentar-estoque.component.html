@@ -36,7 +36,12 @@
 
                                 <ng-container matColumnDef="MovementNumber">
                                     <mat-header-cell *matHeaderCellDef> Movimento </mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.MovementNumber}} </mat-cell>
+                                    <mat-cell *matCellDef="let element"> 
+                                        <div>
+                                            <div>{{element.MovementNumber}}</div>
+                                            <div title="Data do Movimento" class="small-text">{{element.Register| date: 'dd/MM/yyyy'}}</div>
+                                        </div>
+                                    </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="MovementType">
@@ -110,6 +115,16 @@
                                               obrigatório.</span>
                                           </mat-error>
                                     </mat-form-field>
+
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>Situação</mat-label>
+                                        <mat-select formControlName="Situation" [(ngModel)]="Situation" [disabled]=true>
+                                            <mat-option value="P">Pendente</mat-option>
+                                            <mat-option value="F">Finalizado</mat-option>
+                                            <mat-option value="C">Cancelado</mat-option>
+                                        </mat-select>
+
+                                    </mat-form-field>
                                 </div>
 
                                 <div id="tableProducts" class="mt-3 mb-4" *ngIf="isVisible">
@@ -138,7 +153,7 @@
                                                         <div>
                                                             <div>{{element.Product.Name}}</div>
                                                             <div title="Fabricante" class="small-text">{{element.Batch}}</div>
-                                                          </div>
+                                                        </div>
                                                 
                                                     </td>
                                                     <td mat-footer-cell *matFooterCellDef> </td>

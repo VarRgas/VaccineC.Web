@@ -65,6 +65,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     Id: [null],
     MovementType: [null, [Validators.required]],
     MovementNumber: [null],
+    Situation: [null]
   });
 
   constructor(
@@ -152,6 +153,8 @@ export class MovimentarEstoqueComponent implements OnInit {
         this.ProductsAmount = response.ProductsAmount;
         this.Situation = response.Situation;
         this.informationField = `Movimento nº ${response.MovementNumber}`
+
+        this.isMovementTypeDisabled = true;
 
         this.getAllMovements();
 
@@ -272,6 +275,7 @@ export class MovimentarEstoqueComponent implements OnInit {
 
     this.movementService.getById(id).subscribe(
       movement => {
+        console.log(movement)
         this.Id = movement.ID;
         this.MovementNumber = movement.MovementNumber;
         this.MovementType = movement.MovementType;
@@ -607,12 +611,13 @@ export class AddMovementProductEntryDialog implements OnInit {
     movementProduct.batchManufacturingDate = this.BatchManufacturingDate;
     movementProduct.manufacturer = this.Manufacturer;
 
-    this.movementProductService.create(movementProduct).subscribe(
+    this.movementProductService.create(movementProduct, "E").subscribe(
       response => {
         this.dialogRef.close(response);
         this.messageHandler.showMessage("Produto inserido com sucesso!", "success-snackbar")
       },
       error => {
+        this.errorHandler.handleError(error);
         console.log(error);
       });
   }
@@ -801,7 +806,7 @@ export class UpdateMovementProductEntryDialog implements OnInit {
     movementProduct.manufacturer = this.Manufacturer;
     console.log(movementProduct)
 
-    this.movementProductService.update(movementProduct.id, movementProduct).subscribe(
+    this.movementProductService.update(movementProduct.id, "E", movementProduct).subscribe(
       response => {
         this.dialogRef.close(response);
         this.messageHandler.showMessage("Produto alterado com sucesso!", "success-snackbar")
@@ -1008,7 +1013,7 @@ export class UpdateMovementProductExitDialog implements OnInit {
 
     console.log(this.selection.selected)
 
-    this.movementProductService.update(movementProduct.id, movementProduct).subscribe(
+    this.movementProductService.update(movementProduct.id, "S", movementProduct).subscribe(
       response => {
         this.dialogRef.close(response);
         this.messageHandler.showMessage("Produto alterado com sucesso!", "success-snackbar")
@@ -1176,13 +1181,14 @@ export class AddMovementProductExitDialog {
 
     console.log(movementProduct)
 
-    this.movementProductService.create(movementProduct).subscribe(
+    this.movementProductService.create(movementProduct, "S").subscribe(
       response => {
         this.dialogRef.close(response);
         this.messageHandler.showMessage("Produto inserido com sucesso!", "success-snackbar")
       },
       error => {
-        console.log(error);
+        console.log(error)
+        this.errorHandler.handleError(error);
       })
   }
 
