@@ -3,7 +3,7 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Empresa" containerPath="Gerencial" [information]="informationField">
-            <mat-tab-group #tabGroup>
+            <mat-tab-group #tabGroup animationDuration="0ms">
 
                 <!-- SEARCH TAB -->
                 <mat-tab label="Pesquisa">
@@ -70,7 +70,7 @@
                                 </tr>
                             </table>
 
-                            <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                            <mat-paginator #paginatorCompany="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
                         </div>
                     </div>
                 </mat-tab>
@@ -260,7 +260,7 @@
                                 </tr>
                             </table>
 
-                            <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                            <mat-paginator #paginatorSchedule="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
                         </div>
                     </div>
 

@@ -73,7 +73,8 @@ export class GerenciarUsuariosComponent implements OnInit {
   public displayedColumns2: string[] = ['Name', 'ID', 'Options'];
   public dataSource2 = new MatTableDataSource<IResource>();
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorUser') paginatorUser!: MatPaginator;
+  @ViewChild('paginatorResource') paginatorResource!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   public dialogRef?: MatDialogRef<any>;
@@ -120,7 +121,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.usersService.getAll().subscribe(
       users => {
         this.dataSource = new MatTableDataSource(users);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.paginatorUser;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
       },
@@ -136,7 +137,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.usersService.getByName(this.searchEmailUser).subscribe(
       users => {
         this.dataSource = new MatTableDataSource(users);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.paginatorUser;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
       },
@@ -329,7 +330,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.isInputReadOnly = false;
 
     this.dataSource2 = new MatTableDataSource();
-    this.dataSource2.paginator = this.paginator;
+    this.dataSource2.paginator = this.paginatorResource;
     this.dataSource2.sort = this.sort;
 
     this.informationField = "";
@@ -362,7 +363,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.resourcesService.getByUser(id).subscribe(
       resources => {
         this.dataSource2 = new MatTableDataSource(resources);
-        this.dataSource2.paginator = this.paginator;
+        this.dataSource2.paginator = this.paginatorResource;
         this.dataSource2.sort = this.sort;
       },
       error => {
@@ -441,7 +442,7 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.userResourceService.delete(userResourceId).subscribe(
           success => {
             this.dataSource2 = new MatTableDataSource(success);
-            this.dataSource2.paginator = this.paginator;
+            this.dataSource2.paginator = this.paginatorResource;
             this.dataSource2.sort = this.sort;
             this.messageHandler.showMessage("Recurso removido com sucesso!", "success-snackbar")
           },
@@ -467,7 +468,7 @@ export class GerenciarUsuariosComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSource2 = new MatTableDataSource(res);
-          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.paginator = this.paginatorResource;
           this.dataSource2.sort = this.sort;
         }
       }

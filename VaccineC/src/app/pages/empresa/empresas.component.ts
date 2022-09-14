@@ -70,7 +70,8 @@ export class EmpresasComponent implements OnInit {
   public scheduleColor: string = "#84d7b0";
   public CompanyIDParameter!: string;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorCompany') paginatorCompany!: MatPaginator;
+  @ViewChild('paginatorSchedule') paginatorSchedule!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public dialogRef?: MatDialogRef<any>;
   //Parameter form
@@ -119,7 +120,7 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         companies => {
           this.dataSource = new MatTableDataSource(companies);
-          this.dataSource.paginator = this.paginator;
+          this.dataSource.paginator = this.paginatorCompany;
           this.dataSource.sort = this.sort;
           this.searchButtonLoading = false;
         },
@@ -134,7 +135,7 @@ export class EmpresasComponent implements OnInit {
     this.companiesDispatcherService.getCompanyByName(this.searchCompanyName).subscribe(
       companies => {
         this.dataSource = new MatTableDataSource(companies);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.paginatorCompany;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
       },
@@ -377,7 +378,7 @@ export class EmpresasComponent implements OnInit {
       .subscribe(
         result => {
           this.dataSource2 = new MatTableDataSource(result);
-          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.paginator = this.paginatorSchedule;
           this.dataSource2.sort = this.sort;
         },
         error => {
@@ -397,7 +398,7 @@ export class EmpresasComponent implements OnInit {
         this.companiesSchedulesDispatcherService.delete(id).subscribe(
           success => {
             this.dataSource2 = new MatTableDataSource(success);
-            this.dataSource2.paginator = this.paginator;
+            this.dataSource2.paginator = this.paginatorSchedule;
             this.dataSource2.sort = this.sort;
             this.messageHandler.showMessage("Horáro excluído com sucesso!", "success-snackbar")
           },
@@ -424,7 +425,7 @@ export class EmpresasComponent implements OnInit {
     this.tabIsDisabled = true;
 
     this.dataSource2 = new MatTableDataSource();
-    this.dataSource2.paginator = this.paginator;
+    this.dataSource2.paginator = this.paginatorSchedule;
     this.dataSource2.sort = this.sort;
 
     this.informationField = "";
@@ -443,7 +444,7 @@ export class EmpresasComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSource2 = new MatTableDataSource(res);
-          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.paginator = this.paginatorSchedule;
           this.dataSource2.sort = this.sort;
         }
       }
@@ -463,7 +464,7 @@ export class EmpresasComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSource2 = new MatTableDataSource(res);
-          this.dataSource2.paginator = this.paginator;
+          this.dataSource2.paginator = this.paginatorSchedule;
           this.dataSource2.sort = this.sort;
         }
       }

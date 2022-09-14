@@ -46,6 +46,7 @@ export class ProdutoComponent implements OnInit {
   public isInputDisabled = false;
   public isInputReadOnly = false;
   public isNameProductReadonly = false;
+  public isVaccine = false;
 
   //Variáveis dos inputs
   public searchProductName!: string;
@@ -73,7 +74,8 @@ export class ProdutoComponent implements OnInit {
   public displayedColumnsBatches: string[] = ['Batch', 'ManufacturingDate', 'ValidityBatchDate', 'NumberOfUnitsBatch', 'Warning'];
   public dataSourceBatches = new MatTableDataSource<IProductSummariesBatches>();
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorProduct') paginatorProduct!: MatPaginator;
+  @ViewChild('paginatorDoses') paginatorDoses!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public dialogRef?: MatDialogRef<any>;
 
@@ -135,11 +137,21 @@ export class ProdutoComponent implements OnInit {
     }
   }
 
+  getProductIcon(sbimVaccinesId: string) {
+    console.log(sbimVaccinesId)
+    if (sbimVaccinesId == "" || sbimVaccinesId == null) {
+      return "OUTRO"
+    } else {
+      return "VACINA"
+    }
+  }
+
   public getAllProducts(): void {
     this.productsDispatcherService.getAllProducts()
       .subscribe(products => {
+        console.log(products)
         this.dataSource = new MatTableDataSource(products);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.paginatorProduct;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
       },
@@ -155,7 +167,7 @@ export class ProdutoComponent implements OnInit {
       .subscribe(
         products => {
           this.dataSource = new MatTableDataSource(products);
-          this.dataSource.paginator = this.paginator;
+          this.dataSource.paginator = this.paginatorProduct;
           this.dataSource.sort = this.sort;
           this.searchButtonLoading = false;
         },
@@ -170,11 +182,10 @@ export class ProdutoComponent implements OnInit {
     this.resetForms();
 
     this.dataSourceDoses = new MatTableDataSource();
-    this.dataSourceDoses.paginator = this.paginator;
+    this.dataSourceDoses.paginator = this.paginatorDoses;
     this.dataSourceDoses.sort = this.sort;
 
     this.dataSourceBatches = new MatTableDataSource();
-    this.dataSourceBatches.paginator = this.paginator;
     this.dataSourceBatches.sort = this.sort;
 
     this.sbimVaccinesId = '';
@@ -202,9 +213,9 @@ export class ProdutoComponent implements OnInit {
           this.minimumStock = product.MinimumStock;
           this.tabIsDisabled = false;
 
-          if(this.sbimVaccinesId == null || this.sbimVaccinesId == ""){
+          if (this.sbimVaccinesId == null || this.sbimVaccinesId == "") {
             this.isNameProductReadonly = false;
-          }else{
+          } else {
             this.isNameProductReadonly = true;
           }
 
@@ -224,7 +235,7 @@ export class ProdutoComponent implements OnInit {
       .subscribe(
         result => {
           this.dataSourceDoses = new MatTableDataSource(result);
-          this.dataSourceDoses.paginator = this.paginator;
+          this.dataSourceDoses.paginator = this.paginatorDoses;
           this.dataSourceDoses.sort = this.sort;
         },
         error => {
@@ -235,7 +246,6 @@ export class ProdutoComponent implements OnInit {
       .subscribe(
         result => {
           this.dataSourceBatches = new MatTableDataSource(result);
-          this.dataSourceBatches.paginator = this.paginator;
           this.dataSourceBatches.sort = this.sort;
         },
         error => {
@@ -398,7 +408,7 @@ export class ProdutoComponent implements OnInit {
       .subscribe(result => {
         if (result != "") {
           this.dataSourceDoses = new MatTableDataSource(result);
-          this.dataSourceDoses.paginator = this.paginator;
+          this.dataSourceDoses.paginator = this.paginatorDoses;
           this.dataSourceDoses.sort = this.sort;
         }
       });
@@ -417,7 +427,7 @@ export class ProdutoComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceDoses = new MatTableDataSource(res);
-          this.dataSourceDoses.paginator = this.paginator;
+          this.dataSourceDoses.paginator = this.paginatorDoses;
           this.dataSourceDoses.sort = this.sort;
         }
       }
@@ -433,7 +443,7 @@ export class ProdutoComponent implements OnInit {
         this.productsDosesDispatcherService.deleteProductDoses(id).subscribe(
           success => {
             this.dataSourceDoses = new MatTableDataSource(success);
-            this.dataSourceDoses.paginator = this.paginator;
+            this.dataSourceDoses.paginator = this.paginatorDoses;
             this.dataSourceDoses.sort = this.sort;
             this.messageHandler.showMessage("Dose removida com sucesso!", "success-snackbar")
           },
@@ -562,7 +572,7 @@ export class DialogContentDose implements OnInit {
     this.productsDosesDispatcherService.createProductDoses(productDoses).subscribe(
       response => {
         this.dialogRef.close(response);
-        this.messageHandler.showMessage("Doses incluídas com sucesso!", "success-snackbar")
+        this.messageHandler.showMessage("Dose incluída com sucesso!", "success-snackbar")
       },
       error => {
         this.dialogRef.close();
@@ -602,7 +612,6 @@ export class UpdateDialogContentDose implements OnInit {
   ) { }
 
   onSelectionChanged(value: any) {
-    console.log(value)
     if (value == "D1") {
       this.isDoseRangeMonthDisabled = true;
     } else if (value == "DU") {
@@ -625,6 +634,15 @@ export class UpdateDialogContentDose implements OnInit {
         this.productsId = result.ProductsId;
         this.doseType = result.DoseType;
         this.doseRangeMonth = result.DoseRangeMonth;
+
+        if (this.doseType == "D1") {
+          this.isDoseRangeMonthDisabled = true;
+        } else if (this.doseType == "DU") {
+          this.isDoseRangeMonthDisabled = true;
+        } else {
+          this.isDoseRangeMonthDisabled = false;
+        }
+
       },
       error => {
         console.log(error);
@@ -649,7 +667,7 @@ export class UpdateDialogContentDose implements OnInit {
       .subscribe(
         response => {
           this.dialogRef.close(response);
-          this.messageHandler.showMessage("Doses alteradas com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Dose alterada com sucesso!", "success-snackbar")
         },
         error => {
           this.dialogRef.close();

@@ -42,7 +42,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   displayedColumnsMovementProduct: string[] = ['UnitsNumber', 'Name', 'UnitaryValue', 'Amount', 'ID', 'Options'];
   public dataSourceMovementProduct = new MatTableDataSource<IMovementProduct>();
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorMovement') paginatorMovement!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   searchButtonLoading = false;
@@ -96,7 +96,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     this.movementService.getAll().subscribe(
       movements => {
         this.dataSource = new MatTableDataSource(movements);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.paginatorMovement;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
       },
@@ -111,7 +111,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     this.movementService.getAllByMovementNumber(this.searchMovementNumber).subscribe(
       movements => {
         this.dataSource = new MatTableDataSource(movements);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.paginatorMovement;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
       },
@@ -268,6 +268,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     this.isSaveButtonHidden = false;
     this.isFinishButtonHidden = true;
     this.isCancelButtonHidden = true;
+    this.informationField = '';
   }
 
   editMovement(id: string) {
@@ -296,7 +297,6 @@ export class MovimentarEstoqueComponent implements OnInit {
     this.movementProductService.getAllByMovementId(id).subscribe(
       movementProduct => {
         this.dataSourceMovementProduct = new MatTableDataSource(movementProduct);
-        this.dataSourceMovementProduct.paginator = this.paginator;
         this.dataSourceMovementProduct.sort = this.sort;
       },
       error => {
@@ -314,7 +314,6 @@ export class MovimentarEstoqueComponent implements OnInit {
         this.movementProductService.delete(id).subscribe(
           success => {
             this.dataSourceMovementProduct = new MatTableDataSource(success);
-            this.dataSourceMovementProduct.paginator = this.paginator;
             this.dataSourceMovementProduct.sort = this.sort;
             this.messageHandler.showMessage("Produto removido com sucesso!", "success-snackbar")
           },
@@ -352,7 +351,6 @@ export class MovimentarEstoqueComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceMovementProduct = new MatTableDataSource(res);
-          this.dataSourceMovementProduct.paginator = this.paginator;
           this.dataSourceMovementProduct.sort = this.sort;
         }
       }
@@ -374,7 +372,6 @@ export class MovimentarEstoqueComponent implements OnInit {
         (res) => {
           if (res != "") {
             this.dataSourceMovementProduct = new MatTableDataSource(res);
-            this.dataSourceMovementProduct.paginator = this.paginator;
             this.dataSourceMovementProduct.sort = this.sort;
           }
         }
@@ -392,7 +389,6 @@ export class MovimentarEstoqueComponent implements OnInit {
         (res) => {
           if (res != "") {
             this.dataSourceMovementProduct = new MatTableDataSource(res);
-            this.dataSourceMovementProduct.paginator = this.paginator;
             this.dataSourceMovementProduct.sort = this.sort;
           }
         }
@@ -415,7 +411,6 @@ export class MovimentarEstoqueComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceMovementProduct = new MatTableDataSource(res);
-          this.dataSourceMovementProduct.paginator = this.paginator;
           this.dataSourceMovementProduct.sort = this.sort;
         }
       }
@@ -428,7 +423,6 @@ export class MovimentarEstoqueComponent implements OnInit {
     this.movementForm.updateValueAndValidity();
 
     this.dataSourceMovementProduct = new MatTableDataSource();
-    this.dataSourceMovementProduct.paginator = this.paginator;
     this.dataSourceMovementProduct.sort = this.sort;
   }
 

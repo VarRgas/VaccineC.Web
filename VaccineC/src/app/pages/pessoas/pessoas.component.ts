@@ -91,7 +91,9 @@ export class PessoasComponent implements OnInit {
   public dialogRef?: MatDialogRef<any>;
   public response?: { dbPath: '' };
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorPerson') paginatorPerson!: MatPaginator;
+  @ViewChild('paginatorPhone') paginatorPhone!: MatPaginator;
+  @ViewChild('paginatorAddress') paginatorAddress!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   //Form de pessoas
@@ -193,7 +195,7 @@ export class PessoasComponent implements OnInit {
     this.personsDispatcherService.getAllPersons()
       .subscribe(persons => {
         this.dataSource = new MatTableDataSource(persons);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.paginatorPerson;
         this.dataSource.sort = this.sort;
         this.searchButtonLoading = false;
       },
@@ -209,7 +211,7 @@ export class PessoasComponent implements OnInit {
       .subscribe(
         persons => {
           this.dataSource = new MatTableDataSource(persons);
-          this.dataSource.paginator = this.paginator;
+          this.dataSource.paginator = this.paginatorPerson;
           this.dataSource.sort = this.sort;
           this.searchButtonLoading = false;
         },
@@ -248,7 +250,7 @@ export class PessoasComponent implements OnInit {
       .subscribe(
         result => {
           this.dataSourcePhone = new MatTableDataSource(result);
-          this.dataSourcePhone.paginator = this.paginator;
+          this.dataSourcePhone.paginator = this.paginatorPhone;
           this.dataSourcePhone.sort = this.sort;
         },
         error => {
@@ -259,7 +261,7 @@ export class PessoasComponent implements OnInit {
       .subscribe(
         result => {
           this.dataSourceAddress = new MatTableDataSource(result);
-          this.dataSourceAddress.paginator = this.paginator;
+          this.dataSourceAddress.paginator = this.paginatorAddress;
           this.dataSourceAddress.sort = this.sort;
         },
         error => {
@@ -280,11 +282,11 @@ export class PessoasComponent implements OnInit {
     this.profilePic = '';
 
     this.dataSourcePhone = new MatTableDataSource();
-    this.dataSourcePhone.paginator = this.paginator;
+    this.dataSourcePhone.paginator = this.paginatorPhone;
     this.dataSourcePhone.sort = this.sort;
 
     this.dataSourceAddress = new MatTableDataSource();
-    this.dataSourceAddress.paginator = this.paginator;
+    this.dataSourceAddress.paginator = this.paginatorAddress;
     this.dataSourceAddress.sort = this.sort;
   }
 
@@ -678,7 +680,7 @@ export class PessoasComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourcePhone = new MatTableDataSource(res);
-          this.dataSourcePhone.paginator = this.paginator;
+          this.dataSourcePhone.paginator = this.paginatorPhone;
           this.dataSourcePhone.sort = this.sort;
         }
       }
@@ -698,7 +700,7 @@ export class PessoasComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceAddress = new MatTableDataSource(res);
-          this.dataSourceAddress.paginator = this.paginator;
+          this.dataSourceAddress.paginator = this.paginatorAddress;
           this.dataSourceAddress.sort = this.sort;
         }
       }
@@ -714,7 +716,7 @@ export class PessoasComponent implements OnInit {
         this.personsPhonesDispatcherService.delete(id).subscribe(
           success => {
             this.dataSourcePhone = new MatTableDataSource(success);
-            this.dataSourcePhone.paginator = this.paginator;
+            this.dataSourcePhone.paginator = this.paginatorPhone;
             this.dataSourcePhone.sort = this.sort;
             this.messageHandler.showMessage("Telefone removido com sucesso!", "success-snackbar")
           },
@@ -736,7 +738,7 @@ export class PessoasComponent implements OnInit {
         this.personsAddressesDispatcherService.delete(id).subscribe(
           success => {
             this.dataSourceAddress = new MatTableDataSource(success);
-            this.dataSourceAddress.paginator = this.paginator;
+            this.dataSourceAddress.paginator = this.paginatorAddress;
             this.dataSourceAddress.sort = this.sort;
             this.messageHandler.showMessage("Endereço removido com sucesso!", "success-snackbar")
           },
@@ -791,7 +793,7 @@ export class PessoasComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourcePhone = new MatTableDataSource(res);
-          this.dataSourcePhone.paginator = this.paginator;
+          this.dataSourcePhone.paginator = this.paginatorPhone;
           this.dataSourcePhone.sort = this.sort;
         }
       }
@@ -810,7 +812,7 @@ export class PessoasComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceAddress = new MatTableDataSource(res);
-          this.dataSourceAddress.paginator = this.paginator;
+          this.dataSourceAddress.paginator = this.paginatorAddress;
           this.dataSourceAddress.sort = this.sort;
         }
       }

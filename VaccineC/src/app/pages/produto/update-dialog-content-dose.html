@@ -9,7 +9,8 @@
                             formControlName="DoseType"
                             [(ngModel)]="doseType"
                             id="doseType"
-                            required="true">
+                            required
+                            (selectionChange)="onSelectionChanged($event.value)">
                     <mat-option selected value="D1">DOSE 1</mat-option>
                     <mat-option value="D2">DOSE 2</mat-option>
                     <mat-option value="D3">DOSE 3</mat-option>

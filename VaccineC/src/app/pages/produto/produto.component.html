@@ -39,7 +39,12 @@
                 <!-- Product name -->
                 <ng-container matColumnDef="Name">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Produto </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{row.Name}} </mat-cell>
+                  <mat-cell *matCellDef="let row">      
+                    <div>
+                      <div>{{row.Name}}</div>
+                      <div class="small-text">{{getProductIcon(row.SbimVaccinesId)}}</div>
+                    </div>
+                  </mat-cell>
                 </ng-container>
 
                 <!-- Valor de venda -->
@@ -71,7 +76,7 @@
                   <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
                 </tr>
               </table>
-              <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+              <mat-paginator #paginatorProduct="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
             </div>
           </div>
         </mat-tab>
@@ -249,7 +254,7 @@
                 </tr>
 
               </table>
-              <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+              <mat-paginator #paginatorDoses="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
             </div>
           </div>
           <button mat-fab
