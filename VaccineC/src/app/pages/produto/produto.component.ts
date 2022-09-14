@@ -363,7 +363,7 @@ export class ProdutoComponent implements OnInit {
   }
 
   public openDoseDialog(): void {
-    const dialogRef = this.dialog.open(DialogContentDose, {
+    this.dialogRef = this.dialog.open(DialogContentDose, {
       disableClose: true,
       width: '40vw',
       data: {
@@ -371,7 +371,7 @@ export class ProdutoComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed()
+    this.dialogRef.afterClosed()
       .subscribe(result => {
         if (result != "") {
           this.dataSourceDoses = new MatTableDataSource(result);
@@ -489,7 +489,6 @@ export class DialogContentDose implements OnInit {
   public productsId!: string;
   public doseType!: string;
   public doseRangeMonth!: number;
-  public informationField!: string;
 
   //Form de doses
   public productDosesForm: FormGroup = this.formBuilder.group({
@@ -540,7 +539,6 @@ export class UpdateDialogContentDose implements OnInit {
   public productsId!: string;
   public doseType!: string;
   public doseRangeMonth!: number;
-  public informationField!: string;
 
   //Form de doses
   public productDosesForm: FormGroup = this.formBuilder.group({
