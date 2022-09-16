@@ -29,10 +29,7 @@ import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
-import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-resumo.component';
 import { NgChartsModule } from 'ng2-charts';
-import { MovimentarEstoquePesquisaComponent } from './pages/movimentar-estoque/movimentar-estoque-pesquisa/movimentar-estoque-pesquisa.component';
-import { MovimentarEstoqueCadastroComponent, ProductDialog } from './pages/movimentar-estoque/movimentar-estoque-cadastro/movimentar-estoque-cadastro.component';
 import { SituacaoEstoqueMinimoComponent } from './pages/situacao-estoque/situacao-estoque-minimo/situacao-estoque-minimo.component';
 import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situacao-estoque-projecao/situacao-estoque-projecao.component';
 import { OrcamentoPesquisaComponent } from './pages/orcamentos/orcamento-pesquisa/orcamento-pesquisa.component';
@@ -81,14 +78,10 @@ registerLocaleData(localePt, 'pt');
     DialogContentScheduleDialog,
     ConfirmCompanyRemoveDialog,
     ConfirmPersonRemoveDialog,
-    ProdutoResumoComponent,
     DialogContentDose,
     UserResourceAddDialog,
     PasswordDialog,
     ResetPasswordDialog,
-    MovimentarEstoquePesquisaComponent,
-    MovimentarEstoqueCadastroComponent,
-    ProductDialog,
     SituacaoEstoqueMinimoComponent,
     SituacaoEstoqueProjecaoComponent,
     OrcamentoPesquisaComponent,
