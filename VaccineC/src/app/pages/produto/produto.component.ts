@@ -501,8 +501,8 @@ export class ProdutoComponent implements OnInit {
   }
 
   public isExpired(numberOfUnitsBatch: number, validityBatchDate: string) {
-    const validityDateStr = validityBatchDate.split("T")[0];
-    let validityDate = new Date(validityDateStr);
+
+    let validityDate = new Date(validityBatchDate);
     let dateNow = new Date();
     if (numberOfUnitsBatch > 0 && validityDate.getTime() < dateNow.getTime()) {
       return true;

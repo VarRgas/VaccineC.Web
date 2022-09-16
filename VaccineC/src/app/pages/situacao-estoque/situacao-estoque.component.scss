@@ -28,14 +28,6 @@
   border: none
 }
 
-:host ::ng-deep .mat-table {
-  border-radius: 0.75rem;
-  box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 7%), 0px 3px 4px 0px rgb(0 0 0 / 7%), 0px 1px 8px 0px rgb(0 0 0 / 7%);
-}
-
-:host ::ng-deep .mat-cell {
-  font-size: 12px !important;
-}
 
 .search-group {
   display: flex;
@@ -44,4 +36,14 @@
   align-items: center;
   font-size: 14px;
   margin-bottom: 2rem;
+}
+
+.mat-column-Warning {
+  flex: 0 0 50px !important;
+  white-space: unset !important;
+}
+
+.mat-cell-Warning {
+  flex: 0 0 50px !important;
+  white-space: unset !important;
 }

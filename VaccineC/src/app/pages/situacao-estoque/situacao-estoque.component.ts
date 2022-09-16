@@ -22,10 +22,10 @@ export class SituacaoEstoqueComponent implements OnInit {
 
   //Table lotes a vencer
   public value = '';
-  public displayedColumns: string[] = ['Product', 'Batch', 'ValidityBatchDate', 'ID'];
+  public displayedColumns: string[] = ['Product', 'Batch', 'ValidityBatchDate', 'Warning', 'ID'];
   public dataSource = new MatTableDataSource<IBatch>();
 
-  @ViewChild('paginatorBatch') paginatorBatch!: MatPaginator;
+  @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
@@ -42,7 +42,7 @@ export class SituacaoEstoqueComponent implements OnInit {
       .subscribe(
         batchs => {
           this.dataSource = new MatTableDataSource(batchs);
-          this.dataSource.paginator = this.paginatorBatch;
+          this.dataSource.paginator = this.paginatorExpiredBatch;
           this.dataSource.sort = this.sort;
           this.searchButtonLoading = false;
         },
@@ -51,5 +51,29 @@ export class SituacaoEstoqueComponent implements OnInit {
           this.errorHandler.handleError(error);
           this.searchButtonLoading = false;
         });
+  }
+
+  getSituationValidityDanger(validityBatchDate: string) {
+
+    const validityBatchDateFormat = new Date(validityBatchDate);
+    const dateNow = new Date();
+
+    if (validityBatchDateFormat < dateNow) {
+      return false;
+    }
+
+    return true;
+  }
+
+  getSituationValidityWarning(validityBatchDate: string) {
+
+    const validityBatchDateFormat = new Date(validityBatchDate);
+    const dateNow = new Date();
+
+    if (validityBatchDateFormat > dateNow && validityBatchDateFormat.getMonth() == dateNow.getMonth() && validityBatchDateFormat.getFullYear() == dateNow.getFullYear()) {
+      return false;
+    }
+
+    return true;
   }
 }
