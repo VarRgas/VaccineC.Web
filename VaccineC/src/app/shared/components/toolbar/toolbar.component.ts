@@ -17,13 +17,21 @@ export class ToolbarComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    
-    this.userId = localStorage.getItem('userId')!;
-    this.userPersonName = localStorage.getItem('name')!;
 
-    if(localStorage.getItem('profilePic') == "null"){
+    this.userId = localStorage.getItem('userId')!;
+
+    let userPersonName = localStorage.getItem('name')!;
+    let userPersonNameArray = userPersonName.split(" ");
+
+    if (userPersonNameArray.length == 1) {
+      this.userPersonName = userPersonName;
+    } else {
+      this.userPersonName = userPersonNameArray[0] + " " + userPersonNameArray[userPersonNameArray.length - 1];
+    }
+
+    if (localStorage.getItem('profilePic') == "null") {
       this.userPersonProfilePic = `${this.imagePathUrlDefault}`;
-    }else{
+    } else {
       let profilePic = localStorage.getItem('profilePic')!;
       this.userPersonProfilePic = `${this.imagePathUrl}${profilePic}`
     }
@@ -38,7 +46,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   isOpenChange(): void {
-   
+
   }
 
 }

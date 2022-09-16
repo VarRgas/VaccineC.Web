@@ -18,6 +18,7 @@ export class MinhaContaComponent implements OnInit {
 
   public userId = "";
   public userPersonName = "";
+  public userPersonNameComplete = "";
   public userFunction = "";
   public userEmail = "";
   public userPersonProfilePic = "";
@@ -48,7 +49,16 @@ export class MinhaContaComponent implements OnInit {
         this.getPrincipalPersonAddress(user.Person.ID);
         this.getPrincipalPersonPhone(user.Person.ID);
 
-        this.userPersonName = user.Person.Name;
+        let userPersonName = user.Person.Name;
+        let userPersonNameArray = userPersonName.split(" ");
+
+        if (userPersonNameArray.length == 1) {
+          this.userPersonName = userPersonName;
+        } else {
+          this.userPersonName = userPersonNameArray[0] + " " + userPersonNameArray[userPersonNameArray.length - 1];
+        }
+
+        this.userPersonNameComplete = userPersonName;
         this.userEmail = user.Email;
         this.userFunction = user.Function;
 
