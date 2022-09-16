@@ -33,7 +33,6 @@ import { ProdutoResumoComponent } from './pages/produto/produto-resumo/produto-r
 import { NgChartsModule } from 'ng2-charts';
 import { MovimentarEstoquePesquisaComponent } from './pages/movimentar-estoque/movimentar-estoque-pesquisa/movimentar-estoque-pesquisa.component';
 import { MovimentarEstoqueCadastroComponent, ProductDialog } from './pages/movimentar-estoque/movimentar-estoque-cadastro/movimentar-estoque-cadastro.component';
-import { SituacaoEstoqueLotesComponent } from './pages/situacao-estoque/situacao-estoque-lotes/situacao-estoque-lotes.component';
 import { SituacaoEstoqueMinimoComponent } from './pages/situacao-estoque/situacao-estoque-minimo/situacao-estoque-minimo.component';
 import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situacao-estoque-projecao/situacao-estoque-projecao.component';
 import { OrcamentoPesquisaComponent } from './pages/orcamentos/orcamento-pesquisa/orcamento-pesquisa.component';
@@ -90,7 +89,6 @@ registerLocaleData(localePt, 'pt');
     MovimentarEstoquePesquisaComponent,
     MovimentarEstoqueCadastroComponent,
     ProductDialog,
-    SituacaoEstoqueLotesComponent,
     SituacaoEstoqueMinimoComponent,
     SituacaoEstoqueProjecaoComponent,
     OrcamentoPesquisaComponent,
