@@ -25,7 +25,12 @@ export class SituacaoEstoqueComponent implements OnInit {
   public displayedColumns: string[] = ['Product', 'Batch', 'ValidityBatchDate', 'Warning', 'ID'];
   public dataSource = new MatTableDataSource<IBatch>();
 
+  //Table Abaixo do estoque minimo
+  public displayedColumns2: string[] = ['Product', 'Batch', 'MinimumStock', 'Total', 'ID'];
+  public dataSource2 = new MatTableDataSource<IBatch>();
+
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
+  @ViewChild('paginatorBelowMinimumStock') paginatorBelowMinimumStock!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
@@ -35,6 +40,7 @@ export class SituacaoEstoqueComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllSummaryBatchs();
+    this.getBatchsBelowMinimumStock();
   }
 
   public getAllSummaryBatchs(): void {
@@ -44,6 +50,22 @@ export class SituacaoEstoqueComponent implements OnInit {
           this.dataSource = new MatTableDataSource(batchs);
           this.dataSource.paginator = this.paginatorExpiredBatch;
           this.dataSource.sort = this.sort;
+          this.searchButtonLoading = false;
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+          this.searchButtonLoading = false;
+        });
+  }
+
+  public getBatchsBelowMinimumStock(): void {
+    this.productsSummariesBatchesDispatcherService.getAllBatchsBelowMinimumStock()
+      .subscribe(
+        batchs => {
+          this.dataSource2 = new MatTableDataSource(batchs);
+          this.dataSource2.paginator = this.paginatorBelowMinimumStock;
+          this.dataSource2.sort = this.sort;
           this.searchButtonLoading = false;
         },
         error => {

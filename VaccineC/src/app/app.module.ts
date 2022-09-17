@@ -30,11 +30,10 @@ import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-c
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
 import { NgChartsModule } from 'ng2-charts';
-import { SituacaoEstoqueMinimoComponent } from './pages/situacao-estoque/situacao-estoque-minimo/situacao-estoque-minimo.component';
 import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situacao-estoque-projecao/situacao-estoque-projecao.component';
 import { OrcamentoPesquisaComponent } from './pages/orcamentos/orcamento-pesquisa/orcamento-pesquisa.component';
 import { OrcamentoCadastroComponent, BudgetProductDialog } from './pages/orcamentos/orcamento-cadastro/orcamento-cadastro.component';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskModule } from 'ngx-mask'
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AplicacaoCadastroComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao-cadastro/aplicacao-cadastro.component';
 import { AplicacaoPesquisaComponent } from './pages/aplicacao/aplicacao-pesquisa/aplicacao-pesquisa.component';
@@ -82,7 +81,6 @@ registerLocaleData(localePt, 'pt');
     UserResourceAddDialog,
     PasswordDialog,
     ResetPasswordDialog,
-    SituacaoEstoqueMinimoComponent,
     SituacaoEstoqueProjecaoComponent,
     OrcamentoPesquisaComponent,
     OrcamentoCadastroComponent,

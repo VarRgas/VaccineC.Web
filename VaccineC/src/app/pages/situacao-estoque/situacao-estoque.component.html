@@ -11,37 +11,94 @@
                                 <h6 class="m-0 font-weight-bold text-gray-600">Lotes a Vencer</h6>
                             </div>
                             <div class="card-body">
+                              <div class="card-area">
                                 <div id="search-table">
+                                  <div class="col-sm-11 search-table-content mat-elevation-z2">
+                                      <mat-table [dataSource]="dataSource" class="col-sm-12">
+                                          <!-- PRODUCT -->
+                                          <ng-container matColumnDef="Product">
+                                              <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+                                              <mat-cell *matCellDef="let element"> {{element.Products.Name}}
+                                              </mat-cell>
+                                          </ng-container>
+
+                                          <!-- BATCH -->
+                                          <ng-container matColumnDef="Batch">
+                                              <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
+                                              <mat-cell *matCellDef="let element"> {{element.Batch}} </mat-cell>
+                                          </ng-container>
+
+                                          <!-- VALIDADE -->
+                                          <ng-container matColumnDef="ValidityBatchDate">
+                                              <mat-header-cell *matHeaderCellDef> Validade </mat-header-cell>
+                                              <mat-cell *matCellDef="let element"> {{element.ValidityBatchDate | date:
+                                                  'dd/MM/yyyy'}} </mat-cell>
+                                          </ng-container>
+
+                                          <!-- ICONS -->
+                                          <ng-container matColumnDef="Warning">
+                                              <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                                              <mat-cell *matCellDef="let element">
+                                                  <i title="A Vencer" class="fa-solid fa-circle-exclamation" style="color:#FFCA2C;margin:5px" [hidden]="getSituationValidityWarning(element.ValidityBatchDate)"></i>
+                                                  <i title="Vencido" class="fa-solid fa-circle-exclamation fa-beat" style="color:#DC3545;margin:5px" [hidden]="getSituationValidityDanger(element.ValidityBatchDate)"></i>
+                                              </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Id Hidden Column -->
+                                          <ng-container matColumnDef="ID">
+                                              <th *matHeaderCellDef mat-header-cell [hidden]="show"> ID </th>
+                                              <td mat-cell [hidden]="show" *matCellDef="let row">
+                                                  {{row.ID}} </td>
+                                          </ng-container>
+
+                                          <!-- Row shown when there is no matching data. -->
+                                          <tr class="mat-row" *matNoDataRow>
+                                              <td class="mat-cell" colspan="3">Nenhum registro encontrado.</td>
+                                          </tr>
+
+                                          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                      </mat-table>
+                                      <mat-paginator #paginatorExpiredBatch="matPaginator" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+                                  </div>
+                               </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 minimum-stock">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-gray-600">Abaixo do estoque Mínimo</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-area">
+                                  <div id="search-table">
                                     <div class="col-sm-11 search-table-content mat-elevation-z2">
-                                        <mat-table [dataSource]="dataSource" class="col-sm-12">
+                                        <mat-table [dataSource]="dataSource2" class="col-sm-12">
                                             <!-- PRODUCT -->
-                                            <ng-container matColumnDef="Product">
-                                                <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
-                                                <mat-cell *matCellDef="let element"> {{element.Products.Name}}
-                                                </mat-cell>
-                                            </ng-container>
+                                          <ng-container matColumnDef="Product">
+                                            <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+                                            <mat-cell *matCellDef="let row"> {{row.Products.Name}} </mat-cell>
+                                          </ng-container>
 
-                                            <!-- BATCH -->
-                                            <ng-container matColumnDef="Batch">
-                                                <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
-                                                <mat-cell *matCellDef="let element"> {{element.Batch}} </mat-cell>
-                                            </ng-container>
+                                          <!-- BATCH -->
+                                          <ng-container matColumnDef="Batch">
+                                            <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
+                                            <mat-cell *matCellDef="let row"> {{row.Batch}} </mat-cell>
+                                          </ng-container>
 
-                                            <!-- VALIDADE -->
-                                            <ng-container matColumnDef="ValidityBatchDate">
-                                                <mat-header-cell *matHeaderCellDef> Validade </mat-header-cell>
-                                                <mat-cell *matCellDef="let element"> {{element.ValidityBatchDate | date:
-                                                    'dd/MM/yyyy'}} </mat-cell>
-                                            </ng-container>
+                                          <!-- ESTOQUE MINIMO -->
+                                          <ng-container matColumnDef="MinimumStock">
+                                              <mat-header-cell *matHeaderCellDef> Estoque Mínimo </mat-header-cell>
+                                              <mat-cell *matCellDef="let row"> {{row.Products.MinimumStock}} </mat-cell>
+                                          </ng-container>
 
-                                            <!-- ICONS -->
-                                            <ng-container matColumnDef="Warning">
-                                                <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
-                                                <mat-cell *matCellDef="let element"> 
-                                                    <i title="A Vencer" class="fa-solid fa-circle-exclamation" style="color:#FFCA2C;margin:5px" [hidden]="getSituationValidityWarning(element.ValidityBatchDate)"></i>
-                                                    <i title="Vencido" class="fa-solid fa-circle-exclamation fa-beat" style="color:#DC3545;margin:5px" [hidden]="getSituationValidityDanger(element.ValidityBatchDate)"></i>
-                                                </mat-cell>
-                                            </ng-container>
+                                          <!-- TOTAL -->
+                                          <ng-container matColumnDef="Total">
+                                              <mat-header-cell *matHeaderCellDef> Total </mat-header-cell>
+                                              <mat-cell *matCellDef="let row"> {{row.NumberOfUnitsBatch}} </mat-cell>
+                                          </ng-container>
 
                                             <!-- Id Hidden Column -->
                                             <ng-container matColumnDef="ID">
@@ -55,23 +112,12 @@
                                                 <td class="mat-cell" colspan="3">Nenhum registro encontrado.</td>
                                             </tr>
 
-                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                            <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+                                            <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
                                         </mat-table>
-                                        <mat-paginator #paginatorExpiredBatch="matPaginator" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+                                        <mat-paginator #paginatorBelowMinimumStock="matPaginator" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 minimum-stock">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-gray-600">Abaixo do estoque Mínimo</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-area">
-                                    <app-situacao-estoque-minimo></app-situacao-estoque-minimo>
                                 </div>
                             </div>
                         </div>

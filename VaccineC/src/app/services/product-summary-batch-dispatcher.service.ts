@@ -16,6 +16,10 @@ export class ProductsSummariesBatchesDispatcherService {
         return this.httpClient.get(baseURL);
     }
 
+    public getAllBatchsBelowMinimumStock(): Observable<any> {
+      return this.httpClient.get(`${baseURL}/GetAllBelowMinimumStock`);
+    }
+
     public getProductsSummariesBatchesById(id: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${id}`);
     }
