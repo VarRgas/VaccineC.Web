@@ -185,3 +185,18 @@ html {
   font-weight: normal !important;
 }
 
+tr.hover-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke !important;
+}
+
+tr.hover-element-row:not(.example-expanded-row):active {
+  background: #efefef !important;
+}
+
+.hover-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke !important;
+}
+
+.hover-element-row:not(.example-expanded-row):active {
+  background: #efefef !important;
+}

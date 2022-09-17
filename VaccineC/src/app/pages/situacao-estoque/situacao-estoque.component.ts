@@ -1,10 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IBatch } from 'src/app/interfaces/i-batch';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 
 @Component({
@@ -26,25 +29,37 @@ export class SituacaoEstoqueComponent implements OnInit {
   public dataSource = new MatTableDataSource<IBatch>();
 
   //Table Abaixo do estoque minimo
-  public displayedColumns2: string[] = ['Product', 'Batch', 'MinimumStock', 'Total', 'ID'];
+  public displayedColumns2: string[] = ['Product', 'Batch', 'MinimumStock', 'Total', 'Warning', 'ID'];
   public dataSource2 = new MatTableDataSource<IBatch>();
 
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
   @ViewChild('paginatorBelowMinimumStock') paginatorBelowMinimumStock!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  public dialogRef?: MatDialogRef<any>;
+
   constructor(
     private productsSummariesBatchesDispatcherService: ProductsSummariesBatchesDispatcherService,
     private errorHandler: ErrorHandlerService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.getAllSummaryBatchs();
+    this.getNotEmptySummaryBatchs();
     this.getBatchsBelowMinimumStock();
   }
 
-  public getAllSummaryBatchs(): void {
-    this.productsSummariesBatchesDispatcherService.getAllProductsSummariesBatches()
+  public getMinimumDanger(minimumStock: number, units: number): boolean {
+    let halfOfminimumStock = minimumStock / 2;
+    if (units < halfOfminimumStock) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public getNotEmptySummaryBatchs(): void {
+    this.productsSummariesBatchesDispatcherService.getNotEmptyProductsSummariesBatches()
       .subscribe(
         batchs => {
           this.dataSource = new MatTableDataSource(batchs);
@@ -98,4 +113,60 @@ export class SituacaoEstoqueComponent implements OnInit {
 
     return true;
   }
+
+  public openInformationBatch(id: string): void {
+    this.dialogRef = this.dialog.open(BatchInformationDialog, {
+      disableClose: true,
+      width: '50vw',
+      data: {
+        ID: id
+      },
+    });
+  }
+
+}
+
+@Component({
+  selector: 'batch-information-dialog',
+  templateUrl: 'batch-information-dialog.html',
+})
+export class BatchInformationDialog implements OnInit {
+
+  id!: string;
+  ValidityBatchDate!: Date;
+  ManufacturingDate!: Date;
+  Batch!: string;
+  Manufacturer!: string;
+  NumberOfUnitsBatch!: number;
+  Product!: string;
+
+  ngOnInit(): void {
+    this.id = this.data.ID;
+    this.getProductSummaryBatchById(this.id);
+  }
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<BatchInformationDialog>,
+    private messageHandler: MessageHandlerService,
+    private productSummaryBatchDispatcherService: ProductsSummariesBatchesDispatcherService,
+  ) { }
+
+  public getProductSummaryBatchById(id: string): void {
+    this.productSummaryBatchDispatcherService.getProductsSummariesBatchesById(id).subscribe(
+      productSummaryBatch => {
+        console.log(productSummaryBatch)
+        this.Batch = productSummaryBatch.Batch;
+        this.Manufacturer = productSummaryBatch.Manufacturer;
+        this.ValidityBatchDate = productSummaryBatch.ValidityBatchDate;
+        this.ManufacturingDate = productSummaryBatch.ManufacturingDate;
+        this.NumberOfUnitsBatch = productSummaryBatch.NumberOfUnitsBatch;
+        this.Product = productSummaryBatch.Products.Name;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
 }

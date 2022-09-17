@@ -28,7 +28,6 @@
   border: none
 }
 
-
 .search-group {
   display: flex;
   flex-direction: row;
@@ -38,12 +37,18 @@
   margin-bottom: 2rem;
 }
 
-.mat-column-Warning {
+.mat-column-Warning, .mat-column-Total {
   flex: 0 0 50px !important;
   white-space: unset !important;
 }
 
-.mat-cell-Warning {
+.mat-cell-Warning, .mat-column-Total {
   flex: 0 0 50px !important;
   white-space: unset !important;
+}
+
+.information-batch {
+  cursor: pointer;
+  color: var(--cor-produto);
+  text-decoration: underline;
 }

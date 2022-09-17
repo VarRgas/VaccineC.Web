@@ -6,14 +6,14 @@
             <div id="is-content" class="flex-1 is-content is-content-grow">
                 <div class="row">
                     <div class="col-sm-6 expired-lots">
-                        <div class="card shadow mb-4">
+                        <div class="card shadow mb-4 h-100">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-gray-600">Lotes a Vencer</h6>
                             </div>
                             <div class="card-body">
-                              <div class="card-area">
+                              <div class="card-area h-100">
                                 <div id="search-table">
-                                  <div class="col-sm-11 search-table-content mat-elevation-z2">
+                                  <div class="col-sm-12 search-table-content mat-elevation-z2">
                                       <mat-table [dataSource]="dataSource" class="col-sm-12">
                                           <!-- PRODUCT -->
                                           <ng-container matColumnDef="Product">
@@ -25,14 +25,15 @@
                                           <!-- BATCH -->
                                           <ng-container matColumnDef="Batch">
                                               <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
-                                              <mat-cell *matCellDef="let element"> {{element.Batch}} </mat-cell>
+                                              <mat-cell *matCellDef="let element"> 
+                                                <span title="Informações do Lote" class="information-batch" (click)="openInformationBatch(element.ID)">{{element.Batch}}</span>
+                                              </mat-cell>
                                           </ng-container>
 
                                           <!-- VALIDADE -->
                                           <ng-container matColumnDef="ValidityBatchDate">
                                               <mat-header-cell *matHeaderCellDef> Validade </mat-header-cell>
-                                              <mat-cell *matCellDef="let element"> {{element.ValidityBatchDate | date:
-                                                  'dd/MM/yyyy'}} </mat-cell>
+                                              <mat-cell *matCellDef="let element"> {{element.ValidityBatchDate | date: 'dd/MM/yyyy'}} </mat-cell>
                                           </ng-container>
 
                                           <!-- ICONS -->
@@ -67,14 +68,14 @@
                         </div>
                     </div>
                     <div class="col-sm-6 minimum-stock">
-                        <div class="card shadow mb-4">
+                        <div class="card shadow mb-4 h-100">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-gray-600">Abaixo do estoque Mínimo</h6>
                             </div>
                             <div class="card-body">
-                                <div class="card-area">
+                                <div class="card-area h-100">
                                   <div id="search-table">
-                                    <div class="col-sm-11 search-table-content mat-elevation-z2">
+                                    <div class="col-sm-12 search-table-content mat-elevation-z2">
                                         <mat-table [dataSource]="dataSource2" class="col-sm-12">
                                             <!-- PRODUCT -->
                                           <ng-container matColumnDef="Product">
@@ -85,7 +86,9 @@
                                           <!-- BATCH -->
                                           <ng-container matColumnDef="Batch">
                                             <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
-                                            <mat-cell *matCellDef="let row"> {{row.Batch}} </mat-cell>
+                                            <mat-cell *matCellDef="let row">
+                                                <span title="Informações do Lote" class="information-batch" (click)="openInformationBatch(row.ID)">{{row.Batch}} </span>
+                                            </mat-cell>
                                           </ng-container>
 
                                           <!-- ESTOQUE MINIMO -->
@@ -99,6 +102,14 @@
                                               <mat-header-cell *matHeaderCellDef> Total </mat-header-cell>
                                               <mat-cell *matCellDef="let row"> {{row.NumberOfUnitsBatch}} </mat-cell>
                                           </ng-container>
+
+                                          
+                                          <!-- TOTAL -->
+                                          <ng-container matColumnDef="Warning">
+                                            <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                                            <mat-cell *matCellDef="let row">
+                                                <i title="Abaixo da metade" class="fa-solid fa-circle-exclamation fa-beat" style="color:#DC3545;margin:5px" [hidden]="getMinimumDanger(row.Products.MinimumStock, row.NumberOfUnitsBatch)"></i>                                            </mat-cell>
+                                        </ng-container>
 
                                             <!-- Id Hidden Column -->
                                             <ng-container matColumnDef="ID">
@@ -123,7 +134,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 schedule-projection">
+                    <div class="col-sm-12 schedule-projection mt-3">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-gray-600">Projeção de Agendamentos: Agosto/2022

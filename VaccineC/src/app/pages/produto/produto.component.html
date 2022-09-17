@@ -70,7 +70,7 @@
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="editProduct(row.ID)" (dblclick)="tabGroup.selectedIndex=1" style="cursor:pointer;"></mat-row>
+                <mat-row class="hover-element-row" *matRowDef="let row; columns: displayedColumns;" (dblclick)="editProduct(row.ID)" (dblclick)="tabGroup.selectedIndex=1" style="cursor:pointer;"></mat-row>
 
                 <tr class="mat-row" *matNoDataRow>
                   <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
