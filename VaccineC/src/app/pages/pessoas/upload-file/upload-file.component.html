@@ -1,6 +1,2 @@
-<div class="row" style="margin-bottom: 15px">
-  <div class="col-md-3">
-    <input type="file" accept="image/*" #file placeholder="Escolha uma imagem" (change)="uploadFile(file.files)" style="display: none">
-    <button mat-raised-button color="primary" type="button" class="btn btn-success" (click)="file.click()" matTooltip="Inserir uma Foto" matTooltipPosition="left"><i class="fa-solid fa-cloud-arrow-up"></i></button>
-  </div>
-</div>
+<input type="file" accept="image/*" #file placeholder="Escolha uma imagem" (change)="uploadFile(file.files)" style="display: none">
+<button mat-mini-fab color="primary" type="button" class="btn btn-success" (click)="file.click()" matTooltip="Inserir uma Foto" matTooltipPosition="left"><i class="fa-solid fa-cloud-arrow-up"></i></button>

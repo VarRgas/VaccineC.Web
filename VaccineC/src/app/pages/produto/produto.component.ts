@@ -79,6 +79,11 @@ export class ProdutoComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   public dialogRef?: MatDialogRef<any>;
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceBatches.filter = filterValue.trim().toLowerCase();
+  }
+
   onChanged(value: any): void {
 
     if (value == "") {

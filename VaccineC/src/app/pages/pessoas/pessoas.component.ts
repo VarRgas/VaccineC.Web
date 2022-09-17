@@ -77,7 +77,7 @@ export class PessoasComponent implements OnInit {
 
   //Table Search
   public value = '';
-  public displayedColumns: string[] = ['Name', 'CommemorativeDate', 'PersonType', 'ID', 'Options'];
+  public displayedColumns: string[] = ['Name', 'Email', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IPerson>();
 
   //Table Phones
@@ -135,7 +135,19 @@ export class PessoasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //this.getAllPersons();
+  }
+
+  public isPerson(personType: string): boolean {
+    if(personType == "F"){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  public removeImage(): void {
+    this.profilePicExhibition = `${this.imagePathUrlDefault}`;
+    this.profilePic = '';    
   }
 
   public uploadFinished = (event: any) => {
@@ -207,7 +219,10 @@ export class PessoasComponent implements OnInit {
   }
 
   public getPersonsByName(): void {
-    this.personsDispatcherService.getPersonsByName(this.searchPersonName)
+
+    const searchPersonNameFormated = this.searchPersonName.replace(/[^a-zA-Z0-9 ]/g, '');
+
+    this.personsDispatcherService.getPersonsByName(searchPersonNameFormated)
       .subscribe(
         persons => {
           this.dataSource = new MatTableDataSource(persons);
@@ -307,7 +322,6 @@ export class PessoasComponent implements OnInit {
     person.profilePic = this.profilePic;
     person.commemorativeDate = this.CommemorativeDate;
     person.details = this.details;
-
 
     this.personsDispatcherService.createPerson(person)
       .subscribe(

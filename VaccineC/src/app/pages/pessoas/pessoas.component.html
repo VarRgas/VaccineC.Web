@@ -40,19 +40,19 @@
                 <!-- Person Name -->
                 <ng-container matColumnDef="Name">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{row.Name}} </mat-cell>
+                  <mat-cell *matCellDef="let row"> 
+                    <div>
+                      <i title="Pessoa Física" class="fa-solid fa-user me-2" [hidden]="isPerson(row.PersonType)"></i>
+                      <i title="Pessoa Jurídica" class="fa-solid fa-industry me-2" [hidden]="!isPerson(row.PersonType)"></i>
+                      {{row.Name}} 
+                    </div>
+                  </mat-cell>
                 </ng-container>
 
                 <!-- Aniver -->
-                <ng-container matColumnDef="CommemorativeDate">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header> Data de Nascimento </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{row.CommemorativeDate| date: 'dd/MM/yyyy'}} </mat-cell>
-                </ng-container>
-
-                <!-- Person Type -->
-                <ng-container matColumnDef="PersonType">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Pessoa </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{ row.PersonType == 'F' ? 'Física' : 'Jurídica' }} </mat-cell>
+                <ng-container matColumnDef="Email">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> E-mail </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.Email}} </mat-cell>
                 </ng-container>
 
                 <!-- Id Hidden Column -->
@@ -73,7 +73,8 @@
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="editPerson(row.ID)" (dblclick)="tabGroup.selectedIndex=1" style="cursor:pointer;"></mat-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="editPerson(row.ID)"
+                  (dblclick)="tabGroup.selectedIndex=1" style="cursor:pointer;"></mat-row>
 
                 <!-- Row shown when there is no matching data. -->
                 <tr class="mat-row" *matNoDataRow>
@@ -108,8 +109,10 @@
                           alt="foto de perfil" class="mb-2">
 
                         <!-- IMPORTAR IMAGEM -->
-                        <app-upload-file (onUploadFinished)="uploadFinished($event)" class="d-flex justify-content-center"></app-upload-file>
-
+                        <div class="d-flex justify-content-center" style="margin-bottom: 15px">
+                           <div><app-upload-file (onUploadFinished)="uploadFinished($event)"></app-upload-file></div>
+                            <div><button mat-mini-fab color="warn" type="button" [hidden]="!profilePic" (click)="removeImage()" matTooltip="Remover Foto" matTooltipPosition="right" style="margin-left:0.5rem;"><i class="fa-solid fa-eraser"></i></button></div>
+                        </div>
                       </td>
                       <td class="table-name col-sm-11">
                         <!-- NOME DA PESSOA -->

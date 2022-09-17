@@ -270,6 +270,14 @@
 
         <!-- RESUMO -->
         <mat-tab label="Estoque" [disabled]="tabIsDisabled">
+          <div class="col-sm-11 p-0" style="margin-left:2.5rem;">
+          <div class="div-row-input">
+            <mat-form-field appearance="outline" class="col-sm-3" style="font-size:14px;">
+            <mat-label>Filtrar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" #input>
+          </mat-form-field>
+          </div>
+        </div>
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
               <table class="col-sm-12" mat-table [dataSource]="dataSourceBatches">
@@ -318,7 +326,7 @@
 
                 <mat-header-row *matHeaderRowDef="displayedColumnsBatches"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumnsBatches;"></mat-row>
-                <mat-footer-row *matFooterRowDef="displayedColumnsBatches"></mat-footer-row>
+                <mat-footer-row *matFooterRowDef="displayedColumnsBatches; sticky: true"></mat-footer-row>
 
                 <!-- Row shown when there is no matching data. -->
                 <tr class="mat-row" *matNoDataRow>
