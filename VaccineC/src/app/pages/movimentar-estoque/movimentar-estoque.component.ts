@@ -35,7 +35,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   public ProductsAmount!: number;
 
   //SEARCH TABLE
-  displayedColumns: string[] = ['MovementNumber', 'MovementType', 'Situation', 'ProductsAmount', 'ID', 'Options'];
+  displayedColumns: string[] = ['MovementNumber', 'MovementType', 'Situation', 'ProductsInfo','ProductsAmount', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IMovement>();
 
   //PRODUCTS TABLE
@@ -95,6 +95,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   getAllMovements() {
     this.movementService.getAll().subscribe(
       movements => {
+        console.log(movements);
         this.dataSource = new MatTableDataSource(movements);
         this.dataSource.paginator = this.paginatorMovement;
         this.dataSource.sort = this.sort;
@@ -819,7 +820,7 @@ export class UpdateMovementProductEntryDialog implements OnInit {
 })
 export class UpdateMovementProductExitDialog implements OnInit {
 
-  public displayedColumns: string[] = ['Select', 'Batch', 'NumberOfUnitsBatch', 'ManufacturingDate', 'ValidityBatchDate', 'ID'];
+  public displayedColumns: string[] = ['Select', 'Batch', 'NumberOfUnitsBatch', 'ManufacturingDate', 'ValidityBatchDate', 'Warning', 'ID'];
   public dataSource = new MatTableDataSource<IProductSummariesBatches>();
   selection = new SelectionModel<IProductSummariesBatches>(true, []);
   displayType = "Single";
@@ -936,7 +937,7 @@ export class UpdateMovementProductExitDialog implements OnInit {
     this.Amount = 0;
     this.isFieldReadonly = false;
 
-    this.productSummaryBatchService.getProductsSummariesBatchesByProductId(this.ProductId).subscribe(
+    this.productSummaryBatchService.getValidProductsSummariesBatches(this.ProductId).subscribe(
       response => {
         this.isBatchTableVisible = true;
         this.dataSource = new MatTableDataSource(response);
@@ -1014,6 +1015,17 @@ export class UpdateMovementProductExitDialog implements OnInit {
       })
   }
 
+  public isExpired(numberOfUnitsBatch: number, validityBatchDate: string) {
+
+    let validityDate = new Date(validityBatchDate);
+    let dateNow = new Date();
+    if (numberOfUnitsBatch > 0 && validityDate.getTime() < dateNow.getTime()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
 
 @Component({
@@ -1022,7 +1034,7 @@ export class UpdateMovementProductExitDialog implements OnInit {
 })
 export class AddMovementProductExitDialog {
 
-  public displayedColumns: string[] = ['Select', 'Batch', 'NumberOfUnitsBatch', 'ManufacturingDate', 'ValidityBatchDate', 'ID'];
+  public displayedColumns: string[] = ['Select', 'Batch', 'NumberOfUnitsBatch', 'ManufacturingDate', 'ValidityBatchDate', 'Warning', 'ID'];
   public dataSource = new MatTableDataSource<IProductSummariesBatches>();
   selection = new SelectionModel<IProductSummariesBatches>(true, []);
   displayType = "Single";
@@ -1181,6 +1193,17 @@ export class AddMovementProductExitDialog {
         console.log(error)
         this.errorHandler.handleError(error);
       })
+  }
+
+  public isExpired(numberOfUnitsBatch: number, validityBatchDate: string) {
+
+    let validityDate = new Date(validityBatchDate);
+    let dateNow = new Date();
+    if (numberOfUnitsBatch > 0 && validityDate.getTime() < dateNow.getTime()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

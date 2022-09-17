@@ -57,6 +57,12 @@
                                         {{resolveExibitionSituation(element.Situation)}} </mat-cell>
                                 </ng-container>
 
+                                <ng-container matColumnDef="ProductsInfo">
+                                    <mat-header-cell *matHeaderCellDef> Produtos </mat-header-cell>
+                                    <mat-cell *matCellDef="let element">
+                                        {{element.ProductsInfo}} </mat-cell>
+                                </ng-container>
+
                                 <ng-container matColumnDef="ProductsAmount">
                                     <mat-header-cell *matHeaderCellDef> R$ </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.ProductsAmount | currency : 'R$' }}

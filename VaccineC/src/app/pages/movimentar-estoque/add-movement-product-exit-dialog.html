@@ -107,6 +107,17 @@
                             <mat-cell *matCellDef="let row"> {{row.ValidityBatchDate| date: 'dd/MM/yyyy'}} </mat-cell>
                         </ng-container>
 
+                        <!-- Row Button -->
+                        <ng-container matColumnDef="Warning">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <i class="fa-solid fa-circle-exclamation" style="margin:3px;color:red;"
+                                    title="Atenção: Lote vencido"
+                                    [hidden]=!isExpired(row.NumberOfUnitsBatch,row.ValidityBatchDate)></i>
+                            </mat-cell>
+                            <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                        </ng-container>
+
                         <!-- Id Hidden Column -->
                         <ng-container matColumnDef="ID">
                             <mat-header-cell [hidden]=true *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
