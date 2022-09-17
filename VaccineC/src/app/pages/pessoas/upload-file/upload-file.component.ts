@@ -20,23 +20,33 @@ export class UploadFileComponent implements OnInit {
   }
 
   public uploadFile = (files: any) => {
+
     if (files.length === 0)
       return;
 
-    let fileToUpload = <File>files[0];
-    const formData = new FormData();
-    formData.append('file', fileToUpload, fileToUpload.name);
+    let fileType = files[0].type.split("/")[1];
+    
+    if (fileType == "jpg" || fileType == "jpeg" || fileType == "png") {
 
-    this.http.post('http://localhost:5000/api/Files', formData, { reportProgress: true, observe: 'events' })
-      .subscribe(event => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.progress = Math.round(100 * event.loaded / event.total!);
-        }
-        else if (event.type === HttpEventType.Response) {
-          this.message = 'Upload feito com sucesso!';
-          this.messageHandler.showMessage(this.message, "success-snackbar")
-          this.onUploadFinished.emit(event.body);
-        }
-      });
+      let fileToUpload = <File>files[0];
+      const formData = new FormData();
+      formData.append('file', fileToUpload, fileToUpload.name);
+
+      this.http.post('http://localhost:5000/api/Files', formData, { reportProgress: true, observe: 'events' })
+        .subscribe(event => {
+          if (event.type === HttpEventType.UploadProgress) {
+            this.progress = Math.round(100 * event.loaded / event.total!);
+          }
+          else if (event.type === HttpEventType.Response) {
+            this.message = 'Upload feito com sucesso!';
+            this.messageHandler.showMessage(this.message, "success-snackbar")
+            this.onUploadFinished.emit(event.body);
+          }
+        });
+        
+    } else {
+      this.messageHandler.showMessage("Imagem deve ser no formato .jpg, .jpeg ou .png!", "warning-snackbar")
+      return;
+    }
   }
 }
