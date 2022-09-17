@@ -17,6 +17,8 @@ import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/prod
 })
 export class SituacaoEstoqueComponent implements OnInit {
 
+  currentMonth!: string;
+
   //Controle para o spinner do button
   public searchButtonLoading = false;
 
@@ -24,7 +26,6 @@ export class SituacaoEstoqueComponent implements OnInit {
   public show: boolean = true;
 
   //Table lotes a vencer
-  public value = '';
   public displayedColumns: string[] = ['Product', 'Batch', 'ValidityBatchDate', 'Warning', 'ID'];
   public dataSource = new MatTableDataSource<IBatch>();
 
@@ -32,8 +33,13 @@ export class SituacaoEstoqueComponent implements OnInit {
   public displayedColumns2: string[] = ['Product', 'Batch', 'MinimumStock', 'Total', 'Warning', 'ID'];
   public dataSource2 = new MatTableDataSource<IBatch>();
 
+  //Table Projeção
+  public displayedColumns3: string[] = ['scheduling', 'date', 'product', 'quantityInStock', 'quantityAfterApplication'];
+  public dataSource3 = new MatTableDataSource<IBatch>();
+
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
   @ViewChild('paginatorBelowMinimumStock') paginatorBelowMinimumStock!: MatPaginator;
+  @ViewChild('paginatorProjection') paginatorProjection!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   public dialogRef?: MatDialogRef<any>;
@@ -45,8 +51,14 @@ export class SituacaoEstoqueComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
+    this.getCurrentDate();
     this.getNotEmptySummaryBatchs();
     this.getBatchsBelowMinimumStock();
+  }
+
+  public getCurrentDate(): void {
+    const now = new Date();
+    this.currentMonth = `${this.formatMonth(now.getMonth().toString())}/${now.getFullYear()}`
   }
 
   public getMinimumDanger(minimumStock: number, units: number): boolean {
@@ -122,6 +134,55 @@ export class SituacaoEstoqueComponent implements OnInit {
         ID: id
       },
     });
+  }
+
+  public formatMonth(month: string): string {
+    console.log(month)
+    let response = "";
+
+    switch (month) {
+      case "0":
+        response = "Janeiro"
+        break;
+      case "1":
+        response = "Fevereiro"
+        break;
+      case "2":
+        response = "Março"
+        break;
+      case "3":
+        response = "Abril"
+        break;
+      case "4":
+        response = "Maio"
+        break;
+      case "5":
+        response = "Junho"
+        break;
+      case "6":
+        response = "Julho"
+        break;
+      case "7":
+        response = "Agosto"
+        break;
+      case "8":
+        response = "Setembro"
+        break;
+      case "9":
+        response = "Outubro"
+        break;
+      case "10":
+        response = "Novembro"
+        break;
+      case "12":
+        response = "Dezembro"
+        break;
+      default:
+        response = ""
+        break;
+    }
+
+    return response;
   }
 
 }

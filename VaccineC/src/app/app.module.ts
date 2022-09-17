@@ -30,7 +30,6 @@ import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-c
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
 import { NgChartsModule } from 'ng2-charts';
-import { SituacaoEstoqueProjecaoComponent } from './pages/situacao-estoque/situacao-estoque-projecao/situacao-estoque-projecao.component';
 import { OrcamentoPesquisaComponent } from './pages/orcamentos/orcamento-pesquisa/orcamento-pesquisa.component';
 import { OrcamentoCadastroComponent, BudgetProductDialog } from './pages/orcamentos/orcamento-cadastro/orcamento-cadastro.component';
 import { NgxMaskModule } from 'ngx-mask'
@@ -81,7 +80,6 @@ registerLocaleData(localePt, 'pt');
     UserResourceAddDialog,
     PasswordDialog,
     ResetPasswordDialog,
-    SituacaoEstoqueProjecaoComponent,
     OrcamentoPesquisaComponent,
     OrcamentoCadastroComponent,
     BudgetProductDialog,
