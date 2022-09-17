@@ -14,6 +14,11 @@
                     </mat-option>
                 </mat-autocomplete>
                 <mat-icon matSuffix>search</mat-icon>
+                <mat-error
+                *ngIf="movementProductForm.controls.ProductName.touched && movementProductForm.controls.ProductName.invalid">
+                <span *ngIf="movementProductForm.controls.ProductName.errors?.required">O Produto é
+                    obrigatório.</span>
+            </mat-error>
             </mat-form-field>
         </div>
 
@@ -22,6 +27,11 @@
                 <mat-label>Quantidade</mat-label>
                 <input type="number" matInput formControlName="UnitsNumber" [(ngModel)]="UnitsNumber"
                     (blur)="getAmount()" placeholder="Ex. 10" required>
+                    <mat-error
+                    *ngIf="movementProductForm.controls.UnitsNumber.touched && movementProductForm.controls.UnitsNumber.invalid">
+                    <span *ngIf="movementProductForm.controls.UnitsNumber.errors?.required">A Quantidade é
+                        obrigatória.</span>
+                </mat-error>
             </mat-form-field>
         </div>
 
@@ -31,6 +41,11 @@
                 <input matInput formControlName="UnitaryValue" [(ngModel)]="UnitaryValue" placeholder="0,00" required
                     readonly placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
+                <mat-error
+                *ngIf="movementProductForm.controls.UnitaryValue.touched && movementProductForm.controls.UnitaryValue.invalid">
+                <span *ngIf="movementProductForm.controls.UnitaryValue.errors?.required">O R$ Unitário é
+                    obrigatório.</span>
+            </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
@@ -38,6 +53,10 @@
                 <input matInput formControlName="Amount" [(ngModel)]="Amount" placeholder="0,00" required readonly
                     placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
+                <mat-error
+                *ngIf="movementProductForm.controls.Amount.touched && movementProductForm.controls.Amount.invalid">
+                <span *ngIf="movementProductForm.controls.Amount.errors?.required">O R$ Total é obrigatório.</span>
+            </mat-error>
             </mat-form-field>
         </div>
 

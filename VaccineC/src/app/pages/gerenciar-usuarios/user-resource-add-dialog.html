@@ -9,8 +9,8 @@
 
 
       <mat-form-field appearance="fill" class="col-sm-12">
-        <mat-label>Usuário</mat-label>
-        <input type="text" (click)="searchResourceByAutoComplete()" id="ResourcesId" placeholder="Selecione a Pessoa"
+        <mat-label>Recurso</mat-label>
+        <input type="text" (click)="searchResourceByAutoComplete()" id="ResourcesId" placeholder="Selecione o Recurso"
           aria-label="Number" matInput #ResourcesIdinput formControlName="ResourcesId" [matAutocomplete]="auto"
           [(ngModel)]="ResourcesId" required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
@@ -19,6 +19,9 @@
           </mat-option>
         </mat-autocomplete>
         <mat-icon matSuffix>search</mat-icon>
+        <mat-error *ngIf="userResourceForm.controls.ResourcesId.touched && userResourceForm.controls.ResourcesId.invalid">
+          <span *ngIf="userResourceForm.controls.ResourcesId.errors?.required">O Recurso é obrigatório.</span>
+      </mat-error>
       </mat-form-field>
 
     </div>

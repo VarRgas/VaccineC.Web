@@ -514,9 +514,9 @@ export class DialogContentScheduleDialog implements OnInit {
 
   //Form
   CompanyScheduleForm: FormGroup = this.formBuilder.group({
-    Day: [null],
-    StartTime: [null],
-    FinalTime: [null]
+    Day: [null, Validators.required],
+    StartTime: [null, Validators.required],
+    FinalTime: [null, Validators.required]
   });
 
   constructor(
@@ -532,6 +532,13 @@ export class DialogContentScheduleDialog implements OnInit {
   }
 
   saveCompanySchedule(): void {
+
+    if (!this.CompanyScheduleForm.valid) {
+      console.log(this.CompanyScheduleForm);
+      this.CompanyScheduleForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
 
     let diasDaSemana = this.Day;
     let horaInicial = this.StartTime;
@@ -579,11 +586,11 @@ export class UpdateCompanyScheduleDialog implements OnInit {
 
   //Form
   CompanyScheduleForm: FormGroup = this.formBuilder.group({
-    Id: [null],
-    CompanyId: [null],
-    Day: [null],
-    StartTime: [null],
-    FinalTime: [null]
+    Id: [null, Validators.required],
+    CompanyId: [null, Validators.required],
+    Day: [null, Validators.required],
+    StartTime: [null, Validators.required],
+    FinalTime: [null, Validators.required]
   });
 
   constructor(
@@ -614,6 +621,13 @@ export class UpdateCompanyScheduleDialog implements OnInit {
   }
 
   updateCompanySchedule(): void {
+
+    if (!this.CompanyScheduleForm.valid) {
+      console.log(this.CompanyScheduleForm);
+      this.CompanyScheduleForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
 
     let companySchedule = new CompanyScheduleModel();
     companySchedule.id = this.Id;

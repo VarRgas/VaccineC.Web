@@ -17,6 +17,10 @@
                     <mat-option value="DU">DOSE ÚNICA</mat-option>
                     <mat-option value="DR">DOSE DE REFORÇO</mat-option>
                 </mat-select>
+                <mat-error
+                *ngIf="productDosesForm.controls.DoseType.touched && productDosesForm.controls.DoseType.invalid">
+                <span *ngIf="productDosesForm.controls.DoseType.errors?.required">O Tipo de Dose é obrigatório.</span>
+            </mat-error>
             </mat-form-field>
         </div>
 

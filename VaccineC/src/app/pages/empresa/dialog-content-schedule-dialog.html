@@ -19,16 +19,22 @@
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Horário Inicial</mat-label>
                 <input type="time" matInput formControlName="StartTime" id="StartTime" [(ngModel)]="StartTime" required="true">
+                <mat-error *ngIf="CompanyScheduleForm.controls.StartTime.touched && CompanyScheduleForm.controls.StartTime.invalid">
+                    <span *ngIf="CompanyScheduleForm.controls.StartTime.errors?.required">O Horario Inicial é obrigatório.</span>
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Horário Final</mat-label>
                 <input type="time" matInput formControlName="FinalTime" id="FinalTime" [(ngModel)]="FinalTime" required="true">
+                <mat-error *ngIf="CompanyScheduleForm.controls.FinalTime.touched && CompanyScheduleForm.controls.FinalTime.invalid">
+                    <span *ngIf="CompanyScheduleForm.controls.FinalTime.errors?.required">O Horario Final é obrigatório.</span>
+                </mat-error>
             </mat-form-field>
         </div>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button (click)="saveCompanySchedule()" cdkFocusInitial>Salvar</button>
+    <button mat-button class="create-button" (click)="saveCompanySchedule()" cdkFocusInitial>Salvar</button>
 </mat-dialog-actions>

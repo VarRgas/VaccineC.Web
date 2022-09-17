@@ -882,21 +882,18 @@ export class UpdateMovementProductExitDialog implements OnInit {
         this.Amount = response.Amount;
         this.Batch = response.Batch;
 
-        this.productSummaryBatchService.getProductsSummariesBatchesByProductId(this.ProductId).subscribe(
+        this.productSummaryBatchService.getValidProductsSummariesBatches(this.ProductId).subscribe(
           response => {
             this.isBatchTableVisible = true;
             this.dataSource = new MatTableDataSource(response);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
 
-            console.log(this.dataSource.data)
             this.dataSource.data.forEach((productSummaryBatch) => {
-              console.log(productSummaryBatch)
               if (this.Batch == productSummaryBatch.Batch) {
                 this.selection.select(productSummaryBatch)
               }
             })
-            // this.selection.select(this.dataSource.data)
           },
           error => {
             console.log(error);
@@ -1106,7 +1103,7 @@ export class AddMovementProductExitDialog {
     this.Amount = 0;
     this.isFieldReadonly = false;
 
-    this.productSummaryBatchService.getProductsSummariesBatchesByProductId(this.ProductId).subscribe(
+    this.productSummaryBatchService.getValidProductsSummariesBatches(this.ProductId).subscribe(
       response => {
         this.isBatchTableVisible = true;
         this.dataSource = new MatTableDataSource(response);
