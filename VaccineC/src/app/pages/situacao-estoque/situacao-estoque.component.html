@@ -78,7 +78,7 @@
                     <div class="col-sm-6 minimum-stock">
                         <div class="card shadow mb-4 h-100">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-gray-600">Abaixo do estoque Mínimo</h6>
+                                <h6 class="m-0 font-weight-bold text-gray-600">Produtos abaixo do estoque Mínimo</h6>
                             </div>
                             <div class="card-body">
                                 <div class="card-area h-100">
@@ -86,32 +86,23 @@
                                         <div class="col-sm-12 search-table-content mat-elevation-z2">
                                             <mat-table [dataSource]="dataSource2" class="col-sm-12">
                                                 <!-- PRODUCT -->
-                                                <ng-container matColumnDef="Product">
+                                                <ng-container matColumnDef="ProductName">
                                                     <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"> {{row.Products.Name}} </mat-cell>
-                                                </ng-container>
-
-                                                <!-- BATCH -->
-                                                <ng-container matColumnDef="Batch">
-                                                    <mat-header-cell *matHeaderCellDef> Lote </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row">
-                                                        <span title="Informações do Lote" class="information-batch"
-                                                            (click)="openInformationBatch(row.ID)">{{row.Batch}} </span>
-                                                    </mat-cell>
+                                                    <mat-cell *matCellDef="let row"> {{row.ProductName}} </mat-cell>
                                                 </ng-container>
 
                                                 <!-- ESTOQUE MINIMO -->
                                                 <ng-container matColumnDef="MinimumStock">
                                                     <mat-header-cell *matHeaderCellDef> Estoque Mínimo
                                                     </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"> {{row.Products.MinimumStock}}
+                                                    <mat-cell *matCellDef="let row"> {{row.MinimumStock}}
                                                     </mat-cell>
                                                 </ng-container>
 
                                                 <!-- TOTAL -->
-                                                <ng-container matColumnDef="Total">
+                                                <ng-container matColumnDef="TotalUnits">
                                                     <mat-header-cell *matHeaderCellDef> Total </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"> {{row.NumberOfUnitsBatch}}
+                                                    <mat-cell *matCellDef="let row"> {{row.TotalUnits}}
                                                     </mat-cell>
                                                 </ng-container>
 
@@ -123,15 +114,15 @@
                                                         <i title="Abaixo da metade"
                                                             class="fa-solid fa-circle-exclamation fa-beat"
                                                             style="color:#DC3545;margin:5px"
-                                                            [hidden]="getMinimumDanger(row.Products.MinimumStock, row.NumberOfUnitsBatch)"></i>
+                                                            [hidden]="getMinimumDanger(row.MinimumStock, row.TotalUnits)"></i>
                                                     </mat-cell>
                                                 </ng-container>
 
                                                 <!-- Id Hidden Column -->
-                                                <ng-container matColumnDef="ID">
+                                                <ng-container matColumnDef="ProductId">
                                                     <th *matHeaderCellDef mat-header-cell [hidden]="show"> ID </th>
                                                     <td mat-cell [hidden]="show" *matCellDef="let row">
-                                                        {{row.ID}} </td>
+                                                        {{row.ProductId}} </td>
                                                 </ng-container>
 
                                                 <!-- Row shown when there is no matching data. -->
@@ -154,7 +145,7 @@
                     <div class="col-sm-12 schedule-projection mt-3">
                         <div class="card shadow mb-4 h-100">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-gray-600">Projeção de Agendamentos: {{currentMonth}}
+                                <h6 class="m-0 font-weight-bold text-gray-600">Projeção de Estoque: {{currentMonth}}
                                 </h6>
                             </div>
                             <div class="card-body">
@@ -162,34 +153,46 @@
                                     <div id="search-table">
                                         <div class="col-sm-12 search-table-content mat-elevation-z2">
                                             <mat-table [dataSource]="dataSource3" class="col-sm-12">
-                                                <ng-container matColumnDef="scheduling">
-                                                    <mat-header-cell *matHeaderCellDef> Agendamento </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> {{element.scheduling}}
-                                                    </mat-cell>
-                                                </ng-container>
-
-                                                <ng-container matColumnDef="date">
-                                                    <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
-                                                </ng-container>
-
-                                                <ng-container matColumnDef="product">
+                                                <ng-container matColumnDef="ProductName">
                                                     <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> {{element.product}} </mat-cell>
-                                                </ng-container>
-
-                                                <ng-container matColumnDef="quantityInStock">
-                                                    <mat-header-cell *matHeaderCellDef> Qtd em Estoque
-                                                    </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> {{element.quantityInStock}}
+                                                    <mat-cell *matCellDef="let element"> {{element.ProductName}}
                                                     </mat-cell>
                                                 </ng-container>
 
-                                                <ng-container matColumnDef="quantityAfterApplication">
-                                                    <mat-header-cell *matHeaderCellDef> Qtd após Aplic.
+                                                <ng-container matColumnDef="TotalAuthorizationsMonth">
+                                                    <mat-header-cell *matHeaderCellDef> Agendamentos no Período
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let element">
-                                                        {{element.quantityAfterApplication}} </mat-cell>
+                                                        {{element.TotalAuthorizationsMonth}} </mat-cell>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="TotalUnitsProduct">
+                                                    <mat-header-cell *matHeaderCellDef> Quantidade em Estoque
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element"> {{element.TotalUnitsProduct}}
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <ng-container matColumnDef="TotalUnitsAfterApplication">
+                                                    <mat-header-cell *matHeaderCellDef> Quantidade após Aplicação
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element">
+                                                        {{element.TotalUnitsAfterApplication}}
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <!-- TOTAL -->
+                                                <ng-container matColumnDef="Warning">
+                                                    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element">
+                                                        <i title="Estoque Zerado" class="fa-solid fa-circle-exclamation"
+                                                            style="color:#FFCA2C;margin:5px"
+                                                            [hidden]="isUnitsAfterApplicationZero(element.TotalUnitsAfterApplication)"></i>
+                                                        <i title="Estoque Negativado"
+                                                            class="fa-solid fa-circle-exclamation fa-beat"
+                                                            style="color:#DC3545;margin:5px"
+                                                            [hidden]="isUnitsAfterApplicationUnderZero(element.TotalUnitsAfterApplication)"></i>
+                                                    </mat-cell>
                                                 </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns3"></mat-header-row>
@@ -201,7 +204,7 @@
                                                 </tr>
                                             </mat-table>
                                             <mat-paginator #paginatorProjection="matPaginator"
-                                            [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+                                                [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
                                         </div>
                                     </div>
                                 </div>

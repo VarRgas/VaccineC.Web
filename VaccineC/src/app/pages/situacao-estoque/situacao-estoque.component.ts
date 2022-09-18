@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IBatch } from 'src/app/interfaces/i-batch';
+import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
@@ -30,11 +31,11 @@ export class SituacaoEstoqueComponent implements OnInit {
   public dataSource = new MatTableDataSource<IBatch>();
 
   //Table Abaixo do estoque minimo
-  public displayedColumns2: string[] = ['Product', 'Batch', 'MinimumStock', 'Total', 'Warning', 'ID'];
+  public displayedColumns2: string[] = ['ProductName', 'MinimumStock', 'TotalUnits', 'Warning', 'ProductId'];
   public dataSource2 = new MatTableDataSource<IBatch>();
 
   //Table Projeção
-  public displayedColumns3: string[] = ['scheduling', 'date', 'product', 'quantityInStock', 'quantityAfterApplication'];
+  public displayedColumns3: string[] = ['ProductName', 'TotalAuthorizationsMonth', 'TotalUnitsProduct', 'TotalUnitsAfterApplication', 'Warning'];
   public dataSource3 = new MatTableDataSource<IBatch>();
 
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
@@ -46,6 +47,7 @@ export class SituacaoEstoqueComponent implements OnInit {
 
   constructor(
     private productsSummariesBatchesDispatcherService: ProductsSummariesBatchesDispatcherService,
+    private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog) { }
@@ -54,6 +56,7 @@ export class SituacaoEstoqueComponent implements OnInit {
     this.getCurrentDate();
     this.getNotEmptySummaryBatchs();
     this.getBatchsBelowMinimumStock();
+    this.getSummarySituationAuthorization();
   }
 
   public getCurrentDate(): void {
@@ -68,6 +71,20 @@ export class SituacaoEstoqueComponent implements OnInit {
     } else {
       return true;
     }
+  }
+
+  public getSummarySituationAuthorization(): void {
+    this.authorizationsDispatcherService.GetSummarySituationAuthorization()
+      .subscribe(
+        response => {
+          this.dataSource3 = new MatTableDataSource(response);
+          this.dataSource3.paginator = this.paginatorExpiredBatch;
+          this.dataSource3.sort = this.sort;
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
   }
 
   public getNotEmptySummaryBatchs(): void {
@@ -120,6 +137,24 @@ export class SituacaoEstoqueComponent implements OnInit {
     const dateNow = new Date();
 
     if (validityBatchDateFormat > dateNow && validityBatchDateFormat.getMonth() == dateNow.getMonth() && validityBatchDateFormat.getFullYear() == dateNow.getFullYear()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public isUnitsAfterApplicationZero(totalUnitsAfterApplication: number): boolean {
+
+    if (totalUnitsAfterApplication == 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public isUnitsAfterApplicationUnderZero(totalUnitsAfterApplication: number): boolean {
+
+    if (totalUnitsAfterApplication < 0) {
       return false;
     }
 
