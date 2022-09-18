@@ -23,7 +23,7 @@ import { AgendamentoComponent } from './pages/agendamento/agendamento.component'
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
-import { SituacaoEstoqueComponent, BatchInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
+import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog, ConfirmUserResourceRemoveDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos/recursos.component';
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
@@ -107,7 +107,8 @@ registerLocaleData(localePt, 'pt');
     UpdateMovementProductExitDialog,
     ConfirmProductDosesRemoveDialog,
     UpdateDialogContentDose,
-    BatchInformationDialog
+    BatchInformationDialog,
+    ProductBatchsInformationDialog
   ],
   imports: [
     BrowserModule,

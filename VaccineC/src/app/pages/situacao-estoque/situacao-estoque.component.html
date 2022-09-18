@@ -102,7 +102,9 @@
                                                 <!-- TOTAL -->
                                                 <ng-container matColumnDef="TotalUnits">
                                                     <mat-header-cell *matHeaderCellDef> Total </mat-header-cell>
-                                                    <mat-cell *matCellDef="let row"> {{row.TotalUnits}}
+                                                    <mat-cell *matCellDef="let row">
+                                                        <span title="Informações dos Lotes" class="information-batch"
+                                                            (click)="openInformationProductBatchs(row.ProductName, row.ProductId)">{{row.TotalUnits}}</span>
                                                     </mat-cell>
                                                 </ng-container>
 
@@ -160,7 +162,7 @@
                                                 </ng-container>
 
                                                 <ng-container matColumnDef="TotalAuthorizationsMonth">
-                                                    <mat-header-cell *matHeaderCellDef> Agendamentos no Período
+                                                    <mat-header-cell *matHeaderCellDef> Agendamentos em {{currentMonth}}
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let element">
                                                         {{element.TotalAuthorizationsMonth}} </mat-cell>
@@ -169,7 +171,9 @@
                                                 <ng-container matColumnDef="TotalUnitsProduct">
                                                     <mat-header-cell *matHeaderCellDef> Quantidade em Estoque
                                                     </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> {{element.TotalUnitsProduct}}
+                                                    <mat-cell *matCellDef="let element">
+                                                        <span title="Informações dos Lotes" class="information-batch"
+                                                            (click)="openInformationProductBatchs(element.ProductName, element.ProductId)">{{element.TotalUnitsProduct}}</span>
                                                     </mat-cell>
                                                 </ng-container>
 
@@ -185,14 +189,21 @@
                                                 <ng-container matColumnDef="Warning">
                                                     <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                                     <mat-cell *matCellDef="let element">
-                                                        <i title="Estoque Zerado" class="fa-solid fa-circle-exclamation"
+                                                        <i title="Projeção Zerada" class="fa-solid fa-circle-exclamation"
                                                             style="color:#FFCA2C;margin:5px"
                                                             [hidden]="isUnitsAfterApplicationZero(element.TotalUnitsAfterApplication)"></i>
-                                                        <i title="Estoque Negativado"
+                                                        <i title="Projeção Negativada"
                                                             class="fa-solid fa-circle-exclamation fa-beat"
                                                             style="color:#DC3545;margin:5px"
                                                             [hidden]="isUnitsAfterApplicationUnderZero(element.TotalUnitsAfterApplication)"></i>
                                                     </mat-cell>
+                                                </ng-container>
+
+                                                <!-- Id Hidden Column -->
+                                                <ng-container matColumnDef="ProductId">
+                                                    <th *matHeaderCellDef mat-header-cell [hidden]="show"> ID </th>
+                                                    <td mat-cell [hidden]="show" *matCellDef="let element">
+                                                        {{element.ProductId}} </td>
                                                 </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns3"></mat-header-row>

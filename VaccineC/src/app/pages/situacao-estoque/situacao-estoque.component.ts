@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IBatch } from 'src/app/interfaces/i-batch';
+import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-batch';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
@@ -35,7 +36,7 @@ export class SituacaoEstoqueComponent implements OnInit {
   public dataSource2 = new MatTableDataSource<IBatch>();
 
   //Table Projeção
-  public displayedColumns3: string[] = ['ProductName', 'TotalAuthorizationsMonth', 'TotalUnitsProduct', 'TotalUnitsAfterApplication', 'Warning'];
+  public displayedColumns3: string[] = ['ProductName', 'TotalAuthorizationsMonth', 'TotalUnitsProduct', 'TotalUnitsAfterApplication', 'Warning', 'ProductId'];
   public dataSource3 = new MatTableDataSource<IBatch>();
 
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
@@ -171,6 +172,17 @@ export class SituacaoEstoqueComponent implements OnInit {
     });
   }
 
+  public openInformationProductBatchs(productName: string, productId: string): void {
+    this.dialogRef = this.dialog.open(ProductBatchsInformationDialog, {
+      disableClose: true,
+      width: '80vw',
+      data: {
+        ProductName: productName,
+        ProductId: productId
+      },
+    });
+  }
+
   public formatMonth(month: string): string {
     console.log(month)
     let response = "";
@@ -263,6 +275,59 @@ export class BatchInformationDialog implements OnInit {
       error => {
         console.log(error);
       });
+  }
+
+}
+
+@Component({
+  selector: 'product-batchs-information-dialog',
+  templateUrl: 'product-batchs-information-dialog.html',
+})
+export class ProductBatchsInformationDialog implements OnInit {
+
+  ProductId!: string;
+  ProductName!: string;
+
+  //Batches table
+  public displayedColumnsBatches: string[] = ['Batch', 'ManufacturingDate', 'ValidityBatchDate', 'NumberOfUnitsBatch', 'Warning'];
+  public dataSourceBatches = new MatTableDataSource<IProductSummariesBatches>();
+
+  ngOnInit(): void {
+    this.ProductId = this.data.ProductId;
+    this.ProductName = this.data.ProductName;
+    this.getProductSummaryBatchByProductId(this.ProductId);
+  }
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<BatchInformationDialog>,
+    private productSummaryBatchDispatcherService: ProductsSummariesBatchesDispatcherService,
+  ) { }
+
+  public getProductSummaryBatchByProductId(productId: string): void {
+    this.productSummaryBatchDispatcherService.getProductsSummariesBatchesByProductId(productId).subscribe(
+      productsSummariesBatches => {
+        this.dataSourceBatches = new MatTableDataSource(productsSummariesBatches);
+        console.log(productsSummariesBatches)
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  public isExpired(numberOfUnitsBatch: number, validityBatchDate: string) {
+
+    let validityDate = new Date(validityBatchDate);
+    let dateNow = new Date();
+    if (numberOfUnitsBatch > 0 && validityDate.getTime() < dateNow.getTime()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public getTotalUnits() {
+    return this.dataSourceBatches.data.map(t => t.NumberOfUnitsBatch).reduce((acc, value) => acc + value, 0);
   }
 
 }
