@@ -2,8 +2,14 @@
     <app-side-menu></app-side-menu>
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
-        <app-container containerTitle="Agendamento" containerPath="Operacional">
-            <full-calendar [options]='calendarOptions'></full-calendar> 
+        <app-container containerTitle="Agendamento" containerPath="Operacional" [information]="informationField">
+            <div class='demo-app'>
+
+                <div class='demo-app-main'>
+                    <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'></full-calendar>
+                </div>
+
+            </div>
         </app-container>
     </div>
 </div>
