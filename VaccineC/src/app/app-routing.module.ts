@@ -25,6 +25,7 @@ import { NotFoundComponent } from './pages/error/not-found/not-found.component';
 import { InternalServerErrorComponent } from './pages/error/internal-server-error/internal-server-error.component';
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
+import { ConectionErrorComponent } from './pages/error/conection-error/conection-error.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -51,7 +52,8 @@ const routes: Routes = [
 
   { path: 'not-found-404', component: NotFoundComponent },
   { path: 'internal-server-error-500', component: InternalServerErrorComponent },
-  { path: 'unauthorized-error-401', component: UnauthorizedComponent }
+  { path: 'unauthorized-error-401', component: UnauthorizedComponent },
+  { path: 'conection-error', component: ConectionErrorComponent }
 ];
 
 @NgModule({

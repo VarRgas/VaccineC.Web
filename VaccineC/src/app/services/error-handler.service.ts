@@ -39,8 +39,7 @@ export class ErrorHandlerService {
     }
 
     private handle0Error = (error: HttpErrorResponse) => {
-        this.errorMessage = "Não foi possível conectar-se ao servidor."
-        this.createErrorMessage(error);
+        this.router.navigate(['/', 'conection-error']);
     }
 
     private handle404Error = (error: HttpErrorResponse) => {

@@ -46,6 +46,7 @@ import { LOCALE_ID, DEFAULT_CURRENCY_CODE } from '@angular/core';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { MatSortModule } from '@angular/material/sort';
+import { ConectionErrorComponent } from './pages/error/conection-error/conection-error.component';
 registerLocaleData(localePt, 'pt');
 
 @NgModule({
@@ -108,7 +109,8 @@ registerLocaleData(localePt, 'pt');
     ConfirmProductDosesRemoveDialog,
     UpdateDialogContentDose,
     BatchInformationDialog,
-    ProductBatchsInformationDialog
+    ProductBatchsInformationDialog,
+    ConectionErrorComponent
   ],
   imports: [
     BrowserModule,
