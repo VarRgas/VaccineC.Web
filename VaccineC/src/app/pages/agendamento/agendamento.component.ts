@@ -41,7 +41,12 @@ export class AgendamentoComponent implements OnInit {
       minute: '2-digit',
       meridiem: false
     },
-    slotLabelFormat: {hour: 'numeric', minute: '2-digit', hour12: false},
+    slotLabelFormat: {
+      hour: 'numeric', 
+      minute: '2-digit', 
+      hour12: false
+    },
+    slotDuration: '00:10',
     locale: brLocale,
     timeZone: 'America/Sao_Paulo',
     allDaySlot: false,
