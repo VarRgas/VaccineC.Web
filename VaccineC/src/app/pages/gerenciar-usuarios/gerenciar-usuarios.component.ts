@@ -66,7 +66,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   //Table Usuários
   public value = '';
-  public displayedColumns: string[] = ['Email', 'Name', 'Situation', 'ID', 'Options'];
+  public displayedColumns: string[] = ['Email', 'Name', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IUser>();
 
   //Table Recursos

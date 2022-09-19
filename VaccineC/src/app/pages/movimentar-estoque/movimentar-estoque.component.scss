@@ -101,12 +101,27 @@ form {
   font-weight: bold !important;
 }
 
-.mat-column-Select {
+.mat-column-Select, .mat-column-Options {
   flex: 0 0 100px !important;
   white-space: unset !important;
 }
 
-.mat-cell-Select {
+.mat-cell-Select, .mat-cell-Options {
   flex: 0 0 100px !important;
   white-space: unset !important;
+}
+
+.movement-pending {
+  color: #ffc107;
+  opacity : 0.5;
+}
+
+.movement-finished {
+  color: #198754;
+  opacity : 0.5;
+}
+
+.movement-canceled {
+  color: #dc3545;
+  opacity : 0.5;
 }

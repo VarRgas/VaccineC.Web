@@ -82,3 +82,13 @@ form {
   font-size: 12px !important;
   color: #858796 !important;
 }
+
+.situation-active {
+  color: #198754;
+  opacity : 0.5;
+}
+
+.situation-inactive {
+  color: #dc3545;
+  opacity : 0.5;
+}

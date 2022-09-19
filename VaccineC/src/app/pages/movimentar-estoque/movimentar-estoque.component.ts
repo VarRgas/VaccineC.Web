@@ -34,8 +34,11 @@ export class MovimentarEstoqueComponent implements OnInit {
   public Situation!: string;
   public ProductsAmount!: number;
 
+  public situationColor!: string;
+  public situationTitle!: string;
+
   //SEARCH TABLE
-  displayedColumns: string[] = ['MovementNumber', 'MovementType', 'Situation', 'ProductsInfo', 'ProductsAmount', 'ID', 'Options'];
+  displayedColumns: string[] = ['MovementNumber', 'MovementType', 'ProductsInfo', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IMovement>();
 
   //PRODUCTS TABLE
@@ -429,13 +432,17 @@ export class MovimentarEstoqueComponent implements OnInit {
 
   resolveExibitionSituation(situation: string) {
     if (situation == "P") {
-      return "Pendente"
+      this.situationColor = "movement-pending";
+      this.situationTitle = "Pendente"
     } else if (situation == "F") {
-      return "Finalizado"
+      this.situationColor = "movement-finished";
+      this.situationTitle = "Finalizado"
     } else if (situation == "C") {
-      return "Cancelado"
+      this.situationColor = "movement-canceled";
+      this.situationTitle = "Cancelado"
     } else {
-      return ""
+      this.situationColor = "";
+      this.situationTitle = ""
     }
   }
 

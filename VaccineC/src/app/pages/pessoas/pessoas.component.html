@@ -42,8 +42,8 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
                   <mat-cell *matCellDef="let row"> 
                     <div>
-                      <i title="Pessoa Física" class="fa-solid fa-user me-2" [hidden]="isPerson(row.PersonType)"></i>
-                      <i title="Pessoa Jurídica" class="fa-solid fa-industry me-2" [hidden]="!isPerson(row.PersonType)"></i>
+                      <i title="Pessoa Física" class="fa-solid fa-user me-2" [hidden]="isPerson(row.PersonType)" style="opacity: 0.5;"></i>
+                      <i title="Pessoa Jurídica" class="fa-solid fa-industry me-2" [hidden]="!isPerson(row.PersonType)" style="opacity: 0.5;"></i>
                       {{row.Name}} 
                     </div>
                   </mat-cell>

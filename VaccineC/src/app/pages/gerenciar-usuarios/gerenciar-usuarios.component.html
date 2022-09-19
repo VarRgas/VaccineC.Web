@@ -38,19 +38,17 @@
                 <!-- Email Column -->
                 <ng-container matColumnDef="Email">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuário </th>
-                  <td mat-cell *matCellDef="let row"> {{row.Email}} </td>
+                  <td mat-cell *matCellDef="let row"> 
+                    <div>
+                      <span title="{{row.Situation == 'A' ? 'Ativo' : 'Inativo'}}" class="me-2 fa-solid fa-circle {{row.Situation == 'A' ? 'situation-active' : 'situation-inactive'}}"></span>
+                      <span>{{row.Email}}</span>
+                    </div>
                 </ng-container>
 
                 <!-- Person Column -->
                 <ng-container matColumnDef="Name">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Pessoa </th>
                   <td mat-cell *matCellDef="let row"> {{row.Person.Name}} </td>
-                </ng-container>
-
-                <!-- Situation Column -->
-                <ng-container matColumnDef="Situation">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Situação </th>
-                  <td mat-cell *matCellDef="let row"> {{row.Situation == 'A' ? 'Ativo' : 'Inativo'}} </td>
                 </ng-container>
 
                 <!-- Id Hidden Column -->

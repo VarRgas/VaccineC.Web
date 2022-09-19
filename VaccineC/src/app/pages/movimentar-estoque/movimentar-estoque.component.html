@@ -37,6 +37,8 @@
                                 <ng-container matColumnDef="MovementNumber">
                                     <mat-header-cell *matHeaderCellDef> Movimento </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> 
+                                        {{resolveExibitionSituation(element.Situation)}} 
+                                        <span title="{{situationTitle}}" class="me-3 fa-solid fa-circle {{situationColor}}"></span>
                                         <div>
                                             <div>{{element.MovementNumber}}</div>
                                             <div title="Data do Movimento" class="small-text">{{element.Register| date: 'dd/MM/yyyy'}}</div>
@@ -51,22 +53,10 @@
                                     </mat-cell>
                                 </ng-container>
 
-                                <ng-container matColumnDef="Situation">
-                                    <mat-header-cell *matHeaderCellDef> Situação </mat-header-cell>
-                                    <mat-cell *matCellDef="let element">
-                                        {{resolveExibitionSituation(element.Situation)}} </mat-cell>
-                                </ng-container>
-
                                 <ng-container matColumnDef="ProductsInfo">
                                     <mat-header-cell *matHeaderCellDef> Produtos </mat-header-cell>
                                     <mat-cell *matCellDef="let element">
                                         {{element.ProductsInfo}} </mat-cell>
-                                </ng-container>
-
-                                <ng-container matColumnDef="ProductsAmount">
-                                    <mat-header-cell *matHeaderCellDef> R$ </mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.ProductsAmount | currency : 'R$' }}
-                                    </mat-cell>
                                 </ng-container>
 
                                 <!-- Id Hidden Column -->
