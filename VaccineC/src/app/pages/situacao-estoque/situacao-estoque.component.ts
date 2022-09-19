@@ -79,7 +79,7 @@ export class SituacaoEstoqueComponent implements OnInit {
       .subscribe(
         response => {
           this.dataSource3 = new MatTableDataSource(response);
-          this.dataSource3.paginator = this.paginatorExpiredBatch;
+          this.dataSource3.paginator = this.paginatorProjection;
           this.dataSource3.sort = this.sort;
         },
         error => {

@@ -14,7 +14,7 @@
                                 <div class="card-area h-100">
                                     <div id="search-table">
                                         <div class="col-sm-12 search-table-content mat-elevation-z2">
-                                            <mat-table [dataSource]="dataSource" class="col-sm-12">
+                                            <table mat-table [dataSource]="dataSource" class="col-sm-12">
                                                 <!-- PRODUCT -->
                                                 <ng-container matColumnDef="Product">
                                                     <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
@@ -66,7 +66,7 @@
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                                            </mat-table>
+                                            </table>
                                             <mat-paginator #paginatorExpiredBatch="matPaginator"
                                                 [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
                                         </div>
@@ -84,7 +84,7 @@
                                 <div class="card-area h-100">
                                     <div id="search-table">
                                         <div class="col-sm-12 search-table-content mat-elevation-z2">
-                                            <mat-table [dataSource]="dataSource2" class="col-sm-12">
+                                            <table mat-table [dataSource]="dataSource2" class="col-sm-12">
                                                 <!-- PRODUCT -->
                                                 <ng-container matColumnDef="ProductName">
                                                     <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
@@ -134,7 +134,7 @@
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
-                                            </mat-table>
+                                            </table>
                                             <mat-paginator #paginatorBelowMinimumStock="matPaginator"
                                                 [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
                                         </div>
@@ -154,7 +154,7 @@
                                 <div class="card-area h-100">
                                     <div id="search-table">
                                         <div class="col-sm-12 search-table-content mat-elevation-z2">
-                                            <mat-table [dataSource]="dataSource3" class="col-sm-12">
+                                            <table mat-table [dataSource]="dataSource3" class="col-sm-12">
                                                 <ng-container matColumnDef="ProductName">
                                                     <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
                                                     <mat-cell *matCellDef="let element"> {{element.ProductName}}
@@ -162,7 +162,7 @@
                                                 </ng-container>
 
                                                 <ng-container matColumnDef="TotalAuthorizationsMonth">
-                                                    <mat-header-cell *matHeaderCellDef> Agendamentos em {{currentMonth}}
+                                                    <mat-header-cell *matHeaderCellDef> Agendamentos em Aberto
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let element">
                                                         {{element.TotalAuthorizationsMonth}} </mat-cell>
@@ -201,9 +201,9 @@
 
                                                 <!-- Id Hidden Column -->
                                                 <ng-container matColumnDef="ProductId">
-                                                    <th *matHeaderCellDef mat-header-cell [hidden]="show"> ID </th>
-                                                    <td mat-cell [hidden]="show" *matCellDef="let element">
-                                                        {{element.ProductId}} </td>
+                                                    <mat-header-cell *matHeaderCellDef [hidden]="show"> ID </mat-header-cell>
+                                                    <mat-cell [hidden]="show" *matCellDef="let element">
+                                                        {{element.ProductId}} </mat-cell>
                                                 </ng-container>
 
                                                 <mat-header-row *matHeaderRowDef="displayedColumns3"></mat-header-row>
@@ -211,9 +211,9 @@
 
                                                 <!-- Row shown when there is no matching data. -->
                                                 <tr class="mat-row" *matNoDataRow>
-                                                    <td class="mat-cell" colspan="6">Nenhum registro encontrado.</td>
+                                                    <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
                                                 </tr>
-                                            </mat-table>
+                                            </table>
                                             <mat-paginator #paginatorProjection="matPaginator"
                                                 [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
                                         </div>

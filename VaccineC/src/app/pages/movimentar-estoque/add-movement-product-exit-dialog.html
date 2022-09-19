@@ -64,7 +64,7 @@
             <mat-divider></mat-divider>
             <div id="search-table" style="margin-top:2rem;">
                 <div class="col-sm-12 search-table-content mat-elevation-z2">
-                    <mat-table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
+                    <table mat-table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
                         matSortDirection="asc">
 
                         <ng-container matColumnDef="Select">
@@ -131,7 +131,7 @@
                         <tr class="mat-row" *matNoDataRow>
                             <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
                         </tr>
-                    </mat-table>
+                    </table>
 
                 </div>
             </div>
