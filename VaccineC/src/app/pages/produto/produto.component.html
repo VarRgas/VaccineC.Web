@@ -245,7 +245,7 @@
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumnsDoses"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumnsDoses;"></mat-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsDoses;"class="hover-element-row" style="cursor:pointer;" (dblclick)="openUpdateProductDosesDialog(row.ID)"></mat-row>
 
 
                 <!-- Row shown when there is no matching data. -->

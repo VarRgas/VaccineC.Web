@@ -704,7 +704,7 @@ export class PessoasComponent implements OnInit {
   public openUpdatePersonAddressDialog(id: string): void {
     this.dialogRef = this.dialog.open(UpdatePersonAddressDialog, {
       disableClose: true,
-      width: '50vw',
+      height: '100%',
       data: {
         ID: id
       },
@@ -816,6 +816,7 @@ export class PessoasComponent implements OnInit {
 
   public openAddressDialog(): void {
     const dialogRef = this.dialog.open(DialogContentAddressDialog, {
+      height: '100%',
       disableClose: true,
       data: {
         ID: this.personId

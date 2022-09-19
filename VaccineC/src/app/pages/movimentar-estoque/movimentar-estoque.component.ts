@@ -35,7 +35,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   public ProductsAmount!: number;
 
   //SEARCH TABLE
-  displayedColumns: string[] = ['MovementNumber', 'MovementType', 'Situation', 'ProductsInfo','ProductsAmount', 'ID', 'Options'];
+  displayedColumns: string[] = ['MovementNumber', 'MovementType', 'Situation', 'ProductsInfo', 'ProductsAmount', 'ID', 'Options'];
   public dataSource = new MatTableDataSource<IMovement>();
 
   //PRODUCTS TABLE
@@ -342,7 +342,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   openAddMovementProductEntryDialog() {
     const dialogRef = this.dialog.open(AddMovementProductEntryDialog, {
       disableClose: true,
-      width: '80vw',
+      width: '70vw',
       data: {
         ID: this.Id,
       },
@@ -363,7 +363,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     if (this.MovementType == "E") {
       const dialogRef = this.dialog.open(UpdateMovementProductEntryDialog, {
         disableClose: true,
-        width: '80vw',
+        width: '70vw',
         data: {
           ID: id
         },
@@ -380,7 +380,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     } else {
       const dialogRef = this.dialog.open(UpdateMovementProductExitDialog, {
         disableClose: true,
-        width: '80vw',
+        width: '70vw',
         data: {
           ID: id
         },
@@ -402,7 +402,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   openAddMovementProductExitDialog() {
     const dialogRef = this.dialog.open(AddMovementProductExitDialog, {
       disableClose: true,
-      width: '80vw',
+      width: '70vw',
       data: {
         ID: this.Id,
       },

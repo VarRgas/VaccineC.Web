@@ -252,7 +252,7 @@
                                 </ng-container>
 
                                 <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns2;" class="hover-element-row" style="cursor:pointer;" (dblclick)="openUpdateScheduleDialog(row.ID)"></tr>
 
                                 <!-- Row shown when there is no matching data. -->
                                 <tr class="mat-row" *matNoDataRow>

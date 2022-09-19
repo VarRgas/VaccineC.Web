@@ -202,7 +202,7 @@
                                                 <tr mat-header-row *matHeaderRowDef="displayedColumnsMovementProduct">
                                                 </tr>
                                                 <tr mat-row
-                                                    *matRowDef="let row; columns: displayedColumnsMovementProduct;">
+                                                    *matRowDef="let row; columns: displayedColumnsMovementProduct;" class="hover-element-row" style="cursor:pointer;" (dblclick)="isButtonsTableDisabled ? $event.stopPropagation() : openUpdateMovementProductEntryDialog(row.ID)">
                                                 </tr>
                                                 <tr mat-footer-row *matFooterRowDef="displayedColumnsMovementProduct">
                                                 </tr>

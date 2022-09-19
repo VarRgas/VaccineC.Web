@@ -10,6 +10,7 @@
 #home-topbar {
   position: fixed;
   z-index: 30;
+  top: 0;
   width: calc(100% - 14em);
   margin-left: 14em;
   transition: width 0.3s, margin 0.3s

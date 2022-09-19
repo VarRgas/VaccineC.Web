@@ -586,8 +586,8 @@ export class UpdateCompanyScheduleDialog implements OnInit {
 
   //Form
   CompanyScheduleForm: FormGroup = this.formBuilder.group({
-    Id: [null, Validators.required],
-    CompanyId: [null, Validators.required],
+    Id: [null],
+    CompanyId: [null],
     Day: [null, Validators.required],
     StartTime: [null, Validators.required],
     FinalTime: [null, Validators.required]
@@ -610,7 +610,7 @@ export class UpdateCompanyScheduleDialog implements OnInit {
     this.companiesSchedulesDispatcherService.getCompanyScheduleById(id).subscribe(
       result => {
         this.Id = result.ID;
-        this.CompanyId = result.CompanyID;
+        this.CompanyId = result.CompanyId;
         this.Day = result.Day;
         this.StartTime = result.StartTime;
         this.FinalTime = result.FinalTime;
@@ -635,7 +635,8 @@ export class UpdateCompanyScheduleDialog implements OnInit {
     companySchedule.day = this.Day;
     companySchedule.startTime = this.StartTime;
     companySchedule.finalTime = this.FinalTime
-
+    console.log(this.Id)
+    console.log(companySchedule)
     this.companiesSchedulesDispatcherService.update(this.Id, companySchedule)
       .subscribe(
         response => {
