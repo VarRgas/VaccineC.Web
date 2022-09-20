@@ -143,7 +143,7 @@ export class ProdutoComponent implements OnInit {
   }
 
   getProductIcon(sbimVaccinesId: string) {
-    console.log(sbimVaccinesId)
+   
     if (sbimVaccinesId == "" || sbimVaccinesId == null) {
       return "OUTRO"
     } else {
@@ -154,7 +154,7 @@ export class ProdutoComponent implements OnInit {
   public getAllProducts(): void {
     this.productsDispatcherService.getAllProducts()
       .subscribe(products => {
-        console.log(products)
+       
         this.dataSource = new MatTableDataSource(products);
         this.dataSource.paginator = this.paginatorProduct;
         this.dataSource.sort = this.sort;
@@ -550,7 +550,6 @@ export class DialogContentDose implements OnInit {
   }
 
   onSelectionChanged(value: any) {
-    console.log(value)
     if (value == "D1") {
       this.isDoseRangeMonthDisabled = true;
     } else if (value == "DU") {
@@ -634,7 +633,7 @@ export class UpdateDialogContentDose implements OnInit {
   getProductDosesById(id: string): void {
     this.productsDosesDispatcherService.getProductDosesById(id).subscribe(
       result => {
-        console.log(result)
+   
         this.id = result.ID;
         this.productsId = result.ProductsId;
         this.doseType = result.DoseType;

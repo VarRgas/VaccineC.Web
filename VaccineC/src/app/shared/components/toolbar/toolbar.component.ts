@@ -63,31 +63,8 @@ export class ToolbarComponent implements OnInit {
 
     this.notificationDispatcherService.getAllNotificationsByUserId(this.userId).subscribe(
       notifications => {
-
         this.notifications = notifications;
-
-        if (notifications.length != 0) {
-
-          this.displayNone = "none !important";
-          let count = 0;
-
-          notifications.forEach((notification: any) => {
-            if (notification.Situation == "X") {
-              count++;
-            }
-          });
-
-          if (count != 0) {
-            this.isNewNotification = false;
-          } else {
-            this.isNewNotification = true;
-          }
-          this.newNotifications = count;
-
-        } else {
-          this.displayNone = "";
-        }
-
+        this.treatNotifications(notifications);
       },
       error => {
         console.log(error);
@@ -107,6 +84,7 @@ export class ToolbarComponent implements OnInit {
     this.notificationDispatcherService.update(id, notification).subscribe(
       notifications => {
         this.notifications = notifications;
+        this.treatNotifications(notifications);
       },
       error => {
         console.log(error);
@@ -117,20 +95,36 @@ export class ToolbarComponent implements OnInit {
     this.notificationDispatcherService.delete(id).subscribe(
       notifications => {
         this.notifications = notifications;
-        if (notifications.length != 0) {
-
-          this.displayNone = "none !important";
-        } else {
-          this.displayNone = "";
-        }
+        this.treatNotifications(notifications);
       },
       error => {
         console.log(error);
       });
   }
 
-  hideBadge() {
-    this.isNewNotification = true;
+  treatNotifications(notifications: any) {
+
+    if (notifications.length != 0) {
+
+      this.displayNone = "none !important";
+      let count = 0;
+
+      notifications.forEach((notification: any) => {
+        if (notification.Situation == "X") {
+          count++;
+        }
+      });
+
+      if (count != 0) {
+        this.isNewNotification = false;
+      } else {
+        this.isNewNotification = true;
+      }
+      this.newNotifications = count;
+
+    } else {
+      this.displayNone = "";
+    }
   }
 
 }
