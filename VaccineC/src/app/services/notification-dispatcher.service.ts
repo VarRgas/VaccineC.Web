@@ -40,4 +40,8 @@ export class NotificationsDispatcherService {
         return this.httpClient.post(`${baseURL}/UpdateOnDemand`, data);
     }
 
+    public manageNotifications(): Observable<any> {
+        return this.httpClient.get(`${baseURL}/ManageNotifications`);
+    }
+
 }

@@ -5,6 +5,7 @@ import { LoginDispatcherService } from 'src/app/services/login-dispatcher.servic
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
 
 @Component({
   selector: 'app-login',
@@ -27,10 +28,24 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+    private notificationsDispatcherService: NotificationsDispatcherService
   ) { }
 
   ngOnInit(): void {
+    localStorage.clear();
+    this.manageNotifications();
+  }
+
+  manageNotifications(): void {
+    this.notificationsDispatcherService.manageNotifications().subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+      });
+  
   }
 
   public validateLogin(): void {
@@ -47,7 +62,6 @@ export class LoginComponent implements OnInit {
         login.personId = response.PersonID;
         login.personName = response.PersonName;
         login.showNotification = response.ShowNotification;
-        localStorage.clear();
 
         localStorage.setItem('name', response.PersonName);
         localStorage.setItem('profilePic', response.PersonProfilePic);

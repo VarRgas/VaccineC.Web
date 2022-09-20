@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as $ from 'jquery';
 
 @Component({
@@ -14,10 +15,18 @@ export class SideMenuComponent implements OnInit {
   isCollapsedInventory = true;
   isCollapsedManagement = true;
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
 
+  }
+
+  logout(){
+    localStorage.clear();
+    console.log(localStorage);
+    this.router.navigateByUrl('/login');
   }
 
   collapses(): void {
