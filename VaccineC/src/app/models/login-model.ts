@@ -4,4 +4,5 @@ export class LoginModel {
   public personId: string = '';
   public personName: string = '';
   public password: string = '';
+  public showNotification!: string;
 }

@@ -40,11 +40,10 @@
         </li>
 
         <!-- Nav Item - Alerts -->
-        <li class="nav-item dropdown no-arrow mx-1" dropdown (onShown)="onShown()" (onHidden)="onHidden()"
-            (isOpenChange)="isOpenChange()">
+        <li class="nav-item dropdown no-arrow mx-1" dropdown [hidden]="isShowNotificationUser">
             <a class="nav-link dropdown-toggle" href id="basic-link" dropdownToggle (click)="false">
                 <i class="fas fa-bell fa-fw"></i>
-                <span class="badge badge-danger badge-counter">2+</span>
+                <span [hidden]="isNewNotification" class="badge badge-danger badge-counter">+{{newNotifications}}</span>
             </a>
             <ul id="basic-link-dropdown" *dropdownMenu
                 class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" role="menu"
@@ -52,27 +51,25 @@
                 <h6 class="dropdown-header">
                     Central de Notificações
                 </h6>
-                <a class="dropdown-item d-flex align-items-center" href="/situacao-estoque">
+                <a href="/situacao-estoque" *ngFor="let element of notifications" class="dropdown-item d-flex align-items-center">
                     <div class="mr-3">
-                        <div class="icon-circle bg-warning">
+                        <div class="icon-circle {{element.MessageType == 'L' ? 'bg-warning' : 'bg-danger'}}">
                             <i class="fas fa-triangle-exclamation text-white notification-icon"></i>
                         </div>
                     </div>
                     <div>
-                        <div class="small-text">Agosto 12, 2022</div>
-                        <span class="text-gray-600">O lote A1B2C3 está para vencer em
-                            25/08/2022!</span>
+                        <div class="small-text {{element.Situation == 'X' ? 'message-bold' : ''}}">{{element.FormatedDate}}</div>
+                        <span class="text-gray-600 {{element.Situation == 'X' ? 'message-bold' : ''}}" >{{element.Message}}</span>
                     </div>
                 </a>
-                <a class="dropdown-item d-flex align-items-center" href="/situacao-estoque">
+                <a [style.display]="displayNone" class="dropdown-item d-flex align-items-center">
                     <div class="mr-3">
-                        <div class="icon-circle bg-danger">
-                            <i class="fas fa-radiation text-white notification-icon"></i>
+                        <div class="icon-circle bg-success">
+                            <i class="fas fa-face-smile-wink text-white notification-icon"></i>
                         </div>
                     </div>
                     <div>
-                        <div class="small-text">Abril 7, 2022</div>
-                        <span class="text-gray-600">A vacina INFLUENZA encontra-se abaixo do estoque mínimo!</span>
+                        <span class="text-gray-600">Sem novas notificações!</span>
                     </div>
                 </a>
             </ul>
@@ -81,8 +78,7 @@
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
-        <li class="nav-item dropdown no-arrow" dropdown (onShown)="onShown()" (onHidden)="onHidden()"
-            (isOpenChange)="isOpenChange()">
+        <li class="nav-item dropdown no-arrow" dropdown>
             <a class="nav-link dropdown-toggle" href id="basic-link" dropdownToggle (click)="false"
                 aria-controls="basic-link-dropdown">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{userPersonName}}</span>

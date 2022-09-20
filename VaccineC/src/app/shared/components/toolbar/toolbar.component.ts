@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -11,12 +12,25 @@ export class ToolbarComponent implements OnInit {
   public userPersonName = "";
   public userPersonProfilePic = "";
 
-  public imagePathUrl = 'http://localhost:5000/';
-  public imagePathUrlDefault = "../../../../assets/img/default-profile-pic.png";
+  public notifications: any;
 
-  constructor() { }
+  public isShowNotificationUser = false;
+  public newNotifications!: number;
+  public isNewNotification = true;
+  public displayNone = "";
+
+  constructor(
+    private notificationDispatcherService: NotificationsDispatcherService
+  ) { }
 
   ngOnInit(): void {
+    this.setUserInformations();
+  }
+
+  setUserInformations(): void {
+
+    const imagePathUrl = 'http://localhost:5000/';
+    const imagePathUrlDefault = "../../../../assets/img/default-profile-pic.png";
 
     this.userId = localStorage.getItem('userId')!;
 
@@ -30,22 +44,53 @@ export class ToolbarComponent implements OnInit {
     }
 
     if (localStorage.getItem('profilePic') == "null") {
-      this.userPersonProfilePic = `${this.imagePathUrlDefault}`;
+      this.userPersonProfilePic = `${imagePathUrlDefault}`;
     } else {
       let profilePic = localStorage.getItem('profilePic')!;
-      this.userPersonProfilePic = `${this.imagePathUrl}${profilePic}`
+      this.userPersonProfilePic = `${imagePathUrl}${profilePic}`
+    }
+
+    if (localStorage.getItem('showNotification') == "S") {
+      this.isShowNotificationUser = false;
+      this.getUserNotifications();
+    } else {
+      this.isShowNotificationUser = true;
     }
   }
 
-  onHidden(): void {
+  getUserNotifications(): void {
 
-  }
+    this.notificationDispatcherService.getAllNotificationsByUserId(this.userId).subscribe(
+      notifications => {
 
-  onShown(): void {
+        this.notifications = notifications;
 
-  }
+        if (notifications.length != 0) {
 
-  isOpenChange(): void {
+          this.displayNone = "none !important";
+          let count = 0;
+
+          notifications.forEach((notification: any) => {
+            if (notification.Situation == "X") {
+              count++;
+            }
+          });
+
+          if (count != 0) {
+            this.isNewNotification = false;
+          } else {
+            this.isNewNotification = true;
+          }
+          this.newNotifications = count;
+
+        } else {
+          this.displayNone = "";
+        }
+
+      },
+      error => {
+        console.log(error);
+      });
 
   }
 

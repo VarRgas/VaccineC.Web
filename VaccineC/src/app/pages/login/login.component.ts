@@ -46,11 +46,13 @@ export class LoginComponent implements OnInit {
         login.id = response.ID;
         login.personId = response.PersonID;
         login.personName = response.PersonName;
+        login.showNotification = response.ShowNotification;
         localStorage.clear();
 
         localStorage.setItem('name', response.PersonName);
         localStorage.setItem('profilePic', response.PersonProfilePic);
         localStorage.setItem('userId', response.ID);
+        localStorage.setItem('showNotification', response.ShowNotification);
 
         this.snackBar.open("Logado com sucesso!", 'Ok', {
           horizontalPosition: 'right',

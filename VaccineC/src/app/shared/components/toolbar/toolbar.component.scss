@@ -30,6 +30,10 @@
   font-size: 20px;
 }
 
+.message-bold {
+  font-weight: bold !important;
+}
+
 @media (max-width: 768px) {
   #home-topbar {
     width: calc(100% - 6.5em);
