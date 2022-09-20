@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationModel } from 'src/app/models/notification-model';
 import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
 
 @Component({
@@ -92,6 +93,44 @@ export class ToolbarComponent implements OnInit {
         console.log(error);
       });
 
+  }
+
+  markAsRead(id: string, userId: string, message: string, messageType: string) {
+
+    let notification = new NotificationModel();
+    notification.id = id;
+    notification.userId = userId;
+    notification.message = message;
+    notification.messageType = messageType;
+    notification.situation = "L";
+
+    this.notificationDispatcherService.update(id, notification).subscribe(
+      notifications => {
+        this.notifications = notifications;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  remove(id: string) {
+    this.notificationDispatcherService.delete(id).subscribe(
+      notifications => {
+        this.notifications = notifications;
+        if (notifications.length != 0) {
+
+          this.displayNone = "none !important";
+        } else {
+          this.displayNone = "";
+        }
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  hideBadge() {
+    this.isNewNotification = true;
   }
 
 }

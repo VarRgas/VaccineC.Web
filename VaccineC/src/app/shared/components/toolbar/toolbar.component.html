@@ -41,28 +41,31 @@
 
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1" dropdown [hidden]="isShowNotificationUser">
-            <a class="nav-link dropdown-toggle" href id="basic-link" dropdownToggle (click)="false">
+            <a class="nav-link dropdown-toggle" href id="basic-link" dropdownToggle (click)="false" (click)="hideBadge()">
                 <i class="fas fa-bell fa-fw"></i>
                 <span [hidden]="isNewNotification" class="badge badge-danger badge-counter">+{{newNotifications}}</span>
             </a>
             <ul id="basic-link-dropdown" *dropdownMenu
                 class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" role="menu"
-                aria-labelledby="basic-link">
+                aria-labelledby="basic-link" style="width:30rem !important;">
                 <h6 class="dropdown-header">
                     Central de Notificações
                 </h6>
-                <a href="/situacao-estoque" *ngFor="let element of notifications" class="dropdown-item d-flex align-items-center">
-                    <div class="mr-3">
+                <li *ngFor="let element of notifications" style="padding-left: 1rem;" class="dropdown-item d-flex align-items-center" (click)="$event.stopPropagation()">
+                    <div class="mr-1">
                         <div class="icon-circle {{element.MessageType == 'L' ? 'bg-warning' : 'bg-danger'}}">
                             <i class="fas fa-triangle-exclamation text-white notification-icon"></i>
                         </div>
                     </div>
-                    <div>
+                    <div class="col-sm-11">
                         <div class="small-text {{element.Situation == 'X' ? 'message-bold' : ''}}">{{element.FormatedDate}}</div>
                         <span class="text-gray-600 {{element.Situation == 'X' ? 'message-bold' : ''}}" >{{element.Message}}</span>
+                        <span title="Marcar como lido" [hidden]="element.Situation == 'X' ? false : true" style="float:right;cursor:pointer;margin-left:0.3rem;" (click)="markAsRead(element.ID, element.UserId, element.Message, element.MessageType)"><i class="fas fa-circle-check" style="color:#3d9f3d"></i></span>
+                        <span title="Remover" style="float:right;cursor: pointer;" (click)="remove(element.ID)"><i class="fas fa-circle-xmark" style="color:#DC3545"></i></span>
+                   
                     </div>
-                </a>
-                <a [style.display]="displayNone" class="dropdown-item d-flex align-items-center">
+                </li>
+                <li [style.display]="displayNone" class="dropdown-item d-flex align-items-center">
                     <div class="mr-3">
                         <div class="icon-circle bg-success">
                             <i class="fas fa-face-smile-wink text-white notification-icon"></i>
@@ -71,7 +74,7 @@
                     <div>
                         <span class="text-gray-600">Sem novas notificações!</span>
                     </div>
-                </a>
+                </li>
             </ul>
         </li>
 
