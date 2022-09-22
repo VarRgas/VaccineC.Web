@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialExampleModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -47,7 +47,21 @@ import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { MatSortModule } from '@angular/material/sort';
 import { ConectionErrorComponent } from './pages/error/conection-error/conection-error.component';
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
+
 registerLocaleData(localePt, 'pt');
+
+export const MY_FORMATS = {
+  parse: {
+      dateInput: 'DD/MM/YYYY'
+  },
+  display: {
+      dateInput: 'DD/MM/YYYY',
+      monthYearLabel: 'MMMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY'
+  }
+};
 
 @NgModule({
   declarations: [
@@ -138,7 +152,10 @@ registerLocaleData(localePt, 'pt');
     }, {
       provide: DEFAULT_CURRENCY_CODE,
       useValue: 'BRL'
-    }
+    },
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

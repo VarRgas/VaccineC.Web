@@ -22,6 +22,8 @@ import { PersonsJuridicalsDispatcherService } from "src/app/services/person-juri
 import { PersonPhysicalModel } from "src/app/models/person-physical-model";
 import { PersonJuridicalModel } from "src/app/models/person-juridical-model";
 import { cpf, cnpj } from 'cpf-cnpj-validator';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
+import { MomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
 
 @Component({
   selector: 'app-pessoas',
