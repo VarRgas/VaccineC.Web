@@ -1,5 +1,5 @@
-<mat-stepper class="example-stepper" [orientation]="(stepperOrientation | async)!">
-    <mat-step [stepControl]="firstFormGroup" label="Identificação">
+<mat-stepper #stepper class="example-stepper" [orientation]="(stepperOrientation | async)!">
+    <mat-step [stepControl]="firstFormGroup" label="Identificação" >
         <form [formGroup]="firstFormGroup" class="mt-3">
             <div class="div-row-input">
                 <mat-form-field appearance="fill" class="col-sm-12">
@@ -44,7 +44,7 @@
             </div>
             <div>
                 <div class="mt-5" style="float:right;">
-                    <button color="primary" mat-mini-fab matStepperNext aria-label="Example icon button with a menu icon"
+                    <button color="primary" (click)="onNext(stepper)" mat-mini-fab  aria-label="Example icon button with a menu icon"
                         matTooltip="Próximo" matTooltipPosition="above">
                         <mat-icon>chevron_right</mat-icon>
                     </button>

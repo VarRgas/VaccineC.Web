@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { StepperOrientation } from '@angular/material/stepper';
+import { MatStepper, StepperOrientation } from '@angular/material/stepper';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -54,6 +54,11 @@ export class OrcamentoCadastroComponent implements OnInit {
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
   }
+
+  onNext(stepper: MatStepper) {
+    //chamar stepper.next depois de salvar com sucesso
+    stepper.next();
+ }
 
   ngOnInit(): void {
     this.filteredOptions = this.myControl.valueChanges.pipe(
