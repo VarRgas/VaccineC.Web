@@ -19,3 +19,39 @@
   margin-bottom: 0px !important;
   align-self: center !important;
 }
+
+.example-stepper {
+  font-size: 14px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+:host ::ng-deep .mat-horizontal-stepper-header-container {
+  height: 3rem;
+}
+
+:host ::ng-deep .mat-step-header {
+  height: 3rem;
+}
+
+.search-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
+:host ::ng-deep .mat-table {
+  margin-top: 25px;
+  margin-left: 40px;
+  border-radius: 0.75rem !important;
+  box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 10%), 0px 3px 4px 0px rgb(0 0 0 / 10%), 0px 1px 8px 0px rgb(0 0 0 / 10%);
+}
+
+.values {
+  font-size: 20px;
+  margin-bottom: 0.75rem;
+  margin-top: 2rem;
+  margin-left: 0.75rem;
+}

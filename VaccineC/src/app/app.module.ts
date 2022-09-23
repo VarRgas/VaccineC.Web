@@ -21,7 +21,7 @@ import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDia
 import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, ConfirmProductDosesRemoveDialog, UpdateDialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
-import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
+import { BudgetProductDialog, OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog, ConfirmUserResourceRemoveDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
@@ -30,7 +30,6 @@ import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-c
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
 import { NgChartsModule } from 'ng2-charts';
-import { OrcamentoCadastroComponent, BudgetProductDialog } from './pages/orcamentos/orcamento-cadastro/orcamento-cadastro.component';
 import { NgxMaskModule } from 'ngx-mask'
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AplicacaoCadastroComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao-cadastro/aplicacao-cadastro.component';
@@ -94,7 +93,6 @@ export const MY_FORMATS = {
     UserResourceAddDialog,
     PasswordDialog,
     ResetPasswordDialog,
-    OrcamentoCadastroComponent,
     BudgetProductDialog,
     AplicacaoCadastroComponent,
     AplicacaoPesquisaComponent,
