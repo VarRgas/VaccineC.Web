@@ -93,7 +93,7 @@
             <!-- ORÇAMENTO TAB -->
              <mat-tab label="Orçamento">
               <mat-stepper #stepper class="example-stepper" [orientation]="(stepperOrientation | async)!">
-                <mat-step [stepControl]="firstFormGroup" label="Identificação" >
+                <mat-step [stepControl]="budgetForm" label="Identificação" >
                     <form [formGroup]="budgetForm" class="mt-3">
                         <div class="div-row-input">
                             <!-- PESSOA -->
@@ -127,16 +127,16 @@
                             <!-- USUÁRIO -->
                             <mat-form-field appearance="fill" class="col-sm-7">
                                 <mat-label>Usuário colaborador</mat-label>
-                              <input (click)="searchPersonByAutoComplete()"
+                              <input (click)="searchUsersByAutoComplete()"
                                      [readonly]="isInputReadOnly"
                                      type="text"
-                                     id="personId"
+                                     id="userId"
                                      #UserIdinput
                                      placeholder="Selecione o usuário responsável pela venda"
                                      aria-label="Number"
                                      matInput
                                      formControlName="UserId"
-                                     [matAutocomplete]="auto" [(ngModel)]="personId" required>
+                                     [matAutocomplete]="auto" [(ngModel)]="userId" required>
                               <mat-error
                                   *ngIf="budgetForm.controls.UserId.touched && budgetForm.controls.UserId.invalid">
                                   <span *ngIf="budgetForm.controls.UserId.errors?.required">O usuário é obrigatório.</span>
@@ -181,7 +181,7 @@
                         <div>
                             <div class="mt-5" style="float:right;">
                                 <button color="primary"  mat-mini-fab  aria-label="Example icon button with a menu icon"
-                                    matTooltip="Próximo" matTooltipPosition="above">
+                                    matTooltip="Próximo" (click)="onNext(stepper)" matTooltipPosition="above">
                                     <!-- colocar o (click)="onNext(stepper)" -->
                                     <mat-icon>chevron_right</mat-icon>
                                 </button>

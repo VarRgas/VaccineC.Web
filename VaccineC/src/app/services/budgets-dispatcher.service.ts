@@ -22,4 +22,8 @@ export class BudgetsDispatcherService {
     public getBudgetById(id: string): Observable<any> {
       return this.httpClient.get(`${baseURL}/${id}`);
     }
+
+    public createBudget(data: object): Observable<any> {
+      return this.httpClient.post(`${baseURL}/Create`, data);
+    }
 }

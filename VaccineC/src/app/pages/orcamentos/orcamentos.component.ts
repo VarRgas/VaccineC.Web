@@ -16,6 +16,7 @@ import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.se
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
 
 @Component({
   selector: 'app-orcamentos',
@@ -90,7 +91,8 @@ export class OrcamentosComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private budgetsDispatcherService: BudgetsDispatcherService,
     private breakpointObserver: BreakpointObserver,
-    private personAutocompleteService: PersonAutocompleteService) {
+    private personAutocompleteService: PersonAutocompleteService,
+    private usersService: UsersService) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
@@ -98,11 +100,38 @@ export class OrcamentosComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+  }
 
-    // this.filteredOptions = this.myControl.valueChanges.pipe(
-    //   startWith(''),
-    //   map(value => this.filter(value || '')),
-    // );
+  public onNext(stepper: MatStepper) {
+    let budget = new BudgetModel();
+    budget.personId = this.budgetForm.value.PersonId.ID;
+    budget.userId = this.budgetForm.value.UserId.ID;
+    budget.expirationDate = this.expirationDate;
+    budget.details = this.details;
+
+    // this.budgetsDispatcherService.createBudget(budget)
+    //   .subscribe(
+    //     response => {
+    //       this.budgetId = response.ID;
+    //       this.personId = response.Users.Person.ID;
+    //       this.userId = response.Users.ID;
+    //       this.details = response.Details;
+    //       this.informationField = response.Person.Name;
+
+    //       this.createButtonLoading = false;
+    //       //this.tabIsDisabled = false;
+    //       this.isInputReadOnly = true;
+    //       this.loadData();
+
+    //       this.messageHandler.showMessage("Empresa criada com sucesso!", "success-snackbar")
+    //     },
+    //     error => {
+    //       console.log(error);
+    //       this.errorHandler.handleError(error);
+    //       this.createButtonLoading = false;
+    //     });
+
+    stepper.next();
   }
 
   public loadData(): void {
@@ -128,29 +157,6 @@ export class OrcamentosComponent implements OnInit {
           this.errorHandler.handleError(error);
           this.searchButtonLoading = false;
         });
-  }
-
-  public createUpdateBudget(): void {
-    this.createButtonLoading = true;
-
-    if (this.budgetId == "" || this.budgetId == null || this.budgetId == undefined) {
-      this.createBudget();
-    } else {
-      this.updateBudget();
-    }
-  }
-
-  public createBudget(): void {
-    if (!this.budgetForm.valid) {
-      console.log(this.budgetForm);
-      this.createButtonLoading = false;
-      this.budgetForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
-      return;
-    }
-  }
-
-  public updateBudget(): void {
   }
 
   public getBudgetsByPersonName(): void {
@@ -191,7 +197,7 @@ export class OrcamentosComponent implements OnInit {
       .subscribe(
         budget => {
           this.budgetId = budget.ID;
-          this.userId = budget.Users;
+          this.userId = budget.Users.Person;
           this.personId = budget.Users.Person;
           this.expirationDate = budget.ExpirationDate;
           this.details = budget.Details;
@@ -206,9 +212,9 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public resetForms(): void {
-    // this.budgetsForm.reset();
-    // this.budgetsForm.clearValidators();
-    // this.budgetsForm.updateValueAndValidity();
+    this.budgetForm.reset();
+    this.budgetForm.clearValidators();
+    this.budgetForm.updateValueAndValidity();
   }
 
   openProductDialog() {
@@ -228,13 +234,33 @@ export class OrcamentosComponent implements OnInit {
       debounceTime(400),
       distinctUntilChanged(),
       switchMap(val => {
-        return this.filter(val || '')
+        return this.filterPersons(val || '')
       })
     )
   }
 
-  public filter(val: string): Observable<any[]> {
+  public filterPersons(val: string): Observable<any[]> {
     return this.personAutocompleteService.getPersonUserAutocomplete()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  public searchUsersByAutoComplete(): void {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterUsers(val || '')
+      })
+    )
+  }
+
+  public filterUsers(val: string): Observable<any[]> {
+    return this.usersService.getAllActive()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
           return option.Name.toLowerCase()
@@ -245,10 +271,6 @@ export class OrcamentosComponent implements OnInit {
   displayState(state: any) {
     return state && state.Name ? state.Name : '';
   }
-
-  firstFormGroup = this.formBuilder.group({
-    firstCtrl: ['', Validators.required],
-  });
 
   secondFormGroup = this.formBuilder.group({
     secondCtrl: ['', Validators.required],
@@ -320,11 +342,6 @@ export class BudgetProductDialog implements OnInit {
       startWith(''),
       map(value => this._filter(value || '')),
     );
-  }
-
-  public onNext(stepper: MatStepper) {
-    //chamar stepper.next depois de salvar com sucesso
-    stepper.next();
   }
 
   private _filter(value: string): string[] {
