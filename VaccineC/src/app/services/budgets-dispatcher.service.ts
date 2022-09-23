@@ -18,4 +18,8 @@ export class BudgetsDispatcherService {
     public getBudgetsByPersonName(personName: string): Observable<any> {
       return this.httpClient.get(`${baseURL}/${personName}/GetByPersonName`);
     }
+
+    public getBudgetById(id: string): Observable<any> {
+      return this.httpClient.get(`${baseURL}/${id}`);
+    }
 }

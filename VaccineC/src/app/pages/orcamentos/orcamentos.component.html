@@ -88,7 +88,7 @@
              <mat-tab label="Orçamento">
               <mat-stepper #stepper class="example-stepper" [orientation]="(stepperOrientation | async)!">
                 <mat-step [stepControl]="firstFormGroup" label="Identificação" >
-                    <form [formGroup]="firstFormGroup" class="mt-3">
+                    <form [formGroup]="budgetForm" class="mt-3">
                         <div class="div-row-input">
                             <mat-form-field appearance="fill" class="col-sm-12">
                                 <mat-label>Responsável Financeiro</mat-label>
@@ -102,8 +102,35 @@
                                 </mat-autocomplete>
                                 <mat-icon matSuffix>search</mat-icon>
                             </mat-form-field>
+                            <!-- PESSOA -->
+                            <!-- <mat-form-field appearance="fill" class="col-sm-11">
+                              <mat-label>Pessoa</mat-label>
+                              <input (click)="searchPersonByAutoComplete()"
+                                     [readonly]="isInputReadOnly"
+                                     type="text"
+                                     id="personId"
+                                     #PersonIdinput
+                                     placeholder="Selecione a Pessoa Jurídica"
+                                     aria-label="Number"
+                                     matInput
+                                     formControlName="PersonId"
+                                     [matAutocomplete]="auto" [(ngModel)]="personId" required>
+                              <mat-error
+                                  *ngIf="budgetForm.controls.PersonId.touched && budgetForm.controls.PersonId.invalid">
+                                  <span *ngIf="budgetForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
+                              </mat-error>
+                              <mat-autocomplete #auto="matAutocomplete"
+                                                [displayWith]="displayState">
+                                  <mat-option *ngFor="let option of filteredOptions | async"
+                                      [value]="option">
+                                      {{option.Name}}
+                                  </mat-option>
+                              </mat-autocomplete>
+                              <mat-icon matSuffix>search</mat-icon>
+                          </mat-form-field> -->
                         </div>
                         <div class="div-row-input">
+                            <!-- USUÁRIO -->
                             <mat-form-field appearance="fill" class="col-sm-7">
                                 <mat-label>Usuário Colaborador</mat-label>
                                 <input type="text" id="userSellerId" placeholder="Selecione o usuário responsável pela venda"
@@ -115,20 +142,33 @@
                                 </mat-autocomplete>
                                 <mat-icon matSuffix>search</mat-icon>
                             </mat-form-field>
-
+                            <!-- VALIDADE -->
                             <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                                 <mat-label>Validade</mat-label>
-                                <input matInput [matDatepicker]="picker" id="validity" mask="00/00/0009">
+                                <input matInput
+                                       [matDatepicker]="picker"
+                                       id="validity"
+                                       #ExpirationDateInput
+                                       [(ngModel)]="expirationDate"
+                                       formControlName="ExpirationDate">
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
                         </div>
-
                         <div class="div-row-input">
-                            <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
-                                <mat-label>Detalhes</mat-label>
-                                <textarea matInput placeholder="Informações complementares" id="details"></textarea>
-                            </mat-form-field>
+                          <!-- DETALHES -->
+                          <mat-form-field class="example-full-width"
+                                          appearance="fill"
+                                          class="col-sm-11">
+                            <mat-label>Detalhes</mat-label>
+                            <textarea matInput
+                                      #DetailsInput
+                                      formControlName="Details"
+                                      [(ngModel)]="details"
+                                      id="details"
+                                      placeholder="Informações complementares"
+                                      maxlength="255"></textarea>
+                          </mat-form-field>
                         </div>
                         <div>
                             <div class="mt-5" style="float:right;">
