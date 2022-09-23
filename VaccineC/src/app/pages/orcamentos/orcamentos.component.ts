@@ -52,7 +52,7 @@ export class OrcamentosComponent implements OnInit {
 
   //Table search
   public value = '';
-  public displayedBudgetsColumns: string[] = ['ID', 'BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options'];
+  public displayedBudgetsColumns: string[] = ['UserID', 'ID', 'BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options'];
   public dataSourceBudget = new MatTableDataSource<IBudget>();;
 
   public myControl = new FormControl();
@@ -192,7 +192,7 @@ export class OrcamentosComponent implements OnInit {
         budget => {
           this.budgetId = budget.ID;
           this.userId = budget.Users;
-          this.personId = budget.Persons;
+          this.personId = budget.Users.Person;
           this.expirationDate = budget.ExpirationDate;
           this.details = budget.Details;
           this.informationField = budget.BudgetNumber;
