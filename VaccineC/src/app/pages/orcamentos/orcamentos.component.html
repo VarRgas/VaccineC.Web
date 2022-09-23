@@ -3,14 +3,91 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Orçamentos" containerPath="Operacional" [information]="informationField">
-            <mat-tab-group>
-                <mat-tab label="Pesquisa">
-                    <app-orcamento-pesquisa></app-orcamento-pesquisa>
-                </mat-tab>
-                <mat-tab label="Orçamento">
+          <mat-tab-group #tabGroup animationDuration="0ms">
+              <mat-tab label="Pesquisa">
+                <div class="search-group">
+                  <div class="col-sm-11 p-0 d-flex">
+                      <mat-form-field class="search-form-field col-sm-9" appearance="outline">
+                          <mat-label>Digite o nome do responsável ou o nº do orçamento</mat-label>
+                          <input id="searchPersonName" matInput type="text" [(ngModel)]="searchPersonName">
+                          <button *ngIf="value"
+                                  matSuffix
+                                  mat-icon-button
+                                  aria-label="Clear"
+                                  (click)="value=''">
+                              <mat-icon>close</mat-icon>
+                          </button>
+                      </mat-form-field>
+                      <button id="mat-search-button"
+                              mat-raised-button
+                              color="primary"
+                              class="mat-button-entry me-2"
+                              (click)="loadData()">
+                          <span class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
+                              <span>Pesquisar</span>
+                      </button>
+                      <button id="mat-add-button"
+                              mat-raised-button
+                              class="mat-button-entry create-button"
+                              matTooltip="Novo Orçamento"
+                              matTooltipPosition="above"><span
+                              class="fa-solid fa-plus w-20px"
+                              (click)="addNewBudget(); tabGroup.selectedIndex=1"></span></button>
+                  </div>
+              </div>
+              <div id="search-table">
+                <div class="col-sm-11 search-table-content mat-elevation-z2">
+                  <mat-table [dataSource]="dataSourceBudget" class="col-sm-11">
+                    <!-- Id Hidden Column -->
+                    <ng-container matColumnDef="ID">
+                      <mat-header-cell *matHeaderCellDef [hidden]="show"> ID </mat-header-cell>
+                      <mat-cell [hidden]="show" *matCellDef="let row">
+                        {{row.ID}} </mat-cell>
+                    </ng-container>
+                    <!-- Numero do orçamento -->
+                    <ng-container matColumnDef="BudgetNumber">
+                        <mat-header-cell *matHeaderCellDef> Orçamento nº </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.BudgetNumber}} </mat-cell>
+                    </ng-container>
+                    <!-- Nome da pessoa -->
+                    <ng-container matColumnDef="PersonName">
+                        <mat-header-cell *matHeaderCellDef> Pessoa </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.Persons.Name}} </mat-cell>
+                    </ng-container>
+                    <!-- Data de validade -->
+                    <ng-container matColumnDef="ExpirationDate">
+                        <mat-header-cell *matHeaderCellDef> Validade </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.ExpirationDate  | date: 'dd/MM/yyyy'}} </mat-cell>
+                    </ng-container>
+                    <!-- Total -->
+                    <ng-container matColumnDef="Amount">
+                        <mat-header-cell *matHeaderCellDef> R$ Total </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.TotalBudgetAmount}} </mat-cell>
+                    </ng-container>
+                    <!-- Row Button -->
+                    <ng-container matColumnDef="Options">
+                      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <button (click)="editBudget(row.ID); tabGroup.selectedIndex=1" mat-icon-button color="primary"
+                          title="Visualizar"><i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" colspan="3">Nenhum registro encontrado.</td>
+                    </tr>
+                </mat-table>
+                <mat-paginator #paginatorBudget="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                </div>
+              </div>
+            </mat-tab>
+           <mat-tab label="Orçamento">
                     <app-orcamento-cadastro></app-orcamento-cadastro>
-                </mat-tab>
-              </mat-tab-group>
+           </mat-tab>
+          </mat-tab-group>
         </app-container>
     </div>
 </div>

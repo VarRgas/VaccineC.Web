@@ -1,0 +1,21 @@
+.search-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 2rem;
+}
+
+#search-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
+.mat-button-entry {
+  margin-bottom: 0px !important;
+  align-self: center !important;
+}
