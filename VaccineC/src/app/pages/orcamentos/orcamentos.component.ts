@@ -24,9 +24,8 @@ import { UsersService } from 'src/app/services/user-dispatcher.service';
   styleUrls: ['./orcamentos.component.scss']
 })
 export class OrcamentosComponent implements OnInit {
-  //Controle para o spinner do button
-  public searchButtonLoading: boolean = false;
-  public createButtonLoading: boolean = false;
+
+  @ViewChild('stepper') stepper!: MatStepper;
 
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
@@ -37,28 +36,31 @@ export class OrcamentosComponent implements OnInit {
 
   //Variáveis dos inputs
   public searchPersonName!: string;
-  public situation = 'P';
+  public situation!: string;
   public budgetId!: string;
   public personId!: string;
   public userId!: string;
   public details!: string;
   public budgetNumber!: number;
   public budgetsAmount!: number;
-  public discountPercentage: number = 0;
-  public discountValue: number = 0;
-  public totalBudgetAmount: number = 0;
-  public totalBudgetedAmount: number = 0;
+  public discountPercentage!: number;
+  public discountValue!: number;
+  public totalBudgetAmount!: number;
+  public totalBudgetedAmount!: number;
   public expirationDate!: Date;
   public informationField!: string;
 
   //Table search
-  public value = '';
-  public displayedBudgetsColumns: string[] = ['UserID', 'ID', 'BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options'];
+  public displayedBudgetsColumns: string[] = ['BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options', 'ID'];
   public dataSourceBudget = new MatTableDataSource<IBudget>();;
 
   public myControl = new FormControl();
   public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
+
+  public myUserControl = new FormControl();
+  public acUser: string[] = [];
+  public acUsers: Observable<any[]> | undefined;
 
   public displayedColumns: string[] = ['product', 'dose', 'borrower', 'amount'];
   public dataSource = ELEMENT_DATA;
@@ -66,19 +68,12 @@ export class OrcamentosComponent implements OnInit {
   public displayedColumns2: string[] = ['paymentForm', 'portion', 'negotiatedValue'];
   public dataSource2 = ELEMENT_DATA2;
 
-
   public budgetForm: FormGroup = this.formBuilder.group({
-    Id: [null],
-    UserId: [null],
-    PersonId: [null],
+    PersonId: [null, Validators.required],
+    UserId: [null, Validators.required],
     Situation: [null],
-    DiscountPercentage: [null],
-    DiscountValue: [null],
-    TotalBudgetNumber: [null],
-    ExpirationDate: [null],
-    ApprovalDate: [null],
+    ExpirationDate: [null, Validators.required],
     Details: [null],
-    TotalBudgetedNumber: [null],
   });
 
   @ViewChild('paginatorBudget') paginatorBudget!: MatPaginator;
@@ -99,43 +94,107 @@ export class OrcamentosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
+
   }
 
   public onNext(stepper: MatStepper) {
+    if (this.budgetId == "" || this.budgetId == null || this.budgetId == undefined) {
+      this.createBudget(stepper);
+    } else {
+      this.updateBudget(stepper);
+    }
+  }
+
+
+  public createBudget(stepper: MatStepper): void {
+
+    if (!this.budgetForm.valid) {
+      console.log(this.budgetForm);
+      //this.createButtonLoading = false;
+      this.budgetForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
     let budget = new BudgetModel();
     budget.personId = this.budgetForm.value.PersonId.ID;
-    budget.userId = this.budgetForm.value.UserId.ID;
+    budget.userId = localStorage.getItem('userId')!;
+    budget.situation = "P";
+    budget.totalBudgetAmount = 0;
+    budget.discountPercentage = 0;
+    budget.discountValue = 0;
     budget.expirationDate = this.expirationDate;
     budget.details = this.details;
+    budget.totalBudgetedAmount = 0;
 
-    // this.budgetsDispatcherService.createBudget(budget)
-    //   .subscribe(
-    //     response => {
-    //       this.budgetId = response.ID;
-    //       this.personId = response.Users.Person.ID;
-    //       this.userId = response.Users.ID;
-    //       this.details = response.Details;
-    //       this.informationField = response.Person.Name;
+    this.budgetsDispatcherService.createBudget(budget)
+      .subscribe(
+        response => {
+          console.log(response)
+          this.budgetId = response.ID;
+          this.personId = response.Persons;
+          this.userId = response.Users;
+          this.expirationDate = response.ExpirationDate;
+          this.details = response.Details;
 
-    //       this.createButtonLoading = false;
-    //       //this.tabIsDisabled = false;
-    //       this.isInputReadOnly = true;
-    //       this.loadData();
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
 
-    //       this.messageHandler.showMessage("Empresa criada com sucesso!", "success-snackbar")
-    //     },
-    //     error => {
-    //       console.log(error);
-    //       this.errorHandler.handleError(error);
-    //       this.createButtonLoading = false;
-    //     });
+          this.loadData();
+          stepper.next();
+          this.messageHandler.showMessage("Orçamento criado com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
 
-    stepper.next();
+  }
+
+  public updateBudget(stepper: MatStepper): void {
+
+    if (!this.budgetForm.valid) {
+      console.log(this.budgetForm);
+      //this.createButtonLoading = false;
+      this.budgetForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let budget = new BudgetModel();
+    budget.id = this.budgetId;
+    budget.personId = this.budgetForm.value.PersonId.ID;
+    budget.userId = localStorage.getItem('userId')!;
+    budget.situation = "P";
+    budget.totalBudgetAmount = 0;
+    budget.discountPercentage = 0;
+    budget.discountValue = 0;
+    budget.expirationDate = this.expirationDate;
+    budget.details = this.details;
+    budget.totalBudgetedAmount = 0;
+
+    this.budgetsDispatcherService.updateBudget(budget.id, budget)
+      .subscribe(
+        response => {
+          console.log(response)
+          this.budgetId = response.ID;
+          this.personId = response.Persons;
+          this.userId = response.Users;
+          this.expirationDate = response.ExpirationDate;
+          this.details = response.Details;
+
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
+
+          this.loadData();
+          stepper.next();
+          this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
   }
 
   public loadData(): void {
-    this.searchButtonLoading = true;
 
     if (this.searchPersonName == "" || this.searchPersonName == null || this.searchPersonName == undefined) {
       this.getAllBudgets();
@@ -150,12 +209,10 @@ export class OrcamentosComponent implements OnInit {
         this.dataSourceBudget = new MatTableDataSource(budgets);
         this.dataSourceBudget.paginator = this.paginatorBudget;
         this.dataSourceBudget.sort = this.sort;
-        this.searchButtonLoading = false;
       },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
-          this.searchButtonLoading = false;
         });
   }
 
@@ -168,21 +225,29 @@ export class OrcamentosComponent implements OnInit {
           this.dataSourceBudget = new MatTableDataSource(budgets);
           this.dataSourceBudget.paginator = this.paginatorBudget;
           this.dataSourceBudget.sort = this.sort;
-          this.searchButtonLoading = false;
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
-          this.searchButtonLoading = false;
         });
   }
 
-  public addNewBudget(): void {
-    this.resetForms();
-    this.informationField = "";
+  public addNewBudget(stepper: MatStepper): void {
 
-    // this.inputIsDisabled = false;
-    // this.tabIsDisabled = true;
+    this.usersService.getById(localStorage.getItem('userId')!)
+      .subscribe(
+        user => {
+          this.userId = user;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.resetForms();
+    this.stepper.selectedIndex = 0;
+
+    this.budgetId = "";
+    this.informationField = "";
 
     this.dataSourceBudget = new MatTableDataSource();
     this.dataSourceBudget.paginator = this.paginatorBudget;
@@ -191,19 +256,19 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public editBudget(id: string): void {
+
     this.resetForms();
 
     this.budgetsDispatcherService.getBudgetById(id)
       .subscribe(
         budget => {
+          console.log(budget)
           this.budgetId = budget.ID;
-          this.userId = budget.Users.Person;
-          this.personId = budget.Users.Person;
+          this.userId = budget.Users;
+          this.personId = budget.Persons;
           this.expirationDate = budget.ExpirationDate;
           this.details = budget.Details;
-          this.informationField = budget.BudgetNumber;
-
-          //this.tabIsDisabled = false;
+          this.informationField = `Orçamento nº ${budget.BudgetNumber} - ${budget.Persons.Name}`;
         },
         error => {
           console.log(error);
@@ -240,7 +305,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public filterPersons(val: string): Observable<any[]> {
-    return this.personAutocompleteService.getPersonUserAutocomplete()
+    return this.personAutocompleteService.getPersonPhysicalData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
           return option.Name.toLowerCase()
@@ -249,7 +314,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public searchUsersByAutoComplete(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.acUsers = this.myUserControl.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -262,14 +327,19 @@ export class OrcamentosComponent implements OnInit {
   public filterUsers(val: string): Observable<any[]> {
     return this.usersService.getAllActive()
       .pipe(
-        map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+        map(response => response.filter((user: { Email: string; ID: string }) => {
+          console.log(user)
+          return user.Email.toLowerCase()
         }))
       )
   }
 
-  displayState(state: any) {
+  displayStatePerson(state: any) {
     return state && state.Name ? state.Name : '';
+  }
+
+  displayStateUser(state: any) {
+    return state && state.Email ? state.Email : '';
   }
 
   secondFormGroup = this.formBuilder.group({

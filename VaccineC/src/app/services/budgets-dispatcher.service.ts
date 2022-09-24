@@ -26,4 +26,8 @@ export class BudgetsDispatcherService {
     public createBudget(data: object): Observable<any> {
       return this.httpClient.post(`${baseURL}/Create`, data);
     }
+
+    public updateBudget(id: string, data: object): Observable<any> {
+      return this.httpClient.put(`${baseURL}/${id}/Update`, data);
+    }
 }

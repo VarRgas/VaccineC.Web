@@ -7,17 +7,80 @@
   margin-bottom: 2rem;
 }
 
-#search-table {
-  display: flex;
-  justify-content: center;
-  overflow-x: initial;
-  margin: 0.5rem;
-  border: none
+.search-table-content {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+:host ::ng-deep .search-group .mat-form-field-wrapper {
+  padding: 0px;
 }
 
 .mat-button-entry {
   margin-bottom: 0px !important;
   align-self: center !important;
+}
+
+form {
+  width: 100% !important;
+}
+
+.spinner-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-container {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 0px !important;
+  align-self: center !important;
+}
+
+.spinner {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-button {
+  height: 40px;
+  bottom: 6px;
+  margin-left: 5px;
+}
+
+.edit-button {
+  height: 40px;
+  bottom: 6px;
+  margin-left: 10px;
+}
+
+.float-btn {
+  z-index: 100;
+  position: absolute;
+  bottom: 24px;
+  right: 36px;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  height: 100% !important;
+}
+
+:host ::ng-deep .mat-tab-group {
+  height: 100% !important;
+}
+
+:host ::ng-deep .mat-chip {
+  font-size: 12px !important;
+  color: #858796 !important;
 }
 
 .example-stepper {
@@ -26,15 +89,7 @@
   margin-right: 1rem;
 }
 
-:host ::ng-deep .mat-horizontal-stepper-header-container {
-  height: 3rem;
-}
-
-:host ::ng-deep .mat-step-header {
-  height: 3rem;
-}
-
-.search-table {
+#movement-product-table {
   display: flex;
   justify-content: center;
   overflow-x: initial;
@@ -42,9 +97,26 @@
   border: none
 }
 
-.values {
-  font-size: 20px;
-  margin-bottom: 0.75rem;
-  margin-top: 2rem;
-  margin-left: 0.75rem;
+.mat-footer-row {
+  font-weight: bold !important;
+}
+
+.mat-column-Select, .mat-column-Options {
+  flex: 0 0 100px !important;
+  white-space: unset !important;
+}
+
+.mat-cell-Select, .mat-cell-Options {
+  flex: 0 0 100px !important;
+  white-space: unset !important;
+}
+
+.mat-column-BudgetNumber {
+  flex: 0 0 150px !important;
+  white-space: unset !important;
+}
+
+.mat-cell-BudgetNumber {
+  flex: 0 0 150px !important;
+  white-space: unset !important;
 }
