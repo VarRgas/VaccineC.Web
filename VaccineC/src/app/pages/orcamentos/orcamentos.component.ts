@@ -1,9 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation } from '@angular/cdk/stepper';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatStepper } from '@angular/material/stepper';
@@ -11,8 +11,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { IBudget } from 'src/app/interfaces/i-budget';
+import { IBudgetProduct } from 'src/app/interfaces/i-budget-product';
 import { BudgetModel } from 'src/app/models/budget-model';
 import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
+import { BudgetsProductsDispatcherService } from 'src/app/services/budgets-products-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
@@ -33,6 +35,10 @@ export class OrcamentosComponent implements OnInit {
   //Controle de habilitação de campos
   public isInputDisabled = false;
   public isInputReadOnly = false;
+  public isPersonReadOnly = false;
+
+  //Controle dos steps
+  public isBudgetProductEditable = false;
 
   //Variáveis dos inputs
   public searchPersonName!: string;
@@ -45,14 +51,16 @@ export class OrcamentosComponent implements OnInit {
   public budgetsAmount!: number;
   public discountPercentage!: number;
   public discountValue!: number;
+  public discountType: string = 'R$';
   public totalBudgetAmount!: number;
   public totalBudgetedAmount!: number;
   public expirationDate!: Date;
   public informationField!: string;
+  public prefixDiscountType: string = 'R$';
 
   //Table search
   public displayedBudgetsColumns: string[] = ['BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options', 'ID'];
-  public dataSourceBudget = new MatTableDataSource<IBudget>();;
+  public dataSourceBudget = new MatTableDataSource<IBudget>();
 
   public myControl = new FormControl();
   public options: string[] = [];
@@ -62,8 +70,8 @@ export class OrcamentosComponent implements OnInit {
   public acUser: string[] = [];
   public acUsers: Observable<any[]> | undefined;
 
-  public displayedColumns: string[] = ['product', 'dose', 'borrower', 'amount'];
-  public dataSource = ELEMENT_DATA;
+  public displayedColumnsBudgetProduct: string[] = ['ProductName', 'BorrowerPersonName', 'EstimatedSalesValue', 'ID', 'Options'];
+  public dataSourceBudgetProduct = new MatTableDataSource<IBudgetProduct>();
 
   public displayedColumns2: string[] = ['paymentForm', 'portion', 'negotiatedValue'];
   public dataSource2 = ELEMENT_DATA2;
@@ -87,6 +95,7 @@ export class OrcamentosComponent implements OnInit {
     private budgetsDispatcherService: BudgetsDispatcherService,
     private breakpointObserver: BreakpointObserver,
     private personAutocompleteService: PersonAutocompleteService,
+    private budgetsProductsDispatcherService: BudgetsProductsDispatcherService,
     private usersService: UsersService) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -97,12 +106,105 @@ export class OrcamentosComponent implements OnInit {
 
   }
 
-  public onNext(stepper: MatStepper) {
+  calculateBudgetAmount(): void {
+    if (this.discountType == "R$") {
+      this.totalBudgetAmount = Number(this.totalBudgetedAmount) - Number(this.discountValue);
+    } else {
+      let percentDecimal = Number(this.discountValue) / 100;
+      let discountValue = percentDecimal * this.totalBudgetedAmount;
+      this.totalBudgetAmount = this.totalBudgetedAmount - discountValue;
+    }
+  }
+
+  discountTypeChanged(): void {
+    if (this.discountType == "R$") {
+      this.prefixDiscountType = "R$"
+    } else {
+      this.prefixDiscountType = "%"
+    }
+
+    this.calculateBudgetAmount();
+  }
+
+  public getTotalProductAmount() {
+    return this.dataSourceBudgetProduct.data.map(t => t.EstimatedSalesValue).reduce((acc, value) => acc + value, 0);
+  }
+
+  public resolveExibitionDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "DOSE ÚNICA"
+    } else if (doseType == "D1") {
+      return "DOSE 1"
+    } else if (doseType == "D2") {
+      return "DOSE 2"
+    } else if (doseType == "D3") {
+      return "DOSE 3"
+    } else if (doseType == "DR") {
+      return "DOSE DE REFORÇO"
+    } else {
+      return ""
+    }
+  }
+
+  public goToBudgetProductStep(stepper: MatStepper) {
     if (this.budgetId == "" || this.budgetId == null || this.budgetId == undefined) {
       this.createBudget(stepper);
     } else {
       this.updateBudget(stepper);
     }
+  }
+
+  public goToBudgetValuesStep(stepper: MatStepper) {
+    this.totalBudgetedAmount = this.dataSourceBudgetProduct.data.map(t => t.EstimatedSalesValue).reduce((acc, value) => acc + value, 0);
+    stepper.next();
+  }
+
+  public goToBudgetNegotiationStep(stepper: MatStepper) {
+
+    if (!this.budgetForm2.valid) {
+      console.log(this.budgetForm);
+      //this.createButtonLoading = false;
+      this.budgetForm2.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let budget = new BudgetModel();
+    budget.id = this.budgetId;
+    budget.personId = this.budgetForm.value.PersonId.ID;
+    budget.userId = localStorage.getItem('userId')!;
+    budget.situation = "E";
+    budget.totalBudgetAmount = this.totalBudgetAmount;
+    budget.discountPercentage = this.discountPercentage;
+    budget.discountValue = this.discountValue;
+    budget.expirationDate = this.expirationDate;
+    budget.details = this.details;
+    budget.totalBudgetedAmount = this.totalBudgetedAmount;
+
+    this.budgetsDispatcherService.updateBudget(budget.id, budget)
+      .subscribe(
+        response => {
+          console.log(response)
+          this.budgetId = response.ID;
+          this.personId = response.Persons;
+          this.userId = response.Users;
+          this.expirationDate = response.ExpirationDate;
+          this.situation = response.situation;
+          this.details = response.Details;
+
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
+
+          this.isPersonReadOnly = true;
+
+          this.loadData();
+          stepper.next();
+          this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
+
   }
 
 
@@ -132,12 +234,20 @@ export class OrcamentosComponent implements OnInit {
         response => {
           console.log(response)
           this.budgetId = response.ID;
-          this.personId = response.Persons;
           this.userId = response.Users;
+          this.personId = response.Persons;
+          this.situation = response.Situation;
+          this.totalBudgetAmount = response.TotalBudgetAmount;
+          this.discountPercentage = response.DiscountPercentage;
+          this.discountValue = response.DiscountValue;
           this.expirationDate = response.ExpirationDate;
           this.details = response.Details;
+          this.budgetNumber = response.BudgetNumber;
+          this.totalBudgetedAmount = response.TotalBudgetedAmount;
 
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
+
+          this.isPersonReadOnly = true;
 
           this.loadData();
           stepper.next();
@@ -164,25 +274,33 @@ export class OrcamentosComponent implements OnInit {
     budget.id = this.budgetId;
     budget.personId = this.budgetForm.value.PersonId.ID;
     budget.userId = localStorage.getItem('userId')!;
-    budget.situation = "P";
-    budget.totalBudgetAmount = 0;
-    budget.discountPercentage = 0;
-    budget.discountValue = 0;
+    budget.situation = this.situation;
+    budget.totalBudgetAmount = this.totalBudgetAmount;
+    budget.discountPercentage = this.discountPercentage;
+    budget.discountValue = this.discountValue;
     budget.expirationDate = this.expirationDate;
     budget.details = this.details;
-    budget.totalBudgetedAmount = 0;
+    budget.totalBudgetedAmount = this.totalBudgetedAmount;
 
     this.budgetsDispatcherService.updateBudget(budget.id, budget)
       .subscribe(
         response => {
           console.log(response)
           this.budgetId = response.ID;
-          this.personId = response.Persons;
           this.userId = response.Users;
+          this.personId = response.Persons;
+          this.situation = response.Situation;
+          this.totalBudgetAmount = response.TotalBudgetAmount;
+          this.discountPercentage = response.DiscountPercentage;
+          this.discountValue = response.DiscountValue;
           this.expirationDate = response.ExpirationDate;
           this.details = response.Details;
+          this.budgetNumber = response.BudgetNumber;
+          this.totalBudgetedAmount = response.TotalBudgetedAmount;
 
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
+
+          this.isPersonReadOnly = true;
 
           this.loadData();
           stepper.next();
@@ -248,6 +366,7 @@ export class OrcamentosComponent implements OnInit {
 
     this.budgetId = "";
     this.informationField = "";
+    this.isPersonReadOnly = false;
 
     this.dataSourceBudget = new MatTableDataSource();
     this.dataSourceBudget.paginator = this.paginatorBudget;
@@ -266,9 +385,28 @@ export class OrcamentosComponent implements OnInit {
           this.budgetId = budget.ID;
           this.userId = budget.Users;
           this.personId = budget.Persons;
+          this.situation = budget.Situation;
+          this.totalBudgetAmount = budget.TotalBudgetAmount;
+          this.discountPercentage = budget.DiscountPercentage;
+          this.discountValue = budget.DiscountValue;
           this.expirationDate = budget.ExpirationDate;
           this.details = budget.Details;
+          this.budgetNumber = budget.BudgetNumber;
+          this.totalBudgetedAmount = budget.TotalBudgetedAmount;
+
+          console.log(this.situation)
+
           this.informationField = `Orçamento nº ${budget.BudgetNumber} - ${budget.Persons.Name}`;
+          this.isPersonReadOnly = true;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.budgetsProductsDispatcherService.getBudgetsProductsBudget(id)
+      .subscribe(
+        budgetsProducts => {
+          this.dataSourceBudgetProduct = new MatTableDataSource(budgetsProducts);
         },
         error => {
           console.log(error);
@@ -284,7 +422,11 @@ export class OrcamentosComponent implements OnInit {
 
   openProductDialog() {
     const dialogRef = this.dialog.open(BudgetProductDialog, {
-      width: '80vw'
+      disableClose: true,
+      width: '70vw',
+      data: {
+        ID: this.budgetId,
+      },
     });
 
     dialogRef.afterClosed()
@@ -346,8 +488,11 @@ export class OrcamentosComponent implements OnInit {
     secondCtrl: ['', Validators.required],
   });
 
-  thirdFormGroup = this.formBuilder.group({
-    thirdCtrl: ['', Validators.required],
+  budgetForm2 = this.formBuilder.group({
+    TotalBudgetedAmount: [null, Validators.required],
+    TotalBudgetAmount: [null, Validators.required],
+    DiscountType: [null, Validators.required],
+    DiscountValue: [null, Validators.required],
   });
 
   fourthFormGroup = this.formBuilder.group({
@@ -397,6 +542,9 @@ const ELEMENT_DATA3: DosesElement[] = [
 })
 
 export class BudgetProductDialog implements OnInit {
+
+  public budgetId!: number;
+
   public myControl = new FormControl('');
   public options: string[] = ['VACINA COVID', 'VACINA INFLUENZA', 'VACINA TETRAVALENTE'];
   public filteredOptions: Observable<any[]> | undefined;
@@ -405,9 +553,15 @@ export class BudgetProductDialog implements OnInit {
   public dataSource3 = new MatTableDataSource<DosesElement>(ELEMENT_DATA3);
   public selection3 = new SelectionModel<DosesElement>(true, []);
 
-  constructor() { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<BudgetProductDialog>
+  ) { }
 
   ngOnInit(): void {
+
+    this.budgetId = this.data.ID;
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),

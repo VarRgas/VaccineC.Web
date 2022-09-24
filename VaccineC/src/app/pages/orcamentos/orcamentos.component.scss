@@ -120,3 +120,12 @@ form {
   flex: 0 0 150px !important;
   white-space: unset !important;
 }
+
+
+#budget-product-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}

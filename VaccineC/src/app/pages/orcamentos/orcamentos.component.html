@@ -16,15 +16,15 @@
                                 <span class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
                                 <span>Pesquisar</span>
                             </button>
-                            <button (click)="addNewBudget(stepper); tabGroup.selectedIndex=1" id="mat-add-button" mat-raised-button class="mat-button-entry create-button"
-                                matTooltip="Novo Orçamento" matTooltipPosition="above"><span
-                                    class="fa-solid fa-plus w-20px"></span></button>
+                            <button (click)="addNewBudget(stepper); tabGroup.selectedIndex=1" id="mat-add-button"
+                                mat-raised-button class="mat-button-entry create-button" matTooltip="Novo Orçamento"
+                                matTooltipPosition="above"><span class="fa-solid fa-plus w-20px"></span></button>
                         </div>
                     </div>
                     <div id="search-table">
                         <div class="col-sm-11 search-table-content mat-elevation-z2">
-                            <table class="col-sm-12" mat-table [dataSource]="dataSourceBudget" matSort matSortActive="BudgetNumber"
-                                matSortDirection="asc">
+                            <table class="col-sm-12" mat-table [dataSource]="dataSourceBudget" matSort
+                                matSortActive="BudgetNumber" matSortDirection="asc">
                                 <!-- Numero do orçamento -->
                                 <ng-container matColumnDef="BudgetNumber">
                                     <mat-header-cell *matHeaderCellDef> Orçamento nº </mat-header-cell>
@@ -44,7 +44,8 @@
                                 <!-- Total -->
                                 <ng-container matColumnDef="Amount">
                                     <mat-header-cell *matHeaderCellDef> R$ Total </mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.TotalBudgetAmount | currency : 'R$' }} </mat-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.TotalBudgetAmount | currency : 'R$'
+                                        }} </mat-cell>
                                 </ng-container>
                                 <!-- Id Hidden Column -->
                                 <ng-container matColumnDef="ID">
@@ -61,7 +62,9 @@
                                     </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedBudgetsColumns"></mat-header-row>
-                                <mat-row class="hover-element-row" style="cursor:pointer;" (dblclick)="editBudget(row.ID)" (dblclick)="tabGroup.selectedIndex=1" *matRowDef="let row; columns: displayedBudgetsColumns;"></mat-row>
+                                <mat-row class="hover-element-row" style="cursor:pointer;"
+                                    (dblclick)="editBudget(row.ID)" (dblclick)="tabGroup.selectedIndex=1"
+                                    *matRowDef="let row; columns: displayedBudgetsColumns;"></mat-row>
                                 <!-- Row shown when there is no matching data. -->
                                 <tr class="mat-row" *matNoDataRow>
                                     <td class="mat-cell" colspan="3">Nenhum registro encontrado.</td>
@@ -81,10 +84,10 @@
                                     <!-- PESSOA -->
                                     <mat-form-field appearance="fill" class="col-sm-12">
                                         <mat-label>Pessoa</mat-label>
-                                        <input (click)="searchPersonByAutoComplete()"
-                                            type="text" #PersonIdinput placeholder="Selecione a Pessoa"
-                                            aria-label="Number" matInput formControlName="PersonId"
-                                            [matAutocomplete]="autoPerson" [(ngModel)]="personId" required>
+                                        <input (click)="searchPersonByAutoComplete()" type="text" #PersonIdinput
+                                            placeholder="Selecione a Pessoa" aria-label="Number" matInput
+                                            formControlName="PersonId" [matAutocomplete]="autoPerson"
+                                            [(ngModel)]="personId" [readonly]="isPersonReadOnly" required>
                                         <mat-error
                                             *ngIf="budgetForm.controls.PersonId.touched && budgetForm.controls.PersonId.invalid">
                                             <span *ngIf="budgetForm.controls.PersonId.errors?.required">A Pessoa é
@@ -128,16 +131,14 @@
                                     <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
                                         <mat-label>Detalhes</mat-label>
                                         <textarea matInput #DetailsInput formControlName="Details" [(ngModel)]="details"
-                                            placeholder="Informações complementares"
-                                            maxlength="255"></textarea>
+                                            placeholder="Informações complementares" maxlength="255"></textarea>
                                     </mat-form-field>
                                 </div>
                                 <div>
                                     <div class="mt-5" style="float:right;">
                                         <button color="primary" mat-mini-fab
                                             aria-label="Example icon button with a menu icon" matTooltip="Próximo"
-                                            (click)="onNext(stepper)" matTooltipPosition="above">
-                                            <!-- colocar o (click)="onNext(stepper)" -->
+                                            (click)="goToBudgetProductStep(stepper)" matTooltipPosition="above">
                                             <mat-icon>chevron_right</mat-icon>
                                         </button>
                                     </div>
@@ -146,41 +147,76 @@
                         </mat-step>
                         <mat-step [stepControl]="secondFormGroup" label="Produtos">
                             <form [formGroup]="secondFormGroup" class="mt-3">
-                                <div class="demo-button-container offset-sm-1 col-sm-11 p-0">
+                                <div class="demo-button-container col-sm-11">
                                     <button mat-mini-fab class="demo-button me-2 create-button"
                                         matTooltip="Inserir Produto" matTooltipPosition="right"
                                         (click)="openProductDialog()">
                                         <mat-icon>add</mat-icon>
                                     </button>
                                 </div>
-                                <div id="search-table-product" class="search-table offset-sm-1 col-sm-11 p-0">
-                                    <table mat-table [dataSource]="dataSource" class="col-sm-11 offset-sm-1">
+                                <div id="budget-product-table">
+                                    <div class="col-sm-12 search-table-content mat-elevation-z2">
+                                        <table mat-table [dataSource]="dataSourceBudgetProduct" class="col-sm-12">
 
-                                        <ng-container matColumnDef="product">
-                                            <th mat-header-cell *matHeaderCellDef> Produto </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.product}} </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="ProductName">
+                                                <th mat-header-cell *matHeaderCellDef> Produto </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <div>
+                                                        <div>{{element.Product.Name}}</div>
+                                                        <div class="small-text">{{resolveExibitionDoseType(element.ProductDose)}}</div>
+                                                    </div>
+                                                </td>
+                                                <td mat-footer-cell *matFooterCellDef> </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="dose">
-                                            <th mat-header-cell *matHeaderCellDef> Dose </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.dose}} </td>
-                                        </ng-container>
+                                            <ng-container matColumnDef="BorrowerPersonName">
+                                                <th mat-header-cell *matHeaderCellDef> Tomador </th>
+                                                <td mat-cell *matCellDef="let element">{{element.Person.Name}}</td>
+                                                <td mat-footer-cell *matFooterCellDef> </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="borrower">
-                                            <th mat-header-cell *matHeaderCellDef> Tomador </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.borrower}} </td>
-                                        </ng-container>
+                                            <!-- Total -->
+                                            <ng-container matColumnDef="EstimatedSalesValue">
+                                                <th mat-header-cell *matHeaderCellDef> R$ Total </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.EstimatedSalesValue | currency : 'R$' }} </td>
+                                                <td mat-footer-cell *matFooterCellDef> {{getTotalProductAmount()| currency : 'R$' }} </td>
+                                            </ng-container>
 
-                                        <ng-container matColumnDef="amount">
-                                            <th mat-header-cell *matHeaderCellDef> R$ Total </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
-                                        </ng-container>
+                                            <!-- Id Hidden Column -->
+                                            <ng-container matColumnDef="ID">
+                                                <th mat-header-cell [hidden]="show" *matHeaderCellDef> ID </th>
+                                                <td mat-cell [hidden]="show" *matCellDef="let row"> {{row.ID}} </td>
+                                                <td mat-footer-cell [hidden]="show" *matFooterCellDef> </td>
+                                            </ng-container>
 
-                                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                                    </table>
-
+                                            <ng-container matColumnDef="Options">
+                                                <th mat-header-cell *matHeaderCellDef> </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <button mat-icon-button color="warn" title="Remover" style="float:right;">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                    <button mat-icon-button color="primary" title="Editar"
+                                                        style="float:right;">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </td>
+                                                <td mat-footer-cell *matFooterCellDef> </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumnsBudgetProduct">
+                                            </tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumnsBudgetProduct;"
+                                                class="hover-element-row" style="cursor:pointer;">
+                                            </tr>
+                                            <tr mat-footer-row *matFooterRowDef="displayedColumnsBudgetProduct">
+                                            </tr>
+                                            <!-- Row shown when there is no matching data. -->
+                                            <tr class="mat-row" *matNoDataRow>
+                                                <td class="mat-cell" colspan="6">Nenhum registro encontrado.</td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
+
                                 <div class="mt-5" style="float:right;">
                                     <button color="primary" mat-mini-fab matStepperPrevious
                                         aria-label="Example icon button with a menu icon" matTooltip="Anterior"
@@ -188,40 +224,50 @@
                                         <mat-icon>chevron_left</mat-icon>
                                     </button>
 
-                                    <button color="primary" mat-mini-fab matStepperNext
+                                    <button color="primary" mat-mini-fab
                                         aria-label="Example icon button with a menu icon" matTooltip="Próximo"
-                                        matTooltipPosition="above">
+                                        matTooltipPosition="above" (click)="goToBudgetValuesStep(stepper)">
                                         <mat-icon>chevron_right</mat-icon>
                                     </button>
 
                                 </div>
                             </form>
                         </mat-step>
-                        <mat-step [stepControl]="thirdFormGroup" label="Valores">
-                            <form [formGroup]="thirdFormGroup" class="mt-3">
+                        <mat-step [stepControl]="budgetForm2" label="Valores">
+                            <form [formGroup]="budgetForm2" class="mt-3">
                                 <div class="div-row-input">
                                     <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                                         <mat-label>R$ Produtos Orçados</mat-label>
-                                        <input matInput type="text" class="example-right-align" placeholder="0,00"
-                                            id="saleValue" required="true" readonly="true" mask="separator.2"
+                                        <input matInput [(ngModel)]="totalBudgetedAmount" formControlName="TotalBudgetedAmount" type="text" class="example-right-align" placeholder="0,00"
+                                            required readonly mask="separator.2"
                                             [thousandSeparator]="'.'" [decimalMarker]="','">
                                         <span matPrefix>R$&nbsp;</span>
                                     </mat-form-field>
                                 </div>
                                 <div class="div-row-input">
+
+                                    <mat-form-field appearance="fill" class="col-sm-1" style="padding-right:0px">
+                                        <mat-label></mat-label>
+                                        <mat-select [(value)]="discountType" formControlName="DiscountType" #DiscountTypeInput [(ngModel)]="discountType"
+                                          required="true" (selectionChange)="discountTypeChanged()">
+                                          <mat-option value="R$" selecteded>R$</mat-option>
+                                          <mat-option value="%" selected>%</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+
                                     <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
-                                        <mat-label>R$ Desconto</mat-label>
-                                        <input matInput type="text" class="example-right-align" placeholder="0,00"
-                                            id="discount" required="true" mask="separator.2" [thousandSeparator]="'.'"
-                                            [decimalMarker]="','">
-                                        <span matPrefix>R$&nbsp;</span>
+                                        <mat-label>Desconto</mat-label>
+                                        <input matInput [(ngModel)]="discountValue" formControlName="DiscountValue" type="text" class="example-right-align" placeholder="0,00"
+                                            required mask="separator.2" [thousandSeparator]="'.'"
+                                            [decimalMarker]="','" (blur)="calculateBudgetAmount()">
+                                        <span matPrefix>{{prefixDiscountType}}&nbsp;</span>
                                     </mat-form-field>
 
                                     <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4"
                                         style="font-weight:bold">
                                         <mat-label>R$ Total Orçamento</mat-label>
-                                        <input matInput type="text" class="example-right-align" placeholder="0,00"
-                                            id="finalValue" required="true" readonly="true" mask="separator.2"
+                                        <input matInput [(ngModel)]="totalBudgetAmount" formControlName="TotalBudgetAmount" type="text" class="example-right-align" placeholder="0,00"
+                                           required readonly mask="separator.2"
                                             [thousandSeparator]="'.'" [decimalMarker]="','">
                                         <span matPrefix>R$&nbsp;</span>
                                     </mat-form-field>
@@ -232,9 +278,9 @@
                                         matTooltipPosition="above" color="primary" class="me-2">
                                         <mat-icon>chevron_left</mat-icon>
                                     </button>
-                                    <button mat-mini-fab matStepperNext color="primary"
+                                    <button mat-mini-fab color="primary"
                                         aria-label="Example icon button with a menu icon" matTooltip="Definir Pagamento"
-                                        matTooltipPosition="above" class="create-button">
+                                        matTooltipPosition="above" class="create-button" (click)="goToBudgetNegotiationStep(stepper)">
                                         <mat-icon>attach_money</mat-icon>
                                     </button>
                                 </div>
