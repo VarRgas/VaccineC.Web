@@ -28,10 +28,11 @@
                                 <!-- Numero do orçamento -->
                                 <ng-container matColumnDef="BudgetNumber">
                                     <mat-header-cell *matHeaderCellDef> Orçamento </mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> 
-                                        {{resolveExibitionSituation(element.Situation)}} 
-                                        <span title="{{situationTitle}}" class="me-3 fa-solid fa-circle {{situationColor}}"></span>
-                                        {{element.BudgetNumber}} 
+                                    <mat-cell *matCellDef="let element">
+                                        {{resolveExibitionSituation(element.Situation)}}
+                                        <span title="{{situationTitle}}"
+                                            class="me-3 fa-solid fa-circle {{situationColor}}"></span>
+                                        {{element.BudgetNumber}}
                                     </mat-cell>
                                 </ng-container>
                                 <!-- Nome da pessoa -->
@@ -125,9 +126,9 @@
                                     <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                                         <mat-label>Validade</mat-label>
                                         <input matInput [matDatepicker]="picker" #ExpirationDateInput
-                                            [(ngModel)]="expirationDate" formControlName="ExpirationDate">
-                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker></mat-datepicker>
+                                            [(ngModel)]="expirationDate" formControlName="ExpirationDate" [readonly]="isBudgetReadonly">
+                                        <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="isBudgetReadonly"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker  [disabled]="isBudgetReadonly"></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="div-row-input">
@@ -135,7 +136,7 @@
                                     <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
                                         <mat-label>Detalhes</mat-label>
                                         <textarea matInput #DetailsInput formControlName="Details" [(ngModel)]="details"
-                                            placeholder="Informações complementares" maxlength="255"></textarea>
+                                            placeholder="Informações complementares" maxlength="255" [readonly]="isBudgetReadonly"></textarea>
                                     </mat-form-field>
                                 </div>
                                 <div>
@@ -167,7 +168,8 @@
                                                 <td mat-cell *matCellDef="let element">
                                                     <div>
                                                         <div>{{element.Product.Name}}</div>
-                                                        <div class="small-text">{{resolveExibitionDoseType(element.ProductDose)}}</div>
+                                                        <div class="small-text">
+                                                            {{resolveExibitionDoseType(element.ProductDose)}}</div>
                                                     </div>
                                                 </td>
                                                 <td mat-footer-cell *matFooterCellDef> </td>
@@ -182,8 +184,10 @@
                                             <!-- Total -->
                                             <ng-container matColumnDef="EstimatedSalesValue">
                                                 <th mat-header-cell *matHeaderCellDef> R$ Total </th>
-                                                <td mat-cell *matCellDef="let element"> {{element.EstimatedSalesValue | currency : 'R$' }} </td>
-                                                <td mat-footer-cell *matFooterCellDef> {{getTotalProductAmount()| currency : 'R$' }} </td>
+                                                <td mat-cell *matCellDef="let element"> {{element.EstimatedSalesValue |
+                                                    currency : 'R$' }} </td>
+                                                <td mat-footer-cell *matFooterCellDef> {{getTotalProductAmount()|
+                                                    currency : 'R$' }} </td>
                                             </ng-container>
 
                                             <!-- Id Hidden Column -->
@@ -196,7 +200,8 @@
                                             <ng-container matColumnDef="Options">
                                                 <th mat-header-cell *matHeaderCellDef> </th>
                                                 <td mat-cell *matCellDef="let row">
-                                                    <button mat-icon-button color="warn" title="Remover" style="float:right;">
+                                                    <button mat-icon-button color="warn" title="Remover"
+                                                        style="float:right;">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                     <button mat-icon-button color="primary" title="Editar"
@@ -242,9 +247,10 @@
                                 <div class="div-row-input">
                                     <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                                         <mat-label>R$ Produtos Orçados</mat-label>
-                                        <input matInput [(ngModel)]="totalBudgetedAmount" formControlName="TotalBudgetedAmount" type="text" class="example-right-align" placeholder="0,00"
-                                            required readonly mask="separator.2"
-                                            [thousandSeparator]="'.'" [decimalMarker]="','">
+                                        <input matInput [(ngModel)]="totalBudgetedAmount"
+                                            formControlName="TotalBudgetedAmount" type="text"
+                                            class="example-right-align" placeholder="0,00" required readonly
+                                            mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
                                         <span matPrefix>R$&nbsp;</span>
                                     </mat-form-field>
                                 </div>
@@ -252,26 +258,29 @@
 
                                     <mat-form-field appearance="fill" class="col-sm-1" style="padding-right:0px">
                                         <mat-label></mat-label>
-                                        <mat-select [(value)]="discountType" formControlName="DiscountType" #DiscountTypeInput [(ngModel)]="discountType"
-                                          required="true" (selectionChange)="discountTypeChanged()">
-                                          <mat-option value="R$" selecteded>R$</mat-option>
-                                          <mat-option value="%" selected>%</mat-option>
+                                        <mat-select [(value)]="discountType" formControlName="DiscountType"
+                                            #DiscountTypeInput [(ngModel)]="discountType" required
+                                            (selectionChange)="discountTypeChanged()" [disabled]="isbudgetValuesReadonly">
+                                            <mat-option value="R$" selecteded>R$</mat-option>
+                                            <mat-option value="%" selected>%</mat-option>
                                         </mat-select>
-                                      </mat-form-field>
+                                    </mat-form-field>
 
                                     <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                                         <mat-label>Desconto</mat-label>
-                                        <input matInput [(ngModel)]="discountValue" formControlName="DiscountValue" type="text" class="example-right-align" placeholder="0,00"
-                                            required mask="separator.2" [thousandSeparator]="'.'"
-                                            [decimalMarker]="','" (blur)="calculateBudgetAmount()">
+                                        <input matInput [(ngModel)]="discountValue" formControlName="DiscountValue"
+                                            type="text" class="example-right-align" placeholder="0,00" required
+                                            mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','"
+                                            (blur)="calculateBudgetAmount()" [readonly]="isbudgetValuesReadonly">
                                         <span matPrefix>{{prefixDiscountType}}&nbsp;</span>
                                     </mat-form-field>
 
                                     <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4"
                                         style="font-weight:bold">
                                         <mat-label>R$ Total Orçamento</mat-label>
-                                        <input matInput [(ngModel)]="totalBudgetAmount" formControlName="TotalBudgetAmount" type="text" class="example-right-align" placeholder="0,00"
-                                           required readonly mask="separator.2"
+                                        <input matInput [(ngModel)]="totalBudgetAmount"
+                                            formControlName="TotalBudgetAmount" type="text" class="example-right-align"
+                                            placeholder="0,00" required readonly mask="separator.2"
                                             [thousandSeparator]="'.'" [decimalMarker]="','">
                                         <span matPrefix>R$&nbsp;</span>
                                     </mat-form-field>
@@ -284,41 +293,58 @@
                                     </button>
                                     <button mat-mini-fab color="primary"
                                         aria-label="Example icon button with a menu icon" matTooltip="Definir Pagamento"
-                                        matTooltipPosition="above" class="create-button" (click)="goToBudgetNegotiationStep(stepper)">
+                                        matTooltipPosition="above" class="create-button"
+                                        (click)="goToBudgetNegotiationStep(stepper)">
                                         <mat-icon>attach_money</mat-icon>
                                     </button>
                                 </div>
                             </form>
                         </mat-step>
-                        <mat-step [stepControl]="fourthFormGroup" label="Negociação">
-                            <form [formGroup]="fourthFormGroup" class="mt-3">
-                                <div class="div-row-input values" title="Valor restante">
+                        <mat-step [stepControl]="budgetNegotiationForm" label="Negociação">
+                            <form [formGroup]="budgetNegotiationForm" class="mt-3">
+                                <div class="div-row-input values">
                                     <i class="fa-solid fa-cart-shopping me-2"></i>
-                                    <span>{{balanceNegotiations | currency : 'R$' }}</span>
+                                    <span matTooltip="Valor Restante" matTooltipPosition="above">{{balanceNegotiations |
+                                        currency : 'R$' }}</span>
                                 </div>
                                 <div class="div-row-input">
+                                    <!-- FORMA DE PAGAMENTO -->
                                     <mat-form-field appearance="fill" class="col-sm-5">
                                         <mat-label>Forma de Pagamento</mat-label>
-                                        <input matInput #input maxlength="10"
-                                            placeholder="Selecione a forma de pagamento" id="paymentForm">
+                                        <input (click)="searchPaymentFormsByAutoComplete()" type="text"
+                                            #PaymentFormIdinput placeholder="Selecione a forma de pagamento"
+                                            aria-label="Number" matInput formControlName="PaymentFormId"
+                                            [matAutocomplete]="autoPaymentForm" [(ngModel)]="paymentFormId" required
+                                            [readonly]="isbudgetNegotiationReadonly">
+                                        <mat-autocomplete #autoPaymentForm="matAutocomplete"
+                                            [displayWith]="displayStatePaymentForm">
+                                            <mat-option *ngFor="let acPaymentForm of acPaymentForms | async"
+                                                [value]="acPaymentForm">
+                                                {{acPaymentForm.Name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-icon matSuffix>search</mat-icon>
                                     </mat-form-field>
 
                                     <mat-form-field appearance="fill" class="col-sm-3">
                                         <mat-label>Nº Parcelas</mat-label>
-                                        <input matInput #input type="number" maxlength="10" placeholder="Ex. 2"
-                                            id="name">
+                                        <input matInput #input type="number" placeholder="Ex. 2"
+                                            formControlName="Installments" [(ngModel)]="installments" required
+                                            [readonly]="isbudgetNegotiationReadonly">
                                     </mat-form-field>
 
                                     <mat-form-field appearance="fill" floatLabel="always" class="col-sm-3">
                                         <mat-label>R$ Negociado</mat-label>
                                         <input matInput type="text" class="example-right-align" placeholder="0,00"
-                                            id="negotiatedValue" required="true" readonly="true" mask="separator.2"
-                                            [thousandSeparator]="'.'" [decimalMarker]="','">
+                                            required mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','"
+                                            formControlName="TotalAmountTraded" [(ngModel)]="totalAmountTraded"
+                                            [readonly]="isbudgetNegotiationReadonly">
                                         <span matPrefix>R$&nbsp;</span>
                                     </mat-form-field>
 
                                     <button mat-mini-fab class="demo-button create-button"
-                                        matTooltip="Inserir Negociação" matTooltipPosition="above">
+                                        [disabled]="isbudgetNegotiationReadonly" matTooltip="Inserir Negociação"
+                                        matTooltipPosition="above" (click)="createBudgetNegotiation()">
                                         <mat-icon>add</mat-icon>
                                     </button>
 
@@ -342,7 +368,8 @@
                                             <!-- Total -->
                                             <ng-container matColumnDef="TotalAmountTraded">
                                                 <th mat-header-cell *matHeaderCellDef> R$ Total Negociado </th>
-                                                <td mat-cell *matCellDef="let element"> {{element.TotalAmountTraded | currency : 'R$' }} </td>
+                                                <td mat-cell *matCellDef="let element"> {{element.TotalAmountTraded |
+                                                    currency : 'R$' }} </td>
                                             </ng-container>
 
                                             <!-- Id Hidden Column -->
@@ -354,17 +381,19 @@
                                             <ng-container matColumnDef="Options">
                                                 <th mat-header-cell *matHeaderCellDef> </th>
                                                 <td mat-cell *matCellDef="let row">
-                                                    <button mat-icon-button color="warn" title="Remover" style="float:right;">
+                                                    <button mat-icon-button color="warn" title="Remover"
+                                                        style="float:right;" (click)="removeBudgetNegotiation(row.ID)">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </ng-container>
                                             <tr mat-header-row *matHeaderRowDef="displayedColumnsBudgetNegotiation">
                                             </tr>
-                                            <tr mat-row *matRowDef="let row; columns: displayedColumnsBudgetNegotiation;"
+                                            <tr mat-row
+                                                *matRowDef="let row; columns: displayedColumnsBudgetNegotiation;"
                                                 class="hover-element-row" style="cursor:pointer;">
                                             </tr>
-                                        
+
                                             <!-- Row shown when there is no matching data. -->
                                             <tr class="mat-row" *matNoDataRow>
                                                 <td class="mat-cell" colspan="6">Nenhum registro encontrado.</td>
@@ -373,7 +402,13 @@
                                     </div>
                                 </div>
                                 <div class="mt-5" style="float:right;">
-                                    <button mat-mini-fab matStepperPrevious matTooltip="Reabrir"
+                                    <button color="primary" mat-mini-fab matStepperPrevious
+                                        aria-label="Example icon button with a menu icon" matTooltip="Anterior"
+                                        matTooltipPosition="above" class="me-2">
+                                        <mat-icon>chevron_left</mat-icon>
+                                    </button>
+                                    
+                                    <button mat-mini-fab matTooltip="Reabrir"
                                         matTooltipPosition="above" class="me-2">
                                         <mat-icon>reply_all</mat-icon>
                                     </button>

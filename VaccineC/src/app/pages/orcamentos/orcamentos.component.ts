@@ -14,11 +14,14 @@ import { IBudget } from 'src/app/interfaces/i-budget';
 import { IBudgetNegotiation } from 'src/app/interfaces/i-budget-negotiation';
 import { IBudgetProduct } from 'src/app/interfaces/i-budget-product';
 import { BudgetModel } from 'src/app/models/budget-model';
+import { BudgetNegotiationModel } from 'src/app/models/budget-negotiation-model';
 import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
 import { BudgetsNegotiationsDispatcherService } from 'src/app/services/budgets-negotiations-dispatcher.service';
 import { BudgetsProductsDispatcherService } from 'src/app/services/budgets-products-dispatcher.service';
+import { CompaniesParametersDispatcherService } from 'src/app/services/company-parameter-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
 
@@ -38,6 +41,9 @@ export class OrcamentosComponent implements OnInit {
   public isInputDisabled = false;
   public isInputReadOnly = false;
   public isPersonReadOnly = false;
+  public isbudgetNegotiationReadonly = false;
+  public isbudgetValuesReadonly = false;
+  public isBudgetReadonly = false;
 
   //Controle dos steps
   public isBudgetProductEditable = false;
@@ -60,6 +66,12 @@ export class OrcamentosComponent implements OnInit {
   public totalBudgetAmount!: number;
   public totalBudgetedAmount!: number;
   public prefixDiscountType: string = 'R$';
+
+  //BudgetNegotiationForm
+  public paymentFormId!: string;
+  public installments!: number;
+  public totalAmountTraded!: number;
+  public totalAmountBalance!: number;
 
   //Outros
   public situationColor = '';
@@ -90,12 +102,30 @@ export class OrcamentosComponent implements OnInit {
   public acUser: string[] = [];
   public acUsers: Observable<any[]> | undefined;
 
+  //Autocomplete Forma de Pagamento
+  public myPaymentFormControl = new FormControl();
+  public acPaymentForm: string[] = [];
+  public acPaymentForms: Observable<any[]> | undefined;
+
   public budgetForm: FormGroup = this.formBuilder.group({
     PersonId: [null, Validators.required],
     UserId: [null, Validators.required],
     Situation: [null],
     ExpirationDate: [null, Validators.required],
     Details: [null],
+  });
+
+  public budgetForm2: FormGroup = this.formBuilder.group({
+    TotalBudgetedAmount: [null, Validators.required],
+    TotalBudgetAmount: [null, Validators.required],
+    DiscountType: [null, Validators.required],
+    DiscountValue: [null, Validators.required],
+  });
+
+  public budgetNegotiationForm: FormGroup = this.formBuilder.group({
+    PaymentFormId: [null, Validators.required],
+    Installments: [null, Validators.required],
+    TotalAmountTraded: [null, Validators.required]
   });
 
   @ViewChild('paginatorBudget') paginatorBudget!: MatPaginator;
@@ -111,6 +141,8 @@ export class OrcamentosComponent implements OnInit {
     private personAutocompleteService: PersonAutocompleteService,
     private budgetsProductsDispatcherService: BudgetsProductsDispatcherService,
     private budgetsNegotiationsDispatcherService: BudgetsNegotiationsDispatcherService,
+    private paymentFormsDispatcherService: PaymentFormsDispatcherService,
+    private companiesParametersDispatcherService: CompaniesParametersDispatcherService,
     private usersService: UsersService) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -204,13 +236,18 @@ export class OrcamentosComponent implements OnInit {
     budget.id = this.budgetId;
     budget.personId = this.budgetForm.value.PersonId.ID;
     budget.userId = localStorage.getItem('userId')!;
-    budget.situation = "E";
     budget.totalBudgetAmount = this.totalBudgetAmount;
     budget.discountPercentage = this.discountPercentage;
     budget.discountValue = this.discountValue;
     budget.expirationDate = this.expirationDate;
     budget.details = this.details;
     budget.totalBudgetedAmount = this.totalBudgetedAmount;
+
+    if (this.situation == "P") {
+      budget.situation = "E";
+    } else {
+      budget.situation = this.situation;
+    }
 
     if (this.discountType == "R$") {
       budget.discountPercentage = 0;
@@ -251,6 +288,8 @@ export class OrcamentosComponent implements OnInit {
 
     let totalAmountTradedNegotiations = this.dataSourceBudgetNegotiation.data.map(t => t.TotalAmountTraded).reduce((acc, value) => acc + value, 0);
     this.balanceNegotiations = this.totalBudgetAmount - totalAmountTradedNegotiations;
+
+    this.treatBalanceNegotiation();
 
   }
 
@@ -389,7 +428,6 @@ export class OrcamentosComponent implements OnInit {
       .subscribe(budgets => {
         this.dataSourceBudget = new MatTableDataSource(budgets);
         this.dataSourceBudget.paginator = this.paginatorBudget;
-        this.dataSourceBudget.sort = this.sort;
       },
         error => {
           console.log(error);
@@ -423,6 +461,19 @@ export class OrcamentosComponent implements OnInit {
         error => {
           console.log(error);
         });
+
+    this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
+      companyParameter => {
+       
+        let dateNow = new Date();
+        dateNow.setDate(dateNow.getDate() + companyParameter.MaximumDaysBudgetValidity);
+        this.expirationDate = dateNow;
+
+      },
+      error => {
+        console.log(error);
+      }
+    );
 
     this.resetForms();
     setTimeout(() => {
@@ -476,8 +527,10 @@ export class OrcamentosComponent implements OnInit {
             this.discountValue = budget.DiscountValue;
           }
 
+          this.treatBudgetSituation();
           this.informationField = `Orçamento nº ${budget.BudgetNumber} - ${budget.Persons.Name} - ${this.showSituationFormated(budget.Situation)}`;
           this.isPersonReadOnly = true;
+
         },
         error => {
           console.log(error);
@@ -503,6 +556,93 @@ export class OrcamentosComponent implements OnInit {
 
   }
 
+  public createBudgetNegotiation() {
+
+    if (!this.budgetNegotiationForm.valid) {
+      console.log(this.budgetNegotiationForm);
+      this.budgetNegotiationForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let budgetNegotiation = new BudgetNegotiationModel();
+    budgetNegotiation.paymentFormId = this.budgetNegotiationForm.value.PaymentFormId.ID;
+    budgetNegotiation.budgetId = this.budgetId;
+    budgetNegotiation.installments = this.installments;
+    budgetNegotiation.totalAmountBalance = this.balanceNegotiations;
+    budgetNegotiation.totalAmountTraded = this.totalAmountTraded;
+
+    this.budgetsNegotiationsDispatcherService.createBudgetNegotiation(budgetNegotiation).subscribe(
+      budgetsNegotiations => {
+
+        this.budgetNegotiationForm.reset();
+        this.budgetNegotiationForm.clearValidators();
+        this.budgetNegotiationForm.updateValueAndValidity();
+
+        this.dataSourceBudgetNegotiation = new MatTableDataSource(budgetsNegotiations);
+
+        let totalAmountTradedNegotiations = this.dataSourceBudgetNegotiation.data.map(t => t.TotalAmountTraded).reduce((acc, value) => acc + value, 0);
+        this.balanceNegotiations = this.totalBudgetAmount - totalAmountTradedNegotiations;
+
+        this.treatBalanceNegotiation();
+
+        this.messageHandler.showMessage("Negociação inserida com sucesso!", "success-snackbar");
+      },
+      error => {
+        this.errorHandler.handleError(error);
+        console.log(error);
+      });
+  }
+
+  public treatBudgetSituation() {
+
+    this.isPersonReadOnly = true;
+
+    if (this.situation == "P") {
+      this.isbudgetValuesReadonly = false;
+      this.isbudgetNegotiationReadonly = false;
+      this.isBudgetReadonly = false;
+    } else if (this.situation == "E") {
+      this.isbudgetValuesReadonly = true;
+      this.isbudgetNegotiationReadonly = false;
+      this.isBudgetReadonly = false;
+    } else if (this.situation == "X" || this.situation == "A" || this.situation == "F") {
+      this.isbudgetValuesReadonly = true;
+      this.isbudgetNegotiationReadonly = true;
+      this.isBudgetReadonly = true;
+    }
+  }
+
+  public treatBalanceNegotiation() {
+    if (this.balanceNegotiations == 0) {
+      this.isbudgetNegotiationReadonly = true;
+    } else {
+      this.isbudgetNegotiationReadonly = false;
+    }
+  }
+
+  public removeBudgetNegotiation(id: string) {
+    this.budgetsNegotiationsDispatcherService.deleteBudgetNegotiation(id).subscribe(
+      budgetsNegotiations => {
+
+        this.budgetNegotiationForm.reset();
+        this.budgetNegotiationForm.clearValidators();
+        this.budgetNegotiationForm.updateValueAndValidity();
+
+        this.dataSourceBudgetNegotiation = new MatTableDataSource(budgetsNegotiations);
+
+        let totalAmountTradedNegotiations = this.dataSourceBudgetNegotiation.data.map(t => t.TotalAmountTraded).reduce((acc, value) => acc + value, 0);
+        this.balanceNegotiations = this.totalBudgetAmount - totalAmountTradedNegotiations;
+
+        this.treatBalanceNegotiation();
+
+        this.messageHandler.showMessage("Negociação removida com sucesso!", "success-snackbar");
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
   public resetForms(): void {
 
     this.budgetForm.reset();
@@ -512,6 +652,10 @@ export class OrcamentosComponent implements OnInit {
     this.budgetForm2.reset();
     this.budgetForm2.clearValidators();
     this.budgetForm2.updateValueAndValidity();
+
+    this.budgetNegotiationForm.reset();
+    this.budgetNegotiationForm.clearValidators();
+    this.budgetNegotiationForm.updateValueAndValidity();
 
   }
 
@@ -571,6 +715,26 @@ export class OrcamentosComponent implements OnInit {
       )
   }
 
+  public searchPaymentFormsByAutoComplete(): void {
+    this.acPaymentForms = this.myPaymentFormControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterPaymentForms(val || '')
+      })
+    )
+  }
+
+  public filterPaymentForms(val: string): Observable<any[]> {
+    return this.paymentFormsDispatcherService.getAll()
+      .pipe(
+        map(response => response.filter((paymentForm: { Name: string; ID: string }) => {
+          return paymentForm.Name.toLowerCase()
+        }))
+      )
+  }
+
   displayStatePerson(state: any) {
     return state && state.Name ? state.Name : '';
   }
@@ -579,19 +743,12 @@ export class OrcamentosComponent implements OnInit {
     return state && state.Email ? state.Email : '';
   }
 
+  displayStatePaymentForm(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
   secondFormGroup = this.formBuilder.group({
     secondCtrl: ['', Validators.required],
-  });
-
-  budgetForm2 = this.formBuilder.group({
-    TotalBudgetedAmount: [null, Validators.required],
-    TotalBudgetAmount: [null, Validators.required],
-    DiscountType: [null, Validators.required],
-    DiscountValue: [null, Validators.required],
-  });
-
-  fourthFormGroup = this.formBuilder.group({
-    fourthCtrl: ['', Validators.required],
   });
 
   stepperOrientation: Observable<StepperOrientation> | undefined;

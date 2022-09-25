@@ -20,6 +20,10 @@ export class CompaniesParametersDispatcherService {
     return this.httpClient.get(`${baseURL}/${id}`);
   }
 
+  public getDefaultCompanyParameter(): Observable<any> {
+    return this.httpClient.get(`${baseURL}/GetDefaultCompanyParameter`);
+  }
+
   public createCompanyParameter(data: object): Observable<any> {
     return this.httpClient.post(`${baseURL}/Create`, data);
   }

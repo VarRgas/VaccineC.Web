@@ -9,7 +9,7 @@ const baseURL = 'http://localhost:5000/api/BudgetsNegotiations';
 })
 
 export class BudgetsNegotiationsDispatcherService {
-    
+
     constructor(private httpClient: HttpClient) { }
 
     public getAllBudgetsNegotiations(): Observable<any> {
@@ -22,6 +22,14 @@ export class BudgetsNegotiationsDispatcherService {
 
     public getBudgetsNegotiationsBudget(budgetId: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${budgetId}/GetBudgetsNegotiationsByBudget`);
+    }
+    
+    public createBudgetNegotiation(data: object): Observable<any> {
+        return this.httpClient.post(`${baseURL}/Create`, data);
+    }
+
+    public deleteBudgetNegotiation(id: string): Observable<any> {
+        return this.httpClient.delete(`${baseURL}/${id}/Delete`);
     }
 
 }
