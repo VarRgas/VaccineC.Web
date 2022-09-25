@@ -101,12 +101,14 @@ form {
   font-weight: bold !important;
 }
 
-.mat-column-Select, .mat-column-Options {
+.mat-column-Select,
+.mat-column-Options {
   flex: 0 0 100px !important;
   white-space: unset !important;
 }
 
-.mat-cell-Select, .mat-cell-Options {
+.mat-cell-Select,
+.mat-cell-Options {
   flex: 0 0 100px !important;
   white-space: unset !important;
 }
@@ -128,4 +130,49 @@ form {
   overflow-x: initial;
   margin: 0.5rem;
   border: none
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+
+.budget-aproved {
+  color: #59b0dd;
+  opacity: 0.5;
+}
+
+.budget-pending {
+  color: #ffc107;
+  opacity: 0.5;
+}
+
+.budget-canceled {
+  color: #dc3545;
+  opacity: 0.5;
+}
+
+.budget-expired {
+  color: #9BA7C0;
+  opacity: 0.5;
+}
+
+.budget-finished {
+  color: #198754;
+  opacity: 0.5;
+}
+
+.budget-negotiation {
+  color: #253C78;
+  opacity: 0.5;
+}
+
+.values {
+  font-size: 20px;
+  margin-bottom: 0.75rem;
+  margin-top: 2rem;
+  margin-left: 0.75rem;
+}
+
+#budget-payment-table {
+  padding-left: 0.75rem;
 }

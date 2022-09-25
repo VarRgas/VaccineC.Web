@@ -11,9 +11,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { IBudget } from 'src/app/interfaces/i-budget';
+import { IBudgetNegotiation } from 'src/app/interfaces/i-budget-negotiation';
 import { IBudgetProduct } from 'src/app/interfaces/i-budget-product';
 import { BudgetModel } from 'src/app/models/budget-model';
 import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
+import { BudgetsNegotiationsDispatcherService } from 'src/app/services/budgets-negotiations-dispatcher.service';
 import { BudgetsProductsDispatcherService } from 'src/app/services/budgets-products-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
@@ -41,40 +43,52 @@ export class OrcamentosComponent implements OnInit {
   public isBudgetProductEditable = false;
 
   //Variáveis dos inputs
-  public searchPersonName!: string;
-  public situation!: string;
+  //BudgetForm
   public budgetId!: string;
   public personId!: string;
   public userId!: string;
   public details!: string;
+  public situation!: string;
+  public expirationDate!: Date;
   public budgetNumber!: number;
+
+  //BudgetForm2
   public budgetsAmount!: number;
   public discountPercentage!: number;
   public discountValue!: number;
   public discountType: string = 'R$';
   public totalBudgetAmount!: number;
   public totalBudgetedAmount!: number;
-  public expirationDate!: Date;
-  public informationField!: string;
   public prefixDiscountType: string = 'R$';
 
-  //Table search
+  //Outros
+  public situationColor = '';
+  public situationTitle = '';
+  public searchPersonName!: string;
+  public informationField!: string;
+  public balanceNegotiations: number = 0;
+
+  //Table Pesquisa
   public displayedBudgetsColumns: string[] = ['BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options', 'ID'];
   public dataSourceBudget = new MatTableDataSource<IBudget>();
 
+  //Table Produtos
+  public displayedColumnsBudgetProduct: string[] = ['ProductName', 'BorrowerPersonName', 'EstimatedSalesValue', 'ID', 'Options'];
+  public dataSourceBudgetProduct = new MatTableDataSource<IBudgetProduct>();
+
+  //Table Pagamentos
+  public displayedColumnsBudgetNegotiation: string[] = ['PaymentFormName', 'Installments', 'TotalAmountTraded', 'ID', 'Options'];
+  public dataSourceBudgetNegotiation = new MatTableDataSource<IBudgetNegotiation>();
+
+  //Autocomplete Pessoa
   public myControl = new FormControl();
   public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
 
+  //Autocomplete Usuário
   public myUserControl = new FormControl();
   public acUser: string[] = [];
   public acUsers: Observable<any[]> | undefined;
-
-  public displayedColumnsBudgetProduct: string[] = ['ProductName', 'BorrowerPersonName', 'EstimatedSalesValue', 'ID', 'Options'];
-  public dataSourceBudgetProduct = new MatTableDataSource<IBudgetProduct>();
-
-  public displayedColumns2: string[] = ['paymentForm', 'portion', 'negotiatedValue'];
-  public dataSource2 = ELEMENT_DATA2;
 
   public budgetForm: FormGroup = this.formBuilder.group({
     PersonId: [null, Validators.required],
@@ -96,6 +110,7 @@ export class OrcamentosComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private personAutocompleteService: PersonAutocompleteService,
     private budgetsProductsDispatcherService: BudgetsProductsDispatcherService,
+    private budgetsNegotiationsDispatcherService: BudgetsNegotiationsDispatcherService,
     private usersService: UsersService) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -159,6 +174,22 @@ export class OrcamentosComponent implements OnInit {
     stepper.next();
   }
 
+  public showSituationFormated(situation: string): string {
+    if (situation == "A") {
+      return "Aprovado";
+    } else if (situation == "P") {
+      return "Pendente";
+    } else if (situation == "X") {
+      return "Cancelado";
+    } else if (situation == "V") {
+      return "Vencido";
+    } else if (situation == "F") {
+      return "Finalizado";
+    } else {
+      return "Em Negociação";
+    }
+  }
+
   public goToBudgetNegotiationStep(stepper: MatStepper) {
 
     if (!this.budgetForm2.valid) {
@@ -181,29 +212,45 @@ export class OrcamentosComponent implements OnInit {
     budget.details = this.details;
     budget.totalBudgetedAmount = this.totalBudgetedAmount;
 
+    if (this.discountType == "R$") {
+      budget.discountPercentage = 0;
+      budget.discountValue = this.discountValue;
+    } else {
+      budget.discountPercentage = this.discountValue;
+      budget.discountValue = 0;
+    }
+
     this.budgetsDispatcherService.updateBudget(budget.id, budget)
       .subscribe(
         response => {
           console.log(response)
           this.budgetId = response.ID;
-          this.personId = response.Persons;
           this.userId = response.Users;
+          this.personId = response.Persons;
+          this.situation = response.Situation;
+          this.totalBudgetAmount = response.TotalBudgetAmount;
+          this.discountPercentage = response.DiscountPercentage;
+          this.discountValue = response.DiscountValue;
           this.expirationDate = response.ExpirationDate;
-          this.situation = response.situation;
           this.details = response.Details;
+          this.budgetNumber = response.BudgetNumber;
+          this.totalBudgetedAmount = response.TotalBudgetedAmount;
 
-          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
 
           this.isPersonReadOnly = true;
 
           this.loadData();
           stepper.next();
-          this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
+          // this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
         });
+
+    let totalAmountTradedNegotiations = this.dataSourceBudgetNegotiation.data.map(t => t.TotalAmountTraded).reduce((acc, value) => acc + value, 0);
+    this.balanceNegotiations = this.totalBudgetAmount - totalAmountTradedNegotiations;
 
   }
 
@@ -245,7 +292,7 @@ export class OrcamentosComponent implements OnInit {
           this.budgetNumber = response.BudgetNumber;
           this.totalBudgetedAmount = response.TotalBudgetedAmount;
 
-          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
 
           this.isPersonReadOnly = true;
 
@@ -276,11 +323,17 @@ export class OrcamentosComponent implements OnInit {
     budget.userId = localStorage.getItem('userId')!;
     budget.situation = this.situation;
     budget.totalBudgetAmount = this.totalBudgetAmount;
-    budget.discountPercentage = this.discountPercentage;
-    budget.discountValue = this.discountValue;
     budget.expirationDate = this.expirationDate;
     budget.details = this.details;
     budget.totalBudgetedAmount = this.totalBudgetedAmount;
+
+    if (this.discountType == "R$") {
+      budget.discountPercentage = 0;
+      budget.discountValue = this.discountValue;
+    } else {
+      budget.discountPercentage = this.discountValue;
+      budget.discountValue = 0;
+    }
 
     this.budgetsDispatcherService.updateBudget(budget.id, budget)
       .subscribe(
@@ -298,13 +351,23 @@ export class OrcamentosComponent implements OnInit {
           this.budgetNumber = response.BudgetNumber;
           this.totalBudgetedAmount = response.TotalBudgetedAmount;
 
-          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name}`;
+          if (this.discountPercentage != 0) {
+            this.discountType = "%"
+            this.prefixDiscountType = "%"
+            this.discountValue = response.DiscountPercentage;
+          } else {
+            this.discountType = "R$"
+            this.prefixDiscountType = "R$"
+            this.discountValue = response.DiscountValue;
+          }
+
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
 
           this.isPersonReadOnly = true;
 
           this.loadData();
           stepper.next();
-          this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
+          //this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
         },
         error => {
           console.log(error);
@@ -362,7 +425,11 @@ export class OrcamentosComponent implements OnInit {
         });
 
     this.resetForms();
-    this.stepper.selectedIndex = 0;
+    setTimeout(() => {
+      if (this.stepper.selectedIndex != 0) {
+        this.stepper.selectedIndex = 0;
+      }
+    }, 200);
 
     this.budgetId = "";
     this.informationField = "";
@@ -377,6 +444,11 @@ export class OrcamentosComponent implements OnInit {
   public editBudget(id: string): void {
 
     this.resetForms();
+    setTimeout(() => {
+      if (this.stepper.selectedIndex != 0) {
+        this.stepper.selectedIndex = 0;
+      }
+    }, 200);
 
     this.budgetsDispatcherService.getBudgetById(id)
       .subscribe(
@@ -394,9 +466,17 @@ export class OrcamentosComponent implements OnInit {
           this.budgetNumber = budget.BudgetNumber;
           this.totalBudgetedAmount = budget.TotalBudgetedAmount;
 
-          console.log(this.situation)
+          if (this.discountPercentage != 0) {
+            this.discountType = "%"
+            this.prefixDiscountType = "%"
+            this.discountValue = budget.DiscountPercentage;
+          } else {
+            this.discountType = "R$"
+            this.prefixDiscountType = "R$"
+            this.discountValue = budget.DiscountValue;
+          }
 
-          this.informationField = `Orçamento nº ${budget.BudgetNumber} - ${budget.Persons.Name}`;
+          this.informationField = `Orçamento nº ${budget.BudgetNumber} - ${budget.Persons.Name} - ${this.showSituationFormated(budget.Situation)}`;
           this.isPersonReadOnly = true;
         },
         error => {
@@ -412,12 +492,27 @@ export class OrcamentosComponent implements OnInit {
           console.log(error);
         });
 
+    this.budgetsNegotiationsDispatcherService.getBudgetsNegotiationsBudget(id)
+      .subscribe(
+        budgetsNegotiations => {
+          this.dataSourceBudgetNegotiation = new MatTableDataSource(budgetsNegotiations);
+        },
+        error => {
+          console.log(error);
+        });
+
   }
 
   public resetForms(): void {
+
     this.budgetForm.reset();
     this.budgetForm.clearValidators();
     this.budgetForm.updateValueAndValidity();
+
+    this.budgetForm2.reset();
+    this.budgetForm2.clearValidators();
+    this.budgetForm2.updateValueAndValidity();
+
   }
 
   openProductDialog() {
@@ -500,6 +595,28 @@ export class OrcamentosComponent implements OnInit {
   });
 
   stepperOrientation: Observable<StepperOrientation> | undefined;
+
+  resolveExibitionSituation(situation: string) {
+    if (situation == "A") {
+      this.situationColor = "budget-aproved";
+      this.situationTitle = "Aprovado"
+    } else if (situation == "P") {
+      this.situationColor = "budget-pending";
+      this.situationTitle = "Pendente"
+    } else if (situation == "X") {
+      this.situationColor = "budget-canceled";
+      this.situationTitle = "Cancelado"
+    } else if (situation == "V") {
+      this.situationColor = "budget-expired";
+      this.situationTitle = "Vencido"
+    } else if (situation == "F") {
+      this.situationColor = "budget-finished";
+      this.situationTitle = "Finalizado"
+    } else if (situation = "E") {
+      this.situationColor = "budget-negotiation";
+      this.situationTitle = "Em Negociação";
+    }
+  }
 
 }
 
