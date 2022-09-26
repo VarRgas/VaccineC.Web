@@ -21,7 +21,7 @@ import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDia
 import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, ConfirmProductDosesRemoveDialog, UpdateDialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
-import { BudgetProductDialog, OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
+import { AddBudgetProductDialog, OrcamentosComponent, ConfirmBudgetProductRemoveDialog, UpdateBudgetProductDialog } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog, ConfirmUserResourceRemoveDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
@@ -93,7 +93,7 @@ export const MY_FORMATS = {
     UserResourceAddDialog,
     PasswordDialog,
     ResetPasswordDialog,
-    BudgetProductDialog,
+    AddBudgetProductDialog,
     AplicacaoCadastroComponent,
     AplicacaoPesquisaComponent,
     UploadFileComponent,
@@ -120,7 +120,9 @@ export const MY_FORMATS = {
     UpdateDialogContentDose,
     BatchInformationDialog,
     ProductBatchsInformationDialog,
-    ConectionErrorComponent
+    ConectionErrorComponent,
+    ConfirmBudgetProductRemoveDialog,
+    UpdateBudgetProductDialog
   ],
   imports: [
     BrowserModule,

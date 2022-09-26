@@ -3,6 +3,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,16 +14,24 @@ import { Observable } from 'rxjs/internal/Observable';
 import { IBudget } from 'src/app/interfaces/i-budget';
 import { IBudgetNegotiation } from 'src/app/interfaces/i-budget-negotiation';
 import { IBudgetProduct } from 'src/app/interfaces/i-budget-product';
+import { IProductDoses } from 'src/app/interfaces/i-product-doses';
 import { BudgetModel } from 'src/app/models/budget-model';
 import { BudgetNegotiationModel } from 'src/app/models/budget-negotiation-model';
+import { BudgetProductModel } from 'src/app/models/budget-product-model';
+import { MovementProductModel } from 'src/app/models/movement-product-model';
 import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
 import { BudgetsNegotiationsDispatcherService } from 'src/app/services/budgets-negotiations-dispatcher.service';
 import { BudgetsProductsDispatcherService } from 'src/app/services/budgets-products-dispatcher.service';
 import { CompaniesParametersDispatcherService } from 'src/app/services/company-parameter-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { MovementsProductsDispatcherService } from 'src/app/services/movement-product-dispatcher.service';
 import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
+import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
+import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
+import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
+import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
 
 @Component({
@@ -453,6 +462,14 @@ export class OrcamentosComponent implements OnInit {
 
   public addNewBudget(stepper: MatStepper): void {
 
+    this.stepper.reset();
+
+    setTimeout(() => {
+      if (this.stepper.selectedIndex != 0) {
+        this.stepper.selectedIndex = 0;
+      }
+    }, 200);
+
     this.usersService.getById(localStorage.getItem('userId')!)
       .subscribe(
         user => {
@@ -464,7 +481,7 @@ export class OrcamentosComponent implements OnInit {
 
     this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
       companyParameter => {
-       
+
         let dateNow = new Date();
         dateNow.setDate(dateNow.getDate() + companyParameter.MaximumDaysBudgetValidity);
         this.expirationDate = dateNow;
@@ -474,13 +491,6 @@ export class OrcamentosComponent implements OnInit {
         console.log(error);
       }
     );
-
-    this.resetForms();
-    setTimeout(() => {
-      if (this.stepper.selectedIndex != 0) {
-        this.stepper.selectedIndex = 0;
-      }
-    }, 200);
 
     this.budgetId = "";
     this.informationField = "";
@@ -494,17 +504,17 @@ export class OrcamentosComponent implements OnInit {
 
   public editBudget(id: string): void {
 
-    this.resetForms();
+    this.stepper.reset();
+
     setTimeout(() => {
       if (this.stepper.selectedIndex != 0) {
         this.stepper.selectedIndex = 0;
       }
-    }, 200);
+    }, 500);
 
     this.budgetsDispatcherService.getBudgetById(id)
       .subscribe(
         budget => {
-          console.log(budget)
           this.budgetId = budget.ID;
           this.userId = budget.Users;
           this.personId = budget.Persons;
@@ -539,6 +549,7 @@ export class OrcamentosComponent implements OnInit {
     this.budgetsProductsDispatcherService.getBudgetsProductsBudget(id)
       .subscribe(
         budgetsProducts => {
+          console.log(budgetsProducts)
           this.dataSourceBudgetProduct = new MatTableDataSource(budgetsProducts);
         },
         error => {
@@ -594,6 +605,45 @@ export class OrcamentosComponent implements OnInit {
       });
   }
 
+  public removeBudgetProduct(id: string) {
+
+    const dialogRef = this.dialog.open(ConfirmBudgetProductRemoveDialog);
+
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (!!result) {
+          this.budgetsProductsDispatcherService.deleteBudgetProduct(id).subscribe(
+            budgetsProducts => {
+              this.dataSourceBudgetProduct = new MatTableDataSource(budgetsProducts);
+              this.messageHandler.showMessage("Produto removido com sucesso!", "success-snackbar");
+            },
+            error => {
+              this.errorHandler.handleError(error);
+              console.log(error);
+            });
+        }
+      });
+  }
+
+  public updateBudgetProduct(id: string) {
+    const dialogRef = this.dialog.open(UpdateBudgetProductDialog, {
+      disableClose: true,
+      width: '70vw',
+      data: {
+        ID: id
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourceBudgetProduct = new MatTableDataSource(res);
+          this.dataSourceBudgetProduct.sort = this.sort;
+        }
+      }
+    );
+  }
+
   public treatBudgetSituation() {
 
     this.isPersonReadOnly = true;
@@ -625,10 +675,6 @@ export class OrcamentosComponent implements OnInit {
     this.budgetsNegotiationsDispatcherService.deleteBudgetNegotiation(id).subscribe(
       budgetsNegotiations => {
 
-        this.budgetNegotiationForm.reset();
-        this.budgetNegotiationForm.clearValidators();
-        this.budgetNegotiationForm.updateValueAndValidity();
-
         this.dataSourceBudgetNegotiation = new MatTableDataSource(budgetsNegotiations);
 
         let totalAmountTradedNegotiations = this.dataSourceBudgetNegotiation.data.map(t => t.TotalAmountTraded).reduce((acc, value) => acc + value, 0);
@@ -641,37 +687,26 @@ export class OrcamentosComponent implements OnInit {
       error => {
         console.log(error);
       });
-  }
-
-  public resetForms(): void {
-
-    this.budgetForm.reset();
-    this.budgetForm.clearValidators();
-    this.budgetForm.updateValueAndValidity();
-
-    this.budgetForm2.reset();
-    this.budgetForm2.clearValidators();
-    this.budgetForm2.updateValueAndValidity();
-
-    this.budgetNegotiationForm.reset();
-    this.budgetNegotiationForm.clearValidators();
-    this.budgetNegotiationForm.updateValueAndValidity();
 
   }
 
   openProductDialog() {
-    const dialogRef = this.dialog.open(BudgetProductDialog, {
+    const dialogRef = this.dialog.open(AddBudgetProductDialog, {
       disableClose: true,
-      width: '70vw',
+      width: '80vw',
       data: {
         ID: this.budgetId,
       },
     });
 
-    dialogRef.afterClosed()
-      .subscribe(result => {
-        console.log(`Dialog result: ${result}`);
-      });
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourceBudgetProduct = new MatTableDataSource(res);
+          this.dataSourceBudgetProduct.sort = this.sort;
+        }
+      }
+    );
   }
 
   public searchPersonByAutoComplete(): void {
@@ -777,91 +812,421 @@ export class OrcamentosComponent implements OnInit {
 
 }
 
-export interface ProductElement {
-  product: string;
-  dose: string;
-  borrower: string;
-  amount: string;
-}
-
-const ELEMENT_DATA: ProductElement[] = [
-  { product: 'VACINA INFLUENZA', dose: 'DOSE ÚNICA', borrower: 'MARIA', amount: '150,00' },
-  { product: 'VACINA BCG', dose: 'DOSE 1', borrower: 'JOÃO', amount: '100,00' },
-];
-
-export interface PaymentElement {
-  paymentForm: string;
-  portion: string;
-  negotiatedValue: string;
-}
-
-const ELEMENT_DATA2: PaymentElement[] = [
-  { paymentForm: 'CARTÃO DE CRÉDITO', portion: '1', negotiatedValue: '150,00' },
-];
-
-export interface DosesElement {
-  product: string;
-  dose: string;
-}
-
-const ELEMENT_DATA3: DosesElement[] = [
-  { product: 'VACINA BCG', dose: '1' },
-  { product: 'VACINA BCG', dose: '2' },
-  { product: 'VACINA BCG', dose: '3' }
-];
-
 @Component({
-  selector: 'budget-product-dialog',
-  templateUrl: 'budget-product-dialog.html',
+  selector: 'add-budget-product-dialog',
+  templateUrl: 'add-budget-product-dialog.html',
 })
 
-export class BudgetProductDialog implements OnInit {
+export class AddBudgetProductDialog implements OnInit {
 
-  public budgetId!: number;
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<any[]> | undefined;
 
-  public myControl = new FormControl('');
-  public options: string[] = ['VACINA COVID', 'VACINA INFLUENZA', 'VACINA TETRAVALENTE'];
-  public filteredOptions: Observable<any[]> | undefined;
+  myPersonControl = new FormControl();
+  acPerson: string[] = [];
+  acPersons: Observable<any[]> | undefined;
 
-  public displayedColumns3: string[] = ['product', 'dose'];
-  public dataSource3 = new MatTableDataSource<DosesElement>(ELEMENT_DATA3);
-  public selection3 = new SelectionModel<DosesElement>(true, []);
+  //Doses table
+  public displayedColumns: string[] = ['select', 'DoseType'];
+  public dataSource = new MatTableDataSource<IProductDoses>();
+  selection = new SelectionModel<IProductDoses>(true, []);
+
+  Id!: string;
+  BudgetId!: string;
+  ProductName!: string;
+  PersonName!: string;
+  EstimatedSalesValue!: number;
+  ProductDose!: string;
+  Situation: string = 'P';
+  Details!: string;
+  DosesList!: any;
+
+  isFieldReadonly = false;
+  isProductDoseHidden = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<BudgetProductDialog>
+    private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
+    private productService: ProductsDispatcherService,
+    private personAutocompleteService: PersonAutocompleteService,
+    private budgetProductService: BudgetsProductsDispatcherService,
+    private productDoseService: ProductsDosesDispatcherService,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<UpdateBudgetProductDialog>
   ) { }
 
+  //Form
+  budgetProductForm: FormGroup = this.formBuilder.group({
+    Id: [null],
+    PersonName: [null],
+    ProductName: [null, [Validators.required]],
+    ProductDose: [null],
+    EstimatedSalesValue: [null, [Validators.required]],
+    Situation: [null],
+    Details: [null]
+  });
+
   ngOnInit(): void {
-
-    this.budgetId = this.data.ID;
-
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+    this.BudgetId = this.data.ID;
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    const numSelected = this.selection3.selected.length;
-    const numRows = this.dataSource3.data.length;
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
     if (this.isAllSelected()) {
-      this.selection3.clear();
+      this.selection.clear();
       return;
     }
 
-    this.selection3.select(...this.dataSource3.data);
+    this.selection.select(...this.dataSource.data);
+  }
+
+  checkboxLabel(row?: IProductDoses): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.DoseType + 1}`;
+  }
+
+  searchProductByAutoComplete() {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filter(val || '')
+      })
+    )
+  }
+
+  filter(val: string): Observable<any[]> {
+    return this.productService.getAllProducts()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayState(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
+  searchPersonByAutoComplete() {
+    this.acPersons = this.myPersonControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterPerson(val || '')
+      })
+    )
+  }
+
+  filterPerson(val: string): Observable<any[]> {
+    return this.personAutocompleteService.getPersonPhysicalData()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayStatePerson(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
+  onSelectionChanged(event: MatAutocompleteSelectedEvent) {
+    this.EstimatedSalesValue = event.option.value.SaleValue;
+    this.getProductDoses(event.option.value.ID)
+  }
+
+  getProductDoses(productId: string) {
+    this.productDoseService.getProductsDosesByProductId(productId).subscribe(
+      response => {
+        this.dataSource = new MatTableDataSource(response);
+      },
+      error => {
+        console.log(error);
+      });
+
+  }
+
+  createBudgetProduct() {
+
+    if (!this.budgetProductForm.valid) {
+      console.log(this.budgetProductForm);
+      this.budgetProductForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    if (this.selection.selected.length == 0) {
+      this.messageHandler.showMessage("É necessário selecionar ao menos uma Dose!", "warning-snackbar")
+      return;
+    }
+
+    let listBudgetProductModel = new Array<BudgetProductModel>();
+
+    this.selection.selected.forEach((productDose: any) => {
+      
+      let budgetProduct = new BudgetProductModel();
+      budgetProduct.budgetId = this.BudgetId;
+      budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
+      budgetProduct.productId = this.budgetProductForm.value.ProductName.ID;
+      budgetProduct.productDose = productDose.DoseType;
+      budgetProduct.situationProduct = "P";
+      budgetProduct.estimatedSalesValue = this.EstimatedSalesValue;
+      budgetProduct.details = this.Details;
+      budgetProduct.situationProduct = this.Situation;
+      
+      listBudgetProductModel.push(budgetProduct);
+    })
+    console.log(listBudgetProductModel)
+    this.budgetProductService.createOnDemand(listBudgetProductModel).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Produto(s) criado(s) com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
+  }
+
+  formatDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "DOSE ÚNICA"
+    } else if (doseType == "D1") {
+      return "DOSE 1"
+    } else if (doseType == "D2") {
+      return "DOSE 2"
+    } else if (doseType == "D3") {
+      return "DOSE 3"
+    } else if (doseType == "DR") {
+      return "DOSE DE REFORÇO"
+    } else {
+      return ""
+    }
+  }
+}
+
+@Component({
+  selector: 'confirm-budget-product-remove-dialog',
+  templateUrl: 'confirm-budget-product-remove-dialog.html',
+})
+
+export class ConfirmBudgetProductRemoveDialog implements OnInit {
+
+  ngOnInit(): void {
+  }
+
+}
+
+@Component({
+  selector: 'update-budget-product-dialog',
+  templateUrl: 'update-budget-product-dialog.html',
+})
+
+export class UpdateBudgetProductDialog implements OnInit {
+
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<any[]> | undefined;
+
+  myPersonControl = new FormControl();
+  acPerson: string[] = [];
+  acPersons: Observable<any[]> | undefined;
+
+  Id!: string;
+  ProductName!: string;
+  PersonName!: string;
+  EstimatedSalesValue!: number;
+  ProductDose!: string;
+  Situation!: string;
+  Details!: string;
+  DosesList!: any;
+
+  isFieldReadonly = false;
+  isProductDoseHidden = false;
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
+    private productService: ProductsDispatcherService,
+    private personAutocompleteService: PersonAutocompleteService,
+    private budgetProductService: BudgetsProductsDispatcherService,
+    private productDoseService: ProductsDosesDispatcherService,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<UpdateBudgetProductDialog>
+  ) {
+  }
+
+  //Form
+  budgetProductForm: FormGroup = this.formBuilder.group({
+    Id: [null],
+    PersonName: [null],
+    ProductName: [null, [Validators.required]],
+    ProductDose: [null],
+    EstimatedSalesValue: [null, [Validators.required]],
+    Situation: [null],
+    Details: [null]
+  });
+
+  ngOnInit(): void {
+    this.Id = this.data.ID;
+    this.getBudgetProductById(this.Id);
+  }
+
+  getBudgetProductById(id: string): void {
+    this.budgetProductService.getBudgetProductById(id).subscribe(
+      result => {
+        console.log(result)
+        this.Id = result.ID;
+        this.PersonName = result.Person;
+        this.ProductName = result.Product;
+        this.EstimatedSalesValue = result.EstimatedSalesValue;
+        this.Situation = result.SituationProduct;
+        this.Details = result.Details;
+        this.getProductDoses(result.Product.ID);
+
+        setTimeout(() => {
+          this.DosesList.forEach((productDose: any) => {
+            if (productDose.DoseType == result.ProductDose) {
+              this.ProductDose = productDose;
+            }
+          })
+        }, 200);
+
+      },
+      error => {
+        console.log(error);
+      });
+
+  }
+
+  searchProductByAutoComplete() {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filter(val || '')
+      })
+    )
+  }
+
+  filter(val: string): Observable<any[]> {
+    // call the service which makes the http-request
+    return this.productService.getAllProducts()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayState(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
+  searchPersonByAutoComplete() {
+    this.acPersons = this.myPersonControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterPerson(val || '')
+      })
+    )
+  }
+
+  filterPerson(val: string): Observable<any[]> {
+    // call the service which makes the http-request
+    return this.personAutocompleteService.getPersonPhysicalData()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayStatePerson(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
+  onSelectionChanged(event: MatAutocompleteSelectedEvent) {
+    this.EstimatedSalesValue = event.option.value.SaleValue;
+    this.getProductDoses(event.option.value.ID)
+  }
+
+  getProductDoses(productId: string) {
+    this.productDoseService.getProductsDosesByProductId(productId).subscribe(
+      response => {
+        this.DosesList = response;
+        if (this.DosesList.length == 0) {
+          this.isProductDoseHidden = true;
+          this.ProductDose = "";
+        } else {
+          this.isProductDoseHidden = false;
+        }
+      },
+      error => {
+        console.log(error);
+      });
+
+  }
+
+  updateBudgetProduct() {
+
+    if (!this.budgetProductForm.valid) {
+      console.log(this.budgetProductForm);
+      this.budgetProductForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    let budgetProduct = new BudgetProductModel();
+    budgetProduct.id = this.Id;
+    budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
+    budgetProduct.productId = this.budgetProductForm.value.ProductName.ID;
+    budgetProduct.productDose = this.budgetProductForm.value.ProductDose.DoseType;
+    budgetProduct.estimatedSalesValue = this.EstimatedSalesValue;
+    budgetProduct.details = this.Details;
+    budgetProduct.situationProduct = this.Situation;
+
+    this.budgetProductService.updateBudgetProduct(budgetProduct.id, budgetProduct).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Produto alterado com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+      });
+
+  }
+
+  formatDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "DOSE ÚNICA"
+    } else if (doseType == "D1") {
+      return "DOSE 1"
+    } else if (doseType == "D2") {
+      return "DOSE 2"
+    } else if (doseType == "D3") {
+      return "DOSE 3"
+    } else if (doseType == "DR") {
+      return "DOSE DE REFORÇO"
+    } else {
+      return ""
+    }
   }
 }

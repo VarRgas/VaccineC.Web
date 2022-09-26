@@ -1,0 +1,110 @@
+<h2 mat-dialog-title>Produto</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="budgetProductForm">
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Tomador</mat-label>
+                <input type="text" (click)="searchPersonByAutoComplete()" formControlName="PersonName"
+                    [(ngModel)]="PersonName" placeholder="Selecione o Tomador" aria-label="Number" matInput
+                    [formControl]="myPersonControl" [matAutocomplete]="autoPerson">
+                <mat-autocomplete #autoPerson="matAutocomplete" [displayWith]="displayStatePerson">
+                    <mat-option *ngFor="let acPerson of acPersons | async" [value]="acPerson">
+                        {{acPerson.Name}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Produto</mat-label>
+                <input type="text" (click)="searchProductByAutoComplete()" formControlName="ProductName"
+                    [(ngModel)]="ProductName" placeholder="Selecione o Produto" aria-label="Number" matInput
+                    [formControl]="myControl" [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState"
+                    (optionSelected)="onSelectionChanged($event)">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option.Name}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
+                <mat-label>R$ Venda</mat-label>
+                <input matInput formControlName="EstimatedSalesValue" [(ngModel)]="EstimatedSalesValue"
+                    placeholder="0,00" required placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'"
+                    [decimalMarker]="','">
+                <span matPrefix>R$&nbsp;</span>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Situação</mat-label>
+                <mat-select formControlName="Situation" #SituationInput [(ngModel)]="Situation"
+                    [disabled]="true">
+                    <mat-option value="E">EXECUTADO</mat-option>
+                    <mat-option value="P">PENDENTE</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div id="doses" class="mb-2 mt-2">
+            <mat-divider></mat-divider>
+            <div id="search-table" style="margin-top:2rem;margin-bottom:2rem;">
+                <div class="col-sm-12 search-table-content mat-elevation-z2">
+                    <table mat-table class="col-sm-12" mat-table [dataSource]="dataSource" matSort
+                        matSortActive="DoseType" matSortDirection="asc">
+
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef style="width: 5rem;">
+                                <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                    [aria-label]="checkboxLabel()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row" style="width: 5rem;">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <!-- Dose Column -->
+                        <ng-container matColumnDef="DoseType">
+                            <th mat-header-cell *matHeaderCellDef> Dose </th>
+                            <td mat-cell *matCellDef="let element"> {{formatDoseType(element.DoseType)}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+                        </tr>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="6">Nenhum registro encontrado.</td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+        <div class="div-row-input mt-4">
+            <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
+                <mat-label>Detalhes</mat-label>
+                <textarea matInput #DetailsInput formControlName="Details" [(ngModel)]="Details"
+                    placeholder="Informações complementares" maxlength="255"></textarea>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
+    <button mat-flat-button (click)="createBudgetProduct()" cdkFocusInitial class="create-button">Salvar</button>
+</mat-dialog-actions>

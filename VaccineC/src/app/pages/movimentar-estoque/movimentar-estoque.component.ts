@@ -795,7 +795,6 @@ export class UpdateMovementProductEntryDialog implements OnInit {
     }
 
     let movementProduct = new MovementProductModel();
-    console.log(this.ProductId);
     movementProduct.id = this.Id;
     movementProduct.movementId = this.MovementId;
     movementProduct.productId = this.ProductId;
@@ -806,7 +805,6 @@ export class UpdateMovementProductEntryDialog implements OnInit {
     movementProduct.batchExpirationDate = this.BatchExpirationDate;
     movementProduct.batchManufacturingDate = this.BatchManufacturingDate;
     movementProduct.manufacturer = this.Manufacturer;
-    console.log(movementProduct)
 
     this.movementProductService.update(movementProduct.id, "E", movementProduct).subscribe(
       response => {
@@ -1009,8 +1007,6 @@ export class UpdateMovementProductExitDialog implements OnInit {
     movementProduct.batchExpirationDate = this.selection.selected[0].ValidityBatchDate;
     movementProduct.batchManufacturingDate = this.selection.selected[0].ManufacturingDate;
     movementProduct.manufacturer = this.selection.selected[0].Manufacturer;
-
-    console.log(this.selection.selected)
 
     this.movementProductService.update(movementProduct.id, "S", movementProduct).subscribe(
       response => {

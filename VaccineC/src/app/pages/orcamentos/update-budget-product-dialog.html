@@ -1,0 +1,74 @@
+<h2 mat-dialog-title>Produto</h2>
+<mat-dialog-content class="mat-typography" style="max-height: initial;">
+    <form [formGroup]="budgetProductForm">
+        
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Tomador</mat-label>
+                <input type="text" (click)="searchPersonByAutoComplete()" formControlName="PersonName"
+                    [(ngModel)]="PersonName" placeholder="Selecione o Tomador" aria-label="Number" matInput
+                    [formControl]="myPersonControl" [matAutocomplete]="autoPerson">
+                <mat-autocomplete #autoPerson="matAutocomplete" [displayWith]="displayStatePerson">
+                    <mat-option *ngFor="let acPerson of acPersons | async" [value]="acPerson">
+                        {{acPerson.Name}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+        
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Produto</mat-label>
+                <input type="text" (click)="searchProductByAutoComplete()" formControlName="ProductName"
+                    [(ngModel)]="ProductName" placeholder="Selecione o Produto" aria-label="Number" matInput
+                    [formControl]="myControl" [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState"
+                    (optionSelected)="onSelectionChanged($event)">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option.Name}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-4" floatLabel="always">
+                <mat-label>R$ Venda</mat-label>
+                <input matInput formControlName="EstimatedSalesValue" [(ngModel)]="EstimatedSalesValue" placeholder="0,00" required
+                    placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
+                <span matPrefix>R$&nbsp;</span>
+            </mat-form-field>
+            
+            <mat-form-field appearance="fill" class="col-sm-4" [hidden]="isProductDoseHidden">
+                <mat-label>Dose</mat-label>
+                <mat-select formControlName="ProductDose" #ProductDoseInput [(ngModel)]="ProductDose">
+                  <mat-option *ngFor="let dose of DosesList" [value]="dose">{{ formatDoseType(dose.DoseType) }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="col-sm-4">
+                <mat-label>Situação</mat-label>
+                <mat-select formControlName="Situation" #SituationInput [(ngModel)]="Situation"
+                  [disabled]="true">
+                  <mat-option value="E">EXECUTADO</mat-option>
+                  <mat-option value="P">PENDENTE</mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
+                <mat-label>Detalhes</mat-label>
+                <textarea matInput #DetailsInput formControlName="Details"
+                    [(ngModel)]="Details" placeholder="Informações complementares"
+                    maxlength="255"></textarea>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
+    <button mat-flat-button (click)="updateBudgetProduct()" cdkFocusInitial class="create-button">Salvar</button>
+</mat-dialog-actions>
