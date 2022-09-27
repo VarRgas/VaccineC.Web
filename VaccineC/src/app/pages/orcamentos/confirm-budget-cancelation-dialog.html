@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Excluir</h2>
+<mat-dialog-content class="mat-typography">
+    <p>Tem certeza que deseja cancelar esse Orçamento?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="primary">Fechar</button>
+    <button mat-flat-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Cancelar</button>
+</mat-dialog-actions>

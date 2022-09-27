@@ -173,7 +173,8 @@ export class OrcamentosComponent implements OnInit {
   }
 
   discountTypeChanged(): void {
-    if (this.discountType == "R$") {
+    console.log(this.discountType);
+    if (this.discountType == null || this.discountType == undefined || this.discountType == "R$") {
       this.prefixDiscountType = "R$"
     } else {
       this.prefixDiscountType = "%"
@@ -211,8 +212,16 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public goToBudgetValuesStep(stepper: MatStepper) {
+
     this.totalBudgetedAmount = this.dataSourceBudgetProduct.data.map(t => t.EstimatedSalesValue).reduce((acc, value) => acc + value, 0);
-    stepper.next();
+
+    if (this.dataSourceBudgetProduct.data.length == 0) {
+      this.messageHandler.showMessage("Para avançar é necessário inserir Produtos ao Orçamento!", "warning-snackbar")
+    } else {
+      this.discountTypeChanged();
+      stepper.next();
+    }
+
   }
 
   public showSituationFormated(situation: string): string {
@@ -238,6 +247,16 @@ export class OrcamentosComponent implements OnInit {
       //this.createButtonLoading = false;
       this.budgetForm2.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      return;
+    }
+
+    if (this.totalBudgetAmount == 0 || this.totalBudgetAmount == null || this.totalBudgetAmount == undefined) {
+      this.messageHandler.showMessage("Para prosseguir, o R$ Total Orçamento não pode estar zerado!", "warning-snackbar")
+      return;
+    }
+
+    if (this.totalBudgetedAmount == 0 || this.totalBudgetedAmount == null || this.totalBudgetedAmount == undefined) {
+      this.messageHandler.showMessage("Para prosseguir, o R$ Produtos Orçados não pode estar zerado!", "warning-snackbar")
       return;
     }
 
@@ -423,6 +442,98 @@ export class OrcamentosComponent implements OnInit {
         });
   }
 
+  public approveBudget(): void {
+
+    if (this.dataSourceBudgetNegotiation.data.length == 0 || this.balanceNegotiations > 0) {
+      this.messageHandler.showMessage("Para avançar é necessário finalizar a negociação de valores!", "warning-snackbar")
+      return;
+    }
+
+    let budget = new BudgetModel();
+    budget.id = this.budgetId;
+    budget.personId = this.budgetForm.value.PersonId.ID;
+    budget.userId = localStorage.getItem('userId')!;
+    budget.situation = "A";
+    budget.totalBudgetAmount = this.totalBudgetAmount;
+    budget.expirationDate = this.expirationDate;
+    budget.details = this.details;
+    budget.totalBudgetedAmount = this.totalBudgetedAmount;
+
+    this.budgetsDispatcherService.updateBudget(budget.id, budget)
+      .subscribe(
+        response => {
+          console.log(response)
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+          this.loadData();
+          this.messageHandler.showMessage("Orçamento aprovado com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
+  }
+
+  public cancelBudget(): void {
+
+    const dialogRef = this.dialog.open(ConfirmBudgetCancelationDialog);
+
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (!!result) {
+          let budget = new BudgetModel();
+          budget.id = this.budgetId;
+          budget.personId = this.budgetForm.value.PersonId.ID;
+          budget.userId = localStorage.getItem('userId')!;
+          budget.situation = "X";
+          budget.totalBudgetAmount = this.totalBudgetAmount;
+          budget.expirationDate = this.expirationDate;
+          budget.details = this.details;
+          budget.totalBudgetedAmount = this.totalBudgetedAmount;
+
+          this.budgetsDispatcherService.updateBudget(budget.id, budget)
+            .subscribe(
+              response => {
+                console.log(response)
+                this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+                this.loadData();
+                this.messageHandler.showMessage("Orçamento cancelado com sucesso!", "success-snackbar")
+              },
+              error => {
+                console.log(error);
+                this.errorHandler.handleError(error);
+              });
+        }
+      });
+  }
+
+
+  public reopenBudget(): void {
+
+    let budget = new BudgetModel();
+    budget.id = this.budgetId;
+    budget.personId = this.budgetForm.value.PersonId.ID;
+    budget.userId = localStorage.getItem('userId')!;
+    budget.situation = "P";
+    budget.totalBudgetAmount = this.totalBudgetAmount;
+    budget.expirationDate = this.expirationDate;
+    budget.details = this.details;
+    budget.totalBudgetedAmount = this.totalBudgetedAmount;
+
+    this.budgetsDispatcherService.updateBudget(budget.id, budget)
+      .subscribe(
+        response => {
+          console.log(response)
+          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+          this.loadData();
+          this.messageHandler.showMessage("Orçamento reaberto com sucesso!", "success-snackbar")
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
+
+  }
+
   public loadData(): void {
 
     if (this.searchPersonName == "" || this.searchPersonName == null || this.searchPersonName == undefined) {
@@ -462,8 +573,8 @@ export class OrcamentosComponent implements OnInit {
 
   public addNewBudget(stepper: MatStepper): void {
 
-    this.stepper.reset();
-
+    this.resetForms();
+    this.resetTables();
     setTimeout(() => {
       if (this.stepper.selectedIndex != 0) {
         this.stepper.selectedIndex = 0;
@@ -496,21 +607,37 @@ export class OrcamentosComponent implements OnInit {
     this.informationField = "";
     this.isPersonReadOnly = false;
 
-    this.dataSourceBudget = new MatTableDataSource();
-    this.dataSourceBudget.paginator = this.paginatorBudget;
-    this.dataSourceBudget.sort = this.sort;
+  }
+  public resetForms(): void {
 
+    this.budgetForm.reset();
+    this.budgetForm.clearValidators();
+    this.budgetForm.updateValueAndValidity();
+
+    this.budgetForm2.reset();
+    this.budgetForm2.clearValidators();
+    this.budgetForm2.updateValueAndValidity();
+
+    this.budgetNegotiationForm.reset();
+    this.budgetNegotiationForm.clearValidators();
+    this.budgetNegotiationForm.updateValueAndValidity();
+
+  }
+
+  public resetTables(): void {
+    this.dataSourceBudgetNegotiation = new MatTableDataSource();
+    this.dataSourceBudgetProduct = new MatTableDataSource();
   }
 
   public editBudget(id: string): void {
 
-    this.stepper.reset();
-
+    this.resetForms();
+    this.resetTables();
     setTimeout(() => {
       if (this.stepper.selectedIndex != 0) {
         this.stepper.selectedIndex = 0;
       }
-    }, 500);
+    }, 200);
 
     this.budgetsDispatcherService.getBudgetById(id)
       .subscribe(
@@ -537,7 +664,6 @@ export class OrcamentosComponent implements OnInit {
             this.discountValue = budget.DiscountValue;
           }
 
-          this.treatBudgetSituation();
           this.informationField = `Orçamento nº ${budget.BudgetNumber} - ${budget.Persons.Name} - ${this.showSituationFormated(budget.Situation)}`;
           this.isPersonReadOnly = true;
 
@@ -642,25 +768,6 @@ export class OrcamentosComponent implements OnInit {
         }
       }
     );
-  }
-
-  public treatBudgetSituation() {
-
-    this.isPersonReadOnly = true;
-
-    if (this.situation == "P") {
-      this.isbudgetValuesReadonly = false;
-      this.isbudgetNegotiationReadonly = false;
-      this.isBudgetReadonly = false;
-    } else if (this.situation == "E") {
-      this.isbudgetValuesReadonly = true;
-      this.isbudgetNegotiationReadonly = false;
-      this.isBudgetReadonly = false;
-    } else if (this.situation == "X" || this.situation == "A" || this.situation == "F") {
-      this.isbudgetValuesReadonly = true;
-      this.isbudgetNegotiationReadonly = true;
-      this.isBudgetReadonly = true;
-    }
   }
 
   public treatBalanceNegotiation() {
@@ -844,6 +951,7 @@ export class AddBudgetProductDialog implements OnInit {
 
   isFieldReadonly = false;
   isProductDoseHidden = false;
+  isTableDosesHidden = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -943,8 +1051,19 @@ export class AddBudgetProductDialog implements OnInit {
   }
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
+
     this.EstimatedSalesValue = event.option.value.SaleValue;
     this.getProductDoses(event.option.value.ID)
+
+    setTimeout(() => {
+      if (this.dataSource.data.length == 0) {
+        this.isTableDosesHidden = true;
+      } else {
+        this.isTableDosesHidden = false;
+      }
+    }, 200);
+
+
   }
 
   getProductDoses(productId: string) {
@@ -967,28 +1086,48 @@ export class AddBudgetProductDialog implements OnInit {
       return;
     }
 
-    if (this.selection.selected.length == 0) {
+    if (this.selection.selected.length == 0 && this.dataSource.data.length != 0) {
       this.messageHandler.showMessage("É necessário selecionar ao menos uma Dose!", "warning-snackbar")
       return;
     }
 
     let listBudgetProductModel = new Array<BudgetProductModel>();
+    if (this.dataSource.data.length != 0) {
+      this.selection.selected.forEach((productDose: any) => {
 
-    this.selection.selected.forEach((productDose: any) => {
-      
+        let budgetProduct = new BudgetProductModel();
+        budgetProduct.budgetId = this.BudgetId;
+        budgetProduct.productId = this.budgetProductForm.value.ProductName.ID;
+        budgetProduct.productDose = productDose.DoseType;
+        budgetProduct.situationProduct = "P";
+        budgetProduct.estimatedSalesValue = this.EstimatedSalesValue;
+        budgetProduct.details = this.Details;
+        budgetProduct.situationProduct = this.Situation;
+
+        if (this.budgetProductForm.value.PersonName != undefined) {
+          budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
+        }
+
+        listBudgetProductModel.push(budgetProduct);
+      })
+
+    } else {
+
       let budgetProduct = new BudgetProductModel();
       budgetProduct.budgetId = this.BudgetId;
-      budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
       budgetProduct.productId = this.budgetProductForm.value.ProductName.ID;
-      budgetProduct.productDose = productDose.DoseType;
       budgetProduct.situationProduct = "P";
       budgetProduct.estimatedSalesValue = this.EstimatedSalesValue;
       budgetProduct.details = this.Details;
       budgetProduct.situationProduct = this.Situation;
-      
+
+      if (this.budgetProductForm.value.PersonName != undefined) {
+        budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
+      }
+
       listBudgetProductModel.push(budgetProduct);
-    })
-    console.log(listBudgetProductModel)
+    }
+
     this.budgetProductService.createOnDemand(listBudgetProductModel).subscribe(
       response => {
         this.dialogRef.close(response);
@@ -1016,18 +1155,6 @@ export class AddBudgetProductDialog implements OnInit {
       return ""
     }
   }
-}
-
-@Component({
-  selector: 'confirm-budget-product-remove-dialog',
-  templateUrl: 'confirm-budget-product-remove-dialog.html',
-})
-
-export class ConfirmBudgetProductRemoveDialog implements OnInit {
-
-  ngOnInit(): void {
-  }
-
 }
 
 @Component({
@@ -1229,4 +1356,28 @@ export class UpdateBudgetProductDialog implements OnInit {
       return ""
     }
   }
+}
+
+@Component({
+  selector: 'confirm-budget-product-remove-dialog',
+  templateUrl: 'confirm-budget-product-remove-dialog.html',
+})
+
+export class ConfirmBudgetProductRemoveDialog implements OnInit {
+
+  ngOnInit(): void {
+  }
+
+}
+
+@Component({
+  selector: 'confirm-budget-cancelation-dialog',
+  templateUrl: 'confirm-budget-cancelation-dialog.html',
+})
+
+export class ConfirmBudgetCancelationDialog implements OnInit {
+
+  ngOnInit(): void {
+  }
+
 }
