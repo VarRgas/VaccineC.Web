@@ -140,16 +140,16 @@ export class PessoasComponent implements OnInit {
   }
 
   public isPerson(personType: string): boolean {
-    if(personType == "F"){
+    if (personType == "F") {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
 
   public removeImage(): void {
     this.profilePicExhibition = `${this.imagePathUrlDefault}`;
-    this.profilePic = '';    
+    this.profilePic = '';
   }
 
   public uploadFinished = (event: any) => {
@@ -313,7 +313,7 @@ export class PessoasComponent implements OnInit {
       console.log(this.personForm);
       this.createButtonLoading = false;
       this.personForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -360,7 +360,7 @@ export class PessoasComponent implements OnInit {
       console.log(this.personForm);
       this.createButtonLoading = false;
       this.personForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -417,7 +417,7 @@ export class PessoasComponent implements OnInit {
       console.log(this.physicalComplementForm);
       this.createPfButtonLoading = false;
       this.physicalComplementForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -465,7 +465,7 @@ export class PessoasComponent implements OnInit {
       console.log(this.physicalComplementForm);
       this.createPfButtonLoading = false;
       this.physicalComplementForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -509,7 +509,7 @@ export class PessoasComponent implements OnInit {
       console.log(this.juridicalComplementForm.valid);
       this.createPjButtonLoading = false;
       this.juridicalComplementForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -560,7 +560,7 @@ export class PessoasComponent implements OnInit {
       console.log(this.juridicalComplementForm);
       this.createPjButtonLoading = false;
       this.juridicalComplementForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -874,7 +874,7 @@ export class DialogContentPhoneDialog implements OnInit {
     if (!this.personPhoneForm.valid) {
       console.log(this.personPhoneForm);
       this.personPhoneForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -949,7 +949,7 @@ export class UpdatePersonPhoneDialog implements OnInit {
     if (!this.personPhoneForm.valid) {
       console.log(this.personPhoneForm);
       this.personPhoneForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -1074,7 +1074,7 @@ export class UpdatePersonAddressDialog implements OnInit {
     if (!this.personAddressForm.valid) {
       console.log(this.personAddressForm);
       this.personAddressForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -1183,7 +1183,7 @@ export class DialogContentAddressDialog implements OnInit {
     if (!this.personAddressForm.valid) {
       console.log(this.personAddressForm);
       this.personAddressForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

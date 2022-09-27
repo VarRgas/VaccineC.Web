@@ -172,7 +172,7 @@ export class EmpresasComponent implements OnInit {
       console.log(this.companyForm);
       this.createButtonLoading = false;
       this.companyForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -212,7 +212,7 @@ export class EmpresasComponent implements OnInit {
       console.log(this.companyForm);
       this.createButtonLoading = false;
       this.companyForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -272,7 +272,7 @@ export class EmpresasComponent implements OnInit {
     if (!this.companyParametersForm.valid) {
       console.log(this.companyParametersForm);
       this.companyParametersForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -310,7 +310,7 @@ export class EmpresasComponent implements OnInit {
     if (!this.companyParametersForm.valid) {
       console.log(this.companyParametersForm);
       this.companyParametersForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -536,7 +536,7 @@ export class DialogContentScheduleDialog implements OnInit {
     if (!this.CompanyScheduleForm.valid) {
       console.log(this.CompanyScheduleForm);
       this.CompanyScheduleForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -625,7 +625,7 @@ export class UpdateCompanyScheduleDialog implements OnInit {
     if (!this.CompanyScheduleForm.valid) {
       console.log(this.CompanyScheduleForm);
       this.CompanyScheduleForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

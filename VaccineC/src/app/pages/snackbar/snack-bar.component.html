@@ -1,0 +1,12 @@
+<div id="custom-snack-bar-container">
+	<div class="custom-snack-bar-row">
+		<span class="example-snack-bar-message">
+			{{ data.message }}
+		</span>
+		<button id="action-button" (click)="dismissWithAction()" mat-button
+			>{{data.action}}</button>
+	</div>
+
+	<mat-progress-bar id="progress-bar" mode="determinate" [value]="progress">
+	</mat-progress-bar>
+</div>

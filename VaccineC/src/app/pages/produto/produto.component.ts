@@ -143,7 +143,7 @@ export class ProdutoComponent implements OnInit {
   }
 
   getProductIcon(sbimVaccinesId: string) {
-   
+
     if (sbimVaccinesId == "" || sbimVaccinesId == null) {
       return "OUTRO"
     } else {
@@ -154,7 +154,7 @@ export class ProdutoComponent implements OnInit {
   public getAllProducts(): void {
     this.productsDispatcherService.getAllProducts()
       .subscribe(products => {
-       
+
         this.dataSource = new MatTableDataSource(products);
         this.dataSource.paginator = this.paginatorProduct;
         this.dataSource.sort = this.sort;
@@ -263,7 +263,7 @@ export class ProdutoComponent implements OnInit {
       console.log(this.productForm);
       this.createButtonLoading = false;
       this.productForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -333,7 +333,7 @@ export class ProdutoComponent implements OnInit {
       console.log(this.productForm);
       this.createButtonLoading = false;
       this.productForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -564,7 +564,7 @@ export class DialogContentDose implements OnInit {
     if (!this.productDosesForm.valid) {
       console.log(this.productDosesForm);
       this.productDosesForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -633,7 +633,7 @@ export class UpdateDialogContentDose implements OnInit {
   getProductDosesById(id: string): void {
     this.productsDosesDispatcherService.getProductDosesById(id).subscribe(
       result => {
-   
+
         this.id = result.ID;
         this.productsId = result.ProductsId;
         this.doseType = result.DoseType;
@@ -657,7 +657,7 @@ export class UpdateDialogContentDose implements OnInit {
 
     if (!this.productDosesForm.valid) {
       this.productDosesForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

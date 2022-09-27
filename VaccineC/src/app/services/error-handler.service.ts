@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageHandlerService } from './message-handler.service';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,8 @@ export class ErrorHandlerService {
     constructor(
         private router: Router,
         public dialog: MatDialog,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private messageHandler: MessageHandlerService
     ) { }
 
     public handleError = (error: HttpErrorResponse) => {
@@ -66,12 +68,7 @@ export class ErrorHandlerService {
     }
 
     private createErrorMessage = (error: HttpErrorResponse) => {
-        this.snackBar.open(this.errorMessage, 'Ok', {
-            horizontalPosition: 'right',
-            verticalPosition: 'bottom',
-            duration: 8000,
-            panelClass: ['danger-snackbar']
-        });
+        this.messageHandler.showMessage(this.errorMessage, "danger-snackbar");
     }
 
 }

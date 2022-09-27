@@ -124,7 +124,7 @@ export class RecursosComponent implements OnInit {
       console.log(this.resourceForm);
       this.createButtonLoading = false;
       this.resourceForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -158,7 +158,7 @@ export class RecursosComponent implements OnInit {
       console.log(this.resourceForm);
       this.createButtonLoading = false;
       this.resourceForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

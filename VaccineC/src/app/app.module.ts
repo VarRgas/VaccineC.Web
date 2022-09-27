@@ -26,6 +26,7 @@ import { MovimentarEstoqueComponent, AddMovementProductEntryDialog, AddMovementP
 import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog, ConfirmUserResourceRemoveDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos/recursos.component';
+import { SnackBarComponent } from './pages/snackbar/snack-bar.component';
 import { MinhaContaComponent, PasswordDialog } from './pages/minha-conta/minha-conta.component';
 import { VisaoFaturamentoComponent } from './pages/visao-faturamento/visao-faturamento.component';
 import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/visao-faturamento-pesquisa/visao-faturamento-pesquisa.component';
@@ -123,7 +124,8 @@ export const MY_FORMATS = {
     ConectionErrorComponent,
     ConfirmBudgetProductRemoveDialog,
     UpdateBudgetProductDialog,
-    ConfirmBudgetCancelationDialog
+    ConfirmBudgetCancelationDialog,
+    SnackBarComponent
   ],
   imports: [
     BrowserModule,

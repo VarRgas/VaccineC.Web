@@ -35,7 +35,7 @@
                                 matSortDirection="asc">
 
                                 <ng-container matColumnDef="MovementNumber">
-                                    <mat-header-cell *matHeaderCellDef> Movimento </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Movimento </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> 
                                         
                                         {{resolveExibitionSituation(element.Situation)}} 
@@ -50,14 +50,14 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="MovementType">
-                                    <mat-header-cell *matHeaderCellDef> Operação </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Operação </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.MovementType == 'E' ? 'Entrada' :
                                         'Saída'}}
                                     </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="ProductsInfo">
-                                    <mat-header-cell *matHeaderCellDef> Produtos </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Produtos </mat-header-cell>
                                     <mat-cell *matCellDef="let element">
                                         {{element.ProductsInfo}} </mat-cell>
                                 </ng-container>

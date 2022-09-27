@@ -25,7 +25,7 @@ export class UploadFileComponent implements OnInit {
       return;
 
     let fileType = files[0].type.split("/")[1];
-    
+
     if (fileType == "jpg" || fileType == "jpeg" || fileType == "png") {
 
       let fileToUpload = <File>files[0];
@@ -43,7 +43,7 @@ export class UploadFileComponent implements OnInit {
             this.onUploadFinished.emit(event.body);
           }
         });
-        
+
     } else {
       this.messageHandler.showMessage("Imagem deve ser no formato .jpg, .jpeg ou .png!", "warning-snackbar")
       return;

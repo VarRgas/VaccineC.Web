@@ -119,7 +119,7 @@ export class FormasPagamentoComponent implements OnInit {
       console.log(this.paymentFormForm);
       this.createButtonLoading = false;
       this.paymentFormForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -129,7 +129,7 @@ export class FormasPagamentoComponent implements OnInit {
     this.paymentFormsService.create(data)
       .subscribe(
         response => {
-          this.messageHandler.showMessage("Forma de Pagamento criada com sucesso!", "success-snackbar")
+          this.messageHandler.showMessage("Forma de Pagamento criada com sucesso!", "success-snackbar");
           this.IdPaymentForm = response;
           this.informationField = this.Name;
           this.createButtonLoading = false;
@@ -153,14 +153,15 @@ export class FormasPagamentoComponent implements OnInit {
       console.log(this.paymentFormForm);
       this.createButtonLoading = false;
       this.paymentFormForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
     this.paymentFormsService.update(this.IdPaymentForm, paymentForm)
       .subscribe(
         response => {
-          this.messageHandler.showMessage("Forma de Pagamento alterada com sucesso!", "success-snackbar")
+
+          this.messageHandler.showMessage("Forma de Pagamento alterada com sucesso!", "success-snackbar");
           this.IdPaymentForm = response;
           this.informationField = this.Name;
           this.createButtonLoading = false;
@@ -186,7 +187,7 @@ export class FormasPagamentoComponent implements OnInit {
             this.paymentFormForm.clearValidators();
             this.paymentFormForm.updateValueAndValidity();
             this.getAllPaymentForms();
-            this.messageHandler.showMessage("Forma de Pagamento removida com sucesso!", "success-snackbar")
+            this.messageHandler.showMessage("Forma de Pagamento removida com sucesso!", "success-snackbar");
           },
           error => {
             console.log(error);

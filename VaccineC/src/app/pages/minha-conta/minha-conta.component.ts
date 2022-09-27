@@ -173,7 +173,7 @@ export class PasswordDialog implements OnInit {
 
     if (!this.userPasswordForm.valid) {
       this.userPasswordForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

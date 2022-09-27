@@ -165,7 +165,7 @@ export class GerenciarUsuariosComponent implements OnInit {
       console.log(this.userForm);
       this.createButtonLoading = false;
       this.userForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -228,7 +228,7 @@ export class GerenciarUsuariosComponent implements OnInit {
       console.log(this.userForm);
       this.createButtonLoading = false;
       this.userForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -536,7 +536,7 @@ export class UserResourceAddDialog implements OnInit {
     if (!this.userResourceForm.valid) {
       console.log(this.userResourceForm);
       this.userResourceForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

@@ -134,7 +134,7 @@ export class MovimentarEstoqueComponent implements OnInit {
       console.log(this.movementForm);
       this.createButtonLoading = false;
       this.movementForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -181,7 +181,7 @@ export class MovimentarEstoqueComponent implements OnInit {
       console.log(this.movementForm);
       this.finishButtonLoading = false;
       this.movementForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -228,7 +228,7 @@ export class MovimentarEstoqueComponent implements OnInit {
             console.log(this.movementForm);
             this.cancelButtonLoading = false;
             this.movementForm.markAllAsTouched();
-            this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+            this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
             return;
           }
 
@@ -593,7 +593,7 @@ export class AddMovementProductEntryDialog implements OnInit {
     if (!this.movementProductForm.valid) {
       console.log(this.movementProductForm);
       this.movementProductForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -790,7 +790,7 @@ export class UpdateMovementProductEntryDialog implements OnInit {
     if (!this.movementProductForm.valid) {
       console.log(this.movementProductForm);
       this.movementProductForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -972,7 +972,7 @@ export class UpdateMovementProductExitDialog implements OnInit {
     if (!this.movementProductForm.valid) {
       console.log(this.movementProductForm);
       this.movementProductForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -1148,7 +1148,7 @@ export class AddMovementProductExitDialog {
     if (!this.movementProductForm.valid) {
       console.log(this.movementProductForm);
       this.movementProductForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

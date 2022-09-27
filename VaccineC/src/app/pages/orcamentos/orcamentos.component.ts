@@ -57,6 +57,7 @@ export class OrcamentosComponent implements OnInit {
   public isButtonCancelVisibile = false;
   public isButtonReopenVisibile = false;
   public isBudgetProductDisabled = false;
+  public isRemoveBudgetNegotiationHidden = false;
 
   //Variáveis dos inputs
   //BudgetForm
@@ -169,12 +170,13 @@ export class OrcamentosComponent implements OnInit {
 
     if (situation == "P" || situation == null || situation == undefined) {
       this.isBudgetReadonly = false;
-      this.isbudgetNegotiationReadonly = false;
+      this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = false;
       this.isbudgetValuesReadonly = false;
       this.isButtonApproveVisibile = false;
       this.isButtonCancelVisibile = false;
       this.isButtonReopenVisibile = false;
+      this.isRemoveBudgetNegotiationHidden = true;
     } else if (situation == "E") {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = false;
@@ -183,30 +185,34 @@ export class OrcamentosComponent implements OnInit {
       this.isButtonApproveVisibile = true;
       this.isButtonCancelVisibile = false;
       this.isButtonReopenVisibile = false;
+      this.isRemoveBudgetNegotiationHidden = false;
     } else if (situation == "A") {
       this.isBudgetReadonly = true;
-      this.isbudgetNegotiationReadonly = false;
+      this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;
       this.isbudgetValuesReadonly = true;
       this.isButtonApproveVisibile = false;
       this.isButtonCancelVisibile = true;
       this.isButtonReopenVisibile = true;
+      this.isRemoveBudgetNegotiationHidden = true;
     } else if (situation == "X") {
       this.isBudgetReadonly = true;
-      this.isbudgetNegotiationReadonly = false;
+      this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;
       this.isbudgetValuesReadonly = true;
       this.isButtonApproveVisibile = false;
       this.isButtonCancelVisibile = false;
       this.isButtonReopenVisibile = true;
+      this.isRemoveBudgetNegotiationHidden = true;
     } else if (situation == "F") {
       this.isBudgetReadonly = true;
-      this.isbudgetNegotiationReadonly = false;
+      this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;
       this.isbudgetValuesReadonly = true;
       this.isButtonApproveVisibile = false;
       this.isButtonCancelVisibile = false;
       this.isButtonReopenVisibile = false;
+      this.isRemoveBudgetNegotiationHidden = true;
     }
   }
 
@@ -294,7 +300,7 @@ export class OrcamentosComponent implements OnInit {
       console.log(this.budgetForm);
       //this.createButtonLoading = false;
       this.budgetForm2.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -319,10 +325,14 @@ export class OrcamentosComponent implements OnInit {
     budget.details = this.details;
     budget.totalBudgetedAmount = this.totalBudgetedAmount;
 
+
+    console.log(this.situation);
     if (this.situation == "P") {
       budget.situation = "E";
+      console.log("setou E")
     } else {
       budget.situation = this.situation;
+      console.log("não setou E")
     }
 
     if (this.discountType == "R$") {
@@ -377,7 +387,7 @@ export class OrcamentosComponent implements OnInit {
       console.log(this.budgetForm);
       //this.createButtonLoading = false;
       this.budgetForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -430,7 +440,7 @@ export class OrcamentosComponent implements OnInit {
       console.log(this.budgetForm);
       //this.createButtonLoading = false;
       this.budgetForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -514,6 +524,7 @@ export class OrcamentosComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response)
+          this.situation = response.Situation;
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
           this.loadData();
           this.treatBudgetSituation(response.Situation)
@@ -546,6 +557,7 @@ export class OrcamentosComponent implements OnInit {
             .subscribe(
               response => {
                 console.log(response)
+                this.situation = response.Situation;
                 this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
                 this.loadData();
                 this.treatBudgetSituation(response.Situation)
@@ -574,11 +586,13 @@ export class OrcamentosComponent implements OnInit {
     this.budgetsDispatcherService.updateBudget(budget.id, budget)
       .subscribe(
         response => {
-          console.log(response)
+          this.situation = response.Situation;
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
           this.loadData();
           this.treatBudgetSituation(response.Situation)
+          this.stepper.selectedIndex = 1;
           this.messageHandler.showMessage("Orçamento reaberto com sucesso!", "success-snackbar")
+
         },
         error => {
           console.log(error);
@@ -600,6 +614,7 @@ export class OrcamentosComponent implements OnInit {
     this.budgetsDispatcherService.getAllBudgets()
       .subscribe(budgets => {
         this.dataSourceBudget = new MatTableDataSource(budgets);
+        this.dataSourceBudget.sort = this.sort;
         this.dataSourceBudget.paginator = this.paginatorBudget;
       },
         error => {
@@ -752,7 +767,7 @@ export class OrcamentosComponent implements OnInit {
     if (!this.budgetNegotiationForm.valid) {
       console.log(this.budgetNegotiationForm);
       this.budgetNegotiationForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -819,7 +834,6 @@ export class OrcamentosComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceBudgetProduct = new MatTableDataSource(res);
-          this.dataSourceBudgetProduct.sort = this.sort;
         }
       }
     );
@@ -865,7 +879,6 @@ export class OrcamentosComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceBudgetProduct = new MatTableDataSource(res);
-          this.dataSourceBudgetProduct.sort = this.sort;
         }
       }
     );
@@ -952,29 +965,29 @@ export class OrcamentosComponent implements OnInit {
 
   resolveExibitionSituation(situation: string) {
     if (situation == "A") {
-      this.situationColor = "budget-aproved";
+      this.situationColor = "fa-circle budget-aproved";
       this.situationTitle = "Aprovado"
     } else if (situation == "P") {
-      this.situationColor = "budget-pending";
+      this.situationColor = "fa-circle budget-pending";
       this.situationTitle = "Pendente"
     } else if (situation == "X") {
-      this.situationColor = "budget-canceled";
+      this.situationColor = "fa-circle budget-canceled";
       this.situationTitle = "Cancelado"
     } else if (situation == "V") {
-      this.situationColor = "budget-expired";
+      this.situationColor = "fa-circle budget-expired";
       this.situationTitle = "Vencido"
     } else if (situation == "F") {
-      this.situationColor = "budget-finished";
+      this.situationColor = "fa-circle budget-finished";
       this.situationTitle = "Finalizado"
     } else if (situation = "E") {
-      this.situationColor = "budget-negotiation";
+      this.situationColor = "fa-circle budget-negotiation";
       this.situationTitle = "Em Negociação";
     }
   }
 
   resolveExibitionSituationProduct(situationProduct: string) {
     if (situationProduct == "E") {
-      this.situationProductColor = "budget-aproved";
+      this.situationProductColor = "budget-finished";
       this.situationProductTitle = "Em Execução"
     } else if (situationProduct == "P") {
       this.situationProductColor = "budget-pending";
@@ -1150,7 +1163,7 @@ export class AddBudgetProductDialog implements OnInit {
     if (!this.budgetProductForm.valid) {
       console.log(this.budgetProductForm);
       this.budgetProductForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 
@@ -1392,7 +1405,7 @@ export class UpdateBudgetProductDialog implements OnInit {
     if (!this.budgetProductForm.valid) {
       console.log(this.budgetProductForm);
       this.budgetProductForm.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar")
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
     }
 

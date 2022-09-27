@@ -23,26 +23,25 @@
                     </div>
                     <div id="search-table">
                         <div class="col-sm-11 search-table-content mat-elevation-z2">
-                            <table class="col-sm-12" mat-table [dataSource]="dataSourceBudget" matSort
-                                matSortActive="BudgetNumber" matSortDirection="asc">
+                            <table class="col-sm-12" mat-table [dataSource]="dataSourceBudget" matSort matSortDirection="asc">
                                 <!-- Numero do orçamento -->
                                 <ng-container matColumnDef="BudgetNumber">
-                                    <mat-header-cell *matHeaderCellDef> Orçamento </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Orçamento </mat-header-cell>
                                     <mat-cell *matCellDef="let element">
                                         {{resolveExibitionSituation(element.Situation)}}
                                         <span title="{{situationTitle}}"
-                                            class="me-3 fa-solid fa-circle {{situationColor}}"></span>
+                                            class="me-3 fa-solid {{situationColor}}"></span>
                                         {{element.BudgetNumber}}
                                     </mat-cell>
                                 </ng-container>
                                 <!-- Nome da pessoa -->
                                 <ng-container matColumnDef="PersonName">
-                                    <mat-header-cell *matHeaderCellDef> Responsável </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Responsável </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.Persons.Name}} </mat-cell>
                                 </ng-container>
                                 <!-- Data de validade -->
                                 <ng-container matColumnDef="ExpirationDate">
-                                    <mat-header-cell *matHeaderCellDef> Validade </mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Validade </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> {{element.ExpirationDate | date: 'dd/MM/yyyy'}}
                                     </mat-cell>
                                 </ng-container>
@@ -421,7 +420,7 @@
                                                 <th mat-header-cell *matHeaderCellDef> </th>
                                                 <td mat-cell *matCellDef="let row">
                                                     <button type="button" mat-icon-button color="warn" title="Remover"
-                                                        style="float:right;" (click)="removeBudgetNegotiation(row.ID)">
+                                                        style="float:right;" (click)="removeBudgetNegotiation(row.ID)" [disabled]="isRemoveBudgetNegotiationHidden">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 </td>

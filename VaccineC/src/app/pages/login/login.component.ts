@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
+import { MessageHandlerService } from 'src/app/services/message-handler.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ export class LoginComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private errorHandler: ErrorHandlerService,
-    private notificationsDispatcherService: NotificationsDispatcherService
+    private notificationsDispatcherService: NotificationsDispatcherService,
+    private messageHandlerService: MessageHandlerService
   ) { }
 
   ngOnInit(): void {
@@ -68,12 +70,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('userId', response.ID);
         localStorage.setItem('showNotification', response.ShowNotification);
 
-        this.snackBar.open("Logado com sucesso!", 'Ok', {
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          duration: 5000,
-          panelClass: ['success-snackbar']
-        });
+        this.messageHandlerService.showMessage("Logado com sucesso!", 'success-snackbar')
 
         this.router.navigateByUrl('/home', {
           state: { login: login }

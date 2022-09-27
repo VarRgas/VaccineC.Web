@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { SnackBarComponent } from "../pages/snackbar/snack-bar.component";
 
 @Injectable({
     providedIn: 'root'
@@ -12,11 +13,14 @@ export class MessageHandlerService {
     ) { }
 
     public showMessage = (message: string, panelClass: string) => {
-        this.snackBar.open(message, 'Ok', {
+        let action = 'Ok';
+        return this.snackBar.openFromComponent(SnackBarComponent, {
+            data: { message, action },
+            duration: 5000,
             horizontalPosition: 'right',
             verticalPosition: 'bottom',
-            duration: 5000,
             panelClass: [panelClass]
         });
     }
+
 }
