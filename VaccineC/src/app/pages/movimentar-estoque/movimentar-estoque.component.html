@@ -37,12 +37,15 @@
                                 <ng-container matColumnDef="MovementNumber">
                                     <mat-header-cell *matHeaderCellDef> Movimento </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> 
+                                        
                                         {{resolveExibitionSituation(element.Situation)}} 
                                         <span title="{{situationTitle}}" class="me-3 fa-solid fa-circle {{situationColor}}"></span>
-                                        <div>
+                                        
+                                        <span>
                                             <div>{{element.MovementNumber}}</div>
                                             <div title="Data do Movimento" class="small-text">{{element.Register| date: 'dd/MM/yyyy'}}</div>
-                                        </div>
+                                        </span>
+
                                     </mat-cell>
                                 </ng-container>
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NotificationModel } from 'src/app/models/notification-model';
 import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
 
@@ -21,7 +22,8 @@ export class ToolbarComponent implements OnInit {
   public displayNone = "";
 
   constructor(
-    private notificationDispatcherService: NotificationsDispatcherService
+    private notificationDispatcherService: NotificationsDispatcherService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -125,6 +127,12 @@ export class ToolbarComponent implements OnInit {
     } else {
       this.displayNone = "";
     }
+  }
+
+  logout(){
+    localStorage.clear();
+    console.log(localStorage);
+    this.router.navigateByUrl('/login');
   }
 
 }

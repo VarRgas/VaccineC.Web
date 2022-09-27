@@ -53,9 +53,10 @@ export class OrcamentosComponent implements OnInit {
   public isbudgetNegotiationReadonly = false;
   public isbudgetValuesReadonly = false;
   public isBudgetReadonly = false;
-
-  //Controle dos steps
-  public isBudgetProductEditable = false;
+  public isButtonApproveVisibile = false;
+  public isButtonCancelVisibile = false;
+  public isButtonReopenVisibile = false;
+  public isBudgetProductDisabled = false;
 
   //Variáveis dos inputs
   //BudgetForm
@@ -85,6 +86,8 @@ export class OrcamentosComponent implements OnInit {
   //Outros
   public situationColor = '';
   public situationTitle = '';
+  public situationProductColor = '';
+  public situationProductTitle = '';
   public searchPersonName!: string;
   public informationField!: string;
   public balanceNegotiations: number = 0;
@@ -162,6 +165,51 @@ export class OrcamentosComponent implements OnInit {
 
   }
 
+  treatBudgetSituation(situation: string) {
+
+    if (situation == "P" || situation == null || situation == undefined) {
+      this.isBudgetReadonly = false;
+      this.isbudgetNegotiationReadonly = false;
+      this.isBudgetProductDisabled = false;
+      this.isbudgetValuesReadonly = false;
+      this.isButtonApproveVisibile = false;
+      this.isButtonCancelVisibile = false;
+      this.isButtonReopenVisibile = false;
+    } else if (situation == "E") {
+      this.isBudgetReadonly = true;
+      this.isbudgetNegotiationReadonly = false;
+      this.isbudgetValuesReadonly = true;
+      this.isBudgetProductDisabled = true;
+      this.isButtonApproveVisibile = true;
+      this.isButtonCancelVisibile = false;
+      this.isButtonReopenVisibile = false;
+    } else if (situation == "A") {
+      this.isBudgetReadonly = true;
+      this.isbudgetNegotiationReadonly = false;
+      this.isBudgetProductDisabled = true;
+      this.isbudgetValuesReadonly = true;
+      this.isButtonApproveVisibile = false;
+      this.isButtonCancelVisibile = true;
+      this.isButtonReopenVisibile = true;
+    } else if (situation == "X") {
+      this.isBudgetReadonly = true;
+      this.isbudgetNegotiationReadonly = false;
+      this.isBudgetProductDisabled = true;
+      this.isbudgetValuesReadonly = true;
+      this.isButtonApproveVisibile = false;
+      this.isButtonCancelVisibile = false;
+      this.isButtonReopenVisibile = true;
+    } else if (situation == "F") {
+      this.isBudgetReadonly = true;
+      this.isbudgetNegotiationReadonly = false;
+      this.isBudgetProductDisabled = true;
+      this.isbudgetValuesReadonly = true;
+      this.isButtonApproveVisibile = false;
+      this.isButtonCancelVisibile = false;
+      this.isButtonReopenVisibile = false;
+    }
+  }
+
   calculateBudgetAmount(): void {
     if (this.discountType == "R$") {
       this.totalBudgetAmount = Number(this.totalBudgetedAmount) - Number(this.discountValue);
@@ -173,7 +221,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   discountTypeChanged(): void {
-    console.log(this.discountType);
+
     if (this.discountType == null || this.discountType == undefined || this.discountType == "R$") {
       this.prefixDiscountType = "R$"
     } else {
@@ -306,6 +354,7 @@ export class OrcamentosComponent implements OnInit {
           this.isPersonReadOnly = true;
 
           this.loadData();
+          this.treatBudgetSituation(response.Situation)
           stepper.next();
           // this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
         },
@@ -364,6 +413,7 @@ export class OrcamentosComponent implements OnInit {
           this.isPersonReadOnly = true;
 
           this.loadData();
+          this.treatBudgetSituation(response.Situation)
           stepper.next();
           this.messageHandler.showMessage("Orçamento criado com sucesso!", "success-snackbar")
         },
@@ -433,6 +483,7 @@ export class OrcamentosComponent implements OnInit {
           this.isPersonReadOnly = true;
 
           this.loadData();
+          this.treatBudgetSituation(response.Situation)
           stepper.next();
           //this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
         },
@@ -465,6 +516,7 @@ export class OrcamentosComponent implements OnInit {
           console.log(response)
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
           this.loadData();
+          this.treatBudgetSituation(response.Situation)
           this.messageHandler.showMessage("Orçamento aprovado com sucesso!", "success-snackbar")
         },
         error => {
@@ -496,6 +548,7 @@ export class OrcamentosComponent implements OnInit {
                 console.log(response)
                 this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
                 this.loadData();
+                this.treatBudgetSituation(response.Situation)
                 this.messageHandler.showMessage("Orçamento cancelado com sucesso!", "success-snackbar")
               },
               error => {
@@ -505,7 +558,6 @@ export class OrcamentosComponent implements OnInit {
         }
       });
   }
-
 
   public reopenBudget(): void {
 
@@ -525,6 +577,7 @@ export class OrcamentosComponent implements OnInit {
           console.log(response)
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
           this.loadData();
+          this.treatBudgetSituation(response.Situation)
           this.messageHandler.showMessage("Orçamento reaberto com sucesso!", "success-snackbar")
         },
         error => {
@@ -607,6 +660,8 @@ export class OrcamentosComponent implements OnInit {
     this.informationField = "";
     this.isPersonReadOnly = false;
 
+    this.treatBudgetSituation("P")
+
   }
   public resetForms(): void {
 
@@ -663,10 +718,9 @@ export class OrcamentosComponent implements OnInit {
             this.prefixDiscountType = "R$"
             this.discountValue = budget.DiscountValue;
           }
-
+          this.treatBudgetSituation(budget.Situation)
           this.informationField = `Orçamento nº ${budget.BudgetNumber} - ${budget.Persons.Name} - ${this.showSituationFormated(budget.Situation)}`;
           this.isPersonReadOnly = true;
-
         },
         error => {
           console.log(error);
@@ -756,7 +810,8 @@ export class OrcamentosComponent implements OnInit {
       disableClose: true,
       width: '70vw',
       data: {
-        ID: id
+        ID: id,
+        Situation: this.situation
       },
     });
 
@@ -914,6 +969,19 @@ export class OrcamentosComponent implements OnInit {
     } else if (situation = "E") {
       this.situationColor = "budget-negotiation";
       this.situationTitle = "Em Negociação";
+    }
+  }
+
+  resolveExibitionSituationProduct(situationProduct: string) {
+    if (situationProduct == "E") {
+      this.situationProductColor = "budget-aproved";
+      this.situationProductTitle = "Em Execução"
+    } else if (situationProduct == "P") {
+      this.situationProductColor = "budget-pending";
+      this.situationProductTitle = "Pendente"
+    } else {
+      this.situationProductColor = "";
+      this.situationProductTitle = ""
     }
   }
 
@@ -1178,11 +1246,13 @@ export class UpdateBudgetProductDialog implements OnInit {
   EstimatedSalesValue!: number;
   ProductDose!: string;
   Situation!: string;
+  SituationBudget!: string;
   Details!: string;
   DosesList!: any;
 
   isFieldReadonly = false;
   isProductDoseHidden = false;
+  isSaveButtonVisible = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -1210,6 +1280,11 @@ export class UpdateBudgetProductDialog implements OnInit {
 
   ngOnInit(): void {
     this.Id = this.data.ID;
+    if (this.data.Situation != "P") {
+      this.isSaveButtonVisible = false;
+    } else {
+      this.isSaveButtonVisible = true;
+    }
     this.getBudgetProductById(this.Id);
   }
 

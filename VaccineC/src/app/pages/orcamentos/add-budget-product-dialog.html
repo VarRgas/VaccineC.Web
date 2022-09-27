@@ -8,7 +8,7 @@
                 <input (click)="searchPersonByAutoComplete()" type="text"
                     #PersonNameinput placeholder="Selecione o Tomador"
                     aria-label="Number" matInput formControlName="PersonName"
-                    [matAutocomplete]="autoPerson" [(ngModel)]="PersonName" required>
+                    [matAutocomplete]="autoPerson" [(ngModel)]="PersonName">
                 <mat-autocomplete #autoPerson="matAutocomplete"
                     [displayWith]="displayStatePerson">
                     <mat-option *ngFor="let acPerson of acPersons | async"

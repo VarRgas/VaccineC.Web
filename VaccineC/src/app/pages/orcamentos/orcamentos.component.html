@@ -117,7 +117,8 @@
                                             [matAutocomplete]="autoUser" [(ngModel)]="userId" required>
                                         <mat-error
                                             *ngIf="budgetForm.controls.UserId.touched && budgetForm.controls.UserId.invalid">
-                                            <span *ngIf="budgetForm.controls.UserId.errors?.required">O Usuário é obrigatório.</span>
+                                            <span *ngIf="budgetForm.controls.UserId.errors?.required">O Usuário é
+                                                obrigatório.</span>
                                         </mat-error>
                                         <mat-autocomplete #autoUser="matAutocomplete" [displayWith]="displayStateUser">
                                             <mat-option *ngFor="let acUser of acUsers | async" [value]="acUser">
@@ -136,9 +137,10 @@
                                         </mat-datepicker-toggle>
                                         <mat-datepicker #picker [disabled]="isBudgetReadonly"></mat-datepicker>
                                         <mat-error
-                                        *ngIf="budgetForm.controls.ExpirationDate.touched && budgetForm.controls.ExpirationDate.invalid">
-                                        <span *ngIf="budgetForm.controls.ExpirationDate.errors?.required">A Data de Validade é obrigatória.</span>
-                                    </mat-error>
+                                            *ngIf="budgetForm.controls.ExpirationDate.touched && budgetForm.controls.ExpirationDate.invalid">
+                                            <span *ngIf="budgetForm.controls.ExpirationDate.errors?.required">A Data de
+                                                Validade é obrigatória.</span>
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
                                 <div class="div-row-input">
@@ -164,7 +166,8 @@
                         <mat-step label="Produtos">
                             <div class="demo-button-container col-sm-11">
                                 <button mat-mini-fab class="demo-button me-2 create-button" matTooltip="Inserir Produto"
-                                    matTooltipPosition="right" (click)="openProductDialog()">
+                                    matTooltipPosition="right" (click)="openProductDialog()"
+                                    [disabled]="isBudgetProductDisabled">
                                     <mat-icon>add</mat-icon>
                                 </button>
                             </div>
@@ -175,11 +178,16 @@
                                         <ng-container matColumnDef="ProductName">
                                             <th mat-header-cell *matHeaderCellDef> Produto </th>
                                             <td mat-cell *matCellDef="let element">
+                                                <div style="display:flex;align-items:center;">
+                                                {{resolveExibitionSituationProduct(element.SituationProduct)}}
+                                                <span title="{{situationProductTitle}}" class="me-3 fa-solid fa-circle {{situationProductColor}}"></span>
+
                                                 <div>
                                                     <div>{{element.Product.Name}}</div>
                                                     <div class="small-text">
                                                         {{resolveExibitionDoseType(element.ProductDose)}}</div>
                                                 </div>
+                                            </div>
                                             </td>
                                             <td mat-footer-cell *matFooterCellDef> </td>
                                         </ng-container>
@@ -211,11 +219,13 @@
                                             <th mat-header-cell *matHeaderCellDef> </th>
                                             <td mat-cell *matCellDef="let row">
                                                 <button mat-icon-button color="warn" title="Remover"
-                                                    style="float:right;" (click)="removeBudgetProduct(row.ID)">
+                                                    style="float:right;" (click)="removeBudgetProduct(row.ID)"
+                                                    [disabled]="isBudgetProductDisabled">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <button mat-icon-button color="primary" title="Editar"
-                                                    style="float:right;" (click)="updateBudgetProduct(row.ID)">
+                                                    style="float:right;" (click)="updateBudgetProduct(row.ID)"
+                                                    [disabled]="isBudgetProductDisabled">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
                                             </td>
@@ -338,7 +348,9 @@
                                         <mat-icon matSuffix>search</mat-icon>
                                         <mat-error
                                             *ngIf="budgetNegotiationForm.controls.PaymentFormId.touched && budgetNegotiationForm.controls.PaymentFormId.invalid">
-                                            <span *ngIf="budgetNegotiationForm.controls.PaymentFormId.errors?.required">A Forma de Pagamento é obrigatória.</span>
+                                            <span
+                                                *ngIf="budgetNegotiationForm.controls.PaymentFormId.errors?.required">A
+                                                Forma de Pagamento é obrigatória.</span>
                                         </mat-error>
                                     </mat-form-field>
 
@@ -347,9 +359,10 @@
                                         <input matInput #input type="number" placeholder="Ex. 2"
                                             formControlName="Installments" [(ngModel)]="installments" required
                                             [readonly]="isbudgetNegotiationReadonly">
-                                            <mat-error
+                                        <mat-error
                                             *ngIf="budgetNegotiationForm.controls.Installments.touched && budgetNegotiationForm.controls.Installments.invalid">
-                                            <span *ngIf="budgetNegotiationForm.controls.Installments.errors?.required">O Nº Parcelas é obrigatório.</span>
+                                            <span *ngIf="budgetNegotiationForm.controls.Installments.errors?.required">O
+                                                Nº Parcelas é obrigatório.</span>
                                         </mat-error>
                                     </mat-form-field>
 
@@ -362,7 +375,9 @@
                                         <span matPrefix>R$&nbsp;</span>
                                         <mat-error
                                             *ngIf="budgetNegotiationForm.controls.TotalAmountTraded.touched && budgetNegotiationForm.controls.TotalAmountTraded.invalid">
-                                            <span *ngIf="budgetNegotiationForm.controls.TotalAmountTraded.errors?.required">O R$ Negociado é obrigatório.</span>
+                                            <span
+                                                *ngIf="budgetNegotiationForm.controls.TotalAmountTraded.errors?.required">O
+                                                R$ Negociado é obrigatório.</span>
                                         </mat-error>
                                     </mat-form-field>
 
@@ -432,16 +447,18 @@
                                         <mat-icon>chevron_left</mat-icon>
                                     </button>
 
-                                    <button mat-mini-fab matTooltip="Reabrir" matTooltipPosition="above" class="me-2" (click)="reopenBudget()">
+                                    <button mat-mini-fab matTooltip="Reabrir" matTooltipPosition="above" class="me-2"
+                                        (click)="reopenBudget()" *ngIf="isButtonReopenVisibile">
                                         <mat-icon>reply_all</mat-icon>
                                     </button>
                                     <button mat-mini-fab matTooltip="Cancelar" color="warn" matTooltipPosition="above"
-                                        class="me-2" (click)="cancelBudget()">
+                                        class="me-2" (click)="cancelBudget()" *ngIf="isButtonCancelVisibile">
                                         <mat-icon>close</mat-icon>
                                     </button>
                                     <button mat-mini-fab matStepperNext
                                         aria-label="Example icon button with a menu icon" matTooltip="Aprovar"
-                                        matTooltipPosition="above" class="create-button" (click)="approveBudget()">
+                                        matTooltipPosition="above" class="create-button" (click)="approveBudget()"
+                                        *ngIf="isButtonApproveVisibile">
                                         <mat-icon>done</mat-icon>
                                     </button>
                                 </div>
