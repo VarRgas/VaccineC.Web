@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
 
     this.loginDispatcherService.Login(login).subscribe(
       response => {
-
+        
         login.email = response.Email;
         login.id = response.ID;
         login.personId = response.PersonID;
@@ -70,11 +70,9 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('userId', response.ID);
         localStorage.setItem('showNotification', response.ShowNotification);
 
-        this.messageHandlerService.showMessage("Logado com sucesso!", 'success-snackbar')
+        //this.messageHandlerService.showMessage("Logado com sucesso!", 'success-snackbar')
 
-        this.router.navigateByUrl('/home', {
-          state: { login: login }
-        });
+        this.router.navigateByUrl('/home');
       },
       error => {
         console.log(error);

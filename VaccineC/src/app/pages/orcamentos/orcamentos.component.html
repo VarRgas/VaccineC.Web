@@ -23,7 +23,8 @@
                     </div>
                     <div id="search-table">
                         <div class="col-sm-11 search-table-content mat-elevation-z2">
-                            <table class="col-sm-12" mat-table [dataSource]="dataSourceBudget" matSort matSortDirection="asc">
+                            <table class="col-sm-12" mat-table [dataSource]="dataSourceBudget" matSort
+                                matSortDirection="asc">
                                 <!-- Numero do orçamento -->
                                 <ng-container matColumnDef="BudgetNumber">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Orçamento </mat-header-cell>
@@ -165,9 +166,14 @@
                         <mat-step label="Produtos">
                             <div class="demo-button-container col-sm-11">
                                 <button mat-mini-fab class="demo-button me-2 create-button" matTooltip="Inserir Produto"
-                                    matTooltipPosition="right" (click)="openProductDialog()"
+                                    matTooltipPosition="left" (click)="openProductDialog()"
                                     [disabled]="isBudgetProductDisabled">
                                     <mat-icon>add</mat-icon>
+                                </button>
+
+                                <button mat-mini-fab class="demo-button me-2" matTooltip="Repetir Produto"
+                                    matTooltipPosition="right" color="accent">
+                                    <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
                             <div id="budget-product-table">
@@ -178,15 +184,16 @@
                                             <th mat-header-cell *matHeaderCellDef> Produto </th>
                                             <td mat-cell *matCellDef="let element">
                                                 <div style="display:flex;align-items:center;">
-                                                {{resolveExibitionSituationProduct(element.SituationProduct)}}
-                                                <span title="{{situationProductTitle}}" class="me-3 fa-solid fa-circle {{situationProductColor}}"></span>
+                                                    {{resolveExibitionSituationProduct(element.SituationProduct)}}
+                                                    <span title="{{situationProductTitle}}"
+                                                        class="me-3 fa-solid fa-circle {{situationProductColor}}"></span>
 
-                                                <div>
-                                                    <div>{{element.Product.Name}}</div>
-                                                    <div class="small-text">
-                                                        {{resolveExibitionDoseType(element.ProductDose)}}</div>
+                                                    <div>
+                                                        <div>{{element.Product.Name}}</div>
+                                                        <div class="small-text">
+                                                            {{resolveExibitionDoseType(element.ProductDose)}}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
                                             </td>
                                             <td mat-footer-cell *matFooterCellDef> </td>
                                         </ng-container>
@@ -234,7 +241,8 @@
                                         </tr>
                                         <tr mat-row *matRowDef="let row; columns: displayedColumnsBudgetProduct;"
                                             class="hover-element-row" (dblclick)="updateBudgetProduct(row.ID)"
-                                            style="cursor:pointer;">
+                                            style="cursor:pointer;" (click)="onRowClicked(row)"
+                                            [ngClass]="{ 'selected': row === selectedRow }">
                                         </tr>
                                         <tr mat-footer-row *matFooterRowDef="displayedColumnsBudgetProduct">
                                         </tr>
@@ -312,12 +320,19 @@
                                         matTooltipPosition="above" color="primary" class="me-2">
                                         <mat-icon>chevron_left</mat-icon>
                                     </button>
+                                    <button color="primary" mat-mini-fab
+                                        aria-label="Example icon button with a menu icon" matTooltip="Próximo"
+                                        matTooltipPosition="above" (click)="goToBudgetNegotiationStep(stepper)"
+                                        [hidden]="isDefinePaymentVisible">
+                                        <mat-icon>chevron_right</mat-icon>
+                                    </button>
                                     <button mat-mini-fab color="primary"
                                         aria-label="Example icon button with a menu icon" matTooltip="Definir Pagamento"
                                         matTooltipPosition="above" class="create-button"
-                                        (click)="goToBudgetNegotiationStep(stepper)">
+                                        (click)="goToBudgetNegotiationStep(stepper)" [hidden]="!isDefinePaymentVisible">
                                         <mat-icon>attach_money</mat-icon>
                                     </button>
+
                                 </div>
                             </form>
                         </mat-step>
@@ -420,7 +435,8 @@
                                                 <th mat-header-cell *matHeaderCellDef> </th>
                                                 <td mat-cell *matCellDef="let row">
                                                     <button type="button" mat-icon-button color="warn" title="Remover"
-                                                        style="float:right;" (click)="removeBudgetNegotiation(row.ID)" [disabled]="isRemoveBudgetNegotiationHidden">
+                                                        style="float:right;" (click)="removeBudgetNegotiation(row.ID)"
+                                                        [disabled]="isRemoveBudgetNegotiationHidden">
                                                         <i class="fa-solid fa-trash"></i>
                                                     </button>
                                                 </td>

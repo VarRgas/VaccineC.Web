@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { BudgetNegotiationModel } from '../models/budget-negotiation-model';
 
 const baseURL = 'http://localhost:5000/api/BudgetsNegotiations';
 
@@ -30,6 +31,10 @@ export class BudgetsNegotiationsDispatcherService {
 
     public deleteBudgetNegotiation(id: string): Observable<any> {
         return this.httpClient.delete(`${baseURL}/${id}/Delete`);
+    }
+
+    public deleteBudgetNegotiationOnDemand(data: BudgetNegotiationModel[]): Observable<any> {
+        return this.httpClient.post(`${baseURL}/DeleteOnDemand`, data);
     }
 
 }

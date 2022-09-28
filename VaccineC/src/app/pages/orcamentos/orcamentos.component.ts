@@ -58,6 +58,7 @@ export class OrcamentosComponent implements OnInit {
   public isButtonReopenVisibile = false;
   public isBudgetProductDisabled = false;
   public isRemoveBudgetNegotiationHidden = false;
+  public isDefinePaymentVisible = true;
 
   //Variáveis dos inputs
   //BudgetForm
@@ -92,6 +93,7 @@ export class OrcamentosComponent implements OnInit {
   public searchPersonName!: string;
   public informationField!: string;
   public balanceNegotiations: number = 0;
+  public selectedRow!: boolean;
 
   //Table Pesquisa
   public displayedBudgetsColumns: string[] = ['BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options', 'ID'];
@@ -100,6 +102,7 @@ export class OrcamentosComponent implements OnInit {
   //Table Produtos
   public displayedColumnsBudgetProduct: string[] = ['ProductName', 'BorrowerPersonName', 'EstimatedSalesValue', 'ID', 'Options'];
   public dataSourceBudgetProduct = new MatTableDataSource<IBudgetProduct>();
+  clickedRows = new Set<IBudgetProduct>();
 
   //Table Pagamentos
   public displayedColumnsBudgetNegotiation: string[] = ['PaymentFormName', 'Installments', 'TotalAmountTraded', 'ID', 'Options'];
@@ -166,6 +169,17 @@ export class OrcamentosComponent implements OnInit {
 
   }
 
+  onRowClicked(row: any) {
+
+    if (!this.selectedRow) {
+      this.selectedRow = row;
+    }
+    else {
+      this.selectedRow = row;
+    }
+
+  }
+
   treatBudgetSituation(situation: string) {
 
     if (situation == "P" || situation == null || situation == undefined) {
@@ -177,6 +191,7 @@ export class OrcamentosComponent implements OnInit {
       this.isButtonCancelVisibile = false;
       this.isButtonReopenVisibile = false;
       this.isRemoveBudgetNegotiationHidden = true;
+      this.isDefinePaymentVisible = true;
     } else if (situation == "E") {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = false;
@@ -184,8 +199,9 @@ export class OrcamentosComponent implements OnInit {
       this.isBudgetProductDisabled = true;
       this.isButtonApproveVisibile = true;
       this.isButtonCancelVisibile = false;
-      this.isButtonReopenVisibile = false;
+      this.isButtonReopenVisibile = true;
       this.isRemoveBudgetNegotiationHidden = false;
+      this.isDefinePaymentVisible = false;
     } else if (situation == "A") {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
@@ -195,6 +211,7 @@ export class OrcamentosComponent implements OnInit {
       this.isButtonCancelVisibile = true;
       this.isButtonReopenVisibile = true;
       this.isRemoveBudgetNegotiationHidden = true;
+      this.isDefinePaymentVisible = false;
     } else if (situation == "X") {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
@@ -204,6 +221,7 @@ export class OrcamentosComponent implements OnInit {
       this.isButtonCancelVisibile = false;
       this.isButtonReopenVisibile = true;
       this.isRemoveBudgetNegotiationHidden = true;
+      this.isDefinePaymentVisible = false;
     } else if (situation == "F") {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
@@ -213,7 +231,9 @@ export class OrcamentosComponent implements OnInit {
       this.isButtonCancelVisibile = false;
       this.isButtonReopenVisibile = false;
       this.isRemoveBudgetNegotiationHidden = true;
+      this.isDefinePaymentVisible = false;
     }
+
   }
 
   calculateBudgetAmount(): void {
@@ -295,89 +315,87 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public goToBudgetNegotiationStep(stepper: MatStepper) {
-
-    if (!this.budgetForm2.valid) {
-      console.log(this.budgetForm);
-      //this.createButtonLoading = false;
-      this.budgetForm2.markAllAsTouched();
-      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
-      return;
-    }
-
-    if (this.totalBudgetAmount == 0 || this.totalBudgetAmount == null || this.totalBudgetAmount == undefined) {
-      this.messageHandler.showMessage("Para prosseguir, o R$ Total Orçamento não pode estar zerado!", "warning-snackbar")
-      return;
-    }
-
-    if (this.totalBudgetedAmount == 0 || this.totalBudgetedAmount == null || this.totalBudgetedAmount == undefined) {
-      this.messageHandler.showMessage("Para prosseguir, o R$ Produtos Orçados não pode estar zerado!", "warning-snackbar")
-      return;
-    }
-
-    let budget = new BudgetModel();
-    budget.id = this.budgetId;
-    budget.personId = this.budgetForm.value.PersonId.ID;
-    budget.userId = localStorage.getItem('userId')!;
-    budget.totalBudgetAmount = this.totalBudgetAmount;
-    budget.discountPercentage = this.discountPercentage;
-    budget.discountValue = this.discountValue;
-    budget.expirationDate = this.expirationDate;
-    budget.details = this.details;
-    budget.totalBudgetedAmount = this.totalBudgetedAmount;
-
-
-    console.log(this.situation);
     if (this.situation == "P") {
-      budget.situation = "E";
-      console.log("setou E")
-    } else {
-      budget.situation = this.situation;
-      console.log("não setou E")
-    }
+      if (!this.budgetForm2.valid) {
+        console.log(this.budgetForm);
+        //this.createButtonLoading = false;
+        this.budgetForm2.markAllAsTouched();
+        this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+        return;
+      }
 
-    if (this.discountType == "R$") {
-      budget.discountPercentage = 0;
+      if (this.totalBudgetAmount == 0 || this.totalBudgetAmount == null || this.totalBudgetAmount == undefined) {
+        this.messageHandler.showMessage("Para prosseguir, o R$ Total Orçamento não pode estar zerado!", "warning-snackbar")
+        return;
+      }
+
+      if (this.totalBudgetedAmount == 0 || this.totalBudgetedAmount == null || this.totalBudgetedAmount == undefined) {
+        this.messageHandler.showMessage("Para prosseguir, o R$ Produtos Orçados não pode estar zerado!", "warning-snackbar")
+        return;
+      }
+
+      let budget = new BudgetModel();
+      budget.id = this.budgetId;
+      budget.personId = this.budgetForm.value.PersonId.ID;
+      budget.userId = localStorage.getItem('userId')!;
+      budget.totalBudgetAmount = this.totalBudgetAmount;
+      budget.discountPercentage = this.discountPercentage;
       budget.discountValue = this.discountValue;
+      budget.expirationDate = this.expirationDate;
+      budget.details = this.details;
+      budget.totalBudgetedAmount = this.totalBudgetedAmount;
+
+      if (this.situation == "P") {
+        budget.situation = "E";
+      } else {
+        budget.situation = this.situation;
+      }
+
+      if (this.discountType == "R$") {
+        budget.discountPercentage = 0;
+        budget.discountValue = this.discountValue;
+      } else {
+        budget.discountPercentage = this.discountValue;
+        budget.discountValue = 0;
+      }
+
+      this.budgetsDispatcherService.updateBudget(budget.id, budget)
+        .subscribe(
+          response => {
+            console.log(response)
+            this.budgetId = response.ID;
+            this.userId = response.Users;
+            this.personId = response.Persons;
+            this.situation = response.Situation;
+            this.totalBudgetAmount = response.TotalBudgetAmount;
+            this.discountPercentage = response.DiscountPercentage;
+            this.discountValue = response.DiscountValue;
+            this.expirationDate = response.ExpirationDate;
+            this.details = response.Details;
+            this.budgetNumber = response.BudgetNumber;
+            this.totalBudgetedAmount = response.TotalBudgetedAmount;
+
+            this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+
+            this.isPersonReadOnly = true;
+
+            this.loadData();
+            this.treatBudgetSituation(response.Situation)
+            stepper.next();
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+
     } else {
-      budget.discountPercentage = this.discountValue;
-      budget.discountValue = 0;
+      stepper.next();
     }
-
-    this.budgetsDispatcherService.updateBudget(budget.id, budget)
-      .subscribe(
-        response => {
-          console.log(response)
-          this.budgetId = response.ID;
-          this.userId = response.Users;
-          this.personId = response.Persons;
-          this.situation = response.Situation;
-          this.totalBudgetAmount = response.TotalBudgetAmount;
-          this.discountPercentage = response.DiscountPercentage;
-          this.discountValue = response.DiscountValue;
-          this.expirationDate = response.ExpirationDate;
-          this.details = response.Details;
-          this.budgetNumber = response.BudgetNumber;
-          this.totalBudgetedAmount = response.TotalBudgetedAmount;
-
-          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
-
-          this.isPersonReadOnly = true;
-
-          this.loadData();
-          this.treatBudgetSituation(response.Situation)
-          stepper.next();
-          // this.messageHandler.showMessage("Orçamento alterado com sucesso!", "success-snackbar")
-        },
-        error => {
-          console.log(error);
-          this.errorHandler.handleError(error);
-        });
 
     let totalAmountTradedNegotiations = this.dataSourceBudgetNegotiation.data.map(t => t.TotalAmountTraded).reduce((acc, value) => acc + value, 0);
     this.balanceNegotiations = this.totalBudgetAmount - totalAmountTradedNegotiations;
 
     this.treatBalanceNegotiation();
-
   }
 
 
@@ -573,32 +591,68 @@ export class OrcamentosComponent implements OnInit {
 
   public reopenBudget(): void {
 
-    let budget = new BudgetModel();
-    budget.id = this.budgetId;
-    budget.personId = this.budgetForm.value.PersonId.ID;
-    budget.userId = localStorage.getItem('userId')!;
-    budget.situation = "P";
-    budget.totalBudgetAmount = this.totalBudgetAmount;
-    budget.expirationDate = this.expirationDate;
-    budget.details = this.details;
-    budget.totalBudgetedAmount = this.totalBudgetedAmount;
+    if (this.removeNegotiations()) {
+      let budget = new BudgetModel();
+      budget.id = this.budgetId;
+      budget.personId = this.budgetForm.value.PersonId.ID;
+      budget.userId = localStorage.getItem('userId')!;
+      budget.situation = "P";
+      budget.totalBudgetAmount = this.totalBudgetAmount;
+      budget.expirationDate = this.expirationDate;
+      budget.details = this.details;
+      budget.totalBudgetedAmount = this.totalBudgetedAmount;
 
-    this.budgetsDispatcherService.updateBudget(budget.id, budget)
-      .subscribe(
+      this.budgetsDispatcherService.updateBudget(budget.id, budget)
+        .subscribe(
+          response => {
+            this.situation = response.Situation;
+            this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+            this.loadData();
+            this.treatBudgetSituation(response.Situation)
+            this.stepper.selectedIndex = 1;
+            this.messageHandler.showMessage("Orçamento reaberto com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+    }
+
+
+  }
+
+
+  public removeNegotiations(): boolean {
+
+    if (this.dataSourceBudgetNegotiation.data.length > 0) {
+
+      let listBudgetNegotiationModel = new Array<BudgetNegotiationModel>();
+
+      this.dataSourceBudgetNegotiation.data.forEach((productNegotiation: any) => {
+        let budgetNegotiationModel = new BudgetNegotiationModel();
+        budgetNegotiationModel.id = productNegotiation.ID;
+        budgetNegotiationModel.budgetId = productNegotiation.BudgetId;
+        budgetNegotiationModel.paymentFormId = productNegotiation.PaymentFormId;
+        budgetNegotiationModel.totalAmountBalance = productNegotiation.TotalAmountBalance;
+        budgetNegotiationModel.totalAmountTraded = productNegotiation.TotalAmountTraded;
+        budgetNegotiationModel.installments = productNegotiation.Installments;
+
+        listBudgetNegotiationModel.push(budgetNegotiationModel);
+      })
+
+      this.budgetsNegotiationsDispatcherService.deleteBudgetNegotiationOnDemand(listBudgetNegotiationModel).subscribe(
         response => {
-          this.situation = response.Situation;
-          this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
-          this.loadData();
-          this.treatBudgetSituation(response.Situation)
-          this.stepper.selectedIndex = 1;
-          this.messageHandler.showMessage("Orçamento reaberto com sucesso!", "success-snackbar")
+          this.dataSourceBudgetNegotiation = new MatTableDataSource(response);
+          return true;
 
-        },
-        error => {
+        }, error => {
           console.log(error);
           this.errorHandler.handleError(error);
-        });
+          return false;
 
+        });
+    }
+    return true;
   }
 
   public loadData(): void {
@@ -793,6 +847,7 @@ export class OrcamentosComponent implements OnInit {
         this.treatBalanceNegotiation();
 
         this.messageHandler.showMessage("Negociação inserida com sucesso!", "success-snackbar");
+
       },
       error => {
         this.errorHandler.handleError(error);

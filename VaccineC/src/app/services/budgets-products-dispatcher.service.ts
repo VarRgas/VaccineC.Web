@@ -10,7 +10,7 @@ const baseURL = 'http://localhost:5000/api/BudgetsProducts';
 })
 
 export class BudgetsProductsDispatcherService {
-    
+
     constructor(private httpClient: HttpClient) { }
 
     public getAllBudgetsProducts(): Observable<any> {
@@ -31,11 +31,11 @@ export class BudgetsProductsDispatcherService {
 
     public createOnDemand(data: BudgetProductModel[]): Observable<any> {
         return this.httpClient.post(`${baseURL}/CreateOnDemand`, data);
-      }
+    }
 
     public updateBudgetProduct(id: string, data: object): Observable<any> {
         return this.httpClient.put(`${baseURL}/${id}/Update`, data);
-      }
+    }
 
     public deleteBudgetProduct(id: string): Observable<any> {
         return this.httpClient.delete(`${baseURL}/${id}/Delete`);
