@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Repetir Produto</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="repeatProductForm">
+        
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-9">
+                <mat-label>Tomador</mat-label>
+                <input type="text" matInput formControlName="PersonName" [(ngModel)]="PersonName" readonly>
+            </mat-form-field>
+            <mat-slide-toggle [disabled]="isSlideToggleDisabled" [(ngModel)]="isBorrowerRepeated" formControlName="isBorrowerRepeated">Repetir Tomador</mat-slide-toggle>
+        </div>
+
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Produto</mat-label>
+                <input type="text" matInput formControlName="ProductName" [(ngModel)]="ProductName" required readonly>
+            </mat-form-field>
+        </div>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Dose</mat-label>
+                <input type="text" matInput formControlName="ProductDose" [(ngModel)]="ProductDose" readonly>
+            </mat-form-field>
+        </div>
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Nº de Vezes</mat-label>
+                <input type="number" matInput formControlName="NumberOfTimes" [(ngModel)]="NumberOfTimes" required>            
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
+    <button mat-flat-button cdkFocusInitial (click)="repeatBudgetProduct()" class="create-button">Repetir</button>
+</mat-dialog-actions>

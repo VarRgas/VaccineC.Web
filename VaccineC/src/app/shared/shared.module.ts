@@ -13,6 +13,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
+import { MaterialExampleModule } from '../material.module';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 @NgModule({
   declarations: [
     SideMenuComponent,
@@ -31,7 +34,10 @@ import { MatChipsModule } from '@angular/material/chips';
     MatProgressBarModule,
     MatProgressBarModule,
     MatFormFieldModule,
-    MatChipsModule
+    MatChipsModule,
+    MaterialExampleModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     SideMenuComponent,

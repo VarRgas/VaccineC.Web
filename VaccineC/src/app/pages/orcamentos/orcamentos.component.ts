@@ -18,18 +18,14 @@ import { IProductDoses } from 'src/app/interfaces/i-product-doses';
 import { BudgetModel } from 'src/app/models/budget-model';
 import { BudgetNegotiationModel } from 'src/app/models/budget-negotiation-model';
 import { BudgetProductModel } from 'src/app/models/budget-product-model';
-import { MovementProductModel } from 'src/app/models/movement-product-model';
 import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
 import { BudgetsNegotiationsDispatcherService } from 'src/app/services/budgets-negotiations-dispatcher.service';
 import { BudgetsProductsDispatcherService } from 'src/app/services/budgets-products-dispatcher.service';
 import { CompaniesParametersDispatcherService } from 'src/app/services/company-parameter-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
-import { MovementsProductsDispatcherService } from 'src/app/services/movement-product-dispatcher.service';
 import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
-import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
-import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
 import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
@@ -57,8 +53,11 @@ export class OrcamentosComponent implements OnInit {
   public isButtonCancelVisibile = false;
   public isButtonReopenVisibile = false;
   public isBudgetProductDisabled = false;
+  public isBudgetProductRepeatDisabled = false;
   public isRemoveBudgetNegotiationHidden = false;
   public isDefinePaymentVisible = true;
+  public searchButtonLoading = false;
+  public firstStepLoading = false;
 
   //Variáveis dos inputs
   //BudgetForm
@@ -169,6 +168,8 @@ export class OrcamentosComponent implements OnInit {
 
   }
 
+  public budgetProductRowSelected!: any;
+
   onRowClicked(row: any) {
 
     if (!this.selectedRow) {
@@ -177,10 +178,12 @@ export class OrcamentosComponent implements OnInit {
     else {
       this.selectedRow = row;
     }
-
+    this.budgetProductRowSelected = row;
   }
 
   treatBudgetSituation(situation: string) {
+
+    console.log(this.situation)
 
     if (situation == "P" || situation == null || situation == undefined) {
       this.isBudgetReadonly = false;
@@ -192,13 +195,21 @@ export class OrcamentosComponent implements OnInit {
       this.isButtonReopenVisibile = false;
       this.isRemoveBudgetNegotiationHidden = true;
       this.isDefinePaymentVisible = true;
+
+      if (this.dataSourceBudgetProduct.data.length > 0) {
+        this.isBudgetProductRepeatDisabled = false;
+      } else {
+        this.isBudgetProductRepeatDisabled = true;
+      }
+
     } else if (situation == "E") {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = false;
       this.isbudgetValuesReadonly = true;
       this.isBudgetProductDisabled = true;
+      this.isBudgetProductRepeatDisabled = true;
       this.isButtonApproveVisibile = true;
-      this.isButtonCancelVisibile = false;
+      this.isButtonCancelVisibile = true;
       this.isButtonReopenVisibile = true;
       this.isRemoveBudgetNegotiationHidden = false;
       this.isDefinePaymentVisible = false;
@@ -206,6 +217,7 @@ export class OrcamentosComponent implements OnInit {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;
+      this.isBudgetProductRepeatDisabled = true;
       this.isbudgetValuesReadonly = true;
       this.isButtonApproveVisibile = false;
       this.isButtonCancelVisibile = true;
@@ -216,6 +228,7 @@ export class OrcamentosComponent implements OnInit {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;
+      this.isBudgetProductRepeatDisabled = true;
       this.isbudgetValuesReadonly = true;
       this.isButtonApproveVisibile = false;
       this.isButtonCancelVisibile = false;
@@ -223,9 +236,11 @@ export class OrcamentosComponent implements OnInit {
       this.isRemoveBudgetNegotiationHidden = true;
       this.isDefinePaymentVisible = false;
     } else if (situation == "F") {
+      console.log("F")
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;
+      this.isBudgetProductRepeatDisabled = true;
       this.isbudgetValuesReadonly = true;
       this.isButtonApproveVisibile = false;
       this.isButtonCancelVisibile = false;
@@ -237,6 +252,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   calculateBudgetAmount(): void {
+
     if (this.discountType == "R$") {
       this.totalBudgetAmount = Number(this.totalBudgetedAmount) - Number(this.discountValue);
     } else {
@@ -278,6 +294,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public goToBudgetProductStep(stepper: MatStepper) {
+
     if (this.budgetId == "" || this.budgetId == null || this.budgetId == undefined) {
       this.createBudget(stepper);
     } else {
@@ -401,9 +418,11 @@ export class OrcamentosComponent implements OnInit {
 
   public createBudget(stepper: MatStepper): void {
 
+    this.firstStepLoading = true;
+
     if (!this.budgetForm.valid) {
       console.log(this.budgetForm);
-      //this.createButtonLoading = false;
+      this.firstStepLoading = false;
       this.budgetForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
@@ -439,6 +458,7 @@ export class OrcamentosComponent implements OnInit {
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
 
           this.isPersonReadOnly = true;
+          this.firstStepLoading = false;
 
           this.loadData();
           this.treatBudgetSituation(response.Situation)
@@ -448,15 +468,18 @@ export class OrcamentosComponent implements OnInit {
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
+          this.firstStepLoading = false;
         });
 
   }
 
   public updateBudget(stepper: MatStepper): void {
 
+    this.firstStepLoading = true;
+
     if (!this.budgetForm.valid) {
       console.log(this.budgetForm);
-      //this.createButtonLoading = false;
+      this.firstStepLoading = false;
       this.budgetForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
@@ -508,6 +531,7 @@ export class OrcamentosComponent implements OnInit {
 
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
 
+          this.firstStepLoading = false;
           this.isPersonReadOnly = true;
 
           this.loadData();
@@ -518,6 +542,7 @@ export class OrcamentosComponent implements OnInit {
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
+          this.firstStepLoading = false;
         });
   }
 
@@ -537,15 +562,43 @@ export class OrcamentosComponent implements OnInit {
     budget.expirationDate = this.expirationDate;
     budget.details = this.details;
     budget.totalBudgetedAmount = this.totalBudgetedAmount;
+    budget.discountPercentage = this.discountPercentage;
+    budget.discountValue = this.discountValue;
 
     this.budgetsDispatcherService.updateBudget(budget.id, budget)
       .subscribe(
         response => {
+
           console.log(response)
+
+          this.budgetId = response.ID;
+          this.userId = response.Users;
+          this.personId = response.Persons;
           this.situation = response.Situation;
+          this.totalBudgetAmount = response.TotalBudgetAmount;
+          this.discountPercentage = response.DiscountPercentage;
+          this.discountValue = response.DiscountValue;
+          this.expirationDate = response.ExpirationDate;
+          this.details = response.Details;
+          this.budgetNumber = response.BudgetNumber;
+          this.totalBudgetedAmount = response.TotalBudgetedAmount;
+
           this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+
+          if (this.discountPercentage != 0) {
+            this.discountType = "%"
+            this.prefixDiscountType = "%"
+            this.discountValue = response.DiscountPercentage;
+          } else {
+            this.discountType = "R$"
+            this.prefixDiscountType = "R$"
+            this.discountValue = response.DiscountValue;
+          }
+
           this.loadData();
           this.treatBudgetSituation(response.Situation)
+          this.discountTypeChanged();
+          this.stepper.selectedIndex = 0;
           this.messageHandler.showMessage("Orçamento aprovado com sucesso!", "success-snackbar")
         },
         error => {
@@ -570,15 +623,41 @@ export class OrcamentosComponent implements OnInit {
           budget.expirationDate = this.expirationDate;
           budget.details = this.details;
           budget.totalBudgetedAmount = this.totalBudgetedAmount;
+          budget.discountPercentage = this.discountPercentage;
+          budget.discountValue = this.discountValue;
 
           this.budgetsDispatcherService.updateBudget(budget.id, budget)
             .subscribe(
               response => {
                 console.log(response)
+
+                this.budgetId = response.ID;
+                this.userId = response.Users;
+                this.personId = response.Persons;
                 this.situation = response.Situation;
+                this.totalBudgetAmount = response.TotalBudgetAmount;
+                this.discountPercentage = response.DiscountPercentage;
+                this.discountValue = response.DiscountValue;
+                this.expirationDate = response.ExpirationDate;
+                this.details = response.Details;
+                this.budgetNumber = response.BudgetNumber;
+                this.totalBudgetedAmount = response.TotalBudgetedAmount;
+
                 this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+
+                if (this.discountPercentage != 0) {
+                  this.discountType = "%"
+                  this.prefixDiscountType = "%"
+                  this.discountValue = response.DiscountPercentage;
+                } else {
+                  this.discountType = "R$"
+                  this.prefixDiscountType = "R$"
+                  this.discountValue = response.DiscountValue;
+                }
+
                 this.loadData();
                 this.treatBudgetSituation(response.Situation)
+                this.stepper.selectedIndex = 0;
                 this.messageHandler.showMessage("Orçamento cancelado com sucesso!", "success-snackbar")
               },
               error => {
@@ -601,14 +680,39 @@ export class OrcamentosComponent implements OnInit {
       budget.expirationDate = this.expirationDate;
       budget.details = this.details;
       budget.totalBudgetedAmount = this.totalBudgetedAmount;
+      budget.discountPercentage = this.discountPercentage;
+      budget.discountValue = this.discountValue;
 
       this.budgetsDispatcherService.updateBudget(budget.id, budget)
         .subscribe(
           response => {
+
+            this.budgetId = response.ID;
+            this.userId = response.Users;
+            this.personId = response.Persons;
             this.situation = response.Situation;
+            this.totalBudgetAmount = response.TotalBudgetAmount;
+            this.discountPercentage = response.DiscountPercentage;
+            this.discountValue = response.DiscountValue;
+            this.expirationDate = response.ExpirationDate;
+            this.details = response.Details;
+            this.budgetNumber = response.BudgetNumber;
+            this.totalBudgetedAmount = response.TotalBudgetedAmount;
+
             this.informationField = `Orçamento nº ${response.BudgetNumber} - ${response.Persons.Name} - ${this.showSituationFormated(response.Situation)}`;
+
+            if (this.discountPercentage != 0) {
+              this.discountType = "%"
+              this.prefixDiscountType = "%"
+              this.discountValue = response.DiscountPercentage;
+            } else {
+              this.discountType = "R$"
+              this.prefixDiscountType = "R$"
+              this.discountValue = response.DiscountValue;
+            }
+
             this.loadData();
-            this.treatBudgetSituation(response.Situation)
+            this.treatBudgetSituation(response.Situation);
             this.stepper.selectedIndex = 1;
             this.messageHandler.showMessage("Orçamento reaberto com sucesso!", "success-snackbar")
           },
@@ -617,10 +721,35 @@ export class OrcamentosComponent implements OnInit {
             this.errorHandler.handleError(error);
           });
     }
-
-
   }
 
+  public openRepeatProducDialog() {
+
+    if (this.budgetProductRowSelected == "" || this.budgetProductRowSelected == null || this.budgetProductRowSelected == undefined) {
+      this.messageHandler.showMessage("Nenhum produto selecionado!", "warning-snackbar")
+
+    } else {
+      const dialogRef = this.dialog.open(RepeatBudgetProductDialog, {
+        disableClose: true,
+        width: '50vw',
+        data: {
+          BudgetProduct: this.budgetProductRowSelected,
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(
+        (res) => {
+          if (res != "") {
+            this.dataSourceBudgetProduct = new MatTableDataSource(res);
+            this.budgetProductRowSelected = "";
+
+          }
+        }
+      );
+      this.budgetProductRowSelected = "";
+    }
+
+  }
 
   public removeNegotiations(): boolean {
 
@@ -665,15 +794,22 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public getAllBudgets(): void {
+
+    this.searchButtonLoading = true;
+
     this.budgetsDispatcherService.getAllBudgets()
       .subscribe(budgets => {
         this.dataSourceBudget = new MatTableDataSource(budgets);
         this.dataSourceBudget.sort = this.sort;
         this.dataSourceBudget.paginator = this.paginatorBudget;
+
+        this.searchButtonLoading = false;
       },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
+
+          this.searchButtonLoading = false;
         });
   }
 
@@ -693,10 +829,13 @@ export class OrcamentosComponent implements OnInit {
         });
   }
 
-  public addNewBudget(stepper: MatStepper): void {
+  public addNewBudget(): void {
 
     this.resetForms();
     this.resetTables();
+
+    this.budgetProductRowSelected = "";
+
     setTimeout(() => {
       if (this.stepper.selectedIndex != 0) {
         this.stepper.selectedIndex = 0;
@@ -729,7 +868,7 @@ export class OrcamentosComponent implements OnInit {
     this.informationField = "";
     this.isPersonReadOnly = false;
 
-    this.treatBudgetSituation("P")
+    this.treatBudgetSituation("P");
 
   }
   public resetForms(): void {
@@ -757,6 +896,9 @@ export class OrcamentosComponent implements OnInit {
 
     this.resetForms();
     this.resetTables();
+
+    this.budgetProductRowSelected = "";
+
     setTimeout(() => {
       if (this.stepper.selectedIndex != 0) {
         this.stepper.selectedIndex = 0;
@@ -798,8 +940,9 @@ export class OrcamentosComponent implements OnInit {
     this.budgetsProductsDispatcherService.getBudgetsProductsBudget(id)
       .subscribe(
         budgetsProducts => {
-          console.log(budgetsProducts)
+
           this.dataSourceBudgetProduct = new MatTableDataSource(budgetsProducts);
+
         },
         error => {
           console.log(error);
@@ -813,7 +956,6 @@ export class OrcamentosComponent implements OnInit {
         error => {
           console.log(error);
         });
-
   }
 
   public createBudgetNegotiation() {
@@ -853,6 +995,7 @@ export class OrcamentosComponent implements OnInit {
         this.errorHandler.handleError(error);
         console.log(error);
       });
+
   }
 
   public removeBudgetProduct(id: string) {
@@ -864,6 +1007,14 @@ export class OrcamentosComponent implements OnInit {
         if (!!result) {
           this.budgetsProductsDispatcherService.deleteBudgetProduct(id).subscribe(
             budgetsProducts => {
+
+              if (budgetsProducts.length == 0) {
+                setTimeout(() => {
+                  this.treatBudgetSituation(this.situation);
+                  this.budgetProductRowSelected = "";
+                }, 500);
+              }
+
               this.dataSourceBudgetProduct = new MatTableDataSource(budgetsProducts);
               this.messageHandler.showMessage("Produto removido com sucesso!", "success-snackbar");
             },
@@ -873,6 +1024,7 @@ export class OrcamentosComponent implements OnInit {
             });
         }
       });
+
   }
 
   public updateBudgetProduct(id: string) {
@@ -889,17 +1041,26 @@ export class OrcamentosComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceBudgetProduct = new MatTableDataSource(res);
+          this.budgetProductRowSelected = "";
+          setTimeout(() => {
+            this.treatBudgetSituation(this.situation);
+            this.isButtonReopenVisibile = true;
+          }, 500);
         }
       }
     );
+
   }
 
   public treatBalanceNegotiation() {
-    if (this.balanceNegotiations == 0) {
-      this.isbudgetNegotiationReadonly = true;
-    } else {
-      this.isbudgetNegotiationReadonly = false;
+    if (this.situation == "E") {
+      if (this.balanceNegotiations == 0) {
+        this.isbudgetNegotiationReadonly = true;
+      } else {
+        this.isbudgetNegotiationReadonly = false;
+      }
     }
+
   }
 
   public removeBudgetNegotiation(id: string) {
@@ -934,9 +1095,16 @@ export class OrcamentosComponent implements OnInit {
       (res) => {
         if (res != "") {
           this.dataSourceBudgetProduct = new MatTableDataSource(res);
+          this.budgetProductRowSelected = "";
+          this.isButtonReopenVisibile = true;
+          setTimeout(() => {
+            this.treatBudgetSituation(this.situation);
+            this.isButtonReopenVisibile = true;
+          }, 500);
         }
       }
     );
+
   }
 
   public searchPersonByAutoComplete(): void {
@@ -951,7 +1119,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public filterPersons(val: string): Observable<any[]> {
-    return this.personAutocompleteService.getPersonPhysicalData()
+    return this.personAutocompleteService.getAllPersonData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
           return option.Name.toLowerCase()
@@ -1466,7 +1634,11 @@ export class UpdateBudgetProductDialog implements OnInit {
 
     let budgetProduct = new BudgetProductModel();
     budgetProduct.id = this.Id;
-    budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
+
+    if (this.budgetProductForm.value.PersonName != undefined) {
+      budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
+    }
+
     budgetProduct.productId = this.budgetProductForm.value.ProductName.ID;
     budgetProduct.productDose = this.budgetProductForm.value.ProductDose.DoseType;
     budgetProduct.estimatedSalesValue = this.EstimatedSalesValue;
@@ -1500,6 +1672,114 @@ export class UpdateBudgetProductDialog implements OnInit {
     }
   }
 }
+
+@Component({
+  selector: 'repeat-budget-product-dialog',
+  templateUrl: 'repeat-budget-product-dialog.html',
+})
+
+export class RepeatBudgetProductDialog implements OnInit {
+
+  public budgetProductId!: string;
+  public ProductName!: string;
+  public PersonName!: string | null;
+  public ProductDose!: string;
+  public NumberOfTimes!: number;
+
+  public isBorrowerRepeated = false;
+  public isSlideToggleDisabled = false;
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private budgetProductService: BudgetsProductsDispatcherService,
+    private formBuilder: FormBuilder,
+    private messageHandler: MessageHandlerService,
+    public dialogRef: MatDialogRef<RepeatBudgetProductDialog>
+  ) {
+  }
+
+  ngOnInit(): void {
+
+    this.budgetProductId = this.data.BudgetProduct.ID;
+    this.getBudgetProductById(this.data.BudgetProduct.ID)
+
+    if (this.data.BudgetProduct.BorrowerPersonId == null) {
+      this.isSlideToggleDisabled = true;
+    } else {
+      this.isSlideToggleDisabled = false;
+    }
+  }
+
+  //Form
+  repeatProductForm: FormGroup = this.formBuilder.group({
+    ProductName: [null, [Validators.required]],
+    ProductDose: [null],
+    PersonName: [null],
+    NumberOfTimes: [null, [Validators.required]],
+    isBorrowerRepeated: [null]
+  });
+
+  public getBudgetProductById(budgetId: string): void {
+    this.budgetProductService.getBudgetProductById(budgetId).subscribe(
+      response => {
+        if (response.Person != null) {
+          this.PersonName = response.Person.Name;
+        } else {
+          this.PersonName = null;
+        }
+
+        this.ProductName = response.Product.Name;
+        this.ProductDose = this.formatDoseType(response.ProductDose);
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  public formatDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "DOSE ÚNICA"
+    } else if (doseType == "D1") {
+      return "DOSE 1"
+    } else if (doseType == "D2") {
+      return "DOSE 2"
+    } else if (doseType == "D3") {
+      return "DOSE 3"
+    } else if (doseType == "DR") {
+      return "DOSE DE REFORÇO"
+    } else {
+      return ""
+    }
+  }
+
+  public repeatBudgetProduct(): void {
+
+    if (!this.repeatProductForm.valid) {
+      console.log(this.repeatProductForm);
+      this.repeatProductForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+      return;
+    }
+
+    if (this.NumberOfTimes <= 0) {
+      this.repeatProductForm.markAllAsTouched();
+      this.messageHandler.showMessage("O Nº de Vezes precisa ser maior que 0!", "warning-snackbar");
+      return;
+    }
+
+    this.budgetProductService.repeatOnDemand(this.budgetProductId, this.NumberOfTimes, this.isBorrowerRepeated).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Produto(s) inseridos com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+
+}
+
 
 @Component({
   selector: 'confirm-budget-product-remove-dialog',

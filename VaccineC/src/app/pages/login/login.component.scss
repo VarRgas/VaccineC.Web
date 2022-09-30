@@ -13,6 +13,10 @@
     min-height: 100vh;
 }
 
+:host ::ng-deep.mat-spinner {
+    margin-right: 0.2rem !important;
+}
+
 .is-section-content {
     flex: 1;
     display: flex;
@@ -48,6 +52,20 @@
 }
 
 ::placeholder {
-    color:var(--cor-placeholder-produto);
+    color: var(--cor-placeholder-produto);
     opacity: 1;
-  }
+}
+
+.eye-icon {
+    border-top-right-radius: 10rem !important;
+    border-bottom-right-radius: 10rem !important;
+    background-color: white;
+}
+
+.input-password {
+    border-right-color: white !important;
+}
+
+#togglePassword {
+    color: #d1d3e2
+}

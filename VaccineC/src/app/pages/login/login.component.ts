@@ -19,6 +19,8 @@ export class LoginComponent implements OnInit {
   public userEmail!: string;
   public userPassword!: string;
 
+  hide: boolean = true;
+
   loginForm: FormGroup = this.formBuilder.group({
     email: [null, [Validators.required]],
     password: [null, [Validators.required]]
@@ -39,6 +41,10 @@ export class LoginComponent implements OnInit {
     this.manageNotifications();
   }
 
+  showHiddePassword() {
+    this.hide = !this.hide;
+  }
+
   manageNotifications(): void {
     this.notificationsDispatcherService.manageNotifications().subscribe(
       response => {
@@ -47,7 +53,7 @@ export class LoginComponent implements OnInit {
       error => {
         console.log(error);
       });
-  
+
   }
 
   public validateLogin(): void {
@@ -58,7 +64,7 @@ export class LoginComponent implements OnInit {
 
     this.loginDispatcherService.Login(login).subscribe(
       response => {
-        
+
         login.email = response.Email;
         login.id = response.ID;
         login.personId = response.PersonID;

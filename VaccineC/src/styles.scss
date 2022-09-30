@@ -204,3 +204,7 @@ tr.hover-element-row:not(.example-expanded-row):active {
 .hover-element-row:not(.example-expanded-row):active {
   background: #efefef !important;
 }
+
+:host ::ng-deep.mat-spinner{
+  margin-right: 0.2rem !important;
+}

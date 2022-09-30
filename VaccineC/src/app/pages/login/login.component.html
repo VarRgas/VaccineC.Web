@@ -25,10 +25,14 @@
                                                     id="userEmail" aria-describedby="emailHelp"
                                                     placeholder="Digite seu e-mail" [(ngModel)]="userEmail">
                                             </div>
-                                            <div class="form-group">
-                                                <input type="password" formControlName="password" class="form-control form-control-user"
-                                                    id="userPassword" placeholder="Digite sua senha" [(ngModel)]="userPassword">
+
+                                            <div class="input-group mb-3">
+                                                <input [type]="hide ? 'password' : 'text'"  formControlName="password" class="form-control form-control-user input-password" id="userPassword" placeholder="Digite sua senha" [(ngModel)]="userPassword">
+                                                    <span class="input-group-text eye-icon">
+                                                        <i [class]="hide ? 'far fa-eye-slash' : 'far fa-eye'" id="togglePassword" style="cursor: pointer" (click)="showHiddePassword()"></i>
+                                                    </span>
                                             </div>
+
                                             <div class="form-group">
                                                 <div class="custom-control custom-checkbox small">
                                                     <input type="checkbox" class="custom-control-input"

@@ -14,3 +14,7 @@
 .container-expand {
     margin-left: 7.5rem;
 }
+
+:host ::ng-deep.mat-spinner{
+    margin-right: 0.2rem !important;
+  }

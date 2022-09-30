@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { NotificationModel } from 'src/app/models/notification-model';
 import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
+import { ResourceAutocompleteService } from 'src/app/services/resource-autocomplete.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -13,6 +17,8 @@ export class ToolbarComponent implements OnInit {
   public userId = "";
   public userPersonName = "";
   public userPersonProfilePic = "";
+  public ResourcesId!: string;
+
 
   public notifications: any;
 
@@ -21,10 +27,27 @@ export class ToolbarComponent implements OnInit {
   public isNewNotification = true;
   public displayNone = "";
 
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<any[]> | undefined;
+
   constructor(
     private notificationDispatcherService: NotificationsDispatcherService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private resourceAutocompleteService: ResourceAutocompleteService
+  ) {
+
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        console.log(val)
+        return this.filter(val || '')
+      })
+    )
+    console.log(this.filteredOptions)
+  }
 
   ngOnInit(): void {
     this.setUserInformations();
@@ -129,10 +152,44 @@ export class ToolbarComponent implements OnInit {
     }
   }
 
-  logout(){
+  logout() {
     localStorage.clear();
     console.log(localStorage);
     this.router.navigateByUrl('/login');
+  }
+
+
+  searchResourceByAutoComplete() {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filter(val || '')
+      })
+    )
+  }
+
+  filter(val: string): Observable<any[]> {
+    // call the service which makes the http-request
+    console.log(val)
+    return this.resourceAutocompleteService.getResourceData()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
+        }))
+      )
+  }
+
+  displayState(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
+
+  onSelectionChanged(event: MatAutocompleteSelectedEvent) {
+    console.log(event.option.value)
+    let url = event.option.value.UrlName.split("/")[1];
+    this.router.navigateByUrl(url);
   }
 
 }

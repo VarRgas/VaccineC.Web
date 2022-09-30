@@ -17,6 +17,10 @@
     padding: 0px;
 }
 
+:host ::ng-deep.mat-spinner{
+    margin-right: 0.2rem !important;
+  }
+
 .mat-button-entry {
     margin-bottom: 0px !important;
     align-self: center !important;

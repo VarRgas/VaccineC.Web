@@ -63,3 +63,7 @@
   color: var(--cor-produto);
   text-decoration: underline;
 }
+
+:host ::ng-deep.mat-spinner{
+  margin-right: 0.2rem !important;
+}

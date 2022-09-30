@@ -37,6 +37,10 @@ export class BudgetsProductsDispatcherService {
         return this.httpClient.put(`${baseURL}/${id}/Update`, data);
     }
 
+    public repeatOnDemand(id: string, numberOfTimes: number, repeatBorrower: boolean): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${id}/${numberOfTimes}/${repeatBorrower}/RepeatOnDemand`, id);
+    }
+
     public deleteBudgetProduct(id: string): Observable<any> {
         return this.httpClient.delete(`${baseURL}/${id}/Delete`);
     }

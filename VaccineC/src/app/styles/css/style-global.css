@@ -12678,3 +12678,7 @@ body.sidebar-toggled footer.sticky-footer {
 .mat-tab-header{
   margin-bottom: 2em !important;
 }
+
+:host ::ng-deep.mat-spinner{
+  margin-right: 0.2rem !important;
+}

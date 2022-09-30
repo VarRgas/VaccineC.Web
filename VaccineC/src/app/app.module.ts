@@ -21,7 +21,7 @@ import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDia
 import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, ConfirmProductDosesRemoveDialog, UpdateDialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
-import { AddBudgetProductDialog, OrcamentosComponent, ConfirmBudgetProductRemoveDialog, UpdateBudgetProductDialog, ConfirmBudgetCancelationDialog } from './pages/orcamentos/orcamentos.component';
+import { AddBudgetProductDialog, OrcamentosComponent, ConfirmBudgetProductRemoveDialog, UpdateBudgetProductDialog, ConfirmBudgetCancelationDialog, RepeatBudgetProductDialog } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog, ConfirmUserResourceRemoveDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
@@ -46,19 +46,19 @@ import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { MatSortModule } from '@angular/material/sort';
 import { ConectionErrorComponent } from './pages/error/conection-error/conection-error.component';
-import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 registerLocaleData(localePt, 'pt');
 
 export const MY_FORMATS = {
   parse: {
-      dateInput: 'DD/MM/YYYY'
+    dateInput: 'DD/MM/YYYY'
   },
   display: {
-      dateInput: 'DD/MM/YYYY',
-      monthYearLabel: 'MMMM YYYY',
-      dateA11yLabel: 'LL',
-      monthYearA11yLabel: 'MMMM YYYY'
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
   }
 };
 
@@ -125,7 +125,8 @@ export const MY_FORMATS = {
     ConfirmBudgetProductRemoveDialog,
     UpdateBudgetProductDialog,
     ConfirmBudgetCancelationDialog,
-    SnackBarComponent
+    SnackBarComponent,
+    RepeatBudgetProductDialog
   ],
   imports: [
     BrowserModule,
@@ -154,7 +155,7 @@ export const MY_FORMATS = {
       provide: DEFAULT_CURRENCY_CODE,
       useValue: 'BRL'
     },
-    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
 
   ],

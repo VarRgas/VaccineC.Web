@@ -40,3 +40,22 @@
     margin-left: 6.5em;
   }
 }
+
+.navbar-search {
+  margin-left: 10px;
+  margin-top: 18px;
+  font-size: 12px;
+}
+
+:host ::ng-deep .mat-form-field-wrapper{
+  width: 100rem;
+}
+
+::placeholder {
+  color: var(--cor-placeholder-produto);
+  opacity: 1;
+}
+
+.mat-autocomplete-panel.max-height-panel {
+  max-height: 100% !important;
+}

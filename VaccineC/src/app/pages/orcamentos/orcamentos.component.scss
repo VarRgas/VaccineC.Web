@@ -190,3 +190,7 @@ form {
   background-color: whitesmoke !important;
   font-weight: bold !important;
 }
+
+:host ::ng-deep.mat-spinner{
+  margin-right: 0.2rem !important;
+}

@@ -11,12 +11,19 @@
                                 <mat-label>Digite o nome do responsável ou o nº do orçamento</mat-label>
                                 <input id="searchPersonName" matInput type="text" [(ngModel)]="searchPersonName">
                             </mat-form-field>
-                            <button id="mat-search-button" mat-raised-button color="primary"
-                                class="mat-button-entry me-2" (click)="loadData()">
-                                <span class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
-                                <span>Pesquisar</span>
+                                                
+                            <button (click)="loadData()" id="mat-search-button" mat-raised-button
+                                color="primary" class="mat-button-entry me-2" [disabled]="searchButtonLoading">
+                                <div class="spinner">
+                                    <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
+                                    <span *ngIf="!searchButtonLoading"
+                                        class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
+                                    Pesquisar
+                                </div>
                             </button>
-                            <button (click)="addNewBudget(stepper); tabGroup.selectedIndex=1" id="mat-add-button"
+
+
+                            <button (click)="addNewBudget(); tabGroup.selectedIndex=1" id="mat-add-button"
                                 mat-raised-button class="mat-button-entry create-button" matTooltip="Novo Orçamento"
                                 matTooltipPosition="above"><span class="fa-solid fa-plus w-20px"></span></button>
                         </div>
@@ -129,7 +136,7 @@
                                     </mat-form-field>
                                     <!-- VALIDADE -->
                                     <mat-form-field appearance="fill" class="col-sm-5 ml-0">
-                                        <mat-label>Validade</mat-label>
+                                        <mat-label>Validade do Orçamento</mat-label>
                                         <input matInput [matDatepicker]="picker" #ExpirationDateInput
                                             [(ngModel)]="expirationDate" formControlName="ExpirationDate"
                                             [readonly]="isBudgetReadonly">
@@ -156,8 +163,14 @@
                                     <div class="mt-5" style="float:right;">
                                         <button color="primary" mat-mini-fab
                                             aria-label="Example icon button with a menu icon" matTooltip="Próximo"
-                                            (click)="goToBudgetProductStep(stepper)" matTooltipPosition="above">
-                                            <mat-icon>chevron_right</mat-icon>
+                                            (click)="goToBudgetProductStep(stepper)" matTooltipPosition="above" [disabled]="firstStepLoading">
+                                            <div class="spinner">
+                                                <mat-spinner *ngIf="firstStepLoading" [diameter]="15"></mat-spinner>
+                                                <span *ngIf="!firstStepLoading">
+                                                    <mat-icon>chevron_right</mat-icon>
+                                                </span>
+                                                
+                                              </div>
                                         </button>
                                     </div>
                                 </div>
@@ -172,7 +185,7 @@
                                 </button>
 
                                 <button mat-mini-fab class="demo-button me-2" matTooltip="Repetir Produto"
-                                    matTooltipPosition="right" color="accent">
+                                    matTooltipPosition="right" color="accent" [disabled]="isBudgetProductRepeatDisabled" (click)="openRepeatProducDialog()">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>

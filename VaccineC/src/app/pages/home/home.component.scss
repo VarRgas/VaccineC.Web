@@ -81,3 +81,7 @@
     font-size: 2rem !important;
     margin-left: -3rem;
 }
+
+:host ::ng-deep.mat-spinner{
+    margin-right: 0.2rem !important;
+  }

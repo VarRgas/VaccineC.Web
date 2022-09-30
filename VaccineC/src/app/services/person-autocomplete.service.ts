@@ -11,6 +11,12 @@ export class PersonAutocompleteService {
     constructor(private http: HttpClient) { }
     opts = [];
 
+    getAllPersonData() {
+        return this.opts.length ?
+            of(this.opts) :
+            this.http.get<any>(`http://localhost:5000/api/Persons`).pipe(tap(data => this.opts = data))
+    }
+
     getPersonPhysicalData() {
         return this.opts.length ?
             of(this.opts) :
