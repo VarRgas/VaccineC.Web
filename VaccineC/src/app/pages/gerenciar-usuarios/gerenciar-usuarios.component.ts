@@ -79,6 +79,10 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   public dialogRef?: MatDialogRef<any>;
 
+  public hide = true;
+  public hideConfirm = true;
+  public isEyeIconHidden = false;
+
   //Form
   userForm: FormGroup = this.formBuilder.group({
     UserId: [null],
@@ -102,6 +106,14 @@ export class GerenciarUsuariosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  get passwordInput() {
+    return this.userForm.get('Password');
+  }
+
+  get confirmPasswordInput() {
+    return this.userForm.get('ConfirmPassword');
   }
 
   loadUserData() {
@@ -157,6 +169,10 @@ export class GerenciarUsuariosComponent implements OnInit {
     } else {
       this.updateUser();
     }
+
+    this.isEyeIconHidden = true;
+    this.hide = true;
+    this.hideConfirm = true;
   }
 
   createUser(): void {
@@ -174,7 +190,7 @@ export class GerenciarUsuariosComponent implements OnInit {
       this.messageHandler.showMessage("As senhas não coincidem, verifique!", "warning-snackbar")
       return;
     }
-   
+
     let user = new UserModel();
     user.personId = this.userForm.value.PersonId.ID;
     user.email = this.Email;
@@ -328,6 +344,9 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     this.isInputDisabled = false;
     this.isInputReadOnly = false;
+    this.isEyeIconHidden = false;
+    this.hide = true;
+    this.hideConfirm = true;
 
     this.dataSource2 = new MatTableDataSource();
     this.dataSource2.paginator = this.paginatorResource;
@@ -337,9 +356,14 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   editUser(id: string): void {
+   
+    this.hide = true;
+    this.hideConfirm = true;
+    this.isEyeIconHidden = true;
+
     this.usersService.getById(id).subscribe(
       user => {
-        
+
         this.UserId = user.ID;
         this.PersonId = user.Person;
         this.Email = user.Email;

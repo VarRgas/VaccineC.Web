@@ -145,8 +145,11 @@ export class MinhaContaComponent implements OnInit {
 export class PasswordDialog implements OnInit {
 
   public UserId!: string;
-  public Password!: string;
+  public Password: string = '';
   public ConfirmPassword!: string;
+
+  public hide = true;
+  public hideConfirm = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -161,9 +164,17 @@ export class PasswordDialog implements OnInit {
   //Form
   userPasswordForm: FormGroup = this.formBuilder.group({
     UserId: [null],
-    Password: [null, [Validators.required, Validators.maxLength(255)]],
+    Password: ['', [Validators.required, Validators.maxLength(255)]],
     ConfirmPassword: [null, [Validators.required, Validators.maxLength(255)]]
   });
+
+  get passwordInput() { 
+    return this.userPasswordForm.get('Password'); 
+  }
+
+  get confirmPasswordInput() { 
+    return this.userPasswordForm.get('ConfirmPassword'); 
+  }
 
   ngOnInit(): void {
     this.UserId = this.data.ID;

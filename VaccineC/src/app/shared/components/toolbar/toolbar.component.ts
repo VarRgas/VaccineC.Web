@@ -172,7 +172,6 @@ export class ToolbarComponent implements OnInit {
 
   filter(val: string): Observable<any[]> {
     // call the service which makes the http-request
-    console.log(val)
     return this.resourceAutocompleteService.getResourceData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {

@@ -11,7 +11,7 @@
           <div class="search-group">
             <div class="col-sm-11 p-0 d-flex">
               <mat-form-field class="search-form-field col-sm-9" appearance="outline">
-                <mat-label>Digite o e-mail do usuário</mat-label>
+                <mat-label>Digite o e-mail do usuário ou o nome da pessoa</mat-label>
                 <input matInput type="text" [(ngModel)]="searchEmailUser" id="searchEmailUser">
                 <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
                   <mat-icon>close</mat-icon>
@@ -150,7 +150,8 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Senha</mat-label>
-                    <input type="password" [readonly]="isInputReadOnly" matInput #PasswordInput formControlName="Password" [maxlength]="255" placeholder="Informe uma senha" id="Password" [(ngModel)]="Password" required>
+                    <input [type]="hide ? 'password' : 'text'" [readonly]="isInputReadOnly" matInput #PasswordInput formControlName="Password" [maxlength]="255" placeholder="Informe uma senha" id="Password" [(ngModel)]="Password" required>
+                    <mat-icon [hidden]="isEyeIconHidden" style="color:#5A5C69;" matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                     <mat-hint align="end">{{PasswordInput.value?.length || 0}}/255</mat-hint>
                     <mat-error *ngIf="userForm.controls.Password.touched && userForm.controls.Password.invalid">
                         <span *ngIf="userForm.controls.Password.errors?.required">A Senha é obrigatória.</span>
@@ -160,8 +161,9 @@
 
                   <mat-form-field appearance="fill" class="col-sm-5 ml-0">
                     <mat-label>Confirmação de Senha</mat-label>
-                    <input type="password" [readonly]="isInputReadOnly" matInput #ConfirmPasswordInput formControlName="ConfirmPassword" [maxlength]="255" placeholder="Confirme sua senha" id="ConfirmPassword" [(ngModel)]="ConfirmPassword" required>
-                      <mat-hint align="end">{{ConfirmPasswordInput.value?.length || 0}}/255</mat-hint>
+                    <input [type]="hideConfirm ? 'password' : 'text'" [readonly]="isInputReadOnly" matInput #ConfirmPasswordInput formControlName="ConfirmPassword" [maxlength]="255" placeholder="Confirme sua senha" id="ConfirmPassword" [(ngModel)]="ConfirmPassword" required>
+                    <mat-icon [hidden]="isEyeIconHidden" style="color:#5A5C69;" matSuffix (click)="hideConfirm = !hideConfirm">{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    <mat-hint align="end">{{ConfirmPasswordInput.value?.length || 0}}/255</mat-hint>
                       <mat-error *ngIf="userForm.controls.ConfirmPassword.touched && userForm.controls.ConfirmPassword.invalid">
                           <span *ngIf="userForm.controls.ConfirmPassword.errors?.required">É necessário confirmar a senha.</span>
                           <span *ngIf="userForm.controls.ConfirmPassword.errors?.maxlength">A Senha deve ter no máximo 255 caracteres.</span>
