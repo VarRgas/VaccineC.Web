@@ -10,8 +10,10 @@ import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchM
 import { IMovement } from 'src/app/interfaces/i-movement';
 import { IMovementProduct } from 'src/app/interfaces/i-movement-product';
 import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-batch';
+import { DiscardModel } from 'src/app/models/discard-model';
 import { MovementModel } from 'src/app/models/movement-model';
 import { MovementProductModel } from 'src/app/models/movement-product-model';
+import { DiscardsDispatcherService } from 'src/app/services/discards-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { MovementsDispatcherService } from 'src/app/services/movement-dispatcher.service';
@@ -33,9 +35,18 @@ export class MovimentarEstoqueComponent implements OnInit {
   public MovementNumber!: string;
   public Situation!: string;
   public ProductsAmount!: number;
+  public ProductSummaryBatchName!: string;
+  public NumberOfUnitsBatch!: number | null;
+  public ProductSummaryBatchId!: string;
+  public Batch!: string;
+  public ProductBatchHint!: string;
 
   public situationColor!: string;
   public situationTitle!: string;
+
+  myControlProductSummaryBatch = new FormControl();
+  options2: string[] = [];
+  acProductSummaryBatches: Observable<any[]> | undefined;
 
   //SEARCH TABLE
   displayedColumns: string[] = ['MovementNumber', 'MovementType', 'ProductsInfo', 'ID', 'Options'];
@@ -52,13 +63,17 @@ export class MovimentarEstoqueComponent implements OnInit {
   createButtonLoading = false;
   finishButtonLoading = false;
   cancelButtonLoading = false;
+  discardButtonLoading = false;
   isMovementTypeDisabled = false;
   isVisible = false;
+  isDiscardVisible = false;
   isSaveButtonHidden = false;
   isFinishButtonHidden = true;
   isCancelButtonHidden = true;
+  isDiscardButtonHidden = true;
   isAddNewProductButtonHidden = true;
   isButtonsTableDisabled = false;
+  isInputsHidden = true;
 
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
@@ -68,12 +83,16 @@ export class MovimentarEstoqueComponent implements OnInit {
     Id: [null],
     MovementType: [null, [Validators.required]],
     MovementNumber: [null],
-    Situation: [null]
+    Situation: [null],
+    ProductSummaryBatchName: [null],
+    NumberOfUnitsBatch: [null]
   });
 
   constructor(
     private movementService: MovementsDispatcherService,
     private movementProductService: MovementsProductsDispatcherService,
+    private productsSummariesBatchesService: ProductsSummariesBatchesDispatcherService,
+    private discardsDispatcherService: DiscardsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -126,6 +145,15 @@ export class MovimentarEstoqueComponent implements OnInit {
       });
   }
 
+  saveMovement() {
+    if (this.MovementType == "D") {
+
+    } else {
+      this.createMovement();
+      this.isInputsHidden = false;
+    }
+  }
+
   createMovement() {
 
     this.createButtonLoading = true;
@@ -148,6 +176,7 @@ export class MovimentarEstoqueComponent implements OnInit {
       response => {
 
         this.isVisible = true;
+        this.isDiscardVisible = false;
         this.isAddNewProductButtonHidden = false;
         this.treatButtons(response.Situation);
 
@@ -265,14 +294,54 @@ export class MovimentarEstoqueComponent implements OnInit {
       });
   }
 
+  discardBatch() {
+    const dialogRef = this.dialog.open(ConfirmDiscardDialog);
+
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (!!result) {
+          this.discardButtonLoading = true;
+
+          if (this.ProductSummaryBatchName == "" || this.ProductSummaryBatchName == null || this.NumberOfUnitsBatch == 0 || this.NumberOfUnitsBatch == null) {
+            this.discardButtonLoading = false;
+            this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+            return;
+          }
+
+          let discard = new DiscardModel();
+          discard.productSummaryBatchId = this.ProductSummaryBatchId;
+          discard.userId = localStorage.getItem('userId')!;
+          discard.discardedUnits = this.NumberOfUnitsBatch;
+          discard.batch = this.Batch;
+
+          this.discardsDispatcherService.create(discard).subscribe(
+            response => {
+              this.discardButtonLoading = false;
+              this.ProductSummaryBatchName = "";
+              this.NumberOfUnitsBatch = null;
+              this.ProductBatchHint = "";
+              this.messageHandler.showMessage(`Unidades do lote ${discard.batch} descartadas com sucesso!`, "success-snackbar");
+            },
+            error => {
+              this.discardButtonLoading = false;
+              this.errorHandler.handleError(error);
+              console.log(error);
+            });
+        }
+      });
+  }
+
   addNewMovement() {
     this.resetForms();
     this.isMovementTypeDisabled = false;
     this.isVisible = false;
+    this.isDiscardVisible = false;
     this.isSaveButtonHidden = false;
     this.isFinishButtonHidden = true;
     this.isCancelButtonHidden = true;
+    this.isDiscardButtonHidden = true;
     this.informationField = '';
+    this.isInputsHidden = true;
   }
 
   editMovement(id: string) {
@@ -289,9 +358,11 @@ export class MovimentarEstoqueComponent implements OnInit {
         this.informationField = `Movimento nº ${movement.MovementNumber}`
 
         this.treatButtons(movement.Situation)
-
+        this.isInputsHidden = false;
+        this.isDiscardButtonHidden = true;
         this.isMovementTypeDisabled = true;
         this.isVisible = true;
+        this.isDiscardVisible = false;
 
       },
       error => {
@@ -462,6 +533,57 @@ export class MovimentarEstoqueComponent implements OnInit {
     }
   }
 
+  displayProductSummaryBatch(state: any) {
+    return state && state.Batch ? state.Batch : '';
+  }
+
+  public searchProductSummaryBatchByAutoComplete() {
+    this.acProductSummaryBatches = this.myControlProductSummaryBatch.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterProductSummaryBatch(val || '')
+      })
+    )
+  }
+
+  filterProductSummaryBatch(val: string): Observable<any[]> {
+    // call the service which makes the http-request
+    return this.productsSummariesBatchesService.getNotEmptyProductsSummariesBatches()
+      .pipe(
+        map(response => response.filter((option: { Batch: string; ID: string }) => {
+          return option.Batch.toLowerCase()
+        }))
+      )
+  }
+
+  onSelectionChanged(event: MatAutocompleteSelectedEvent) {
+    console.log(event.option.value);
+    this.NumberOfUnitsBatch = event.option.value.NumberOfUnitsBatch;
+    this.Batch = event.option.value.Batch;
+    this.ProductBatchHint = event.option.value.Products.Name;
+    this.ProductSummaryBatchId = event.option.value.ID;
+  }
+
+  onSelectionMovementTypeChanged(value: any){
+    if(value == "D"){
+      this.isSaveButtonHidden = true;
+      this.isVisible = false;
+      this.isDiscardVisible = true;
+      this.isDiscardButtonHidden = false;
+      this.isInputsHidden = true;
+      this.isMovementTypeDisabled = false;
+      this.isSaveButtonHidden = true;
+    }else{
+      this.isSaveButtonHidden = false;
+      this.isVisible = false;
+      this.isDiscardVisible = false;
+      this.isDiscardButtonHidden = true;
+      this.isInputsHidden = false;
+      this.isSaveButtonHidden = false;
+    }
+  }
 
 }
 
@@ -1022,13 +1144,13 @@ export class UpdateMovementProductExitDialog implements OnInit {
 
     let validityDate = new Date(validityBatchDate);
     let dateNow = new Date();
+
     if (numberOfUnitsBatch > 0 && validityDate.getTime() < dateNow.getTime()) {
       return true;
     } else {
       return false;
     }
   }
-
 }
 
 @Component({
@@ -1222,3 +1344,9 @@ export class ConfirmCancelMovementDialog { }
   templateUrl: 'confirm-cancel-movement-product-dialog.html',
 })
 export class ConfirmCancelMovementProductDialog { }
+
+@Component({
+  selector: 'confirm-discard-dialog',
+  templateUrl: 'confirm-discard-dialog.html',
+})
+export class ConfirmDiscardDialog { }

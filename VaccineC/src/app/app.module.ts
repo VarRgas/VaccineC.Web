@@ -22,7 +22,7 @@ import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, Confir
 import { AgendamentoComponent } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { AddBudgetProductDialog, OrcamentosComponent, ConfirmBudgetProductRemoveDialog, UpdateBudgetProductDialog, ConfirmBudgetCancelationDialog, RepeatBudgetProductDialog } from './pages/orcamentos/orcamentos.component';
-import { MovimentarEstoqueComponent, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
+import { MovimentarEstoqueComponent, ConfirmDiscardDialog, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
 import { GerenciarUsuariosComponent, UserResourceAddDialog, ResetPasswordDialog, ConfirmUserResourceRemoveDialog } from './pages/gerenciar-usuarios/gerenciar-usuarios.component';
 import { RecursosComponent, ConfirmResourceRemoveDialog } from './pages/recursos/recursos.component';
@@ -126,7 +126,8 @@ export const MY_FORMATS = {
     UpdateBudgetProductDialog,
     ConfirmBudgetCancelationDialog,
     SnackBarComponent,
-    RepeatBudgetProductDialog
+    RepeatBudgetProductDialog,
+    ConfirmDiscardDialog
   ],
   imports: [
     BrowserModule,

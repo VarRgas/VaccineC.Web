@@ -94,10 +94,10 @@
                         <div class="registration-group">
                             <div class="offset-sm-1 col-sm-11 p-0">
                                 <div class="div-row-input">
-                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                    <mat-form-field appearance="fill" class="col-sm-6" [hidden]="isInputsHidden">
                                         <mat-label>Movimento</mat-label>
                                         <input matInput formControlName="MovementNumber" [(ngModel)]="MovementNumber"
-                                            readonly>
+                                            readonly >
                                     </mat-form-field>
                                 </div>
 
@@ -105,9 +105,10 @@
                                     <mat-form-field appearance="fill" class="col-sm-6">
                                         <mat-label>Tipo de Operação</mat-label>
                                         <mat-select formControlName="MovementType" [(ngModel)]="MovementType"
-                                            [disabled]="isMovementTypeDisabled" required>
+                                            [disabled]="isMovementTypeDisabled" (selectionChange)="onSelectionMovementTypeChanged($event.value)" required>
                                             <mat-option value="E">Entrada</mat-option>
                                             <mat-option value="S">Saída</mat-option>
+                                            <mat-option value="D">Descarte</mat-option>
                                         </mat-select>
                                         <mat-error *ngIf="movementForm.controls.MovementType.touched && movementForm.controls.MovementType.invalid">
                                             <span *ngIf="movementForm.controls.MovementType.errors?.required">O Tipo de Operação é
@@ -115,9 +116,9 @@
                                           </mat-error>
                                     </mat-form-field>
 
-                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                    <mat-form-field appearance="fill" class="col-sm-5" [hidden]="isInputsHidden">
                                         <mat-label>Situação</mat-label>
-                                        <mat-select formControlName="Situation" [(ngModel)]="Situation" [disabled]=true>
+                                        <mat-select formControlName="Situation" [(ngModel)]="Situation" [disabled]="true">
                                             <mat-option value="P">Pendente</mat-option>
                                             <mat-option value="F">Finalizado</mat-option>
                                             <mat-option value="C">Cancelado</mat-option>
@@ -125,7 +126,30 @@
 
                                     </mat-form-field>
                                 </div>
+                                <div id="discard" *ngIf="isDiscardVisible">
+                                    <div class="div-row-input">
+                                        <mat-form-field appearance="fill" class="col-sm-6">
+                                            <mat-label>Lote</mat-label>
+                                            <input type="text" (click)="searchProductSummaryBatchByAutoComplete()" formControlName="ProductSummaryBatchName"
+                                                [(ngModel)]="ProductSummaryBatchName" placeholder="Selecione o Lote" aria-label="Number" matInput
+                                                [formControl]="myControlProductSummaryBatch" [matAutocomplete]="auto">
+                                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProductSummaryBatch" (optionSelected)="onSelectionChanged($event)">
+                                                <mat-option *ngFor="let acProductSummaryBatch of acProductSummaryBatches | async" [value]="acProductSummaryBatch" multiLineOption>
+                                                    <div matLine>{{acProductSummaryBatch.Batch}}</div>
+                                                    <div class="small-text" matLine>{{acProductSummaryBatch.Products.Name}}</div>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-icon matSuffix>search</mat-icon>
+                                            <mat-hint align="end">{{ProductBatchHint}}</mat-hint>
 
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="fill" class="col-sm-5">
+                                            <mat-label>Unidades</mat-label>
+                                            <input type="number" matInput #NumberOfUnitsBatchInput formControlName="NumberOfUnitsBatch" [(ngModel)]="NumberOfUnitsBatch" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
                                 <div id="tableProducts" class="mt-3 mb-4" *ngIf="isVisible">
                                     <div class="demo-button-container col-sm-11">
                                         <button mat-mini-fab class="demo-button me-2 create-button"
@@ -210,7 +234,7 @@
                                 <div class="div-row-input registration-button-row d-flex">
 
                                     <button mat-raised-button class="create-button" type="button"
-                                        [hidden]="isSaveButtonHidden" (click)="createMovement()">
+                                        [hidden]="isSaveButtonHidden" (click)="saveMovement()">
                                         <div class="spinner">
                                             <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
                                             <span *ngIf="!createButtonLoading"
@@ -236,6 +260,15 @@
                                             Cancelar
                                         </div>
                                     </button>
+                                    <button mat-raised-button color="warn" type="button"
+                                    [hidden]="isDiscardButtonHidden" (click)="discardBatch()">
+                                    <div class="spinner">
+                                        <mat-spinner *ngIf="discardButtonLoading" [diameter]="15"></mat-spinner>
+                                        <span *ngIf="!discardButtonLoading"
+                                            class="fa-solid fa-trash me-1 w-20px"></span>
+                                        Descartar
+                                    </div>
+                                </button>
                                 </div>
 
                             </div>

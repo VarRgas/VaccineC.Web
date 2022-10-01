@@ -5,11 +5,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IBatch } from 'src/app/interfaces/i-batch';
+import { IDiscard } from 'src/app/interfaces/i-discard';
 import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-batch';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
+import { DiscardsDispatcherService } from 'src/app/services/discards-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
-import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 
 @Component({
@@ -39,6 +40,10 @@ export class SituacaoEstoqueComponent implements OnInit {
   public displayedColumns3: string[] = ['ProductName', 'TotalAuthorizationsMonth', 'TotalUnitsProduct', 'TotalUnitsAfterApplication', 'Warning', 'ProductId'];
   public dataSource3 = new MatTableDataSource<IBatch>();
 
+  //Table Descartes
+  public displayedColumns4: string[] = ['Batch', 'User' ,'Register', 'DiscardedUnits', 'ID'];
+  public dataSource4 = new MatTableDataSource<IDiscard>();
+
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
   @ViewChild('paginatorBelowMinimumStock') paginatorBelowMinimumStock!: MatPaginator;
   @ViewChild('paginatorProjection') paginatorProjection!: MatPaginator;
@@ -49,6 +54,7 @@ export class SituacaoEstoqueComponent implements OnInit {
   constructor(
     private productsSummariesBatchesDispatcherService: ProductsSummariesBatchesDispatcherService,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
+    private discardsDispatcherService: DiscardsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog) { }
@@ -58,6 +64,7 @@ export class SituacaoEstoqueComponent implements OnInit {
     this.getNotEmptySummaryBatchs();
     this.getBatchsBelowMinimumStock();
     this.getSummarySituationAuthorization();
+    this.getDiscards();
   }
 
   public getCurrentDate(): void {
@@ -80,7 +87,6 @@ export class SituacaoEstoqueComponent implements OnInit {
         response => {
           this.dataSource3 = new MatTableDataSource(response);
           this.dataSource3.paginator = this.paginatorProjection;
-          this.dataSource3.sort = this.sort;
         },
         error => {
           console.log(error);
@@ -94,13 +100,10 @@ export class SituacaoEstoqueComponent implements OnInit {
         batchs => {
           this.dataSource = new MatTableDataSource(batchs);
           this.dataSource.paginator = this.paginatorExpiredBatch;
-          this.dataSource.sort = this.sort;
-          this.searchButtonLoading = false;
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
-          this.searchButtonLoading = false;
         });
   }
 
@@ -110,7 +113,6 @@ export class SituacaoEstoqueComponent implements OnInit {
         batchs => {
           this.dataSource2 = new MatTableDataSource(batchs);
           this.dataSource2.paginator = this.paginatorBelowMinimumStock;
-          this.dataSource2.sort = this.sort;
           this.searchButtonLoading = false;
         },
         error => {
@@ -118,6 +120,25 @@ export class SituacaoEstoqueComponent implements OnInit {
           this.errorHandler.handleError(error);
           this.searchButtonLoading = false;
         });
+  }
+
+  public getDiscards(): void{
+    this.discardsDispatcherService.getAllDiscards()
+    .subscribe(
+      discards => {
+        console.log(discards)
+        this.dataSource4 = new MatTableDataSource(discards);
+        this.dataSource4.sort = this.sort;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  getTotalUnitsDiscarded(){
+    return this.dataSource4.data.map(t => t.DiscardedUnits).reduce((acc, value) => acc + value, 0);
+
   }
 
   getSituationValidityDanger(validityBatchDate: string) {
@@ -184,7 +205,7 @@ export class SituacaoEstoqueComponent implements OnInit {
   }
 
   public formatMonth(month: string): string {
-    console.log(month)
+
     let response = "";
 
     switch (month) {
@@ -264,7 +285,6 @@ export class BatchInformationDialog implements OnInit {
   public getProductSummaryBatchById(id: string): void {
     this.productSummaryBatchDispatcherService.getProductsSummariesBatchesById(id).subscribe(
       productSummaryBatch => {
-        console.log(productSummaryBatch)
         this.Batch = productSummaryBatch.Batch;
         this.Manufacturer = productSummaryBatch.Manufacturer;
         this.ValidityBatchDate = productSummaryBatch.ValidityBatchDate;
@@ -308,7 +328,6 @@ export class ProductBatchsInformationDialog implements OnInit {
     this.productSummaryBatchDispatcherService.getProductsSummariesBatchesByProductId(productId).subscribe(
       productsSummariesBatches => {
         this.dataSourceBatches = new MatTableDataSource(productsSummariesBatches);
-        console.log(productsSummariesBatches)
       },
       error => {
         console.log(error);

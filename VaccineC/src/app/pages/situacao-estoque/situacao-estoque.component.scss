@@ -67,3 +67,18 @@
 :host ::ng-deep.mat-spinner{
   margin-right: 0.2rem !important;
 }
+
+.mat-footer-row {
+  font-weight: bold !important;
+}
+
+
+.mat-column-DiscardedUnits {
+  flex: 0 0 160px !important;
+  white-space: unset !important;
+}
+
+.mat-cell-DiscardedUnits {
+  flex: 0 0 160px !important;
+  white-space: unset !important;
+}
