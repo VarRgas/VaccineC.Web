@@ -276,8 +276,7 @@
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Data
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let element">
-                                                        {{element.Register |
-                                                        date: 'dd/MM/yyyy H:mm'}}
+                                                        {{element.Register | date: 'dd/MM/yyyy H:mm'}}
                                                     </mat-cell>
                                                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                                                 </ng-container>

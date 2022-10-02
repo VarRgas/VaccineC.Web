@@ -8,4 +8,5 @@ export class BudgetProductModel {
     public estimatedSalesValue!: number;
     public situationProduct: string = '';
     public register!: Date;
+    public userId!: string;
 }
