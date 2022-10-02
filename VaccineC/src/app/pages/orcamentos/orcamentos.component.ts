@@ -117,7 +117,6 @@ export class OrcamentosComponent implements OnInit {
   public displayedColumnsHistoric: string[] = ['Register', 'User', 'Historic', 'ID'];
   public dataSourceHistoric = new MatTableDataSource<IBudgetHistoric>();
 
-
   //Autocomplete Pessoa
   public myControl = new FormControl();
   public options: string[] = [];
@@ -155,7 +154,6 @@ export class OrcamentosComponent implements OnInit {
   });
 
   @ViewChild('paginatorBudget') paginatorBudget!: MatPaginator;
-  @ViewChild('paginatorHistoric') paginatorHistoric!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
@@ -180,7 +178,9 @@ export class OrcamentosComponent implements OnInit {
   ngOnInit(): void {
     this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
       companyParameter => {
-        this.DefaultCompanyParameter = companyParameter;
+        if(companyParameter != null){
+          this.DefaultCompanyParameter = companyParameter;
+        }
       },
       error => {
         console.log(error);
@@ -418,7 +418,9 @@ export class OrcamentosComponent implements OnInit {
 
             this.loadData();
             this.treatBudgetSituation(response.Situation);
-            this.paymentFormId = this.DefaultCompanyParameter.PaymentForm;
+            if(this.DefaultCompanyParameter != null && this.DefaultCompanyParameter.PaymentForm != null){
+              this.paymentFormId = this.DefaultCompanyParameter.PaymentForm;
+            }
             stepper.next();
           },
           error => {
@@ -798,9 +800,12 @@ export class OrcamentosComponent implements OnInit {
         listBudgetNegotiationModel.push(budgetNegotiationModel);
       })
 
-      this.budgetsNegotiationsDispatcherService.deleteBudgetNegotiationOnDemand(listBudgetNegotiationModel).subscribe(
+      this.budgetsNegotiationsDispatcherService.deleteBudgetNegotiationOnDemand(listBudgetNegotiationModel, localStorage.getItem('userId')!).subscribe(
         response => {
           this.dataSourceBudgetNegotiation = new MatTableDataSource(response);
+          setTimeout(() => {
+            this.getBudgetHistorics();
+          }, 500);
           return true;
 
         }, error => {
@@ -860,39 +865,37 @@ export class OrcamentosComponent implements OnInit {
 
   public addNewBudget(): void {
 
-    this.tabBudgetIsDisabled = false;
-
-    this.resetForms();
-    this.resetTables();
-
-    this.budgetProductRowSelected = "";
-
     setTimeout(() => {
-      if (this.stepper.selectedIndex != 0) {
-        this.stepper.selectedIndex = 0;
+      this.resetForms();
+      this.resetTables();
+
+      this.tabBudgetIsDisabled = false;
+      this.budgetProductRowSelected = "";
+
+      this.usersService.getById(localStorage.getItem('userId')!)
+        .subscribe(
+          user => {
+            this.userId = user;
+          },
+          error => {
+            console.log(error);
+          });
+
+      let dateNow = new Date();
+      if(this.DefaultCompanyParameter != null && this.DefaultCompanyParameter.MaximumDaysBudgetValidity != null){
+        dateNow.setDate(dateNow.getDate() + this.DefaultCompanyParameter.MaximumDaysBudgetValidity);
       }
+
+      this.expirationDate = dateNow;
+      this.budgetId = "";
+      this.informationField = "";
+      this.isPersonReadOnly = false;
+
+      this.treatBudgetSituation("P");
     }, 200);
 
-    this.usersService.getById(localStorage.getItem('userId')!)
-      .subscribe(
-        user => {
-          this.userId = user;
-        },
-        error => {
-          console.log(error);
-        });
-
-    let dateNow = new Date();
-    dateNow.setDate(dateNow.getDate() + this.DefaultCompanyParameter.MaximumDaysBudgetValidity);
-    this.expirationDate = dateNow;
-
-    this.budgetId = "";
-    this.informationField = "";
-    this.isPersonReadOnly = false;
-
-    this.treatBudgetSituation("P");
-
   }
+
   public resetForms(): void {
 
     this.budgetForm.reset();
@@ -912,6 +915,7 @@ export class OrcamentosComponent implements OnInit {
   public resetTables(): void {
     this.dataSourceBudgetNegotiation = new MatTableDataSource();
     this.dataSourceBudgetProduct = new MatTableDataSource();
+    this.dataSourceHistoric = new MatTableDataSource();
   }
 
   public editBudget(id: string): void {
@@ -920,12 +924,6 @@ export class OrcamentosComponent implements OnInit {
     this.resetTables();
 
     this.budgetProductRowSelected = "";
-
-    setTimeout(() => {
-      if (this.stepper.selectedIndex != 0) {
-        this.stepper.selectedIndex = 0;
-      }
-    }, 200);
 
     this.budgetsDispatcherService.getBudgetById(id)
       .subscribe(
@@ -984,7 +982,6 @@ export class OrcamentosComponent implements OnInit {
       .subscribe(
         budgetsHistorics => {
           this.dataSourceHistoric = new MatTableDataSource(budgetsHistorics);
-          this.dataSourceHistoric.paginator = this.paginatorHistoric;
         },
         error => {
           console.log(error);
@@ -1006,6 +1003,7 @@ export class OrcamentosComponent implements OnInit {
     budgetNegotiation.installments = this.installments;
     budgetNegotiation.totalAmountBalance = this.balanceNegotiations;
     budgetNegotiation.totalAmountTraded = this.totalAmountTraded;
+    budgetNegotiation.userId = localStorage.getItem('userId')!
 
     this.budgetsNegotiationsDispatcherService.createBudgetNegotiation(budgetNegotiation).subscribe(
       budgetsNegotiations => {
@@ -1020,7 +1018,7 @@ export class OrcamentosComponent implements OnInit {
         this.balanceNegotiations = this.totalBudgetAmount - totalAmountTradedNegotiations;
 
         this.treatBalanceNegotiation();
-
+        this.getBudgetHistorics();
         this.messageHandler.showMessage("Negociação inserida com sucesso!", "success-snackbar");
 
       },
@@ -1099,7 +1097,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public removeBudgetNegotiation(id: string) {
-    this.budgetsNegotiationsDispatcherService.deleteBudgetNegotiation(id).subscribe(
+    this.budgetsNegotiationsDispatcherService.deleteBudgetNegotiation(id, localStorage.getItem('userId')!).subscribe(
       budgetsNegotiations => {
 
         this.dataSourceBudgetNegotiation = new MatTableDataSource(budgetsNegotiations);
@@ -1108,10 +1106,11 @@ export class OrcamentosComponent implements OnInit {
         this.balanceNegotiations = this.totalBudgetAmount - totalAmountTradedNegotiations;
 
         this.treatBalanceNegotiation();
-
+        this.getBudgetHistorics();
         this.messageHandler.showMessage("Negociação removida com sucesso!", "success-snackbar");
       },
       error => {
+        this.errorHandler.handleError(error);
         console.log(error);
       });
 
@@ -1262,7 +1261,6 @@ export class OrcamentosComponent implements OnInit {
       .subscribe(
         budgetsHistorics => {
           this.dataSourceHistoric = new MatTableDataSource(budgetsHistorics);
-          this.dataSourceHistoric.paginator = this.paginatorHistoric;
         },
         error => {
           console.log(error);

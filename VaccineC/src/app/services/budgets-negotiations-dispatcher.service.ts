@@ -29,12 +29,12 @@ export class BudgetsNegotiationsDispatcherService {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }
 
-    public deleteBudgetNegotiation(id: string): Observable<any> {
-        return this.httpClient.delete(`${baseURL}/${id}/Delete`);
+    public deleteBudgetNegotiation(id: string, userId: string): Observable<any> {
+        return this.httpClient.delete(`${baseURL}/${id}/${userId}/Delete`);
     }
 
-    public deleteBudgetNegotiationOnDemand(data: BudgetNegotiationModel[]): Observable<any> {
-        return this.httpClient.post(`${baseURL}/DeleteOnDemand`, data);
+    public deleteBudgetNegotiationOnDemand(data: BudgetNegotiationModel[], userId: string): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${userId}/DeleteOnDemand`, data);
     }
 
 }

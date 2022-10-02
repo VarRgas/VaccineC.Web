@@ -559,7 +559,6 @@ export class MovimentarEstoqueComponent implements OnInit {
   }
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
-    console.log(event.option.value);
     this.NumberOfUnitsBatch = event.option.value.NumberOfUnitsBatch;
     this.Batch = event.option.value.Batch;
     this.ProductBatchHint = event.option.value.Products.Name;

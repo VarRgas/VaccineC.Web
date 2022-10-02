@@ -6,4 +6,5 @@ export class BudgetNegotiationModel {
     public totalAmountTraded!: number;
     public installments!: number;
     public register!: Date;
+    public userId!: string;
 }

@@ -186,7 +186,6 @@ export class ToolbarComponent implements OnInit {
 
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
-    console.log(event.option.value)
     let url = event.option.value.UrlName.split("/")[1];
     this.router.navigateByUrl(url);
   }
