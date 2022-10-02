@@ -62,7 +62,9 @@
                                 </ng-container>
 
                                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row class="hover-element-row" *matRowDef="let row; columns: displayedColumns;" (dblclick)="editCompany(row.ID)" (dblclick)="tabGroup.selectedIndex=1" style="cursor:pointer;"></tr>
+                                <tr mat-row class="hover-element-row" *matRowDef="let row; columns: displayedColumns;"
+                                    (dblclick)="editCompany(row.ID)" (dblclick)="tabGroup.selectedIndex=1"
+                                    style="cursor:pointer;"></tr>
 
                                 <!-- Row shown when there is no matching data. -->
                                 <tr class="mat-row" *matNoDataRow>
@@ -70,7 +72,8 @@
                                 </tr>
                             </table>
 
-                            <mat-paginator #paginatorCompany="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                            <mat-paginator #paginatorCompany="matPaginator" [pageSizeOptions]="[10, 25, 100]">
+                            </mat-paginator>
                         </div>
                     </div>
                 </mat-tab>
@@ -89,17 +92,18 @@
                                 <div class="div-row-input">
                                     <mat-form-field appearance="fill" class="col-sm-11">
                                         <mat-label>Pessoa</mat-label>
-                                        <input (click)="searchPersonByAutoComplete()" [readonly]="isInputReadOnly" type="text" id="personId"
-                                            #PersonIdinput placeholder="Selecione a Pessoa Jurídica" aria-label="Number"
-                                            matInput formControlName="PersonId"
-                                            [matAutocomplete]="auto" [(ngModel)]="personId" required>
+                                        <input (click)="searchPersonByAutoComplete()" [readonly]="isInputReadOnly"
+                                            type="text" id="personId" #PersonIdinput
+                                            placeholder="Selecione a Pessoa Jurídica" aria-label="Number" matInput
+                                            formControlName="PersonId" [matAutocomplete]="auto" [(ngModel)]="personId"
+                                            required>
                                         <mat-error
                                             *ngIf="companyForm.controls.PersonId.touched && companyForm.controls.PersonId.invalid">
-                                            <span *ngIf="companyForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
+                                            <span *ngIf="companyForm.controls.PersonId.errors?.required">A Pessoa é
+                                                obrigatória.</span>
                                         </mat-error>
                                         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
-                                            <mat-option *ngFor="let option of filteredOptions | async"
-                                                [value]="option">
+                                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                                                 {{option.Name}}
                                             </mat-option>
                                         </mat-autocomplete>
@@ -167,9 +171,12 @@
                                             formControlName="ApplicationTimePerMinute"
                                             [(ngModel)]="ApplicationTimePerMinute" id="ApplicationTimePerMinute"
                                             placeholder="Ex. 10" required="true">
-                                            <mat-error *ngIf="companyParametersForm.controls.ApplicationTimePerMinute.touched && companyParametersForm.controls.ApplicationTimePerMinute.invalid">
-                                                <span *ngIf="companyParametersForm.controls.ApplicationTimePerMinute.errors?.required">O Tempo de Aplicação é obrigatório.</span>
-                                            </mat-error>
+                                        <mat-error
+                                            *ngIf="companyParametersForm.controls.ApplicationTimePerMinute.touched && companyParametersForm.controls.ApplicationTimePerMinute.invalid">
+                                            <span
+                                                *ngIf="companyParametersForm.controls.ApplicationTimePerMinute.errors?.required">O
+                                                Tempo de Aplicação é obrigatório.</span>
+                                        </mat-error>
                                         <span matSuffix>min</span>
                                     </mat-form-field>
                                 </div>
@@ -181,10 +188,33 @@
                                             formControlName="MaximumDaysBudgetValidity"
                                             [(ngModel)]="MaximumDaysBudgetValidity" id="MaximumDaysBudgetValidity"
                                             maxlength="15" placeholder="Ex. 30" required="true">
-                                            <mat-error *ngIf="companyParametersForm.controls.MaximumDaysBudgetValidity.touched && companyParametersForm.controls.MaximumDaysBudgetValidity.invalid">
-                                                <span *ngIf="companyParametersForm.controls.MaximumDaysBudgetValidity.errors?.required">A Validade do Orçamento é obrigatória.</span>
-                                            </mat-error>
+                                        <mat-error
+                                            *ngIf="companyParametersForm.controls.MaximumDaysBudgetValidity.touched && companyParametersForm.controls.MaximumDaysBudgetValidity.invalid">
+                                            <span
+                                                *ngIf="companyParametersForm.controls.MaximumDaysBudgetValidity.errors?.required">A
+                                                Validade do Orçamento é obrigatória.</span>
+                                        </mat-error>
                                         <span matSuffix>dias</span>
+                                    </mat-form-field>
+                                </div>
+
+                                
+                                <div class="div-row-input">
+                                    <!-- FORMA DE PAGAMENTO -->
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>Forma de Pagamento Padrão</mat-label>
+                                        <input (click)="searchPaymentFormsByAutoComplete()" type="text"
+                                            #PaymentFormIdinput placeholder="Selecione a forma de pagamento"
+                                            aria-label="Number" matInput formControlName="PaymentFormId"
+                                            [matAutocomplete]="autoPaymentForm" [(ngModel)]="paymentFormId">
+                                        <mat-autocomplete #autoPaymentForm="matAutocomplete"
+                                            [displayWith]="displayStatePaymentForm">
+                                            <mat-option *ngFor="let acPaymentForm of acPaymentForms | async"
+                                                [value]="acPaymentForm">
+                                                {{acPaymentForm.Name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-icon matSuffix>search</mat-icon>
                                     </mat-form-field>
                                 </div>
 
@@ -242,17 +272,20 @@
                                 <ng-container matColumnDef="Options">
                                     <th mat-header-cell *matHeaderCellDef> </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <button mat-icon-button color="warn" title="Remover" (click)="deleteCompanySchedule(row.ID)" style="float:right;">
+                                        <button mat-icon-button color="warn" title="Remover"
+                                            (click)="deleteCompanySchedule(row.ID)" style="float:right;">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
-                                        <button mat-icon-button color="primary" title="Editar" (click)="openUpdateScheduleDialog(row.ID)" style="float:right;">
+                                        <button mat-icon-button color="primary" title="Editar"
+                                            (click)="openUpdateScheduleDialog(row.ID)" style="float:right;">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                     </td>
                                 </ng-container>
 
                                 <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns2;" class="hover-element-row" style="cursor:pointer;" (dblclick)="openUpdateScheduleDialog(row.ID)"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns2;" class="hover-element-row"
+                                    style="cursor:pointer;" (dblclick)="openUpdateScheduleDialog(row.ID)"></tr>
 
                                 <!-- Row shown when there is no matching data. -->
                                 <tr class="mat-row" *matNoDataRow>
@@ -260,7 +293,8 @@
                                 </tr>
                             </table>
 
-                            <mat-paginator #paginatorSchedule="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+                            <mat-paginator #paginatorSchedule="matPaginator" [pageSizeOptions]="[10, 25, 100]">
+                            </mat-paginator>
                         </div>
                     </div>
 

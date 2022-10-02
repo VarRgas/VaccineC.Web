@@ -59,6 +59,8 @@ export class OrcamentosComponent implements OnInit {
   public searchButtonLoading = false;
   public firstStepLoading = false;
 
+  public DefaultCompanyParameter!: any;
+
   //Variáveis dos inputs
   //BudgetForm
   public budgetId!: string;
@@ -165,7 +167,14 @@ export class OrcamentosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
+      companyParameter => {
+        this.DefaultCompanyParameter = companyParameter;
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   public budgetProductRowSelected!: any;
@@ -182,8 +191,6 @@ export class OrcamentosComponent implements OnInit {
   }
 
   treatBudgetSituation(situation: string) {
-
-    console.log(this.situation)
 
     if (situation == "P" || situation == null || situation == undefined) {
       this.isBudgetReadonly = false;
@@ -332,7 +339,9 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public goToBudgetNegotiationStep(stepper: MatStepper) {
+
     if (this.situation == "P") {
+
       if (!this.budgetForm2.valid) {
         console.log(this.budgetForm);
         //this.createButtonLoading = false;
@@ -397,7 +406,8 @@ export class OrcamentosComponent implements OnInit {
             this.isPersonReadOnly = true;
 
             this.loadData();
-            this.treatBudgetSituation(response.Situation)
+            this.treatBudgetSituation(response.Situation);
+            this.paymentFormId = this.DefaultCompanyParameter.PaymentForm;
             stepper.next();
           },
           error => {
@@ -405,7 +415,11 @@ export class OrcamentosComponent implements OnInit {
             this.errorHandler.handleError(error);
           });
 
-    } else {
+    } else if (this.situation == "E") {
+      this.paymentFormId = this.DefaultCompanyParameter.PaymentForm;
+      stepper.next();
+    }
+    else {
       stepper.next();
     }
 
@@ -414,7 +428,6 @@ export class OrcamentosComponent implements OnInit {
 
     this.treatBalanceNegotiation();
   }
-
 
   public createBudget(stepper: MatStepper): void {
 
@@ -851,18 +864,9 @@ export class OrcamentosComponent implements OnInit {
           console.log(error);
         });
 
-    this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
-      companyParameter => {
-
-        let dateNow = new Date();
-        dateNow.setDate(dateNow.getDate() + companyParameter.MaximumDaysBudgetValidity);
-        this.expirationDate = dateNow;
-
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    let dateNow = new Date();
+    dateNow.setDate(dateNow.getDate() + this.DefaultCompanyParameter.MaximumDaysBudgetValidity);
+    this.expirationDate = dateNow;
 
     this.budgetId = "";
     this.informationField = "";

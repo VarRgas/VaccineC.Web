@@ -18,6 +18,7 @@ import { IResource } from 'src/app/interfaces/i-resource';
 import { ICompanyParameter } from 'src/app/interfaces/i-company-parameter';
 import { CompaniesSchedulesDispatcherService } from 'src/app/services/company-schedule-dispatcher.service';
 import { CompanyScheduleModel } from 'src/app/models/company-schedule-model';
+import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
 
 
 @Component({
@@ -53,6 +54,7 @@ export class EmpresasComponent implements OnInit {
   public details!: string;
   public register!: string;
   public informationField!: string;
+  public paymentFormId!: string;
 
   //Table
   public value = '';
@@ -70,6 +72,11 @@ export class EmpresasComponent implements OnInit {
   public scheduleColor: string = "#84d7b0";
   public CompanyIDParameter!: string;
 
+  //Autocomplete Forma de Pagamento
+  public myPaymentFormControl = new FormControl();
+  public acPaymentForm: string[] = [];
+  public acPaymentForms: Observable<any[]> | undefined;
+
   @ViewChild('paginatorCompany') paginatorCompany!: MatPaginator;
   @ViewChild('paginatorSchedule') paginatorSchedule!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -77,9 +84,10 @@ export class EmpresasComponent implements OnInit {
   //Parameter form
   companyParametersForm: FormGroup = this.formBuilder.group({
     CompanyParameterID: [null],
-    CompanyID: [null, [Validators.required]],
+    CompanyID: [null],
     ApplicationTimePerMinute: [null, [Validators.required]],
     MaximumDaysBudgetValidity: [null, [Validators.required]],
+    PaymentFormId: [null],
     ScheduleColor: [null]
   });
 
@@ -94,6 +102,7 @@ export class EmpresasComponent implements OnInit {
     private companiesDispatcherService: CompaniesDispatcherService,
     private companiesParametersDispatcherService: CompaniesParametersDispatcherService,
     private companiesSchedulesDispatcherService: CompaniesSchedulesDispatcherService,
+    private paymentFormsDispatcherService: PaymentFormsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -190,6 +199,7 @@ export class EmpresasComponent implements OnInit {
           this.createButtonLoading = false;
           this.tabIsDisabled = false;
           this.isInputReadOnly = true;
+          this.scheduleColor = "#84d7b0";
           this.getAllCompanies();
 
           this.messageHandler.showMessage("Empresa criada com sucesso!", "success-snackbar")
@@ -276,16 +286,25 @@ export class EmpresasComponent implements OnInit {
       return;
     }
 
-    const data = this.companyParametersForm.value;
-    data.HasPending = false;
-    console.log(data);
+    let companyParameter = new CompanyParameterModel();
+    companyParameter.companyId = this.companyID;
+    companyParameter.applicationTimePerMinute = this.ApplicationTimePerMinute;
+    companyParameter.scheduleColor = this.scheduleColor;
+    companyParameter.maximumDaysBudgetValidity = this.MaximumDaysBudgetValidity;
 
-    this.companiesParametersDispatcherService.createCompanyParameter(data)
+    if(this.companyParametersForm.value.PaymentFormId == null || this.companyParametersForm.value.PaymentFormId == undefined || this.companyParametersForm.value.PaymentFormId == ""){
+      companyParameter.defaultPaymentFormId = null;
+    }else{
+      companyParameter.defaultPaymentFormId = this.companyParametersForm.value.PaymentFormId.ID;
+    }
+
+    console.log(companyParameter)
+  
+    this.companiesParametersDispatcherService.createCompanyParameter(companyParameter)
       .subscribe(
         response => {
           this.CompanyParameterID = response.ID;
           this.CompanyIDParameter = response.CompanyId;
-          console.log(this.CompanyIDParameter)
           this.ApplicationTimePerMinute = response.ApplicationTimePerMinute;
           this.MaximumDaysBudgetValidity = response.MaximumDaysBudgetValidity;
           this.scheduleColor = response.ScheduleColor;
@@ -296,22 +315,29 @@ export class EmpresasComponent implements OnInit {
           this.errorHandler.handleError(error);
         });
 
-    console.log(this.CompanyIDParameter)
   }
 
   public updateCompanyParameter(): void {
-    let companyParameter = new CompanyParameterModel();
-    companyParameter.id = this.CompanyParameterID;
-    companyParameter.companyId = this.CompanyIDParameter;
-    companyParameter.applicationTimePerMinute = this.ApplicationTimePerMinute;
-    companyParameter.maximumDaysBudgetValidity = this.MaximumDaysBudgetValidity;
-    companyParameter.scheduleColor = this.scheduleColor;
-
+    
     if (!this.companyParametersForm.valid) {
       console.log(this.companyParametersForm);
       this.companyParametersForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
+    }
+
+    let companyParameter = new CompanyParameterModel();
+    companyParameter.id = this.CompanyParameterID;
+    companyParameter.companyId = this.companyID;
+    companyParameter.applicationTimePerMinute = this.ApplicationTimePerMinute;
+    companyParameter.maximumDaysBudgetValidity = this.MaximumDaysBudgetValidity;
+    companyParameter.scheduleColor = this.scheduleColor;
+    console.log(companyParameter)
+
+    if(this.companyParametersForm.value.PaymentFormId == null || this.companyParametersForm.value.PaymentFormId == undefined || this.companyParametersForm.value.PaymentFormId == ""){
+      companyParameter.defaultPaymentFormId = null;
+    }else{
+      companyParameter.defaultPaymentFormId = this.companyParametersForm.value.PaymentFormId.ID;
     }
 
     this.companiesParametersDispatcherService.updateCompanyParameter(this.CompanyParameterID, companyParameter)
@@ -354,8 +380,8 @@ export class EmpresasComponent implements OnInit {
     this.companiesDispatcherService.getCompaniesParametersByCompanyID(id)
       .subscribe(
         companyParameter => {
-
-          if (companyParameter.length == 0) {
+          
+          if (companyParameter == null) {
             this.CompanyParameterID = "";
             this.ApplicationTimePerMinute = "";
             this.MaximumDaysBudgetValidity = "";
@@ -363,10 +389,14 @@ export class EmpresasComponent implements OnInit {
             this.companyParametersForm.clearValidators();
             this.companyParametersForm.updateValueAndValidity();
           } else {
+            console.log(companyParameter)
             this.CompanyParameterID = companyParameter.ID;
             this.scheduleColor = companyParameter.ScheduleColor;
             this.ApplicationTimePerMinute = companyParameter.ApplicationTimePerMinute;
-            this.MaximumDaysBudgetValidity = companyParameter.MaximumDaysBudgetValidity
+            this.MaximumDaysBudgetValidity = companyParameter.MaximumDaysBudgetValidity;
+            if(companyParameter.PaymentForm != null){
+              this.paymentFormId = companyParameter.PaymentForm;
+            }
           }
 
         },
@@ -421,6 +451,7 @@ export class EmpresasComponent implements OnInit {
     this.companyParametersForm.clearValidators();
     this.companyParametersForm.updateValueAndValidity();
 
+    this.scheduleColor = "#84d7b0";
     this.isInputReadOnly = false;
     this.tabIsDisabled = true;
 
@@ -494,6 +525,31 @@ export class EmpresasComponent implements OnInit {
   displayState(state: any) {
     return state && state.Name ? state.Name : '';
   }
+
+  public searchPaymentFormsByAutoComplete(): void {
+    this.acPaymentForms = this.myPaymentFormControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterPaymentForms(val || '')
+      })
+    )
+  }
+
+  public filterPaymentForms(val: string): Observable<any[]> {
+    return this.paymentFormsDispatcherService.getAll()
+      .pipe(
+        map(response => response.filter((paymentForm: { Name: string; ID: string }) => {
+          return paymentForm.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayStatePaymentForm(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
 }
 
 //DIALOG ADD SCHEDULE

@@ -1,6 +1,7 @@
 export class CompanyParameterModel {
-    public id: string = '';
+    public id!: string;
     public companyId: string = '';
+    public defaultPaymentFormId!: string | null;
     public applicationTimePerMinute: string = '';
     public maximumDaysBudgetValidity: string = '';
     public scheduleColor: string = '';
