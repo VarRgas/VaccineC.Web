@@ -13,7 +13,8 @@
 </div>
 
 <div id="search-table">
-    <mat-table [dataSource]="dataSource" class="col-sm-11">
+    <div class="col-sm-11 search-table-content mat-elevation-z2">
+    <mat-table [dataSource]="dataSource" class="col-sm-12">
 
         <ng-container matColumnDef="imageUrl">
             <mat-header-cell *matHeaderCellDef> Foto </mat-header-cell>
@@ -21,7 +22,7 @@
         </ng-container>
 
         <ng-container matColumnDef="pacient">
-            <mat-header-cell *matHeaderCellDef> Paciente </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef> Tomador </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.pacient}} </mat-cell>
         </ng-container>
 
@@ -33,4 +34,5 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
+</div>
 </div>

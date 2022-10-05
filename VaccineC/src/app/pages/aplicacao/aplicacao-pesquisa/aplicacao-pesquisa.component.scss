@@ -15,10 +15,6 @@
     border: none
 }
 
-:host ::ng-deep .mat-table {
-    border-radius: 0.75rem;
-    box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 10%), 0px 3px 4px 0px rgb(0 0 0 / 10%), 0px 1px 8px 0px rgb(0 0 0 / 10%);
-}
 
 :host ::ng-deep .mat-form-field-wrapper {
     padding: 0px;
@@ -33,3 +29,13 @@ img {
     width: 30px;
     height: 30px;
 }
+
+.mat-column-Select, .mat-column-imageUrl {
+    flex: 0 0 80px !important;
+    white-space: unset !important;
+  }
+  
+  .mat-cell-Select, .mat-cell-imageUrl {
+    flex: 0 0 80px !important;
+    white-space: unset !important;
+  }

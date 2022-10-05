@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Agendamento</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="authorizationForm">
+        <div class="div-row-input">
+            <mat-form-field appearance="fill" class="col-sm-5">
+                <mat-label>Data de Aplicação</mat-label>
+                <input matInput type="text" #AuthorizationDateFormatedInput formControlName="AuthorizationDateFormated" [(ngModel)]="authorizationDateFormated" required readonly>
+                <mat-icon matSuffix>today</mat-icon>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
+    <button mat-flat-button class="create-button" cdkFocusInitial>Agendar</button>
+</mat-dialog-actions>
