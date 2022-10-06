@@ -3,5 +3,6 @@ export class DiscardModel {
     public userId: string = '';
     public batch: string = '';
     public discardedUnits!: number | null;
+    public reason: string = '';
   }
   

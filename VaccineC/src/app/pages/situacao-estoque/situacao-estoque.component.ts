@@ -41,7 +41,7 @@ export class SituacaoEstoqueComponent implements OnInit {
   public dataSource3 = new MatTableDataSource<IBatch>();
 
   //Table Descartes
-  public displayedColumns4: string[] = ['Batch', 'User' ,'Register', 'DiscardedUnits', 'ID'];
+  public displayedColumns4: string[] = ['Batch', 'User' ,'Register', 'Reason','DiscardedUnits', 'ID'];
   public dataSource4 = new MatTableDataSource<IDiscard>();
 
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;

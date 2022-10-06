@@ -127,6 +127,7 @@
                                     </mat-form-field>
                                 </div>
                                 <div id="discard" *ngIf="isDiscardVisible">
+                                    <form [formGroup]="discardForm">
                                     <div class="div-row-input">
                                         <mat-form-field appearance="fill" class="col-sm-6">
                                             <mat-label>Lote</mat-label>
@@ -141,7 +142,9 @@
                                             </mat-autocomplete>
                                             <mat-icon matSuffix>search</mat-icon>
                                             <mat-hint align="end">{{ProductBatchHint}}</mat-hint>
-
+                                            <mat-error *ngIf="discardForm.controls.ProductSummaryBatchName.touched && discardForm.controls.ProductSummaryBatchName.invalid">
+                                                <span *ngIf="discardForm.controls.ProductSummaryBatchName.errors?.required">O Lote é obrigatório.</span>
+                                            </mat-error>
                                         </mat-form-field>
 
                                         <mat-form-field appearance="fill" class="col-sm-5">
@@ -149,6 +152,20 @@
                                             <input type="number" matInput #NumberOfUnitsBatchInput formControlName="NumberOfUnitsBatch" [(ngModel)]="NumberOfUnitsBatch" readonly>
                                         </mat-form-field>
                                     </div>
+                                    <div class="div-row-input">
+                                        <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
+                                            <mat-label>Motivo do Descarte</mat-label>
+                                            <textarea matInput #ReasonInput formControlName="Reason" [(ngModel)]="Reason" placeholder="Motivo do Descarte"></textarea>
+                                            <mat-hint align="end">{{ReasonInput.value?.length || 0}}/100</mat-hint>
+                                            <mat-error *ngIf="discardForm.controls.Reason.touched && discardForm.controls.Reason.invalid">
+                                                <span *ngIf="discardForm.controls.Reason.errors?.required">O Motivo é obrigatório.</span>
+                                                <span *ngIf="discardForm.controls.Reason.errors?.minlength">O Motivo deve ter no mínimo 5 caracteres.</span>
+                                                <span *ngIf="discardForm.controls.Reason.errors?.maxlength">O Motivo deve ter até 100 caracteres.</span>
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                    </div>
+                                </form>
                                 </div>
                                 <div id="tableProducts" class="mt-3 mb-4" *ngIf="isVisible">
                                     <div class="demo-button-container col-sm-11">

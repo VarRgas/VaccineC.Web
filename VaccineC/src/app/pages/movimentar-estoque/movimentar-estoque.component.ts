@@ -38,6 +38,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   public ProductSummaryBatchName!: string;
   public NumberOfUnitsBatch!: number | null;
   public ProductSummaryBatchId!: string;
+  public Reason!: string;
   public Batch!: string;
   public ProductBatchHint!: string;
 
@@ -78,14 +79,19 @@ export class MovimentarEstoqueComponent implements OnInit {
   //Controle de exibição dos IDs na Table
   public show: boolean = true;
 
-  //Form
+  //Movement Form
   movementForm: FormGroup = this.formBuilder.group({
     Id: [null],
     MovementType: [null, [Validators.required]],
     MovementNumber: [null],
-    Situation: [null],
-    ProductSummaryBatchName: [null],
-    NumberOfUnitsBatch: [null]
+    Situation: [null]
+  });
+
+  //Discard Form
+  discardForm: FormGroup = this.formBuilder.group({
+    ProductSummaryBatchName: [null, [Validators.required]],
+    NumberOfUnitsBatch: [null, [Validators.required]],
+    Reason: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(100)]]
   });
 
   constructor(
@@ -295,24 +301,28 @@ export class MovimentarEstoqueComponent implements OnInit {
   }
 
   discardBatch() {
+
+    if (!this.discardForm.valid) {
+      console.log(this.discardForm);
+      this.discardForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+      return;
+    }
+
     const dialogRef = this.dialog.open(ConfirmDiscardDialog);
 
     dialogRef.afterClosed()
       .subscribe(result => {
         if (!!result) {
+          
           this.discardButtonLoading = true;
-
-          if (this.ProductSummaryBatchName == "" || this.ProductSummaryBatchName == null || this.NumberOfUnitsBatch == 0 || this.NumberOfUnitsBatch == null) {
-            this.discardButtonLoading = false;
-            this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
-            return;
-          }
 
           let discard = new DiscardModel();
           discard.productSummaryBatchId = this.ProductSummaryBatchId;
           discard.userId = localStorage.getItem('userId')!;
           discard.discardedUnits = this.NumberOfUnitsBatch;
           discard.batch = this.Batch;
+          discard.reason = this.Reason;
 
           this.discardsDispatcherService.create(discard).subscribe(
             response => {
@@ -320,6 +330,7 @@ export class MovimentarEstoqueComponent implements OnInit {
               this.ProductSummaryBatchName = "";
               this.NumberOfUnitsBatch = null;
               this.ProductBatchHint = "";
+              this.Reason = "";
               this.messageHandler.showMessage(`Unidades do lote ${discard.batch} descartadas com sucesso!`, "success-snackbar");
             },
             error => {
@@ -496,6 +507,10 @@ export class MovimentarEstoqueComponent implements OnInit {
     this.movementForm.reset();
     this.movementForm.clearValidators();
     this.movementForm.updateValueAndValidity();
+
+    this.discardForm.reset();
+    this.discardForm.clearValidators();
+    this.discardForm.updateValueAndValidity();
 
     this.dataSourceMovementProduct = new MatTableDataSource();
     this.dataSourceMovementProduct.sort = this.sort;

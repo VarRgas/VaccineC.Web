@@ -4,5 +4,6 @@ export interface IDiscard {
     Batch: string;
     DiscardedUnits: number;
     Register: Date;
+    Reason: string;
   }
   

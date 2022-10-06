@@ -281,6 +281,15 @@
                                                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                                                 </ng-container>
 
+                                                <ng-container matColumnDef="Reason">
+                                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Motivo
+                                                    </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element">
+                                                        {{element.Reason}}
+                                                    </mat-cell>
+                                                    <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+                                                </ng-container>
+
                                                 <!-- Id Hidden Column -->
                                                 <ng-container matColumnDef="ID">
                                                     <mat-header-cell *matHeaderCellDef [hidden]="show"> ID
