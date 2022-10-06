@@ -285,7 +285,7 @@
                                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Motivo
                                                     </mat-header-cell>
                                                     <mat-cell *matCellDef="let element">
-                                                        {{element.Reason}}
+                                                        <div #tooltip="matTooltip" matTooltip="{{element.Reason}}" matTooltipPosition="right" matTooltipShowDelay="800">{{formatReason(element.Reason)}}</div>
                                                     </mat-cell>
                                                     <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                                                 </ng-container>

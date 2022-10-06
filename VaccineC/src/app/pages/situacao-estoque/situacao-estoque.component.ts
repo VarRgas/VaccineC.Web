@@ -41,7 +41,7 @@ export class SituacaoEstoqueComponent implements OnInit {
   public dataSource3 = new MatTableDataSource<IBatch>();
 
   //Table Descartes
-  public displayedColumns4: string[] = ['Batch', 'User' ,'Register', 'Reason','DiscardedUnits', 'ID'];
+  public displayedColumns4: string[] = ['Batch', 'User', 'Register', 'Reason', 'DiscardedUnits', 'ID'];
   public dataSource4 = new MatTableDataSource<IDiscard>();
 
   @ViewChild('paginatorExpiredBatch') paginatorExpiredBatch!: MatPaginator;
@@ -122,21 +122,21 @@ export class SituacaoEstoqueComponent implements OnInit {
         });
   }
 
-  public getDiscards(): void{
+  public getDiscards(): void {
     this.discardsDispatcherService.getAllDiscards()
-    .subscribe(
-      discards => {
-        console.log(discards)
-        this.dataSource4 = new MatTableDataSource(discards);
-        this.dataSource4.sort = this.sort;
-      },
-      error => {
-        console.log(error);
-        this.errorHandler.handleError(error);
-      });
+      .subscribe(
+        discards => {
+          console.log(discards)
+          this.dataSource4 = new MatTableDataSource(discards);
+          this.dataSource4.sort = this.sort;
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
   }
 
-  getTotalUnitsDiscarded(){
+  getTotalUnitsDiscarded() {
     return this.dataSource4.data.map(t => t.DiscardedUnits).reduce((acc, value) => acc + value, 0);
 
   }
@@ -251,6 +251,16 @@ export class SituacaoEstoqueComponent implements OnInit {
     }
 
     return response;
+  }
+
+  public formatReason(reason: string) {
+
+    if (reason.length > 20) {
+      return `${reason.substring(0, 20)}...`
+    } else {
+      return reason;
+    }
+
   }
 
 }
