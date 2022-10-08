@@ -28,6 +28,10 @@ export class CompaniesDispatcherService {
     return this.httpClient.get(`${baseURL}/${name}/GetByName`);
   }
 
+  public getCompanyConfigAuthorization(): Observable<any> {
+    return this.httpClient.get(`${baseURL}/GetCompanyConfig`);
+  }
+
   public createCompany(data: object): Observable<any> {
     return this.httpClient.post(`${baseURL}/Create`, data);
   }
@@ -39,4 +43,5 @@ export class CompaniesDispatcherService {
   public deleteCompany(id: string): Observable<any> {
     return this.httpClient.delete(`${baseURL}/${id}/Delete`);
   }
+
 }

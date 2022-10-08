@@ -42,11 +42,9 @@ export class ToolbarComponent implements OnInit {
       debounceTime(400),
       distinctUntilChanged(),
       switchMap(val => {
-        console.log(val)
         return this.filter(val || '')
       })
     )
-    console.log(this.filteredOptions)
   }
 
   ngOnInit(): void {

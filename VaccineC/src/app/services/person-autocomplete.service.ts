@@ -40,4 +40,10 @@ export class PersonAutocompleteService {
             of(this.opts) :
             this.http.get<any>(`http://localhost:5000/api/Persons/GetAllCompanyAutocomplete`).pipe(tap(data => this.opts = data))
     }
+
+    getPersonAuthorizationAutocomplete() {
+        return this.opts.length ?
+            of(this.opts) :
+            this.http.get<any>(`http://localhost:5000/api/Persons/GetAllAuthorizationAutocomplete`).pipe(tap(data => this.opts = data))
+    }
 }

@@ -1,11 +1,53 @@
-<h2 mat-dialog-title>Agendamento</h2>
+<div mat-dialog-title class="d-flex justify-content-between">
+    <div mat-dialog-title>Agendamento</div>
+    <div title="Data de Agendamento" style="color:#858796;font-size: 13px;"><i class="fa-solid fa-calendar me-2"></i>{{authorizationDateFormated}}</div>
+</div>
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="authorizationForm">
-        <div class="div-row-input">
+        <div class="div-row-input d-flex mb-3" style="align-items:center;justify-content: center;">
+            <div>
+                <div *ngIf="!profilePicExhibition" id="profilePicExhibition" style="background-image: url(../../../assets/img/default-profile-pic.png); width: 140px; height: 140px; background-size: cover; background-position: top center; border-radius: 50%; margin-right: 1.5rem; margin-left: 0.75rem;">
+                </div>
+                <img id="profilePicExhibition" *ngIf="profilePicExhibition" src="{{profilePicExhibition}}" alt="foto de perfil" style="background-image: url(../../../assets/img/default-profile-pic.png); width: 140px; height: 140px; background-size: cover; background-position: top center; border-radius: 50%; margin-right: 1.5rem; margin-left: 0.75rem;">
+            </div>
+            <div class="col-sm-9" style="border-left-color: var(--cor-produto); border-radius: 3px; border-width: 0px 0px 0px 3px; border-style: solid; padding-left: 1.5em;">
+                <mat-form-field appearance="fill" class="col-sm-12 person-field" style="padding-right:0px">
+                    <mat-label>Pessoa</mat-label>
+                    <input (click)="searchPersonByAutoComplete()" type="text" #PersonIdinput placeholder="Selecione a Pessoa" aria-label="Number" matInput formControlName="PersonId" [matAutocomplete]="autoPerson" [(ngModel)]="personId" required>
+                    <mat-autocomplete #autoPerson="matAutocomplete" [displayWith]="displayStatePerson" (optionSelected)="onSelectionChanged($event)">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                            {{option.Name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <div style="padding-left: 1.2em;" *ngIf="personPrincipalInfoVisible">
+                    <div class="mt-2"><i class="fa-solid fa-location-dot me-2 cor-produto"></i>{{personPrincipalAddress}}</div>
+                    <div class="mt-2"><i class="fa-solid fa-phone me-2 cor-produto"></i>{{personPrincipalPhone}}</div>
+                </div>
+                <mat-divider class="mt-3" *ngIf="personPrincipalInfoVisible"></mat-divider>
+            </div>
+        </div>
+        <div class="div-row-input d-flex mb-3 mt-5" style="margin-left:1rem;" *ngIf="personPrincipalInfoVisible">
+            
+            <mat-form-field appearance="fill" class="col-sm-7">
+                <mat-label>Orçamento</mat-label>
+                <input (click)="searchBudgetByAutoComplete()" type="text" #BudgetIdinput placeholder="Selecione o Orçamento" aria-label="Number" matInput formControlName="BudgetId" [matAutocomplete]="autoBudget" [(ngModel)]="budgetId" required>
+                <mat-autocomplete #autoBudget="matAutocomplete" [displayWith]="displayStateBudget">
+                    <mat-option style="height:50px;line-height: 20px;" *ngFor="let budget of filteredBudgets | async" [value]="budget" multiLineOption>
+                        <div matLine>{{budget.BudgetNumber}}</div>
+                        <div class="small-text" matLine>{{budget.Persons.Name}} - {{budget.Register | date: 'dd/MM/yyyy'}}</div>
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+            
             <mat-form-field appearance="fill" class="col-sm-5">
-                <mat-label>Data de Aplicação</mat-label>
-                <input matInput type="text" #AuthorizationDateFormatedInput formControlName="AuthorizationDateFormated" [(ngModel)]="authorizationDateFormated" required readonly>
-                <mat-icon matSuffix>today</mat-icon>
+                <mat-label>Forma de Aplicação</mat-label>
+                <mat-select formControlName="TypeOfService" #TypeOfServiceInput [(ngModel)]="typeOfService" required>
+                    <mat-option value="C">NA CLÍNICA</mat-option>
+                    <mat-option value="D">A DOMICÍLIO</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
     </form>

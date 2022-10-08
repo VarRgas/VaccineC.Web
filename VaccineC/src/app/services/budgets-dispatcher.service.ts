@@ -9,7 +9,8 @@ const baseURL = 'http://localhost:5000/api/Budgets';
 })
 
 export class BudgetsDispatcherService {
-    constructor(private httpClient: HttpClient) { }
+    
+  constructor(private httpClient: HttpClient) { }
 
     public getAllBudgets(): Observable<any> {
         return this.httpClient.get(baseURL);
@@ -17,6 +18,10 @@ export class BudgetsDispatcherService {
 
     public getBudgetsByPersonName(personName: string): Observable<any> {
       return this.httpClient.get(`${baseURL}/${personName}/GetByPersonName`);
+    }
+
+    public getBudgetsByBorrower(borrowerId: string): Observable<any> {
+      return this.httpClient.get(`${baseURL}/${borrowerId}/GetAllByBorrower`);
     }
 
     public getBudgetById(id: string): Observable<any> {

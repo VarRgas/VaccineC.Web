@@ -7,7 +7,8 @@ export const INITIAL_EVENTS: EventInput[] = [
   {
     id: createEventId(),
     title: 'Evento Exemplo',
-    start: TODAY_STR + 'T12:00:00'
+    start: TODAY_STR + 'T12:00:00',
+    end: TODAY_STR + 'T12:10:00'
   }
 ];
 

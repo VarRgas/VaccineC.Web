@@ -94,7 +94,7 @@ select[readonly] {
   border: none
 }
 
-.search-table{
+.search-table {
   display: flex;
   justify-content: center;
   overflow-x: initial;
@@ -175,7 +175,7 @@ html {
   }
 }
 
-.example-snack-bar-message{
+.example-snack-bar-message {
   font-size: 14px !important;
 }
 
@@ -205,6 +205,19 @@ tr.hover-element-row:not(.example-expanded-row):active {
   background: #efefef !important;
 }
 
-:host ::ng-deep.mat-spinner{
+:host ::ng-deep.mat-spinner {
   margin-right: 0.2rem !important;
+}
+
+
+.fc-scrollgrid {
+  z-index: 10;
+  border-radius: 10px;
+  border-collapse: separate !important;
+  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%) !important;
+  margin-bottom: 1rem !important;
+}
+
+.fc-scrollgrid th {
+  border-top-right-radius: 10px;
 }
