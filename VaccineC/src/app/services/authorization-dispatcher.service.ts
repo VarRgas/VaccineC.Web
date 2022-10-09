@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthorizationModel } from '../models/authorization-model';
 
 const baseURL = 'http://localhost:5000/api/Authorizations';
 
@@ -22,4 +23,8 @@ export class AuthorizationsDispatcherService {
     public GetSummarySituationAuthorization(): Observable<any> {
         return this.httpClient.get(`${baseURL}/GetSummarySituationAuthorization`);
     }
+
+    public createOnDemand(data: AuthorizationModel[]): Observable<any> {
+        return this.httpClient.post(`${baseURL}/CreateOnDemand`, data);
+      }
 }

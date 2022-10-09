@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
@@ -28,6 +28,14 @@ import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
 import { MatSidenav } from '@angular/material/sidenav';
+import { BudgetsProductsDispatcherService } from 'src/app/services/budgets-products-dispatcher.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { IBudgetProduct } from 'src/app/interfaces/i-budget-product';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { EventModel } from 'src/app/models/event-model';
+import { AuthorizationModel } from 'src/app/models/authorization-model';
+import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 
 defineFullCalendarElement()
 
@@ -37,14 +45,8 @@ defineFullCalendarElement()
   styleUrls: ['./agendamento.component.scss']
 })
 export class AgendamentoComponent implements OnInit {
-  @ViewChild('sidenav') sidenav!: MatSidenav;
 
   reason = '';
-
-  close(reason: string) {
-    this.reason = reason;
-    this.sidenav.close();
-  }
 
   @ViewChild('calendar') calendarRef!: ElementRef<FullCalendarElement>;
 
@@ -55,15 +57,25 @@ export class AgendamentoComponent implements OnInit {
   public slotDuration!: Duration | DurationInput;
   public slotLabelInterval!: Duration | DurationInput;
   public events: EventInput[] = [];
+  public eventTitle!: string;
+
+  public formatEventTitle(title: string): string {
+
+    if (title.length > 19) {
+      title = `${title.substring(0, 16)}...`;
+    }
+    return title.toUpperCase();
+  }
+
   ngOnInit(): void {
 
     this.eventsDispatcherService.getAllEvents().subscribe(
       events => {
         events.forEach((event: any) => {
-
+          this.eventTitle = event.Info;
           let fullCalendarEvent = {
             id: event.ID,
-            title: 'teste',
+            title: this.formatEventTitle(event.Info),
             start: this.formatDate(event.StartDate, event.StartTime),
             end: this.formatDate(event.EndDate, event.EndTime)
           }
@@ -128,6 +140,10 @@ export class AgendamentoComponent implements OnInit {
     selectMirror: true,
     dayMaxEvents: true,
     contentHeight: "auto",
+    eventDidMount: function (info) {
+      info.el.title = `(${info.timeText}) ${info.event._def.title}`;
+    },
+    nowIndicator: true,
 
 
     select: this.handleDateSelect.bind(this),
@@ -189,12 +205,8 @@ export class AgendamentoComponent implements OnInit {
       width: '60vw',
       data: {
         Start: selectInfo.start,
-        End: selectInfo.end
+        End: selectInfo.end,
       },
-    });
-
-    this.dialogRef.afterClosed().subscribe(result => {
-
     });
 
     /*
@@ -250,6 +262,8 @@ export class AddAuthorizationDialog implements OnInit {
   public personPrincipalAddress!: string;
   public typeOfService!: string;
   public budgetId!: string;
+  public ApplicationDate!: any;
+  public notify!: boolean;
 
   public personPrincipalInfoVisible = false;
 
@@ -263,6 +277,12 @@ export class AddAuthorizationDialog implements OnInit {
   public acBudgets: string[] = [];
   public filteredBudgets: Observable<any[]> | undefined;
 
+
+  //Table Produtos
+  public displayedColumnsBudgetProduct: string[] = ['select', 'ProductName', 'ProductDose', 'ApplicationDate', 'toggle', 'ID'];
+  public dataSourceBudgetProduct = new MatTableDataSource<IBudgetProduct>();
+  selection = new SelectionModel<IBudgetProduct>(true, []);
+
   ngOnInit(): void {
     this.authorizationDateFormated = `${this.formatDate(new Date(this.data.Start))} - ${this.formatHour(new Date(this.data.Start))} até ${this.formatHour(new Date(this.data.End))}`;
     this.startDate = this.data.Start;
@@ -275,6 +295,11 @@ export class AddAuthorizationDialog implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private personAutocompleteService: PersonAutocompleteService,
     private budgetsDispatcherService: BudgetsDispatcherService,
+    private budgetsProductsDispatcherService: BudgetsProductsDispatcherService,
+    private authorizationDispatcherService: AuthorizationsDispatcherService,
+    private cdRef: ChangeDetectorRef,
+    private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddAuthorizationDialog>
   ) { }
@@ -284,8 +309,33 @@ export class AddAuthorizationDialog implements OnInit {
     AuthorizationDateFormated: [null],
     PersonId: [null],
     TypeOfService: [null],
-    BudgetId: [null]
+    BudgetId: [null],
+    ApplicationDate: [null],
+    Notify: [null]
   });
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSourceBudgetProduct.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSourceBudgetProduct.data);
+  }
+
+  checkboxLabel(row?: IBudgetProduct): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.BudgetId + 1}`;
+  }
+
 
   public formatDate(date: Date) {
     return [
@@ -357,6 +407,13 @@ export class AddAuthorizationDialog implements OnInit {
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
 
+    this.budgetId = "";
+    this.typeOfService = "";
+
+    this.authorizationForm.clearValidators();
+    this.authorizationForm.updateValueAndValidity();
+    this.dataSourceBudgetProduct = new MatTableDataSource();
+
     this.treatProfilePicExhibition(event.option.value.ProfilePic)
     this.personBorrowerId = event.option.value.ID;
     if (event.option.value.PersonPrincipalPhone != null) {
@@ -381,6 +438,101 @@ export class AddAuthorizationDialog implements OnInit {
     } else {
       this.profilePicExhibition = `${this.imagePathUrlDefault}`;
     }
+
+  }
+
+  onSelectionBudgetChanged(event: MatAutocompleteSelectedEvent) {
+    this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByBorrower(event.option.value.ID, this.authorizationForm.value.PersonId.ID).subscribe(
+      response => {
+        if (response.length > 0) {
+
+          /*
+          let tzoffset = (new Date()).getTimezoneOffset() * 60000;
+          response[0].ApplicationDate = (new Date(this.startDate.getTime() - tzoffset).toISOString().slice(0, 16));
+          this.dataSourceBudgetProduct = new MatTableDataSource(response);
+          this.cdRef.detectChanges();
+          */
+
+        }
+        this.dataSourceBudgetProduct = new MatTableDataSource(response);
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  public resolveExibitionDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "DOSE ÚNICA"
+    } else if (doseType == "D1") {
+      return "DOSE 1"
+    } else if (doseType == "D2") {
+      return "DOSE 2"
+    } else if (doseType == "D3") {
+      return "DOSE 3"
+    } else if (doseType == "DR") {
+      return "DOSE DE REFORÇO"
+    } else {
+      return ""
+    }
+  }
+
+  updateActiveStatus(element: any) {
+    element.activate = !element.activate;
+  }
+
+  public addAuthorization() {
+
+    if (!this.authorizationForm.valid) {
+      console.log(this.authorizationForm);
+      this.authorizationForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+      return;
+    }
+
+    if (this.selection.selected.length == 0 && this.dataSourceBudgetProduct.data.length != 0) {
+      this.messageHandler.showMessage("É necessário selecionar ao menos um Produto para agendar!", "warning-snackbar")
+      return;
+    }
+
+    let listAuthorizationModel = new Array<AuthorizationModel>();
+
+    this.selection.selected.forEach((register: any) => {
+      console.log(register);
+      let startTime = this.formatHour(new Date(register.ApplicationDate));
+      let startDate = new Date(register.ApplicationDate);
+      startDate.setHours(0, 0, 0, 0);
+
+      let eventModel = new EventModel();
+      eventModel.StartDate = startDate;
+      eventModel.StartTime = startTime;
+      eventModel.Concluded = "N";
+      eventModel.Situation = "A";
+      eventModel.UserId = localStorage.getItem('userId')!;
+
+      let authorizationModel = new AuthorizationModel();
+      authorizationModel.UserId = localStorage.getItem('userId')!;
+      authorizationModel.AuthorizationDate = new Date();
+      authorizationModel.BorrowerPersonId = this.authorizationForm.value.PersonId.ID;
+      authorizationModel.Situation = "C";
+      authorizationModel.TypeOfService = this.typeOfService;
+      authorizationModel.Notify = register.Notify == true ? "S" : "N"
+      authorizationModel.BudgetProductId = register.ID;
+      authorizationModel.Event = eventModel;
+      listAuthorizationModel.push(authorizationModel);
+    });
+
+    console.log(listAuthorizationModel);
+
+    this.authorizationDispatcherService.createOnDemand(listAuthorizationModel).subscribe(
+      response => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      }, error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
 
   }
 }

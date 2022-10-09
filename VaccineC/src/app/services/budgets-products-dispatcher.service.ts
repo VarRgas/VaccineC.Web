@@ -25,6 +25,10 @@ export class BudgetsProductsDispatcherService {
         return this.httpClient.get(`${baseURL}/${budgetId}/GetBudgetsProductsByBudget`);
     }
 
+    public GetAllPendingBudgetsProductsByBorrower(budgetId: string, borrowerId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${budgetId}/${borrowerId}/GetAllPendingBudgetsProductsByBorrower`);
+    }
+
     public createBudgetProduct(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }

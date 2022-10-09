@@ -7,6 +7,8 @@ export interface IBudgetProduct {
     Details: string,
     EstimatedSalesValue: number,
     SituationProduct: string,
-    Register: Date
+    Register: Date,
+    ApplicationDate: Date,
+    Notify: string
   }
   

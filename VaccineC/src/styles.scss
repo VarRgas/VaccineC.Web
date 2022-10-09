@@ -221,3 +221,7 @@ tr.hover-element-row:not(.example-expanded-row):active {
 .fc-scrollgrid th {
   border-top-right-radius: 10px;
 }
+
+:host ::ng-deep.mat-drawer {
+  z-index: 10000000000000000 !important;
+}
