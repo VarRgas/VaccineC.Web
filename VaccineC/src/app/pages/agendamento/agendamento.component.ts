@@ -62,7 +62,7 @@ export class AgendamentoComponent implements OnInit {
   public formatEventTitle(title: string): string {
 
     if (title.length > 19) {
-      title = `${title.substring(0, 16)}...`;
+      title = `${title.substring(0, 18)}...`;
     }
     return title.toUpperCase();
   }
@@ -144,8 +144,9 @@ export class AgendamentoComponent implements OnInit {
       info.el.title = `(${info.timeText}) ${info.event._def.title}`;
     },
     nowIndicator: true,
-
-
+    eventStartEditable: false,
+    expandRows: true,
+    eventDurationEditable: false,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this)
@@ -535,4 +536,18 @@ export class AddAuthorizationDialog implements OnInit {
       });
 
   }
+}
+
+
+//DIALOG UPDATE AUTHORIZATION
+@Component({
+  selector: 'update-authorization-dialog',
+  templateUrl: 'update-authorization-dialog.html',
+})
+export class UpdateAuthorizationDialog implements OnInit {
+  
+  ngOnInit(): void {
+   
+  }
+
 }
