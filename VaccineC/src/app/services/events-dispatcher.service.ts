@@ -16,6 +16,10 @@ export class EventsDispatcherService {
         return this.httpClient.get(baseURL);
     }
 
+    public getAllEventsActive(): Observable<any> {
+        return this.httpClient.get(`${baseURL}/GetAllActive`);
+    }
+
     public getEventById(id: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${id}`);
     }

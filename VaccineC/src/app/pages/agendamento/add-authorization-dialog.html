@@ -43,12 +43,16 @@
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
                 <div style="padding-left: 1.2em;" *ngIf="personPrincipalInfoVisible">
+                    <div class="mt-2" title="Aniversário" widt>
+                        <i class="fa-solid fa-cake-candles me-2 cor-produto" style="width:15px"></i>
+                        {{personBirthday}}
+                    </div>
                     <div class="mt-2" title="Endereço Principal">
-                        <i class="fa-solid fa-location-dot me-2 cor-produto"></i>
+                        <i class="fa-solid fa-location-dot me-2 cor-produto" style="width:15px"></i>
                         {{personPrincipalAddress}}
                     </div>
                     <div class="mt-2" title="Telefone Principal">
-                        <i class="fa-solid fa-phone me-2 cor-produto"></i>
+                        <i class="fa-solid fa-phone me-2 cor-produto" style="width:15px"></i>
                         {{personPrincipalPhone}}
                     </div>
                 </div>

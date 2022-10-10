@@ -1,0 +1,166 @@
+<style>
+    .situation-finalized {
+        color: #198754;
+        opacity: 0.5;
+    }
+
+    .situation-canceled {
+        color: #dc3545;
+        opacity: 0.5;
+    }
+
+    .situation-pending {
+        color: #ffc107;
+        opacity: 0.5;
+    }
+
+    .search-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 2rem;
+}
+
+.search-table-content {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+:host ::ng-deep .search-group .mat-form-field-wrapper {
+  padding: 0px;
+}
+
+:host ::ng-deep.mat-spinner{
+  margin-right: 0.2rem !important;
+}
+
+.mat-button-entry {
+  margin-bottom: 0px !important;
+  align-self: center !important;
+}
+
+form {
+  width: 100% !important;
+}
+
+.spinner-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-container {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 0px !important;
+  align-self: center !important;
+}
+
+.spinner{
+  display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+:host ::ng-deep .mat-chip {
+  font-size: 12px !important;
+  color: #858796 !important;
+}
+
+</style>
+
+<h2 mat-dialog-title>Buscar Agendamentos</h2>
+<mat-dialog-content class="mat-typography" style="max-height: initial;">
+    <div class="search-group">
+        <div class="col-sm-11 p-0 d-flex">
+            <mat-form-field class="search-form-field col-sm-10" appearance="outline">
+                <mat-label>Digite o nº da Autorização ou o nome do Tomador</mat-label>
+                <input matInput type="text" [(ngModel)]="searchAuth">
+            </mat-form-field>
+            <button (click)="loadAuthData()" id="mat-search-button" mat-raised-button
+                color="primary" class="mat-button-entry me-2" [disabled]="searchButtonLoading">
+                <div class="spinner">
+                    <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
+                    <span *ngIf="!searchButtonLoading"
+                        class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
+                    Pesquisar
+                </div>
+            </button>
+        </div>
+    </div>
+    <div id="search-table">
+        <div class="col-sm-11 search-table-content mat-elevation-z2">
+            <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
+                matSortDirection="asc">
+
+                <!-- Date Column -->
+                <ng-container matColumnDef="Date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+                    <td mat-cell *matCellDef="let row"> {{row.Event.StartDate | date: 'dd/MM/yyyy'}} às
+                        {{row.Event.StartTime}}</td>
+                </ng-container>
+
+                <!-- AuthorizationNumber Column -->
+                <ng-container matColumnDef="AuthorizationNumber">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Autorização </th>
+                    <td mat-cell *matCellDef="let row"> 
+                        {{treatAuthSituation(row.Situation)}}
+                        <div>
+                            <span title="{{authSituationTitle}}" class="me-2 fa-solid fa-circle {{authSituation}}"></span>
+                            <span>{{row.AuthorizationNumber}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Borrower Column -->
+                <ng-container matColumnDef="Borrower">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tomador </th>
+                    <td mat-cell *matCellDef="let row"> {{row.Person.Name}} </td>
+                </ng-container>
+
+                <!-- Product Column -->
+                <ng-container matColumnDef="Product">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Produto </th>
+                    <td mat-cell *matCellDef="let row"> {{row.BudgetProduct.Product.Name}} </td>
+                </ng-container>
+
+                <!-- Id Hidden Column -->
+                <ng-container matColumnDef="ID">
+                    <th mat-header-cell hidden *matHeaderCellDef mat-sort-header> ID </th>
+                    <td mat-cell hidden *matCellDef="let row"> {{row.ID}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Options">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button mat-icon-button color="primary" title="Visualizar">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr class="hover-element-row" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="5">Nenhum registro encontrado.</td>
+                </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 15, 100]"></mat-paginator>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Voltar</button>
+</mat-dialog-actions>

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
@@ -13,7 +13,7 @@ import {
 } from '@fullcalendar/web-component';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, { ThirdPartyDraggable } from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import { INITIAL_EVENTS } from './event-utils';
 import brLocale from '@fullcalendar/core/locales/pt-br';
@@ -37,6 +37,9 @@ import { EventModel } from 'src/app/models/event-model';
 import { AuthorizationModel } from 'src/app/models/authorization-model';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { AuthorizationUpdateModel } from 'src/app/models/authorization-update-model';
+import { IAuthorization } from 'src/app/interfaces/i-authorization';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 defineFullCalendarElement()
 
@@ -70,7 +73,15 @@ export class AgendamentoComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.eventsDispatcherService.getAllEvents().subscribe(
+    setTimeout(() => {
+      const button = document.getElementsByClassName('fc-myCustomButton-button')[0];
+
+      button?.addEventListener('click', (event) => {
+        this.openSearchAuthorizationDialog();
+      });
+    }, 500);
+
+    this.eventsDispatcherService.getAllEventsActive().subscribe(
       events => {
         events.forEach((event: any) => {
           this.eventTitle = event.Info;
@@ -105,7 +116,8 @@ export class AgendamentoComponent implements OnInit {
         console.log(error);
         this.calendarVisible = false;
       });
-    ;
+
+
   }
 
   constructor(
@@ -117,9 +129,10 @@ export class AgendamentoComponent implements OnInit {
 
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
+
     plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,next today myCustomButton',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
@@ -133,6 +146,15 @@ export class AgendamentoComponent implements OnInit {
       minute: '2-digit',
       hour12: false
     },
+    customButtons: {
+      myCustomButton: {
+
+        text: 'Buscar',
+        click: function () {
+
+        }
+      }
+    },
     locale: brLocale,
     allDaySlot: false,
     initialView: 'timeGridWeek',
@@ -143,8 +165,15 @@ export class AgendamentoComponent implements OnInit {
     dayMaxEvents: true,
     contentHeight: "auto",
     eventDidMount: function (info) {
-      console.log(info)
       info.el.title = `(${info.timeText}) ${info.event._def.extendedProps.description}`;
+    },
+    views: {
+      dayGridMonth: {
+        selectable: false
+      },
+      timeGrid: {
+        selectable: true
+      }
     },
     nowIndicator: true,
     eventStartEditable: false,
@@ -152,16 +181,24 @@ export class AgendamentoComponent implements OnInit {
     eventDurationEditable: false,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this)
+    eventsSet: this.handleEvents.bind(this),
     /* you can update a remote database when these fire:
     eventAdd:
     eventChange:
     eventRemove:
     */
+
   };
   currentEvents: EventApi[] = [
 
   ];
+
+  public openSearchAuthorizationDialog() {
+    this.dialogRef = this.dialog.open(SearchAuthorizationDialog, {
+      disableClose: true,
+      width: '80vw',
+    });
+  }
 
   handleInfo() {
     this.calendarOptions = {
@@ -175,7 +212,7 @@ export class AgendamentoComponent implements OnInit {
   }
 
   public getEvents(): any {
-    this.eventsDispatcherService.getAllEvents().subscribe(
+    this.eventsDispatcherService.getAllEventsActive().subscribe(
       events => {
 
         events.forEach((event: any) => {
@@ -273,6 +310,7 @@ export class AddAuthorizationDialog implements OnInit {
   public budgetId!: string;
   public ApplicationDate!: any;
   public notify!: boolean;
+  public personBirthday!: string;
 
   public personPrincipalInfoVisible = false;
 
@@ -413,7 +451,7 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
-
+    console.log(event.option.value)
     this.budgetId = "";
     this.typeOfService = "";
 
@@ -434,7 +472,7 @@ export class AddAuthorizationDialog implements OnInit {
     } else {
       this.personPrincipalAddress = `Não informado`;
     }
-
+    this.treatBirthdayExhibition(event.option.value.CommemorativeDate, event.option.value.PersonType);
     this.personPrincipalInfoVisible = true;
   }
 
@@ -529,8 +567,6 @@ export class AddAuthorizationDialog implements OnInit {
       listAuthorizationModel.push(authorizationModel);
     });
 
-    console.log(listAuthorizationModel);
-
     this.authorizationDispatcherService.createOnDemand(listAuthorizationModel).subscribe(
       response => {
         setTimeout(() => {
@@ -541,6 +577,20 @@ export class AddAuthorizationDialog implements OnInit {
         this.errorHandler.handleError(error);
       });
 
+  }
+
+  public treatBirthdayExhibition(commemorativeDate: Date, personType: string) {
+    if (personType == "J") {
+      this.personBirthday = `${this.formatDate(new Date(commemorativeDate))}`;
+    } else {
+      this.personBirthday = `${this.formatDate(new Date(commemorativeDate))} - ${this.getPersonAge(commemorativeDate)} anos`;
+    }
+  }
+
+  public getPersonAge(commemorativeDate: Date) {
+    const bdate = new Date(commemorativeDate);
+    const timeDiff = Math.abs(Date.now() - bdate.getTime());
+    return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
   }
 }
 
@@ -561,6 +611,7 @@ export class UpdateAuthorizationDialog implements OnInit {
   public personName!: string;
   public personPrincipalAddress!: string;
   public personPrincipalPhone!: string;
+  public personBirthday!: string;
   public budgetNumber!: number;
   public typeOfService!: string;
   public product!: string;
@@ -612,7 +663,7 @@ export class UpdateAuthorizationDialog implements OnInit {
         this.notifyInformation = authorization.Notify == "S" ? "Notificação por SMS ativada" : "Notificação por SMS desativada";
         this.authorizationNumber = authorization.AuthorizationNumber;
         this.budgetNumber = authorization.BudgetProduct.Budget.BudgetNumber;
-
+        this.treatBirthdayExhibition(authorization.Person.CommemorativeDate)
         this.treatAuthDateExhibition(authorization.Event.StartDate, authorization.Event.StartTime);
 
       },
@@ -647,7 +698,7 @@ export class UpdateAuthorizationDialog implements OnInit {
   public cancelAuthorization() {
 
     const dialogRef = this.dialog.open(ConfirmCancelAuthorizationDialog);
-    
+
     dialogRef.afterClosed()
       .subscribe(result => {
         if (!!result) {
@@ -663,7 +714,7 @@ export class UpdateAuthorizationDialog implements OnInit {
             });
         }
       });
-    
+
   }
 
   public treatProfilePicExhibition(profilePic: string): void {
@@ -698,6 +749,29 @@ export class UpdateAuthorizationDialog implements OnInit {
 
   }
 
+  public treatBirthdayExhibition(commemorativeDate: Date) {
+    this.personBirthday = `${this.formatDate(new Date(commemorativeDate))} - ${this.getPersonAge(commemorativeDate)} anos`;
+  }
+
+  public formatDate(date: Date) {
+    return [
+      this.padTo2Digits(date.getDate()),
+      this.padTo2Digits(date.getMonth() + 1),
+      date.getFullYear(),
+    ].join('/');
+  }
+
+  public padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
+  public getPersonAge(commemorativeDate: Date) {
+    const bdate = new Date(commemorativeDate);
+    const timeDiff = Math.abs(Date.now() - bdate.getTime());
+    return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
+  }
+
+
   public resolveExibitionDoseType(doseType: string) {
     if (doseType == "DU") {
       return "DOSE ÚNICA"
@@ -724,8 +798,6 @@ export class UpdateAuthorizationDialog implements OnInit {
 
 }
 
-
-
 //DIALOG CONFIRM CANCEL AUTHORIZATION
 @Component({
   selector: 'confirm-cancel-authorization-dialog',
@@ -735,4 +807,107 @@ export class ConfirmCancelAuthorizationDialog implements OnInit {
   ngOnInit(): void {
 
   }
+}
+
+//DIALOG SEARCH AUTHORIZATION
+@Component({
+  selector: 'search-authorization-dialog',
+  templateUrl: 'search-authorization-dialog.html',
+})
+export class SearchAuthorizationDialog implements OnInit {
+
+  //Table
+  public value = '';
+  public displayedColumns: string[] = ['AuthorizationNumber', 'Date', 'Borrower', 'Product', 'ID', 'Options'];
+  public dataSource = new MatTableDataSource<IAuthorization>();
+
+  public authSituation!: string;
+  public authSituationTitle!: string;
+
+  //Controle para o spinner do button
+  public searchButtonLoading = false;
+
+  //Variáveis dos inputs
+  public searchAuth!: string;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<UpdateAuthorizationDialog>,
+    private authorizationsDispatcherService: AuthorizationsDispatcherService,
+    private eventsDispatcherService: EventsDispatcherService,
+    private errorHandler: ErrorHandlerService,
+    public dialog: MatDialog
+  ) { }
+
+  ngOnInit(): void {
+
+  }
+  
+  public loadAuthData(){
+    this.searchButtonLoading = true;
+
+    if (this.searchAuth == "" || this.searchAuth == null || this.searchAuth == undefined) {
+      this.getAllAuth();
+    } else {
+      this.getAuthByParameter();
+    }
+  }
+
+  public getAllAuth(){
+    this.authorizationsDispatcherService.getAllAuthorizations().subscribe(
+      response => {
+        console.log(response)
+        this.dataSource = new MatTableDataSource(response);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        this.searchButtonLoading = false;
+      },
+      error => {
+        this.errorHandler.handleError(error);
+        console.log(error);
+
+        this.searchButtonLoading = false;
+      });
+  }
+
+  public getAuthByParameter(){
+    this.authorizationsDispatcherService.getAuthorizationByParameter(this.searchAuth).subscribe(
+      response => {
+        console.log(response)
+        this.dataSource = new MatTableDataSource(response);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        this.searchButtonLoading = false;
+      },
+      error => {
+        this.errorHandler.handleError(error);
+        console.log(error);
+
+        this.searchButtonLoading = false;
+      });
+  }
+
+  public treatAuthSituation(situation: string) {
+
+    if (situation == "C") {
+      this.authSituation = 'situation-pending'
+      this.authSituationTitle = 'Confirmado'
+    } else if (situation == "P") {
+      this.authSituation = 'situation-finalized'
+      this.authSituationTitle = 'Aplicado'
+    } else if (situation == "X") {
+      this.authSituation = 'situation-canceled'
+      this.authSituationTitle = 'Cancelado'
+    } else {
+      this.authSituation = ''
+      this.authSituationTitle = ''
+    }
+  }
+
 }

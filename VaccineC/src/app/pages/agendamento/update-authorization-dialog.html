@@ -14,12 +14,16 @@
                     <input matInput #PersonNameinput formControlName="PersonName" [(ngModel)]="personName" readonly>
                 </mat-form-field>
                 <div style="padding-left: 1.2em;" >
+                    <div class="mt-2" title="Aniversário">
+                        <i class="fa-solid fa-cake-candles me-2 cor-produto" style="width:15px"></i>
+                        {{personBirthday}}
+                    </div>
                     <div class="mt-2" title="Endereço Principal">
-                        <i class="fa-solid fa-location-dot me-2 cor-produto"></i>
+                        <i class="fa-solid fa-location-dot me-2 cor-produto" style="width:15px"></i>
                         {{personPrincipalAddress}}
                     </div>
                     <div class="mt-2" title="Telefone Principal">
-                        <i class="fa-solid fa-phone me-2 cor-produto"></i>
+                        <i class="fa-solid fa-phone me-2 cor-produto" style="width:15px"></i>
                         {{personPrincipalPhone}}
                     </div>
                 </div>
@@ -56,5 +60,5 @@
 <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Voltar</button>
     <button mat-flat-button  color="warn" (click)="cancelAuthorization()">Cancelar</button>
-    <button mat-flat-button class="create-button" (click)="updateAuthorization()">Salvar</button>
+    <button mat-flat-button class="create-button" (click)="updateAuthorization()">Reagendar</button>
 </mat-dialog-actions>
