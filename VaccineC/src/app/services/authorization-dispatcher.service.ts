@@ -20,11 +20,23 @@ export class AuthorizationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${id}`);
     }
 
+    public getAuthorizationByEventId(eventId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${eventId}/GetAuthorizationByEventId`);
+    }
+
     public GetSummarySituationAuthorization(): Observable<any> {
         return this.httpClient.get(`${baseURL}/GetSummarySituationAuthorization`);
     }
 
     public createOnDemand(data: AuthorizationModel[]): Observable<any> {
         return this.httpClient.post(`${baseURL}/CreateOnDemand`, data);
-      }
+    }
+
+    public update(id: string, data: object): Observable<any> {
+        return this.httpClient.put(`${baseURL}/${id}/Update`, data);
+    }
+
+    public delete(id: string): Observable<any> {
+        return this.httpClient.delete(`${baseURL}/${id}/Delete`);
+    }
 }

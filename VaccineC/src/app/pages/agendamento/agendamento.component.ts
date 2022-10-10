@@ -36,6 +36,7 @@ import { MessageHandlerService } from 'src/app/services/message-handler.service'
 import { EventModel } from 'src/app/models/event-model';
 import { AuthorizationModel } from 'src/app/models/authorization-model';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
+import { AuthorizationUpdateModel } from 'src/app/models/authorization-update-model';
 
 defineFullCalendarElement()
 
@@ -77,7 +78,8 @@ export class AgendamentoComponent implements OnInit {
             id: event.ID,
             title: this.formatEventTitle(event.Info),
             start: this.formatDate(event.StartDate, event.StartTime),
-            end: this.formatDate(event.EndDate, event.EndTime)
+            end: this.formatDate(event.EndDate, event.EndTime),
+            description: event.CompleteInfo
           }
           this.events.push(fullCalendarEvent);
         });
@@ -141,7 +143,8 @@ export class AgendamentoComponent implements OnInit {
     dayMaxEvents: true,
     contentHeight: "auto",
     eventDidMount: function (info) {
-      info.el.title = `(${info.timeText}) ${info.event._def.title}`;
+      console.log(info)
+      info.el.title = `(${info.timeText}) ${info.event._def.extendedProps.description}`;
     },
     nowIndicator: true,
     eventStartEditable: false,
@@ -174,7 +177,7 @@ export class AgendamentoComponent implements OnInit {
   public getEvents(): any {
     this.eventsDispatcherService.getAllEvents().subscribe(
       events => {
-        console.log(events)
+
         events.forEach((event: any) => {
 
           let fullCalendarEvent = {
@@ -228,9 +231,14 @@ export class AgendamentoComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Remover evento? '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
+    console.log(clickInfo.event._def.publicId)
+    this.dialogRef = this.dialog.open(UpdateAuthorizationDialog, {
+      disableClose: true,
+      width: '60vw',
+      data: {
+        Id: clickInfo.event._def.publicId
+      },
+    });
   }
 
   handleEvents(events: EventApi[]) {
@@ -278,7 +286,6 @@ export class AddAuthorizationDialog implements OnInit {
   public acBudgets: string[] = [];
   public filteredBudgets: Observable<any[]> | undefined;
 
-
   //Table Produtos
   public displayedColumnsBudgetProduct: string[] = ['select', 'ProductName', 'ProductDose', 'ApplicationDate', 'toggle', 'ID'];
   public dataSourceBudgetProduct = new MatTableDataSource<IBudgetProduct>();
@@ -298,7 +305,6 @@ export class AddAuthorizationDialog implements OnInit {
     private budgetsDispatcherService: BudgetsDispatcherService,
     private budgetsProductsDispatcherService: BudgetsProductsDispatcherService,
     private authorizationDispatcherService: AuthorizationsDispatcherService,
-    private cdRef: ChangeDetectorRef,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -529,7 +535,7 @@ export class AddAuthorizationDialog implements OnInit {
       response => {
         setTimeout(() => {
           window.location.reload();
-        }, 300);
+        }, 200);
       }, error => {
         console.log(error);
         this.errorHandler.handleError(error);
@@ -545,9 +551,188 @@ export class AddAuthorizationDialog implements OnInit {
   templateUrl: 'update-authorization-dialog.html',
 })
 export class UpdateAuthorizationDialog implements OnInit {
-  
+
+  public imagePathUrl = 'http://localhost:5000/';
+  public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
+
+  public eventId!: string;
+  public authorizationId!: string;
+  public profilePicExhibition!: string;
+  public personName!: string;
+  public personPrincipalAddress!: string;
+  public personPrincipalPhone!: string;
+  public budgetNumber!: number;
+  public typeOfService!: string;
+  public product!: string;
+  public notify!: string;
+  public authorizationNumber!: number;
+  public applicationDate!: string;
+  public notifyInformation!: string;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<UpdateAuthorizationDialog>,
+    private authorizationsDispatcherService: AuthorizationsDispatcherService,
+    private errorHandler: ErrorHandlerService,
+    public dialog: MatDialog
+  ) { }
+
   ngOnInit(): void {
-   
+    console.log(this.eventId)
+    this.eventId = this.data.Id;
+    console.log(this.eventId)
+    this.getAuthorizationByEventId();
   }
 
+  //Form
+  authorizationForm: FormGroup = this.formBuilder.group({
+    AuthorizationDateFormated: [null],
+    PersonName: [null],
+    PersonId: [null],
+    TypeOfService: [null],
+    BudgetId: [null],
+    ApplicationDate: [null],
+    Notify: [null],
+    BudgetNumber: [null],
+    Product: [null]
+  });
+
+  public getAuthorizationByEventId() {
+    this.authorizationsDispatcherService.getAuthorizationByEventId(this.eventId).subscribe(
+      authorization => {
+        console.log(authorization);
+        this.authorizationId = authorization.ID;
+        this.treatProfilePicExhibition(authorization.Person.ProfilePic);
+        this.treatPersonInfoExhibition(authorization.Person);
+        this.personName = authorization.Person.Name;
+        this.typeOfService = authorization.TypeOfService;
+        this.product = `${authorization.BudgetProduct.Product.Name} (${this.resolveExibitionDoseType(authorization.BudgetProduct.ProductDose)})`
+        this.notify = authorization.Notify;
+        this.notifyInformation = authorization.Notify == "S" ? "Notificação por SMS ativada" : "Notificação por SMS desativada";
+        this.authorizationNumber = authorization.AuthorizationNumber;
+        this.budgetNumber = authorization.BudgetProduct.Budget.BudgetNumber;
+
+        this.treatAuthDateExhibition(authorization.Event.StartDate, authorization.Event.StartTime);
+
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  public updateAuthorization() {
+
+    let authorizationUpdate = new AuthorizationUpdateModel();
+    authorizationUpdate.ID = this.authorizationId;
+    authorizationUpdate.UserId = localStorage.getItem('userId')!;
+    authorizationUpdate.EventId = this.eventId;
+    authorizationUpdate.StartDateEvent = new Date(this.applicationDate);
+    authorizationUpdate.StartTimeEvent = this.formatHour(new Date(this.applicationDate));
+    console.log(authorizationUpdate)
+
+    this.authorizationsDispatcherService.update(authorizationUpdate.ID, authorizationUpdate).subscribe(
+      response => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
+      },
+      error => {
+        this.errorHandler.handleError(error);
+        console.log(error);
+      });
+
+  }
+
+  public cancelAuthorization() {
+
+    const dialogRef = this.dialog.open(ConfirmCancelAuthorizationDialog);
+    
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (!!result) {
+          this.authorizationsDispatcherService.delete(this.authorizationId).subscribe(
+            response => {
+              setTimeout(() => {
+                window.location.reload();
+              }, 200);
+            },
+            error => {
+              this.errorHandler.handleError(error);
+              console.log(error);
+            });
+        }
+      });
+    
+  }
+
+  public treatProfilePicExhibition(profilePic: string): void {
+    if (profilePic != null && profilePic != "") {
+      this.profilePicExhibition = `${this.imagePathUrl}${profilePic}`;
+    } else {
+      this.profilePicExhibition = `${this.imagePathUrlDefault}`;
+    }
+  }
+
+  public treatPersonInfoExhibition(person: any): void {
+
+    if (person.PersonPrincipalAddress != null) {
+      this.personPrincipalAddress = `${person.PersonPrincipalAddress.PublicPlace}, ${person.PersonPrincipalAddress.AddressNumber} - ${person.PersonPrincipalAddress.District} - ${person.PersonPrincipalAddress.City}/${person.PersonPrincipalAddress.State}`
+    } else {
+      this.personPrincipalAddress = `Não informado`;
+    }
+
+    if (person.PersonPrincipalPhone != null) {
+      this.personPrincipalPhone = `(${person.PersonPrincipalPhone.CodeArea}) ${person.PersonPrincipalPhone.NumberPhone}`;
+    } else {
+      this.personPrincipalPhone = `Não informado`;
+    }
+  }
+
+  public treatAuthDateExhibition(startDate: any, startTime: any) {
+
+    let startDateFormat = new Date(startDate);
+    startDateFormat.setHours(parseInt(startTime.split(":")[0]), parseInt(startTime.split(":")[1]));
+    let tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    this.applicationDate = (new Date(startDateFormat.getTime() - tzoffset).toISOString().slice(0, 16));
+
+  }
+
+  public resolveExibitionDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "DOSE ÚNICA"
+    } else if (doseType == "D1") {
+      return "DOSE 1"
+    } else if (doseType == "D2") {
+      return "DOSE 2"
+    } else if (doseType == "D3") {
+      return "DOSE 3"
+    } else if (doseType == "DR") {
+      return "DOSE DE REFORÇO"
+    } else {
+      return ""
+    }
+  }
+
+  public formatHour(date: Date) {
+    return `${this.padStr(date.getHours())}:${this.padStr(date.getMinutes())}`
+  }
+
+  public padStr(i: any) {
+    return (i < 10) ? "0" + i : "" + i;
+  }
+
+}
+
+
+
+//DIALOG CONFIRM CANCEL AUTHORIZATION
+@Component({
+  selector: 'confirm-cancel-authorization-dialog',
+  templateUrl: 'confirm-cancel-authorization-dialog.html',
+})
+export class ConfirmCancelAuthorizationDialog implements OnInit {
+  ngOnInit(): void {
+
+  }
 }
