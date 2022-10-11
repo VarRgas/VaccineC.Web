@@ -24,6 +24,10 @@ export class BudgetsDispatcherService {
       return this.httpClient.get(`${baseURL}/${borrowerId}/GetAllByBorrower`);
     }
 
+    public getBudgetsByResponsible(responsibleId: string): Observable<any> {
+      return this.httpClient.get(`${baseURL}/${responsibleId}/GetAllByResponsible`);
+    }
+
     public getBudgetById(id: string): Observable<any> {
       return this.httpClient.get(`${baseURL}/${id}`);
     }

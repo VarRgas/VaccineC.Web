@@ -1471,7 +1471,8 @@ export class AddBudgetProductDialog implements OnInit {
       budgetProduct.estimatedSalesValue = this.EstimatedSalesValue;
       budgetProduct.details = this.Details;
       budgetProduct.situationProduct = this.Situation;
-
+      budgetProduct.userId = localStorage.getItem('userId')!;
+      
       if (this.budgetProductForm.value.PersonName != undefined) {
         budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
       }

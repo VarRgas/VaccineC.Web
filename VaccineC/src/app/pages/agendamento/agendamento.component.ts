@@ -103,8 +103,7 @@ export class AgendamentoComponent implements OnInit {
         this.errorHandler.handleError(error);
         console.log(error);
       });
-
-
+      
     this.companyDispatcherService.getCompanyConfigAuthorization().subscribe(
       response => {
 
@@ -121,7 +120,17 @@ export class AgendamentoComponent implements OnInit {
         this.calendarVisible = false;
       });
 
-
+      /*
+      let fullCalendarEvent = {
+        id: '28eb8764-1184-4448-a7bd-bb605070764z',
+        title: '',
+        start: '2022-10-11T08:00:00',
+        end: '2022-10-11T18:00:00',
+        description: '',
+        display: 'background'
+      }
+      this.events.push(fullCalendarEvent);
+      */
   }
 
   constructor(
@@ -196,6 +205,7 @@ export class AgendamentoComponent implements OnInit {
         selectable: true
       }
     },
+
     nowIndicator: true,
     eventStartEditable: false,
     expandRows: true,
@@ -222,34 +232,17 @@ export class AgendamentoComponent implements OnInit {
   }
 
   handleInfo() {
-    this.calendarOptions = {
-      ...this.calendarOptions,
-      slotDuration: this.slotDuration,
-      slotLabelInterval: this.slotLabelInterval,
-      slotMinTime: this.slotMinTime,
-      slotMaxTime: this.slotMaxTime,
-      events: this.events
-    }
-  }
+    setTimeout(() => {
+      this.calendarOptions = {
+        ...this.calendarOptions,
+        slotDuration: this.slotDuration,
+        slotLabelInterval: this.slotLabelInterval,
+        slotMinTime: this.slotMinTime,
+        slotMaxTime: this.slotMaxTime,
+        events: this.events
+      }
+    }, 200);
 
-  public getEvents(): any {
-    this.eventsDispatcherService.getAllEventsActive().subscribe(
-      events => {
-        events.forEach((event: any) => {
-
-          let fullCalendarEvent = {
-            id: event.ID,
-            title: 'teste',
-            start: this.formatDate(event.StartDate, event.StartTime),
-            end: this.formatDate(event.EndDate, event.EndTime)
-          }
-          this.events.push(fullCalendarEvent);
-        });
-      },
-      error => {
-        this.errorHandler.handleError(error);
-        console.log(error);
-      });
   }
 
   public formatDate(date: string, time: string): DateInput {
@@ -260,7 +253,7 @@ export class AgendamentoComponent implements OnInit {
   handleDateSelect(selectInfo: DateSelectArg) {
     //console.log(new Date(selectInfo.start))
     //console.log(new Date(selectInfo.end))
-
+    console.log(selectInfo)
     this.dialogRef = this.dialog.open(AddAuthorizationDialog, {
       disableClose: true,
       width: '60vw',
@@ -269,22 +262,6 @@ export class AgendamentoComponent implements OnInit {
         End: selectInfo.end,
       },
     });
-
-    /*
-     const title = prompt('Adicionar Evento:');
-     const calendarApi = selectInfo.view.calendar;
- 
-     calendarApi.unselect(); // clear date selection
- 
-     if (title) {
-       calendarApi.addEvent({
-         id: createEventId(),
-         title,
-         start: selectInfo.startStr,
-         end: selectInfo.endStr
-       });
-     }
-     */
   }
 
   handleEventClick(clickInfo: EventClickArg) {
@@ -316,6 +293,7 @@ export class AddAuthorizationDialog implements OnInit {
   public imagePathUrl = 'http://localhost:5000/';
   public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
 
+  //Variaveis PF
   public authorizationDateFormated!: string;
   public startDate!: Date;
   public endDate!: Date;
@@ -333,8 +311,17 @@ export class AddAuthorizationDialog implements OnInit {
   public personBirthday!: string;
   public personPhone!: string;
   public cellphonesList!: any;
+  public personType!: string;
 
+  //Variáveis PJ
+  public budgetJuridicalId!: string;
+  public typeOfServiceJuridical!: string;
+  public ApplicationDateJ!: any;
+
+  //Controle de exibição
+  public dataInfoVisible = false;
   public personPrincipalInfoVisible = false;
+  public personPrincipalJuridicalInfoVisible = false;
   public isNotifyChecked = false;
 
   //Autocomplete Pessoa
@@ -342,15 +329,25 @@ export class AddAuthorizationDialog implements OnInit {
   public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
 
-  //Autocomplete Orçamento
+  //Autocomplete Orçamento PF
   public myControlBudget = new FormControl();
   public acBudgets: string[] = [];
   public filteredBudgets: Observable<any[]> | undefined;
 
-  //Table Produtos
+  //Autocomplete Orçamento PJ
+  public myControlBudgetJuridical = new FormControl();
+  public acBudgetsJuridical: string[] = [];
+  public filteredBudgetsJ: Observable<any[]> | undefined;
+
+  //Table Produtos PF
   public displayedColumnsBudgetProduct: string[] = ['select', 'ProductName', 'ProductDose', 'ApplicationDate', 'toggle', 'ID'];
   public dataSourceBudgetProduct = new MatTableDataSource<IBudgetProduct>();
   selection = new SelectionModel<IBudgetProduct>(true, []);
+
+  //Table Produtos PJ
+  public displayedColumnsBudgetProductJuridical: string[] = ['select', 'ProductName', 'Borrower', 'ApplicationDate', 'ID'];
+  public dataSourceBudgetProductJuridical = new MatTableDataSource<IBudgetProduct>();
+  selectionJuridical = new SelectionModel<IBudgetProduct>(true, []);
 
   ngOnInit(): void {
     this.authorizationDateFormated = `${this.formatDate(new Date(this.data.Start))} - ${this.formatHour(new Date(this.data.Start))} até ${this.formatHour(new Date(this.data.End))}`;
@@ -384,6 +381,13 @@ export class AddAuthorizationDialog implements OnInit {
     PersonPhone: [null]
   });
 
+  //Form Juridical
+  authorizationJuridicalForm: FormGroup = this.formBuilder.group({
+    BudgetJuridicalId: [null],
+    TypeOfServiceJuridical: [null],
+    ApplicationDateJ: [null]
+  });
+
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSourceBudgetProduct.data.length;
@@ -407,6 +411,28 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
 
+  isAllSelectedJuridical() {
+    const numSelected = this.selectionJuridical.selected.length;
+    const numRows = this.dataSourceBudgetProductJuridical.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleAllRowsJuridical() {
+    if (this.isAllSelectedJuridical()) {
+      this.selectionJuridical.clear();
+      return;
+    }
+
+    this.selectionJuridical.select(...this.dataSourceBudgetProductJuridical.data);
+  }
+
+  checkboxLabelJuridical(row?: IBudgetProduct): string {
+    if (!row) {
+      return `${this.isAllSelectedJuridical() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selectionJuridical.isSelected(row) ? 'deselect' : 'select'} row ${row.BudgetId + 1}`;
+  }
+
   public formatDate(date: Date) {
     return [
       this.padTo2Digits(date.getDate()),
@@ -425,6 +451,26 @@ export class AddAuthorizationDialog implements OnInit {
 
   public padStr(i: any) {
     return (i < 10) ? "0" + i : "" + i;
+  }
+
+  public searchBudgetJuridicalByAutoComplete(): void {
+    this.filteredBudgetsJ = this.myControlBudgetJuridical.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterBudgetsJ(val || '')
+      })
+    )
+  }
+
+  public filterBudgetsJ(val: string): Observable<any[]> {
+    return this.budgetsDispatcherService.getBudgetsByResponsible(this.personBorrowerId)
+      .pipe(
+        map((response: any[]) => response.filter((option: { ID: string }) => {
+          return option.ID.toLowerCase()
+        }))
+      )
   }
 
   public searchBudgetByAutoComplete(): void {
@@ -462,6 +508,10 @@ export class AddAuthorizationDialog implements OnInit {
     return state && state.BudgetNumber ? state.BudgetNumber : '';
   }
 
+  displayStateBudgetJuridical(state: any) {
+    return state && state.BudgetNumber ? state.BudgetNumber : '';
+  }
+
   public filterPersons(val: string): Observable<any[]> {
     return this.personAutocompleteService.getPersonAuthorizationAutocomplete()
       .pipe(
@@ -477,7 +527,13 @@ export class AddAuthorizationDialog implements OnInit {
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
     console.log(event.option.value)
+
+    this.personType = event.option.value.PersonType;
+    this.personPrincipalInfoVisible = false;
+    this.profilePicExhibition = `${this.imagePathUrlDefault}`;
     this.budgetId = "";
+    this.budgetJuridicalId = "";
+    this.typeOfServiceJuridical = "";
     this.typeOfService = "";
     this.personPhone = "";
     this.cellphonesList = "";
@@ -485,7 +541,12 @@ export class AddAuthorizationDialog implements OnInit {
 
     this.authorizationForm.clearValidators();
     this.authorizationForm.updateValueAndValidity();
+
+    this.authorizationJuridicalForm.clearValidators();
+    this.authorizationJuridicalForm.updateValueAndValidity();
+
     this.dataSourceBudgetProduct = new MatTableDataSource();
+    this.dataSourceBudgetProductJuridical = new MatTableDataSource();
 
     this.treatProfilePicExhibition(event.option.value.ProfilePic)
     this.personBorrowerId = event.option.value.ID;
@@ -501,7 +562,16 @@ export class AddAuthorizationDialog implements OnInit {
       this.personPrincipalAddress = `Não informado`;
     }
     this.treatBirthdayExhibition(event.option.value.CommemorativeDate, event.option.value.PersonType);
-    this.personPrincipalInfoVisible = true;
+    this.dataInfoVisible = true;
+
+    if (event.option.value.PersonType == "F") {
+      this.personPrincipalInfoVisible = true;
+      this.personPrincipalJuridicalInfoVisible = false;
+    } else {
+      this.personPrincipalJuridicalInfoVisible = true;
+      this.personPrincipalInfoVisible = false;
+    }
+
   }
 
   public treatProfilePicExhibition(profilePic: string): void {
@@ -517,17 +587,19 @@ export class AddAuthorizationDialog implements OnInit {
   onSelectionBudgetChanged(event: MatAutocompleteSelectedEvent) {
     this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByBorrower(event.option.value.ID, this.authorizationForm.value.PersonId.ID).subscribe(
       response => {
-        if (response.length > 0) {
-
-          /*
-          let tzoffset = (new Date()).getTimezoneOffset() * 60000;
-          response[0].ApplicationDate = (new Date(this.startDate.getTime() - tzoffset).toISOString().slice(0, 16));
-          this.dataSourceBudgetProduct = new MatTableDataSource(response);
-          this.cdRef.detectChanges();
-          */
-
-        }
+        console.log(response)
         this.dataSourceBudgetProduct = new MatTableDataSource(response);
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  onSelectionBudgetJuridicalChanged(event: MatAutocompleteSelectedEvent) {
+    this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByResponsible(event.option.value.ID).subscribe(
+      response => {
+        console.log(response)
+        this.dataSourceBudgetProductJuridical = new MatTableDataSource(response);
       },
       error => {
         console.log(error);
@@ -584,6 +656,76 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   public addAuthorization() {
+    if (this.personType == "F") {
+      this.addAuthorizationPhysical();
+    } else {
+      this.addAuthorizationJuridical();
+    }
+  }
+
+  public addAuthorizationJuridical() {
+
+    if (!this.authorizationJuridicalForm.valid) {
+      console.log(this.authorizationJuridicalForm);
+      this.authorizationJuridicalForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+      return;
+    }
+
+    if (this.selectionJuridical.selected.length == 0 && this.dataSourceBudgetProductJuridical.data.length != 0) {
+      this.messageHandler.showMessage("É necessário selecionar ao menos um Produto para agendar!", "warning-snackbar")
+      return;
+    }
+
+    if (this.dataSourceBudgetProductJuridical.data.length == 0) {
+      this.messageHandler.showMessage("É necessário selecionar ao menos um Produto para agendar!", "warning-snackbar")
+      return;
+    }
+
+    let listAuthorizationModel = new Array<AuthorizationModel>();
+
+    this.selectionJuridical.selected.forEach((register: any) => {
+      console.log(register)
+      let startTime = this.formatHour(new Date(register.ApplicationDate));
+      let startDate = new Date(register.ApplicationDate);
+      startDate.setHours(0, 0, 0, 0);
+
+      let eventModel = new EventModel();
+      eventModel.StartDate = startDate;
+      eventModel.StartTime = startTime;
+      eventModel.Concluded = "N";
+      eventModel.Situation = "A";
+      eventModel.UserId = localStorage.getItem('userId')!;
+
+      let authorizationModel = new AuthorizationModel();
+      authorizationModel.UserId = localStorage.getItem('userId')!;
+      authorizationModel.AuthorizationDate = new Date();
+      authorizationModel.BorrowerPersonId = register.BorrowerPersonId;
+      authorizationModel.Situation = "C";
+      authorizationModel.TypeOfService = this.typeOfServiceJuridical;
+      authorizationModel.Notify = "N"
+      authorizationModel.BudgetProductId = register.ID;
+      authorizationModel.Event = eventModel;
+
+
+      listAuthorizationModel.push(authorizationModel);
+    });
+    console.log(listAuthorizationModel)
+
+    this.authorizationDispatcherService.createOnDemand(listAuthorizationModel).subscribe(
+      response => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
+      }, error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
+
+  }
+
+  public addAuthorizationPhysical() {
 
     if (!this.authorizationForm.valid) {
       console.log(this.authorizationForm);
@@ -733,7 +875,13 @@ export class UpdateAuthorizationDialog implements OnInit {
         this.treatPersonInfoExhibition(authorization.Person);
         this.personName = authorization.Person.Name;
         this.typeOfService = authorization.TypeOfService;
-        this.product = `${authorization.BudgetProduct.Product.Name} (${this.resolveExibitionDoseType(authorization.BudgetProduct.ProductDose)})`
+        
+        if(authorization.BudgetProduct.ProductDose == null || authorization.BudgetProduct.ProductDose == '' || authorization.BudgetProduct.ProductDose == undefined){
+          this.product = `${authorization.BudgetProduct.Product.Name}`
+        }else{
+          this.product = `${authorization.BudgetProduct.Product.Name} (${this.resolveExibitionDoseType(authorization.BudgetProduct.ProductDose)})`
+        }
+  
         this.notify = authorization.Notify;
         this.notifyInformation = authorization.Notify == "S" ? "Notificação por SMS ativada" : "Notificação por SMS desativada";
         this.authorizationNumber = authorization.AuthorizationNumber;
