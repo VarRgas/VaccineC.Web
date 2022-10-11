@@ -40,6 +40,9 @@
                             {{option.Name}}
                         </mat-option>
                     </mat-autocomplete>
+                    <mat-error *ngIf="authorizationForm.controls.PersonId.touched && authorizationForm.controls.PersonId.invalid">
+                        <span *ngIf="authorizationForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
+                    </mat-error>
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
                 <div style="padding-left: 1.2em;" *ngIf="personPrincipalInfoVisible">
@@ -75,6 +78,9 @@
                             'dd/MM/yyyy'}}</div>
                     </mat-option>
                 </mat-autocomplete>
+                <mat-error *ngIf="authorizationForm.controls.BudgetId.touched && authorizationForm.controls.BudgetId.invalid">
+                    <span *ngIf="authorizationForm.controls.BudgetId.errors?.required">O Orçamento é obrigatório.</span>
+                </mat-error>
                 <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
 
@@ -84,6 +90,9 @@
                     <mat-option value="C">NA CLÍNICA</mat-option>
                     <mat-option value="D">A DOMICÍLIO</mat-option>
                 </mat-select>
+                <mat-error *ngIf="authorizationForm.controls.TypeOfService.touched && authorizationForm.controls.TypeOfService.invalid">
+                    <span *ngIf="authorizationForm.controls.TypeOfService.errors?.required">O Tipo de Aplicação é obrigatório.</span>
+                </mat-error>
             </mat-form-field>
         </div>
         <div class="div-row-input d-flex mb-3 mt-3" style="margin-left:1rem;" *ngIf="personPrincipalInfoVisible">

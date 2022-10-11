@@ -1,3 +1,8 @@
+<style>
+    .notify-hover{
+        cursor: pointer;
+    }
+</style>
 <div mat-dialog-title class="d-flex justify-content-between">
     <div mat-dialog-title>Agendamento</div>
     <div title="Número da Autorização" style="color:#858796;font-size: 15px;"><i class="fa-solid fa-tags me-2"></i>{{authorizationNumber}}</div>
@@ -48,17 +53,20 @@
             <mat-form-field appearance="fill" class="col-sm-7">
                 <mat-label>Produto</mat-label>
                 <input matInput #Productinput formControlName="Product" [(ngModel)]="product" readonly>
-                <mat-icon style="color:#858796" matSuffix matTooltip="{{notifyInformation}}" matTooltipPosition="above">{{notify == "S" ? 'notifications_active' : 'notifications_off'}}</mat-icon>
+                <mat-icon (click)="loadNotifications($event)" class="{{notify == 'S' ? 'notify-hover':''}}" style="color:#858796;" matSuffix matTooltip="{{notifyInformation}}" matTooltipPosition="above">{{notify == "S" ? 'notifications_active' : 'notifications_off'}}</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-5">
-                <input type="datetime-local" matInput formControlName="ApplicationDate" [(ngModel)]="applicationDate">
+                <input type="datetime-local" matInput formControlName="ApplicationDate" [(ngModel)]="applicationDate" [readonly]="isDisabled" required>
+                <mat-error *ngIf="authorizationForm.controls.ApplicationDate.touched && authorizationForm.controls.ApplicationDate.invalid">
+                    <span *ngIf="authorizationForm.controls.ApplicationDate.errors?.required">A Data de Agendamento é obrigatória.</span>
+                </mat-error>
             </mat-form-field>
         </div>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Voltar</button>
-    <button mat-flat-button  color="warn" (click)="cancelAuthorization()">Cancelar</button>
-    <button mat-flat-button class="create-button" (click)="updateAuthorization()">Reagendar</button>
+    <button mat-flat-button color="warn" [hidden]="isDisabled" (click)="cancelAuthorization()">Cancelar</button>
+    <button mat-flat-button class="create-button"  [hidden]="isDisabled" (click)="updateAuthorization()">Reagendar</button>
 </mat-dialog-actions>

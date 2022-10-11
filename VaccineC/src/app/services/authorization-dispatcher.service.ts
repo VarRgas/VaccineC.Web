@@ -40,7 +40,7 @@ export class AuthorizationsDispatcherService {
         return this.httpClient.put(`${baseURL}/${id}/Update`, data);
     }
 
-    public delete(id: string): Observable<any> {
-        return this.httpClient.delete(`${baseURL}/${id}/Delete`);
+    public delete(id: string, userId: string): Observable<any> {
+        return this.httpClient.delete(`${baseURL}/${id}/${userId}/Delete`);
     }
 }

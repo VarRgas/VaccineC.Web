@@ -18,7 +18,7 @@ import listPlugin from '@fullcalendar/list';
 import { INITIAL_EVENTS } from './event-utils';
 import brLocale from '@fullcalendar/core/locales/pt-br';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CompaniesDispatcherService } from 'src/app/services/company-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { EventsDispatcherService } from 'src/app/services/events-dispatcher.service';
@@ -40,6 +40,7 @@ import { AuthorizationUpdateModel } from 'src/app/models/authorization-update-mo
 import { IAuthorization } from 'src/app/interfaces/i-authorization';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { AuthorizationsNotificationsDispatcherService } from 'src/app/services/authorization-notification-dispatcher.service';
 
 defineFullCalendarElement()
 
@@ -83,6 +84,7 @@ export class AgendamentoComponent implements OnInit {
 
     this.eventsDispatcherService.getAllEventsActive().subscribe(
       events => {
+
         events.forEach((event: any) => {
           this.eventTitle = event.Info;
           let fullCalendarEvent = {
@@ -90,7 +92,8 @@ export class AgendamentoComponent implements OnInit {
             title: this.formatEventTitle(event.Info),
             start: this.formatDate(event.StartDate, event.StartTime),
             end: this.formatDate(event.EndDate, event.EndTime),
-            description: event.CompleteInfo
+            description: event.CompleteInfo,
+            authSituation: event.AuthSituation
           }
           this.events.push(fullCalendarEvent);
         });
@@ -165,6 +168,15 @@ export class AgendamentoComponent implements OnInit {
     dayMaxEvents: true,
     contentHeight: "auto",
     eventDidMount: function (info) {
+
+      if (info.event._def.extendedProps.authSituation == 'C') {
+        info.el.style.backgroundColor = '#3788d8';
+        info.el.style.borderColor = '#3788d8';
+      } else if (info.event._def.extendedProps.authSituation == 'P') {
+        info.el.style.backgroundColor = '#37d89d';
+        info.el.style.borderColor = '#37d89d';
+      }
+
       info.el.title = `(${info.timeText}) ${info.event._def.extendedProps.description}`;
     },
     views: {
@@ -214,7 +226,6 @@ export class AgendamentoComponent implements OnInit {
   public getEvents(): any {
     this.eventsDispatcherService.getAllEventsActive().subscribe(
       events => {
-
         events.forEach((event: any) => {
 
           let fullCalendarEvent = {
@@ -268,7 +279,7 @@ export class AgendamentoComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    console.log(clickInfo.event._def.publicId)
+
     this.dialogRef = this.dialog.open(UpdateAuthorizationDialog, {
       disableClose: true,
       width: '60vw',
@@ -540,6 +551,11 @@ export class AddAuthorizationDialog implements OnInit {
       return;
     }
 
+    if (this.dataSourceBudgetProduct.data.length == 0) {
+      this.messageHandler.showMessage("É necessário selecionar ao menos um Produto para agendar!", "warning-snackbar")
+      return;
+    }
+
     let listAuthorizationModel = new Array<AuthorizationModel>();
 
     this.selection.selected.forEach((register: any) => {
@@ -620,19 +636,21 @@ export class UpdateAuthorizationDialog implements OnInit {
   public applicationDate!: string;
   public notifyInformation!: string;
 
+  public isDisabled = false;
+
   constructor(
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<UpdateAuthorizationDialog>,
+    public dialogNotRef: MatDialogRef<AuthorizationNotificationDialog>,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    console.log(this.eventId)
     this.eventId = this.data.Id;
-    console.log(this.eventId)
     this.getAuthorizationByEventId();
   }
 
@@ -643,7 +661,7 @@ export class UpdateAuthorizationDialog implements OnInit {
     PersonId: [null],
     TypeOfService: [null],
     BudgetId: [null],
-    ApplicationDate: [null],
+    ApplicationDate: [null, [Validators.required]],
     Notify: [null],
     BudgetNumber: [null],
     Product: [null]
@@ -654,6 +672,7 @@ export class UpdateAuthorizationDialog implements OnInit {
       authorization => {
         console.log(authorization);
         this.authorizationId = authorization.ID;
+        this.treatSituationAuth(authorization.Situation);
         this.treatProfilePicExhibition(authorization.Person.ProfilePic);
         this.treatPersonInfoExhibition(authorization.Person);
         this.personName = authorization.Person.Name;
@@ -674,13 +693,19 @@ export class UpdateAuthorizationDialog implements OnInit {
 
   public updateAuthorization() {
 
+    if (!this.authorizationForm.valid) {
+      console.log(this.authorizationForm);
+      this.authorizationForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+      return;
+    }
+
     let authorizationUpdate = new AuthorizationUpdateModel();
     authorizationUpdate.ID = this.authorizationId;
     authorizationUpdate.UserId = localStorage.getItem('userId')!;
     authorizationUpdate.EventId = this.eventId;
     authorizationUpdate.StartDateEvent = new Date(this.applicationDate);
     authorizationUpdate.StartTimeEvent = this.formatHour(new Date(this.applicationDate));
-    console.log(authorizationUpdate)
 
     this.authorizationsDispatcherService.update(authorizationUpdate.ID, authorizationUpdate).subscribe(
       response => {
@@ -702,7 +727,7 @@ export class UpdateAuthorizationDialog implements OnInit {
     dialogRef.afterClosed()
       .subscribe(result => {
         if (!!result) {
-          this.authorizationsDispatcherService.delete(this.authorizationId).subscribe(
+          this.authorizationsDispatcherService.delete(this.authorizationId, localStorage.getItem('userId')!).subscribe(
             response => {
               setTimeout(() => {
                 window.location.reload();
@@ -747,6 +772,16 @@ export class UpdateAuthorizationDialog implements OnInit {
     let tzoffset = (new Date()).getTimezoneOffset() * 60000;
     this.applicationDate = (new Date(startDateFormat.getTime() - tzoffset).toISOString().slice(0, 16));
 
+  }
+
+  public treatSituationAuth(situation: string) {
+    if (situation == 'P') {
+      this.isDisabled = true;
+    } else if (situation == 'X') {
+      this.isDisabled = true;
+    } else {
+      this.isDisabled = false;
+    }
   }
 
   public treatBirthdayExhibition(commemorativeDate: Date) {
@@ -796,6 +831,20 @@ export class UpdateAuthorizationDialog implements OnInit {
     return (i < 10) ? "0" + i : "" + i;
   }
 
+  public loadNotifications(event: any) {
+    if (this.notify == "N") {
+      event.stopPropagation();
+    } else {
+      this.dialogNotRef = this.dialog.open(AuthorizationNotificationDialog, {
+        disableClose: true,
+        width: '40vw',
+        data: {
+          Id: this.authorizationId
+        },
+      });
+    }
+
+  }
 }
 
 //DIALOG CONFIRM CANCEL AUTHORIZATION
@@ -846,8 +895,8 @@ export class SearchAuthorizationDialog implements OnInit {
   ngOnInit(): void {
 
   }
-  
-  public loadAuthData(){
+
+  public loadAuthData() {
     this.searchButtonLoading = true;
 
     if (this.searchAuth == "" || this.searchAuth == null || this.searchAuth == undefined) {
@@ -857,7 +906,7 @@ export class SearchAuthorizationDialog implements OnInit {
     }
   }
 
-  public getAllAuth(){
+  public getAllAuth() {
     this.authorizationsDispatcherService.getAllAuthorizations().subscribe(
       response => {
         console.log(response)
@@ -875,7 +924,7 @@ export class SearchAuthorizationDialog implements OnInit {
       });
   }
 
-  public getAuthByParameter(){
+  public getAuthByParameter() {
     this.authorizationsDispatcherService.getAuthorizationByParameter(this.searchAuth).subscribe(
       response => {
         console.log(response)
@@ -910,4 +959,50 @@ export class SearchAuthorizationDialog implements OnInit {
     }
   }
 
+  public openUpdateAuthorizationDialog(eventId: string) {
+    this.dialogRef = this.dialog.open(UpdateAuthorizationDialog, {
+      disableClose: true,
+      width: '60vw',
+      data: {
+        Id: eventId
+      },
+    });
+  }
+
+}
+
+//DIALOG AUTHORIZATION NOTIFICATION
+@Component({
+  selector: 'authorization-notification-dialog',
+  templateUrl: 'authorization-notification-dialog.html',
+})
+export class AuthorizationNotificationDialog implements OnInit {
+
+  public authorizationId!: string;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<UpdateAuthorizationDialog>,
+    private authorizationsNotificationsDispatcherService: AuthorizationsNotificationsDispatcherService,
+    private eventsDispatcherService: EventsDispatcherService,
+    private errorHandler: ErrorHandlerService,
+    public dialog: MatDialog
+  ) { }
+
+  ngOnInit(): void {
+    this.authorizationId = this.data.Id;
+    this.getAuthNotificationByAuth();
+  }
+
+  public getAuthNotificationByAuth() {
+    this.authorizationsNotificationsDispatcherService.getAuthorizationNotificationByAuthorizationId(this.authorizationId).subscribe(
+      response => {
+        console.log(response)
+      },
+      error => {
+        this.errorHandler.handleError(error);
+        console.log(error);
+      });
+  }
 }
