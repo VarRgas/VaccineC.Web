@@ -25,6 +25,10 @@ export class PersonsPhonesDispatcherService {
     return this.httpClient.get(`${baseURL}/${personId}/GetAllPersonsPhonesByPersonId`);
   }
 
+  public getAllPersonsPhonesCelByPersonId(personId: string): Observable<any> {
+    return this.httpClient.get(`${baseURL}/${personId}/GetAllPersonsPhonesCellByPersonId`);
+  }
+
   public getPrincipalPersonPhoneByPersonId(personId: string): Observable<any> {
     return this.httpClient.get(`${baseURL}/${personId}/GetPrincipalPersonPhone`);
   }

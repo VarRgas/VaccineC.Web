@@ -1,8 +1,27 @@
 <h2 mat-dialog-title>Notificação SMS</h2>
 <mat-dialog-content class="mat-typography">
-    
+    <form [formGroup]="authorizationNotificationForm">
+        <div class="div-row-input d-flex">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Data de Envio</mat-label>
+                <input matInput #SendDateHourinput formControlName="SendDateHour" [(ngModel)]="sendDateHour" readonly>
+            </mat-form-field>
+        </div>
+        <div class="div-row-input d-flex">
+            <mat-form-field appearance="fill" class="col-sm-12">
+                <mat-label>Telefone</mat-label>
+                <input matInput #PersonPhoneinput formControlName="PersonPhone" [(ngModel)]="personPhone" readonly>
+            </mat-form-field>
+        </div>
+        <div class="div-row-input d-flex">
+            <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
+                <mat-label>Mensagem</mat-label>
+                <textarea matInput #MessageInput formControlName="Message" [(ngModel)]="message"></textarea>
+            </mat-form-field>
+        </div>
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-flat-button
-            mat-dialog-close color="primary">Voltar</button>
+            mat-dialog-close color="primary" cdkFocusInitial>Voltar</button>
 </mat-dialog-actions>

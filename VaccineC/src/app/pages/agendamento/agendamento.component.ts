@@ -41,6 +41,7 @@ import { IAuthorization } from 'src/app/interfaces/i-authorization';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { AuthorizationsNotificationsDispatcherService } from 'src/app/services/authorization-notification-dispatcher.service';
+import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 
 defineFullCalendarElement()
 
@@ -181,7 +182,15 @@ export class AgendamentoComponent implements OnInit {
     },
     views: {
       dayGridMonth: {
-        selectable: false
+        selectable: false,
+        eventDidMount: function (info) {
+
+          if (info.event._def.extendedProps.authSituation == 'P') {
+            info.el.style.color = '#37d89d';
+          }
+
+          info.el.title = `(${info.timeText}) ${info.event._def.extendedProps.description}`;
+        }
       },
       timeGrid: {
         selectable: true
@@ -322,8 +331,11 @@ export class AddAuthorizationDialog implements OnInit {
   public ApplicationDate!: any;
   public notify!: boolean;
   public personBirthday!: string;
+  public personPhone!: string;
+  public cellphonesList!: any;
 
   public personPrincipalInfoVisible = false;
+  public isNotifyChecked = false;
 
   //Autocomplete Pessoa
   public myControl = new FormControl();
@@ -354,6 +366,7 @@ export class AddAuthorizationDialog implements OnInit {
     private budgetsDispatcherService: BudgetsDispatcherService,
     private budgetsProductsDispatcherService: BudgetsProductsDispatcherService,
     private authorizationDispatcherService: AuthorizationsDispatcherService,
+    private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -367,7 +380,8 @@ export class AddAuthorizationDialog implements OnInit {
     TypeOfService: [null],
     BudgetId: [null],
     ApplicationDate: [null],
-    Notify: [null]
+    Notify: [null],
+    PersonPhone: [null]
   });
 
   isAllSelected() {
@@ -465,6 +479,9 @@ export class AddAuthorizationDialog implements OnInit {
     console.log(event.option.value)
     this.budgetId = "";
     this.typeOfService = "";
+    this.personPhone = "";
+    this.cellphonesList = "";
+    this.isNotifyChecked = false;
 
     this.authorizationForm.clearValidators();
     this.authorizationForm.updateValueAndValidity();
@@ -534,7 +551,36 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   updateActiveStatus(element: any) {
-    element.activate = !element.activate;
+
+    let isAnyNotifyActivated = 0;
+
+    this.dataSourceBudgetProduct.data.forEach((budgetProduct: any) => {
+      if (budgetProduct.Notify == true) {
+        isAnyNotifyActivated++;
+      }
+    });
+
+    if (isAnyNotifyActivated > 0) {
+
+      this.cellphonesList = "";
+
+      this.personsPhonesDispatcherService.getAllPersonsPhonesCelByPersonId(this.authorizationForm.value.PersonId.ID).subscribe(
+        response => {
+          this.cellphonesList = response;
+        }, error => {
+          this.cellphonesList = "";
+          console.log(error);
+          this.errorHandler.handleError(error);
+        });
+
+      this.personPhone = "";
+      this.isNotifyChecked = true;
+    } else {
+      this.personPhone = "";
+      this.isNotifyChecked = false;
+      this.cellphonesList = "";
+    }
+
   }
 
   public addAuthorization() {
@@ -556,10 +602,15 @@ export class AddAuthorizationDialog implements OnInit {
       return;
     }
 
+    if (this.isNotifyChecked == true && this.cellphonesList.length > 0 && this.personPhone == "") {
+      this.messageHandler.showMessage("É necessário informar um telefone para notificar!", "warning-snackbar")
+      return;
+    }
+
     let listAuthorizationModel = new Array<AuthorizationModel>();
 
     this.selection.selected.forEach((register: any) => {
-      console.log(register);
+
       let startTime = this.formatHour(new Date(register.ApplicationDate));
       let startDate = new Date(register.ApplicationDate);
       startDate.setHours(0, 0, 0, 0);
@@ -580,6 +631,11 @@ export class AddAuthorizationDialog implements OnInit {
       authorizationModel.Notify = register.Notify == true ? "S" : "N"
       authorizationModel.BudgetProductId = register.ID;
       authorizationModel.Event = eventModel;
+
+      if (authorizationModel.Notify == 'S') {
+        authorizationModel.PersonPhone = `${this.authorizationForm.value.PersonPhone.CodeArea}${this.authorizationForm.value.PersonPhone.NumberPhone}`;
+      }
+      console.log(authorizationModel)
       listAuthorizationModel.push(authorizationModel);
     });
 
@@ -979,6 +1035,9 @@ export class SearchAuthorizationDialog implements OnInit {
 export class AuthorizationNotificationDialog implements OnInit {
 
   public authorizationId!: string;
+  public sendDateHour!: string;
+  public personPhone!: string;
+  public message!: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -995,14 +1054,41 @@ export class AuthorizationNotificationDialog implements OnInit {
     this.getAuthNotificationByAuth();
   }
 
+  //Form
+  authorizationNotificationForm: FormGroup = this.formBuilder.group({
+    SendDateHour: [null],
+    PersonPhone: [null],
+    Message: [null]
+  });
+
   public getAuthNotificationByAuth() {
     this.authorizationsNotificationsDispatcherService.getAuthorizationNotificationByAuthorizationId(this.authorizationId).subscribe(
       response => {
         console.log(response)
+        this.personPhone = response.PersonPhone;
+        this.message = response.Message;
+        this.sendDateHour = `${this.formatDate(new Date(response.SendDate))} - ${this.formatHour(response.SendHour)}`;
       },
       error => {
         this.errorHandler.handleError(error);
         console.log(error);
       });
   }
+
+  public formatDate(date: Date) {
+    return [
+      this.padTo2Digits(date.getDate()),
+      this.padTo2Digits(date.getMonth() + 1),
+      date.getFullYear(),
+    ].join('/');
+  }
+
+  public padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
+  public formatHour(hour: string) {
+    return `${hour.substring(0, hour.length - 3)}`
+  }
+
 }

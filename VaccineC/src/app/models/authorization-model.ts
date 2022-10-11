@@ -13,4 +13,5 @@ export class AuthorizationModel {
     public EventId!: string;
     public BudgetProductId!: string;
     public Event!: EventModel;
+    public PersonPhone!: string;
 }
