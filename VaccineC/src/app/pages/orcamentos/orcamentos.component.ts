@@ -99,6 +99,7 @@ export class OrcamentosComponent implements OnInit {
   public informationField!: string;
   public balanceNegotiations: number = 0;
   public selectedRow!: boolean;
+  public personType!: string;
 
   //Table Pesquisa
   public displayedBudgetsColumns: string[] = ['BudgetNumber', 'PersonName', 'ExpirationDate', 'Amount', 'Options', 'ID'];
@@ -178,7 +179,7 @@ export class OrcamentosComponent implements OnInit {
   ngOnInit(): void {
     this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
       companyParameter => {
-        if(companyParameter != null){
+        if (companyParameter != null) {
           this.DefaultCompanyParameter = companyParameter;
         }
       },
@@ -326,11 +327,26 @@ export class OrcamentosComponent implements OnInit {
 
     if (this.dataSourceBudgetProduct.data.length == 0) {
       this.messageHandler.showMessage("Para avançar é necessário inserir Produtos ao Orçamento!", "warning-snackbar")
-    } else {
-      this.discountTypeChanged();
-      stepper.next();
+      return;
     }
 
+    let count = 0;
+
+    if (this.personType == 'F') {
+      this.dataSourceBudgetProduct.data.forEach((budgetProduct: any) => {
+        if (budgetProduct.BorrowerPersonId == '' || budgetProduct.BorrowerPersonId == null) {
+          count++;
+        }
+      });
+    }
+
+    if (count > 0) {
+      this.messageHandler.showMessage("Para avançar é necessário informar os Tomadores para os Produtos!", "warning-snackbar")
+      return;
+    }
+
+    this.discountTypeChanged();
+    stepper.next();
   }
 
   public showSituationFormated(situation: string): string {
@@ -418,7 +434,7 @@ export class OrcamentosComponent implements OnInit {
 
             this.loadData();
             this.treatBudgetSituation(response.Situation);
-            if(this.DefaultCompanyParameter != null && this.DefaultCompanyParameter.PaymentForm != null){
+            if (this.DefaultCompanyParameter != null && this.DefaultCompanyParameter.PaymentForm != null) {
               this.paymentFormId = this.DefaultCompanyParameter.PaymentForm;
             }
             stepper.next();
@@ -469,6 +485,7 @@ export class OrcamentosComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response)
+          this.personType = response.Persons.PersonType;
           this.budgetId = response.ID;
           this.userId = response.Users;
           this.personId = response.Persons;
@@ -535,6 +552,7 @@ export class OrcamentosComponent implements OnInit {
       .subscribe(
         response => {
 
+          this.personType = response.Persons.PersonType;
           this.budgetId = response.ID;
           this.userId = response.Users;
           this.personId = response.Persons;
@@ -882,7 +900,7 @@ export class OrcamentosComponent implements OnInit {
           });
 
       let dateNow = new Date();
-      if(this.DefaultCompanyParameter != null && this.DefaultCompanyParameter.MaximumDaysBudgetValidity != null){
+      if (this.DefaultCompanyParameter != null && this.DefaultCompanyParameter.MaximumDaysBudgetValidity != null) {
         dateNow.setDate(dateNow.getDate() + this.DefaultCompanyParameter.MaximumDaysBudgetValidity);
       }
 
@@ -928,6 +946,7 @@ export class OrcamentosComponent implements OnInit {
     this.budgetsDispatcherService.getBudgetById(id)
       .subscribe(
         budget => {
+          this.personType = budget.Persons.PersonType;
           this.budgetId = budget.ID;
           this.userId = budget.Users;
           this.personId = budget.Persons;
@@ -1472,7 +1491,7 @@ export class AddBudgetProductDialog implements OnInit {
       budgetProduct.details = this.Details;
       budgetProduct.situationProduct = this.Situation;
       budgetProduct.userId = localStorage.getItem('userId')!;
-      
+
       if (this.budgetProductForm.value.PersonName != undefined) {
         budgetProduct.borrowerPersonId = this.budgetProductForm.value.PersonName.ID;
       }

@@ -15,10 +15,17 @@
         </div>
         <div class="div-row-input d-flex">
             <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
-                <mat-label>Mensagem</mat-label>
-                <textarea matInput #MessageInput formControlName="Message" [(ngModel)]="message"></textarea>
+                <mat-label>Status</mat-label>
+                <input matInput #StatusInput formControlName="Status" [(ngModel)]="status" readonly>
             </mat-form-field>
         </div>
+        <div class="div-row-input d-flex">
+            <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
+                <mat-label>Mensagem</mat-label>
+                <textarea matInput #MessageInput formControlName="Message" [(ngModel)]="message" readonly></textarea>
+            </mat-form-field>
+        </div>
+     
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

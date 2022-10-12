@@ -103,7 +103,7 @@ export class AgendamentoComponent implements OnInit {
         this.errorHandler.handleError(error);
         console.log(error);
       });
-      
+
     this.companyDispatcherService.getCompanyConfigAuthorization().subscribe(
       response => {
 
@@ -120,17 +120,17 @@ export class AgendamentoComponent implements OnInit {
         this.calendarVisible = false;
       });
 
-      /*
-      let fullCalendarEvent = {
-        id: '28eb8764-1184-4448-a7bd-bb605070764z',
-        title: '',
-        start: '2022-10-11T08:00:00',
-        end: '2022-10-11T18:00:00',
-        description: '',
-        display: 'background'
-      }
-      this.events.push(fullCalendarEvent);
-      */
+    /*
+    let fullCalendarEvent = {
+      id: '28eb8764-1184-4448-a7bd-bb605070764z',
+      title: '',
+      start: '2022-10-11T08:00:00',
+      end: '2022-10-11T18:00:00',
+      description: '',
+      display: 'background'
+    }
+    this.events.push(fullCalendarEvent);
+    */
   }
 
   constructor(
@@ -322,7 +322,11 @@ export class AddAuthorizationDialog implements OnInit {
   public dataInfoVisible = false;
   public personPrincipalInfoVisible = false;
   public personPrincipalJuridicalInfoVisible = false;
+  public tableBudgetProductPhysicalVisible = false;
+  public tableBudgetProductJuridicalVisible = false;
   public isNotifyChecked = false;
+  public personBirthdayTitle!: string;
+  public personBirthdayIcon!: string;
 
   //Autocomplete Pessoa
   public myControl = new FormControl();
@@ -587,7 +591,7 @@ export class AddAuthorizationDialog implements OnInit {
   onSelectionBudgetChanged(event: MatAutocompleteSelectedEvent) {
     this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByBorrower(event.option.value.ID, this.authorizationForm.value.PersonId.ID).subscribe(
       response => {
-        console.log(response)
+        this.tableBudgetProductPhysicalVisible = true;
         this.dataSourceBudgetProduct = new MatTableDataSource(response);
       },
       error => {
@@ -598,7 +602,7 @@ export class AddAuthorizationDialog implements OnInit {
   onSelectionBudgetJuridicalChanged(event: MatAutocompleteSelectedEvent) {
     this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByResponsible(event.option.value.ID).subscribe(
       response => {
-        console.log(response)
+        this.tableBudgetProductJuridicalVisible = true;
         this.dataSourceBudgetProductJuridical = new MatTableDataSource(response);
       },
       error => {
@@ -749,6 +753,11 @@ export class AddAuthorizationDialog implements OnInit {
       return;
     }
 
+    if (this.isNotifyChecked == true && this.cellphonesList.length > 0 && this.personPhone == undefined) {
+      this.messageHandler.showMessage("É necessário informar um telefone para notificar!", "warning-snackbar")
+      return;
+    }
+
     let listAuthorizationModel = new Array<AuthorizationModel>();
 
     this.selection.selected.forEach((register: any) => {
@@ -795,8 +804,12 @@ export class AddAuthorizationDialog implements OnInit {
 
   public treatBirthdayExhibition(commemorativeDate: Date, personType: string) {
     if (personType == "J") {
+      this.personBirthdayTitle = `Fundação`;
+      this.personBirthdayIcon = `person-digging`;
       this.personBirthday = `${this.formatDate(new Date(commemorativeDate))}`;
     } else {
+      this.personBirthdayTitle = `Aniversário`;
+      this.personBirthdayIcon = `cake-candles`;
       this.personBirthday = `${this.formatDate(new Date(commemorativeDate))} - ${this.getPersonAge(commemorativeDate)} anos`;
     }
   }
@@ -875,13 +888,13 @@ export class UpdateAuthorizationDialog implements OnInit {
         this.treatPersonInfoExhibition(authorization.Person);
         this.personName = authorization.Person.Name;
         this.typeOfService = authorization.TypeOfService;
-        
-        if(authorization.BudgetProduct.ProductDose == null || authorization.BudgetProduct.ProductDose == '' || authorization.BudgetProduct.ProductDose == undefined){
+
+        if (authorization.BudgetProduct.ProductDose == null || authorization.BudgetProduct.ProductDose == '' || authorization.BudgetProduct.ProductDose == undefined) {
           this.product = `${authorization.BudgetProduct.Product.Name}`
-        }else{
+        } else {
           this.product = `${authorization.BudgetProduct.Product.Name} (${this.resolveExibitionDoseType(authorization.BudgetProduct.ProductDose)})`
         }
-  
+
         this.notify = authorization.Notify;
         this.notifyInformation = authorization.Notify == "S" ? "Notificação por SMS ativada" : "Notificação por SMS desativada";
         this.authorizationNumber = authorization.AuthorizationNumber;
@@ -1186,6 +1199,7 @@ export class AuthorizationNotificationDialog implements OnInit {
   public sendDateHour!: string;
   public personPhone!: string;
   public message!: string;
+  public status!: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -1206,7 +1220,8 @@ export class AuthorizationNotificationDialog implements OnInit {
   authorizationNotificationForm: FormGroup = this.formBuilder.group({
     SendDateHour: [null],
     PersonPhone: [null],
-    Message: [null]
+    Message: [null],
+    Status: [null]
   });
 
   public getAuthNotificationByAuth() {
@@ -1215,6 +1230,7 @@ export class AuthorizationNotificationDialog implements OnInit {
         console.log(response)
         this.personPhone = response.PersonPhone;
         this.message = response.Message;
+        this.status = response.ReturnMessage;
         this.sendDateHour = `${this.formatDate(new Date(response.SendDate))} - ${this.formatHour(response.SendHour)}`;
       },
       error => {

@@ -16,6 +16,32 @@
     .md-overlay-pane {
         height: auto !important;
     }
+
+    .mat-column-ApplicationDate {
+        flex: 0 0 100px !important;
+        white-space: unset !important;
+        width: 100px !important;
+    }
+
+    .mat-cell-ApplicationDate {
+        flex: 0 0 100px !important;
+        white-space: unset !important;
+        width: 100px !important;
+    }
+
+    .mat-column-toggle {
+        flex: 0 0 60px !important;
+        white-space: unset !important;
+        padding-left: 2rem !important;
+        width: 100px !important;
+    }
+
+    .mat-cell-toggle {
+        flex: 0 0 60px !important;
+        white-space: unset !important;
+        padding-left: 2rem !important;
+        width: 100px !important;
+    }
 </style>
 <div mat-dialog-title class="d-flex justify-content-between">
     <div mat-dialog-title>Agendamento</div>
@@ -54,16 +80,18 @@
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
                 <div style="padding-left: 1.2em;" *ngIf="dataInfoVisible">
-                    <div class="mt-2" title="Aniversário" widt>
-                        <i class="fa-solid fa-cake-candles me-2 cor-produto" style="width:15px"></i>
+                    <div class="mt-2" widt>
+                        <i title="{{personBirthdayTitle}}" class="fa-solid fa-{{personBirthdayIcon}} me-2 cor-produto"
+                            style="width:15px"></i>
                         {{personBirthday}}
                     </div>
-                    <div class="mt-2" title="Endereço Principal">
-                        <i class="fa-solid fa-location-dot me-2 cor-produto" style="width:15px"></i>
+                    <div class="mt-2">
+                        <i title="Endereço Principal" class="fa-solid fa-location-dot me-2 cor-produto"
+                            style="width:15px"></i>
                         {{personPrincipalAddress}}
                     </div>
-                    <div class="mt-2" title="Telefone Principal">
-                        <i class="fa-solid fa-phone me-2 cor-produto" style="width:15px"></i>
+                    <div class="mt-2">
+                        <i title="Telefone Principal" class="fa-solid fa-phone me-2 cor-produto" style="width:15px"></i>
                         {{personPrincipalPhone}}
                     </div>
                 </div>
@@ -120,7 +148,8 @@
 
                 </mat-form-field>
             </div>
-            <div class="div-row-input d-flex mb-3 mt-3" style="margin-left:1rem;" *ngIf="personPrincipalInfoVisible">
+            <div class="div-row-input d-flex mb-3 mt-3" style="margin-left:1rem;"
+                *ngIf="tableBudgetProductPhysicalVisible">
                 <div id="budget-product-table" style="width:100%;">
                     <div class="col-sm-12 search-table-content mat-elevation-z2">
                         <table mat-table [dataSource]="dataSourceBudgetProduct" class="col-sm-12">
@@ -200,14 +229,17 @@
             </div>
         </div>
         <div *ngIf="personPrincipalJuridicalInfoVisible">
-            <div class="div-row-input d-flex mb-2 mt-5" style="margin-left:1rem;" *ngIf="personPrincipalJuridicalInfoVisible">
+            <div class="div-row-input d-flex mb-2 mt-5" style="margin-left:1rem;"
+                *ngIf="personPrincipalJuridicalInfoVisible">
                 <form [formGroup]="authorizationJuridicalForm" class="col-sm-12 p-0">
                     <mat-form-field appearance="fill" class="col-sm-7">
                         <mat-label>Orçamento</mat-label>
                         <input (click)="searchBudgetJuridicalByAutoComplete()" type="text" #BudgetJuridicalIdinput
-                            placeholder="Selecione o Orçamento" aria-label="Number" matInput formControlName="BudgetJuridicalId"
-                            [matAutocomplete]="autoBudgetJuridical" [(ngModel)]="budgetJuridicalId" required>
-                        <mat-autocomplete #autoBudgetJuridical="matAutocomplete" [displayWith]="displayStateBudgetJuridical"
+                            placeholder="Selecione o Orçamento" aria-label="Number" matInput
+                            formControlName="BudgetJuridicalId" [matAutocomplete]="autoBudgetJuridical"
+                            [(ngModel)]="budgetJuridicalId" required>
+                        <mat-autocomplete #autoBudgetJuridical="matAutocomplete"
+                            [displayWith]="displayStateBudgetJuridical"
                             (optionSelected)="onSelectionBudgetJuridicalChanged($event)">
                             <mat-option style="height:50px;line-height: 20px;"
                                 *ngFor="let budgetJ of filteredBudgetsJ | async" [value]="budgetJ" multiLineOption>
@@ -218,7 +250,8 @@
                         </mat-autocomplete>
                         <mat-error
                             *ngIf="authorizationJuridicalForm.controls.BudgetJuridicalId.touched && authorizationJuridicalForm.controls.BudgetJuridicalId.invalid">
-                            <span *ngIf="authorizationJuridicalForm.controls.BudgetJuridicalId.errors?.required">O Orçamento é
+                            <span *ngIf="authorizationJuridicalForm.controls.BudgetJuridicalId.errors?.required">O
+                                Orçamento é
                                 obrigatório.</span>
                         </mat-error>
                         <mat-icon matSuffix>search</mat-icon>
@@ -226,20 +259,22 @@
 
                     <mat-form-field appearance="fill" class="col-sm-5">
                         <mat-label>Forma de Aplicação</mat-label>
-                        <mat-select formControlName="TypeOfServiceJuridical" #TypeOfServiceJuridicalInput [(ngModel)]="typeOfServiceJuridical"
-                            required>
+                        <mat-select formControlName="TypeOfServiceJuridical" #TypeOfServiceJuridicalInput
+                            [(ngModel)]="typeOfServiceJuridical" required>
                             <mat-option value="C">NA CLÍNICA</mat-option>
                             <mat-option value="D">A DOMICÍLIO</mat-option>
                         </mat-select>
                         <mat-error
                             *ngIf="authorizationJuridicalForm.controls.TypeOfServiceJuridical.touched && authorizationJuridicalForm.controls.TypeOfServiceJuridical.invalid">
-                            <span *ngIf="authorizationJuridicalForm.controls.TypeOfServiceJuridical.errors?.required">O Tipo de Aplicação é
+                            <span *ngIf="authorizationJuridicalForm.controls.TypeOfServiceJuridical.errors?.required">O
+                                Tipo de Aplicação é
                                 obrigatório.</span>
                         </mat-error>
                     </mat-form-field>
                 </form>
             </div>
-            <div class="div-row-input d-flex mb-3 mt-3" style="margin-left:1rem;" *ngIf="personPrincipalJuridicalInfoVisible">
+            <div class="div-row-input d-flex mb-3 mt-3" style="margin-left:1rem;"
+                *ngIf="tableBudgetProductJuridicalVisible">
                 <div id="budget-product-table-juridical" style="width:100%;">
                     <div class="col-sm-12 search-table-content mat-elevation-z2">
                         <table mat-table [dataSource]="dataSourceBudgetProductJuridical" class="col-sm-12">
@@ -256,20 +291,21 @@
                                 <td mat-cell *matCellDef="let row" style="width: 5rem;">
                                     <mat-checkbox (click)="$event.stopPropagation()"
                                         (change)="$event ? selectionJuridical.toggle(row) : null"
-                                        [checked]="selectionJuridical.isSelected(row)" [aria-label]="checkboxLabelJuridical(row)">
+                                        [checked]="selectionJuridical.isSelected(row)"
+                                        [aria-label]="checkboxLabelJuridical(row)">
                                     </mat-checkbox>
                                 </td>
                             </ng-container>
 
                             <ng-container matColumnDef="ProductName">
                                 <th mat-header-cell *matHeaderCellDef> Produto </th>
-                                <td mat-cell *matCellDef="let element"> 
+                                <td mat-cell *matCellDef="let element">
                                     <div>
                                         <div>{{element.Product == null ? '' : element.Product.Name}}</div>
                                         <div class="small-text">{{resolveExibitionDoseType(element.ProductDose)}}</div>
-                                      </div> 
+                                    </div>
                                 </td>
-                                    
+
                             </ng-container>
 
                             <!-- Borrower -->
@@ -312,7 +348,7 @@
                 </div>
             </div>
         </div>
-       
+
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
