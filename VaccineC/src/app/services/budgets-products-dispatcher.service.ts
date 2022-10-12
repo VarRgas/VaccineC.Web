@@ -25,8 +25,8 @@ export class BudgetsProductsDispatcherService {
         return this.httpClient.get(`${baseURL}/${budgetId}/GetBudgetsProductsByBudget`);
     }
 
-    public GetAllPendingBudgetsProductsByBorrower(budgetId: string, borrowerId: string): Observable<any> {
-        return this.httpClient.get(`${baseURL}/${budgetId}/${borrowerId}/GetAllPendingBudgetsProductsByBorrower`);
+    public GetAllPendingBudgetsProductsByBorrower(budgetId: string, borrowerId: string, startDate: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${budgetId}/${borrowerId}/${startDate}/GetAllPendingBudgetsProductsByBorrower`);
     }
 
     public GetAllPendingBudgetsProductsByResponsible(budgetId: string): Observable<any> {

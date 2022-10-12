@@ -188,10 +188,10 @@
                             <!-- Data Aplicação -->
                             <ng-container matColumnDef="ApplicationDate">
                                 <th mat-header-cell *matHeaderCellDef> Agendar para </th>
-                                <td mat-cell *matCellDef="let element">
+                                <td mat-cell *matCellDef="let element; let i = index">
                                     <mat-form-field id="application-date-column" appearance="outline">
                                         <input type="datetime-local" matInput formControlName="ApplicationDate"
-                                            [(ngModel)]="element.ApplicationDate">
+                                            [(ngModel)]="ApplicationDates[i]">{{formateApplicationDate(element.ApplicationDate)}}
                                     </mat-form-field>
 
                                 </td>
@@ -352,6 +352,7 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
-    <button mat-flat-button class="create-button" (click)="addAuthorization()" cdkFocusInitial>Agendar</button>
+    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
+    <button mat-flat-button color="accent" (click)="suggestDoses()" *ngIf="isSuggestDosesVisible">Sugerir Doses</button>
+    <button mat-flat-button class="create-button" (click)="addAuthorization()" >Agendar</button>
 </mat-dialog-actions>

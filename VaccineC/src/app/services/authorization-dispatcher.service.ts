@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthorizationModel } from '../models/authorization-model';
+import { AuthorizationSuggestionModel } from '../models/authorization-suggestion-model';
 
 const baseURL = 'http://localhost:5000/api/Authorizations';
 
@@ -42,5 +43,9 @@ export class AuthorizationsDispatcherService {
 
     public delete(id: string, userId: string): Observable<any> {
         return this.httpClient.delete(`${baseURL}/${id}/${userId}/Delete`);
+    }
+
+    public suggestDoses(data: AuthorizationSuggestionModel[]): Observable<any> {
+        return this.httpClient.post(`${baseURL}/SuggestDoses`, data);
     }
 }

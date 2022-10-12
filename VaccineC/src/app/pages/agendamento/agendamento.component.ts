@@ -42,6 +42,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { AuthorizationsNotificationsDispatcherService } from 'src/app/services/authorization-notification-dispatcher.service';
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
+import { AuthorizationSuggestionModel } from 'src/app/models/authorization-suggestion-model';
 
 defineFullCalendarElement()
 
@@ -253,7 +254,6 @@ export class AgendamentoComponent implements OnInit {
   handleDateSelect(selectInfo: DateSelectArg) {
     //console.log(new Date(selectInfo.start))
     //console.log(new Date(selectInfo.end))
-    console.log(selectInfo)
     this.dialogRef = this.dialog.open(AddAuthorizationDialog, {
       disableClose: true,
       width: '60vw',
@@ -306,17 +306,16 @@ export class AddAuthorizationDialog implements OnInit {
   public personPrincipalAddress!: string;
   public typeOfService!: string;
   public budgetId!: string;
-  public ApplicationDate!: any;
   public notify!: boolean;
   public personBirthday!: string;
   public personPhone!: string;
   public cellphonesList!: any;
   public personType!: string;
+  public ApplicationDates: any = {};
 
   //Variáveis PJ
   public budgetJuridicalId!: string;
   public typeOfServiceJuridical!: string;
-  public ApplicationDateJ!: any;
 
   //Controle de exibição
   public dataInfoVisible = false;
@@ -324,6 +323,7 @@ export class AddAuthorizationDialog implements OnInit {
   public personPrincipalJuridicalInfoVisible = false;
   public tableBudgetProductPhysicalVisible = false;
   public tableBudgetProductJuridicalVisible = false;
+  public isSuggestDosesVisible = false;
   public isNotifyChecked = false;
   public personBirthdayTitle!: string;
   public personBirthdayIcon!: string;
@@ -371,6 +371,7 @@ export class AddAuthorizationDialog implements OnInit {
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
+    private cd: ChangeDetectorRef,
     public dialogRef: MatDialogRef<AddAuthorizationDialog>
   ) { }
 
@@ -530,7 +531,6 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
-    console.log(event.option.value)
 
     this.personType = event.option.value.PersonType;
     this.personPrincipalInfoVisible = false;
@@ -542,6 +542,7 @@ export class AddAuthorizationDialog implements OnInit {
     this.personPhone = "";
     this.cellphonesList = "";
     this.isNotifyChecked = false;
+    this.isSuggestDosesVisible = false;
 
     this.authorizationForm.clearValidators();
     this.authorizationForm.updateValueAndValidity();
@@ -588,20 +589,49 @@ export class AddAuthorizationDialog implements OnInit {
 
   }
 
+  public budgetSearchId!: string;
+
   onSelectionBudgetChanged(event: MatAutocompleteSelectedEvent) {
-    this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByBorrower(event.option.value.ID, this.authorizationForm.value.PersonId.ID).subscribe(
+    this.budgetSearchId = event.option.value.ID;
+    this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByBorrower(event.option.value.ID, this.authorizationForm.value.PersonId.ID, new Date(this.data.Start).toUTCString()).subscribe(
       response => {
-        this.tableBudgetProductPhysicalVisible = true;
+
         this.dataSourceBudgetProduct = new MatTableDataSource(response);
+        this.tableBudgetProductPhysicalVisible = true;
+        this.isSuggestDosesVisible = true;
+        this.cd.detectChanges();
+
       },
       error => {
         console.log(error);
       });
   }
 
+  formateApplicationDate(date: string) {
+    if (date != null) {
+      let data = "";
+      let lastChar = date.substr(date.length - 1);
+      if (lastChar == 'Z') {
+        data = date.substring(0, date.length - 1);
+      } else {
+        data = date;
+      }
+
+      let dataFormatada = new Date(data)
+      let tzoffset = (new Date()).getTimezoneOffset() * 60000;
+      let dataOk = new Date(dataFormatada.getTime() - tzoffset);
+      
+      return date = (new Date(dataOk.getTime()).toISOString().slice(0, 16));
+    } else {
+      return "";
+    }
+
+  }
+
   onSelectionBudgetJuridicalChanged(event: MatAutocompleteSelectedEvent) {
     this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByResponsible(event.option.value.ID).subscribe(
       response => {
+        this.isSuggestDosesVisible = true;
         this.tableBudgetProductJuridicalVisible = true;
         this.dataSourceBudgetProductJuridical = new MatTableDataSource(response);
       },
@@ -799,6 +829,63 @@ export class AddAuthorizationDialog implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+
+  }
+
+  public suggestDoses() {
+    if (this.personType == 'F') {
+      this.suggestDosesPhysical();
+    } else {
+      this.suggestDosesJuridical();
+    }
+  }
+
+  public suggestDosesPhysical() {
+
+    if (this.selection.selected.length <= 1 && this.dataSourceBudgetProduct.data.length != 0) {
+      this.messageHandler.showMessage("Selecione 2 ou mais produtos!", "warning-snackbar")
+      return;
+    }
+
+    if (this.dataSourceBudgetProduct.data.length <= 1) {
+      this.messageHandler.showMessage("Selecione 2 ou mais produtos!", "warning-snackbar")
+      return;
+    }
+
+    let listAuthorizationSuggestionModel = new Array<AuthorizationSuggestionModel>();
+
+    let AuthDate = new Date(this.data.Start).toUTCString();
+
+    this.selection.selected.forEach((register: any) => {
+      console.log(register)
+      let authorizationSuggestionModel = new AuthorizationSuggestionModel();
+      authorizationSuggestionModel.BudgetId = this.budgetSearchId;
+      authorizationSuggestionModel.BudgetProductId = register.ID;
+      authorizationSuggestionModel.BorrowerId = register.BorrowerPersonId;
+      authorizationSuggestionModel.DoseType = register.ProductDose;
+      authorizationSuggestionModel.ProductId = register.Product.ID;
+
+      if (register.ApplicationDate != null) {
+        authorizationSuggestionModel.StartDate = new Date(register.ApplicationDate);
+        authorizationSuggestionModel.StartTime = this.formatHour(new Date(register.ApplicationDate));
+      }
+
+      listAuthorizationSuggestionModel.push(authorizationSuggestionModel);
+    });
+
+    this.authorizationDispatcherService.suggestDoses(listAuthorizationSuggestionModel).subscribe(
+      response => {
+        this.selection.clear();
+        this.dataSourceBudgetProduct = new MatTableDataSource(response);
+
+      }, error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
+  }
+
+  public suggestDosesJuridical() {
 
   }
 
