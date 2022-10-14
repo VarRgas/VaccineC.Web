@@ -1010,6 +1010,7 @@ export class UpdateAuthorizationDialog implements OnInit {
     public dialogRef: MatDialogRef<UpdateAuthorizationDialog>,
     public dialogNotRef: MatDialogRef<AuthorizationNotificationDialog>,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
+    private budgetDispatcherService: BudgetsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     public dialog: MatDialog
@@ -1033,17 +1034,20 @@ export class UpdateAuthorizationDialog implements OnInit {
     Product: [null]
   });
 
+  public budgetInformation!: string;
+
   public getAuthorizationByEventId() {
     this.authorizationsDispatcherService.getAuthorizationByEventId(this.eventId).subscribe(
       authorization => {
-        console.log(authorization);
+
+        this.getBudget(authorization.BudgetProduct.BudgetId);
         this.authorizationId = authorization.ID;
         this.treatSituationAuth(authorization.Situation);
         this.treatProfilePicExhibition(authorization.Person.ProfilePic);
         this.treatPersonInfoExhibition(authorization.Person);
         this.personName = authorization.Person.Name;
         this.typeOfService = authorization.TypeOfService;
-
+        
         if (authorization.BudgetProduct.ProductDose == null || authorization.BudgetProduct.ProductDose == '' || authorization.BudgetProduct.ProductDose == undefined) {
           this.product = `${authorization.BudgetProduct.Product.Name}`
         } else {
@@ -1061,6 +1065,18 @@ export class UpdateAuthorizationDialog implements OnInit {
       error => {
         console.log(error);
       });
+  }
+
+  public getBudget(budgetId: string){
+    this.budgetDispatcherService.getBudgetById(budgetId).subscribe(
+      budget => {
+        this.budgetInformation = `Responsável: ${budget.Persons.Name}`
+        console.log(budget);
+      },
+      error => {
+        console.log(error);
+      });
+    
   }
 
   public updateAuthorization() {

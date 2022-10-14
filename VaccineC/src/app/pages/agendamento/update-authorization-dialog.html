@@ -39,6 +39,7 @@
             <mat-form-field appearance="fill" class="col-sm-7">
                 <mat-label>Orçamento</mat-label>
                 <input matInput #BudgetNumberinput formControlName="BudgetNumber" [(ngModel)]="budgetNumber" readonly>
+                <mat-hint align="end">{{budgetInformation}}</mat-hint>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-5">
@@ -49,7 +50,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="div-row-input d-flex" style="margin-left:1rem;">
+        <div class="div-row-input d-flex mt-3" style="margin-left:1rem;">
             <mat-form-field appearance="fill" class="col-sm-7">
                 <mat-label>Produto</mat-label>
                 <input matInput #Productinput formControlName="Product" [(ngModel)]="product" readonly>
