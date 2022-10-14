@@ -875,7 +875,25 @@ export class AddAuthorizationDialog implements OnInit {
     this.authorizationDispatcherService.suggestDoses(listAuthorizationSuggestionModel).subscribe(
       response => {
         this.selection.clear();
-        this.dataSourceBudgetProduct = new MatTableDataSource(response);
+
+        this.dataSourceBudgetProduct.data.forEach((budgetProduct: any) => {
+          
+
+          response.forEach((budgetProductResponse: any) => {
+            if(budgetProduct.ID == budgetProductResponse.ID){
+              console.log(budgetProduct)
+              console.log(budgetProductResponse)
+              console.log(true)
+
+              if(budgetProductResponse.ApplicationDate != null){
+                budgetProduct.ApplicationDate = budgetProductResponse.ApplicationDate;
+              }
+            }
+          });
+
+        });
+
+        //this.dataSourceBudgetProduct = new MatTableDataSource(response);
 
       }, error => {
         console.log(error);
