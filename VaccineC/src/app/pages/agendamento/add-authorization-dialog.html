@@ -193,7 +193,6 @@
                                         <input type="datetime-local" matInput formControlName="ApplicationDate"
                                             [(ngModel)]="ApplicationDates[i]">{{formateApplicationDate(element.ApplicationDate)}}
                                     </mat-form-field>
-
                                 </td>
                             </ng-container>
 
@@ -319,12 +318,11 @@
                             <!-- Data Aplicação -->
                             <ng-container matColumnDef="ApplicationDate">
                                 <th mat-header-cell *matHeaderCellDef> Agendar para </th>
-                                <td mat-cell *matCellDef="let element">
+                                <td mat-cell *matCellDef="let element; let i = index">
                                     <mat-form-field id="application-date-column" appearance="outline">
                                         <input type="datetime-local" matInput formControlName="ApplicationDate"
-                                            [(ngModel)]="element.ApplicationDate">
+                                            [(ngModel)]="ApplicationDates[i]">{{formateApplicationDate(element.ApplicationDate)}}
                                     </mat-form-field>
-
                                 </td>
                             </ng-container>
 

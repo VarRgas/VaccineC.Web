@@ -629,7 +629,8 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   onSelectionBudgetJuridicalChanged(event: MatAutocompleteSelectedEvent) {
-    this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByResponsible(event.option.value.ID).subscribe(
+    this.budgetSearchId = event.option.value.ID;
+    this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByResponsible(event.option.value.ID, new Date(this.data.Start).toUTCString()).subscribe(
       response => {
         this.isSuggestDosesVisible = true;
         this.tableBudgetProductJuridicalVisible = true;
@@ -854,10 +855,8 @@ export class AddAuthorizationDialog implements OnInit {
 
     let listAuthorizationSuggestionModel = new Array<AuthorizationSuggestionModel>();
 
-    let AuthDate = new Date(this.data.Start).toUTCString();
-
     this.selection.selected.forEach((register: any) => {
-      console.log(register)
+  
       let authorizationSuggestionModel = new AuthorizationSuggestionModel();
       authorizationSuggestionModel.BudgetId = this.budgetSearchId;
       authorizationSuggestionModel.BudgetProductId = register.ID;
@@ -886,6 +885,45 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   public suggestDosesJuridical() {
+
+    if (this.selectionJuridical.selected.length <= 1 && this.dataSourceBudgetProductJuridical.data.length != 0) {
+      this.messageHandler.showMessage("Selecione 2 ou mais produtos!", "warning-snackbar")
+      return;
+    }
+
+    if (this.dataSourceBudgetProductJuridical.data.length <= 1) {
+      this.messageHandler.showMessage("Selecione 2 ou mais produtos!", "warning-snackbar")
+      return;
+    }
+
+    let listAuthorizationSuggestionModel = new Array<AuthorizationSuggestionModel>();
+
+    this.selectionJuridical.selected.forEach((register: any) => {
+
+      let authorizationSuggestionModel = new AuthorizationSuggestionModel();
+      authorizationSuggestionModel.BudgetId = this.budgetSearchId;
+      authorizationSuggestionModel.BudgetProductId = register.ID;
+      authorizationSuggestionModel.BorrowerId = register.BorrowerPersonId;
+      authorizationSuggestionModel.DoseType = register.ProductDose;
+      authorizationSuggestionModel.ProductId = register.Product.ID;
+
+      if (register.ApplicationDate != null) {
+        authorizationSuggestionModel.StartDate = new Date(register.ApplicationDate);
+        authorizationSuggestionModel.StartTime = this.formatHour(new Date(register.ApplicationDate));
+      }
+
+      listAuthorizationSuggestionModel.push(authorizationSuggestionModel);
+    });
+
+    this.authorizationDispatcherService.suggestJuridicalDoses(listAuthorizationSuggestionModel).subscribe(
+      response => {
+        this.selectionJuridical.clear();
+        this.dataSourceBudgetProductJuridical = new MatTableDataSource(response);
+
+      }, error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
 
   }
 

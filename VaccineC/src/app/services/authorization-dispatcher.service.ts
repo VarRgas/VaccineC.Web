@@ -48,4 +48,8 @@ export class AuthorizationsDispatcherService {
     public suggestDoses(data: AuthorizationSuggestionModel[]): Observable<any> {
         return this.httpClient.post(`${baseURL}/SuggestDoses`, data);
     }
+
+    public suggestJuridicalDoses(data: AuthorizationSuggestionModel[]): Observable<any> {
+        return this.httpClient.post(`${baseURL}/SuggestJuridicalDoses`, data);
+    }
 }
