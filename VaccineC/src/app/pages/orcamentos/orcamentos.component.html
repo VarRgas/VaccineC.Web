@@ -96,7 +96,7 @@
                 <mat-tab label="Orçamento" [disabled]="tabBudgetIsDisabled">
                     <ng-template matTabContent>
                         <mat-stepper #stepper class="example-stepper" [orientation]="(stepperOrientation | async)!">
-                            <mat-step [stepControl]="budgetForm" label="Identificação">
+                            <mat-step [stepControl]="budgetForm" label="Identificação" state="icon1">
                                 <form [formGroup]="budgetForm" class="mt-3">
                                     <div class="div-row-input">
                                         <!-- PESSOA -->
@@ -187,7 +187,7 @@
                                     </div>
                                 </form>
                             </mat-step>
-                            <mat-step label="Produtos">
+                            <mat-step label="Produtos" state="icon2">
                                 <div class="demo-button-container col-sm-11">
                                     <button mat-mini-fab class="demo-button me-2 create-button"
                                         matTooltip="Inserir Produto" matTooltipPosition="left"
@@ -297,7 +297,7 @@
                                 </div>
 
                             </mat-step>
-                            <mat-step [stepControl]="budgetForm2" label="Valores">
+                            <mat-step [stepControl]="budgetForm2" label="Valores" state="icon3">
                                 <form [formGroup]="budgetForm2" class="mt-3">
                                     <div class="div-row-input">
                                         <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
@@ -364,7 +364,7 @@
                                     </div>
                                 </form>
                             </mat-step>
-                            <mat-step [stepControl]="budgetNegotiationForm" label="Negociação">
+                            <mat-step [stepControl]="budgetNegotiationForm" label="Negociação" state="icon4">
                                 <form [formGroup]="budgetNegotiationForm" class="mt-3">
                                     <div class="div-row-input values">
                                         <i class="fa-solid fa-cart-shopping me-2"></i>
@@ -514,6 +514,19 @@
                                     </div>
                                 </form>
                             </mat-step>
+                            <!-- Icon overrides. -->
+                            <ng-template matStepperIcon="icon1">
+                                <mat-icon>person</mat-icon>
+                            </ng-template>
+                            <ng-template matStepperIcon="icon2">
+                                <mat-icon>shopping_cart</mat-icon>
+                            </ng-template>
+                            <ng-template matStepperIcon="icon3">
+                                <mat-icon>attach_money</mat-icon>
+                            </ng-template>
+                            <ng-template matStepperIcon="icon4">
+                                <mat-icon>price_check</mat-icon>
+                            </ng-template>
                         </mat-stepper>
                     </ng-template>
                 </mat-tab>

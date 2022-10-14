@@ -31,11 +31,15 @@ import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
 import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 @Component({
   selector: 'app-orcamentos',
   templateUrl: './orcamentos.component.html',
-  styleUrls: ['./orcamentos.component.scss']
+  styleUrls: ['./orcamentos.component.scss'],
+  providers: [{
+    provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false }
+  }]
 })
 export class OrcamentosComponent implements OnInit {
 
