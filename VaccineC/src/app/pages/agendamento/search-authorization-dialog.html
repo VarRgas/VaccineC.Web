@@ -84,7 +84,7 @@ form {
         <div class="col-sm-11 p-0 d-flex">
             <mat-form-field class="search-form-field col-sm-10" appearance="outline">
                 <mat-label>Digite o nº da Autorização ou o nome do Tomador</mat-label>
-                <input matInput type="text" [(ngModel)]="searchAuth">
+                <input matInput type="text" [(ngModel)]="searchAuth" placeholder="(Mínimo 3 caracteres)">
             </mat-form-field>
             <button (click)="loadAuthData()" id="mat-search-button" mat-raised-button
                 color="primary" class="mat-button-entry me-2" [disabled]="searchButtonLoading">

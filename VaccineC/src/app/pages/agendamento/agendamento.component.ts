@@ -162,8 +162,8 @@ export class AgendamentoComponent implements OnInit {
     },
     customButtons: {
       myCustomButton: {
-
         text: 'Buscar',
+        hint: "Buscar Agendamentos",
         click: function () {
 
         }
@@ -620,7 +620,7 @@ export class AddAuthorizationDialog implements OnInit {
       let dataFormatada = new Date(data)
       let tzoffset = (new Date()).getTimezoneOffset() * 60000;
       let dataOk = new Date(dataFormatada.getTime() - tzoffset);
-      
+
       return date = (new Date(dataOk.getTime()).toISOString().slice(0, 16));
     } else {
       return "";
@@ -856,12 +856,18 @@ export class AddAuthorizationDialog implements OnInit {
     let listAuthorizationSuggestionModel = new Array<AuthorizationSuggestionModel>();
 
     this.selection.selected.forEach((register: any) => {
-  
+
       let authorizationSuggestionModel = new AuthorizationSuggestionModel();
       authorizationSuggestionModel.BudgetId = this.budgetSearchId;
       authorizationSuggestionModel.BudgetProductId = register.ID;
       authorizationSuggestionModel.BorrowerId = register.BorrowerPersonId;
-      authorizationSuggestionModel.DoseType = register.ProductDose;
+
+      if (register.ProductDose == null) {
+        authorizationSuggestionModel.DoseType = "";
+      } else {
+        authorizationSuggestionModel.DoseType = register.ProductDose;
+      }
+
       authorizationSuggestionModel.ProductId = register.Product.ID;
 
       if (register.ApplicationDate != null) {
@@ -877,15 +883,15 @@ export class AddAuthorizationDialog implements OnInit {
         this.selection.clear();
 
         this.dataSourceBudgetProduct.data.forEach((budgetProduct: any) => {
-          
+
 
           response.forEach((budgetProductResponse: any) => {
-            if(budgetProduct.ID == budgetProductResponse.ID){
+            if (budgetProduct.ID == budgetProductResponse.ID) {
               console.log(budgetProduct)
               console.log(budgetProductResponse)
               console.log(true)
 
-              if(budgetProductResponse.ApplicationDate != null){
+              if (budgetProductResponse.ApplicationDate != null) {
                 budgetProduct.ApplicationDate = budgetProductResponse.ApplicationDate;
               }
             }
@@ -922,7 +928,13 @@ export class AddAuthorizationDialog implements OnInit {
       authorizationSuggestionModel.BudgetId = this.budgetSearchId;
       authorizationSuggestionModel.BudgetProductId = register.ID;
       authorizationSuggestionModel.BorrowerId = register.BorrowerPersonId;
-      authorizationSuggestionModel.DoseType = register.ProductDose;
+
+      if (register.ProductDose == null) {
+        authorizationSuggestionModel.DoseType = "";
+      } else {
+        authorizationSuggestionModel.DoseType = register.ProductDose;
+      }
+
       authorizationSuggestionModel.ProductId = register.Product.ID;
 
       if (register.ApplicationDate != null) {
@@ -1249,6 +1261,7 @@ export class SearchAuthorizationDialog implements OnInit {
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private eventsDispatcherService: EventsDispatcherService,
     private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService,
     public dialog: MatDialog
   ) { }
 
@@ -1259,8 +1272,9 @@ export class SearchAuthorizationDialog implements OnInit {
   public loadAuthData() {
     this.searchButtonLoading = true;
 
-    if (this.searchAuth == "" || this.searchAuth == null || this.searchAuth == undefined) {
-      this.getAllAuth();
+    if (this.searchAuth == undefined || this.searchAuth == null || this.searchAuth == "") {
+      this.messageHandler.showMessage("É necessário informar no mínimo 3 caracteres para realizar a busca!", "danger-snackbar");
+      this.searchButtonLoading = false;
     } else {
       this.getAuthByParameter();
     }
@@ -1291,13 +1305,11 @@ export class SearchAuthorizationDialog implements OnInit {
         this.dataSource = new MatTableDataSource(response);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         this.searchButtonLoading = false;
       },
       error => {
         this.errorHandler.handleError(error);
         console.log(error);
-
         this.searchButtonLoading = false;
       });
   }
