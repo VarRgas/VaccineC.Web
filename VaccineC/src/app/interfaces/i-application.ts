@@ -1,0 +1,15 @@
+export interface IApplication {
+  Id: string,
+  UserId: string,
+  BudgetId: string,
+  InclusionDate: Date,
+  situation: string,
+  ApplicationDate: Date,
+  DoseType: string,
+  RouteOfAdministration: string,
+  ApplicationPlace: string,
+  details: string,
+  register: Date,
+  MovementsProductsId: string,
+  AuthorizationsId: string,
+}

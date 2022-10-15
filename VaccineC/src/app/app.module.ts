@@ -34,7 +34,6 @@ import { NgChartsModule } from 'ng2-charts';
 import { NgxMaskModule } from 'ngx-mask'
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AplicacaoCadastroComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao-cadastro/aplicacao-cadastro.component';
-import { AplicacaoPesquisaComponent } from './pages/aplicacao/aplicacao-pesquisa/aplicacao-pesquisa.component';
 import { GlobalErrorDialog } from './shared/components/global-error-dialog/global-error-dialog.component';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
@@ -96,7 +95,6 @@ export const MY_FORMATS = {
     ResetPasswordDialog,
     AddBudgetProductDialog,
     AplicacaoCadastroComponent,
-    AplicacaoPesquisaComponent,
     UploadFileComponent,
     AplicationDialog,
     BatchDialog,
