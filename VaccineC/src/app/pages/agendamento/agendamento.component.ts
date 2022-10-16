@@ -43,6 +43,7 @@ import { MatSort } from '@angular/material/sort';
 import { AuthorizationsNotificationsDispatcherService } from 'src/app/services/authorization-notification-dispatcher.service';
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { AuthorizationSuggestionModel } from 'src/app/models/authorization-suggestion-model';
+import { PersonModel } from 'src/app/models/person-model';
 
 defineFullCalendarElement()
 
@@ -228,7 +229,8 @@ export class AgendamentoComponent implements OnInit {
   public openSearchAuthorizationDialog() {
     this.dialogRef = this.dialog.open(SearchAuthorizationDialog, {
       disableClose: true,
-      width: '80vw',
+      maxWidth: '90vw',
+      width: '100%'
     });
   }
 
@@ -1035,6 +1037,10 @@ export class UpdateAuthorizationDialog implements OnInit {
   });
 
   public budgetInformation!: string;
+  public budgetTooltipBudgetNumber!: string;
+  public budgetTooltipResponsible!: string;
+  public budgetTooltipValidity!: string;
+  public budgetTooltipTotalBudgetAmount!: string;
 
   public getAuthorizationByEventId() {
     this.authorizationsDispatcherService.getAuthorizationByEventId(this.eventId).subscribe(
@@ -1047,7 +1053,7 @@ export class UpdateAuthorizationDialog implements OnInit {
         this.treatPersonInfoExhibition(authorization.Person);
         this.personName = authorization.Person.Name;
         this.typeOfService = authorization.TypeOfService;
-        
+
         if (authorization.BudgetProduct.ProductDose == null || authorization.BudgetProduct.ProductDose == '' || authorization.BudgetProduct.ProductDose == undefined) {
           this.product = `${authorization.BudgetProduct.Product.Name}`
         } else {
@@ -1067,16 +1073,20 @@ export class UpdateAuthorizationDialog implements OnInit {
       });
   }
 
-  public getBudget(budgetId: string){
+  public getBudget(budgetId: string) {
     this.budgetDispatcherService.getBudgetById(budgetId).subscribe(
       budget => {
         this.budgetInformation = `Responsável: ${budget.Persons.Name}`
+        this.budgetTooltipBudgetNumber = `Orçamento nº ${budget.BudgetNumber}`
+        this.budgetTooltipResponsible = `Responsável: ${budget.Persons.Name}`
+        this.budgetTooltipValidity = `Validade: ${this.formatDate(new Date(budget.ExpirationDate))}`
+        this.budgetTooltipTotalBudgetAmount = `Total: ${budget.TotalBudgetAmount.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`
         console.log(budget);
       },
       error => {
         console.log(error);
       });
-    
+
   }
 
   public updateAuthorization() {
@@ -1261,11 +1271,22 @@ export class SearchAuthorizationDialog implements OnInit {
   public authSituation!: string;
   public authSituationTitle!: string;
 
+  //Autocomplete Pessoa
+  public myControl = new FormControl();
+  public options: string[] = [];
+  public filteredOptions: Observable<any[]> | undefined;
+
   //Controle para o spinner do button
   public searchButtonLoading = false;
 
   //Variáveis dos inputs
   public searchAuth!: string;
+  public searchSituation = "T";
+  public searchPerson!: any;
+
+  public isFilterSituationVisible = false;
+  public isFilterResponsibleVisible = false;
+  public isFilterVisible = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -1276,6 +1297,7 @@ export class SearchAuthorizationDialog implements OnInit {
     public dialogRef: MatDialogRef<UpdateAuthorizationDialog>,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private eventsDispatcherService: EventsDispatcherService,
+    private personAutocompleteService: PersonAutocompleteService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     public dialog: MatDialog
@@ -1296,28 +1318,28 @@ export class SearchAuthorizationDialog implements OnInit {
     }
   }
 
-  public getAllAuth() {
-    this.authorizationsDispatcherService.getAllAuthorizations().subscribe(
-      response => {
-        console.log(response)
-        this.dataSource = new MatTableDataSource(response);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-
-        this.searchButtonLoading = false;
-      },
-      error => {
-        this.errorHandler.handleError(error);
-        console.log(error);
-
-        this.searchButtonLoading = false;
-      });
-  }
-
   public getAuthByParameter() {
-    this.authorizationsDispatcherService.getAuthorizationByParameter(this.searchAuth).subscribe(
+
+    if (this.searchSituation == undefined || this.searchSituation == null || this.searchSituation == "") {
+      this.searchSituation = "T";
+    }
+
+    if (this.isFilterSituationVisible == false) {
+      this.searchSituation = "T";
+    }
+
+    if (this.searchPerson == undefined || this.searchPerson == null || this.searchPerson == "") {
+      this.searchPerson = new PersonModel();
+      this.searchPerson.ID = "00000000-0000-0000-0000-000000000000";
+    }
+
+    if (this.isFilterResponsibleVisible == false) {
+      this.searchPerson.ID = "00000000-0000-0000-0000-000000000000";
+    }
+
+    this.authorizationsDispatcherService.getAuthorizationByParameter(this.searchAuth, this.searchSituation, this.searchPerson.ID).subscribe(
       response => {
-        console.log(response)
+
         this.dataSource = new MatTableDataSource(response);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -1355,6 +1377,59 @@ export class SearchAuthorizationDialog implements OnInit {
         Id: eventId
       },
     });
+  }
+
+  public showSearchSituation() {
+    
+    if(this.isFilterResponsibleVisible == false){
+      this.searchPerson = new PersonModel();
+    }
+
+    if(this.isFilterSituationVisible == false){
+      this.searchSituation = "T";
+    }
+    
+    this.isFilterVisible = true;
+    this.isFilterSituationVisible = !this.isFilterSituationVisible;
+  }
+
+  public showSearchPerson() {
+    
+    if(this.isFilterResponsibleVisible == false){
+      this.searchPerson = new PersonModel();
+    }
+
+    if(this.isFilterSituationVisible == false){
+      this.searchSituation = "T";
+    }
+
+    this.isFilterVisible = true;
+    this.isFilterResponsibleVisible = !this.isFilterResponsibleVisible;
+  }
+
+
+  public searchPersonByAutoComplete(): void {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterPersons(val || '')
+      })
+    )
+  }
+
+  public filterPersons(val: string): Observable<any[]> {
+    return this.personAutocompleteService.getAllPersonData()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayStatePerson(state: any) {
+    return state && state.Name ? state.Name : '';
   }
 
 }

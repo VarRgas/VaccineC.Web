@@ -2,6 +2,10 @@
     .notify-hover{
         cursor: pointer;
     }
+
+    ::ng-deep .mat-tooltip  {
+        white-space: pre-line !important;
+    }
 </style>
 <div mat-dialog-title class="d-flex justify-content-between">
     <div mat-dialog-title>Agendamento</div>
@@ -39,7 +43,15 @@
             <mat-form-field appearance="fill" class="col-sm-7">
                 <mat-label>Orçamento</mat-label>
                 <input matInput #BudgetNumberinput formControlName="BudgetNumber" [(ngModel)]="budgetNumber" readonly>
-                <mat-hint align="end">{{budgetInformation}}</mat-hint>
+                <mat-hint 
+                    align="end" 
+                    matTooltip="{{budgetTooltipBudgetNumber}}
+                                {{budgetTooltipResponsible}}
+                                {{budgetTooltipValidity}}
+                                {{budgetTooltipTotalBudgetAmount}}" 
+                    matTooltipPosition="above">
+                    {{budgetInformation}}
+                </mat-hint>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-5">

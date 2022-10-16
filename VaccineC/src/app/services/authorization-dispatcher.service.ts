@@ -25,8 +25,8 @@ export class AuthorizationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${eventId}/GetAuthorizationByEventId`);
     }
 
-    public getAuthorizationByParameter(information: string): Observable<any> {
-        return this.httpClient.get(`${baseURL}/${information}/GetAuthorizationByParameter`);
+    public getAuthorizationByParameter(information: string, situation: string, responsible: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${information}/${situation}/${responsible}/GetAuthorizationByParameter`);
     }
 
     public GetSummarySituationAuthorization(): Observable<any> {
