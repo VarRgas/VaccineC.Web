@@ -1,0 +1,51 @@
+<style>
+    .mat-button-entry {
+        margin-bottom: 1rem !important;
+        align-self: center !important;
+    }
+</style>
+<mat-nav-list>
+    <form [formGroup]="budgetProductForm">
+        <div class="div-row-input d-flex">
+            
+            <mat-form-field appearance="fill" class="col-sm-10">
+                <mat-label>Tomador</mat-label>
+                <input 
+                    (click)="searchPersonByAutoComplete()" 
+                    type="text"
+                    #PersonNameinput 
+                    placeholder="Selecione o Tomador"
+                    aria-label="Number" 
+                    matInput 
+                    formControlName="Person"
+                    [matAutocomplete]="autoPerson" 
+                    [(ngModel)]="person"
+                    required>
+                <mat-autocomplete 
+                    #autoPerson="matAutocomplete"
+                    [displayWith]="displayStatePerson">
+                    
+                    <mat-option *ngFor="let acPerson of acPersons | async"
+                        [value]="acPerson">
+                        {{acPerson.Name}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-error *ngIf="budgetProductForm.controls.Person.touched && budgetProductForm.controls.Person.invalid">
+                    <span *ngIf="budgetProductForm.controls.Person.errors?.required">O Tomador é obrigatório.</span>
+                </mat-error>
+            </mat-form-field>
+
+            <button 
+                id="mat-add-button" 
+                (click)="addEditBorrower()"
+                mat-raised-button 
+                class="mat-button-entry create-button" 
+                matTooltip="Salvar Tomador"
+                matTooltipPosition="above">
+            <span class="fa-solid fa-floppy-disk w-20px"></span>
+            </button>
+
+        </div>
+    </form>
+  </mat-nav-list>

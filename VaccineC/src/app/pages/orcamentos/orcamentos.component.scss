@@ -136,7 +136,7 @@ form {
   pointer-events: none !important;
 }
 
-::ng-deep .mat-mini-fab.mat-accent.mat-button-disabled{
+::ng-deep .mat-mini-fab.mat-accent.mat-button-disabled {
   color: rgba(0, 0, 0, 0.26) !important;
   background-color: rgba(0, 0, 0, 0.12) !important;
 }
@@ -182,8 +182,9 @@ form {
   padding-left: 0.75rem;
 }
 
-.highlight{
-  background: #42A948; /* green */
+.highlight {
+  background: #42A948;
+  /* green */
 }
 
 .selected {
@@ -191,6 +192,11 @@ form {
   font-weight: bold !important;
 }
 
-:host ::ng-deep.mat-spinner{
+:host ::ng-deep.mat-spinner {
   margin-right: 0.2rem !important;
+}
+
+#historic-table tr td {
+  white-space: pre-wrap !important;
+  padding-right: 1.5rem;
 }

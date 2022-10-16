@@ -534,12 +534,12 @@
                     <ng-template matTabContent>
                         <div class="search-table">
                             <div class="col-sm-11 search-table-content mat-elevation-z2">
-                                <table class="col-sm-12" mat-table [dataSource]="dataSourceHistoric">
+                                <table class="col-sm-12" mat-table [dataSource]="dataSourceHistoric" id="historic-table">
 
                                     <!-- Register Column -->
                                     <ng-container matColumnDef="Register">
-                                        <th mat-header-cell *matHeaderCellDef> Data </th>
-                                        <td mat-cell *matCellDef="let row"> {{row.Register | date: 'dd/MM/yyyy H:mm'}}
+                                        <th mat-header-cell *matHeaderCellDef style="white-space: unset !important;width: 170px;"> Data </th>
+                                        <td mat-cell *matCellDef="let row" style="white-space: unset !important;width: 170px;"> {{row.Register | date: 'dd/MM/yyyy H:mm'}}
                                         </td>
                                     </ng-container>
 

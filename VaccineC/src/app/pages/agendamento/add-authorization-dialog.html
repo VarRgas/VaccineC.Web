@@ -42,6 +42,11 @@
         padding-left: 2rem !important;
         width: 100px !important;
     }
+
+    .insert-borrower{
+        cursor: pointer;
+        color: var(--cor-produto);
+    }
 </style>
 <div mat-dialog-title class="d-flex justify-content-between">
     <div mat-dialog-title>Agendamento</div>
@@ -174,8 +179,7 @@
 
                     <ng-container matColumnDef="ProductName">
                         <th mat-header-cell *matHeaderCellDef> Produto </th>
-                        <td mat-cell *matCellDef="let element"> {{element.Product == null ? '' :
-                            element.Product.Name}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.Product == null ? '' : element.Product.Name}} </td>
                     </ng-container>
 
                     <!-- Dose -->
@@ -309,8 +313,12 @@
                         <!-- Borrower -->
                         <ng-container matColumnDef="Borrower">
                             <th mat-header-cell *matHeaderCellDef> Tomador </th>
-                            <td mat-cell *matCellDef="let element">{{element.Person == null ? '' :
-                                element.Person.Name}}
+                            <td mat-cell *matCellDef="let element">
+                                {{formatPersonName(element.Person)}}
+                                <span class="{{personNameFormatedClass}}" title="{{personNameFormatedTitle}}" (click)="addEditBorrower(element)">
+                                    <i class="fa-solid {{personNameFormatedIcon}} me-1"></i>
+                                    {{personNameFormated}}
+                                </span>
                             </td>
                         </ng-container>
 

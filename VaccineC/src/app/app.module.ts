@@ -19,7 +19,7 @@ import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.c
 import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog, ConfirmPersonRemoveDialog, ConfirmPersonPhoneRemoveDialog, UpdatePersonPhoneDialog, ConfirmAddressPhoneRemoveDialog, UpdatePersonAddressDialog } from './pages/pessoas/pessoas.component';
 import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDialog, ConfirmCompanyScheduleRemoveDialog, UpdateCompanyScheduleDialog } from './pages/empresa/empresas.component';
 import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, ConfirmProductDosesRemoveDialog, UpdateDialogContentDose } from './pages/produto/produto.component';
-import { AgendamentoComponent, AddAuthorizationDialog, UpdateAuthorizationDialog, ConfirmCancelAuthorizationDialog, SearchAuthorizationDialog, AuthorizationNotificationDialog} from './pages/agendamento/agendamento.component';
+import { AgendamentoComponent, AddBorrowerBottomSheet, AddAuthorizationDialog, UpdateAuthorizationDialog, ConfirmCancelAuthorizationDialog, SearchAuthorizationDialog, AuthorizationNotificationDialog } from './pages/agendamento/agendamento.component';
 import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
 import { AddBudgetProductDialog, OrcamentosComponent, ConfirmBudgetProductRemoveDialog, UpdateBudgetProductDialog, ConfirmBudgetCancelationDialog, RepeatBudgetProductDialog } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent, ConfirmDiscardDialog, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
@@ -46,7 +46,7 @@ import { registerLocaleData } from '@angular/common';
 import { MatSortModule } from '@angular/material/sort';
 import { ConectionErrorComponent } from './pages/error/conection-error/conection-error.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 registerLocaleData(localePt, 'pt');
 
 export const MY_FORMATS = {
@@ -130,7 +130,8 @@ export const MY_FORMATS = {
     UpdateAuthorizationDialog,
     ConfirmCancelAuthorizationDialog,
     SearchAuthorizationDialog,
-    AuthorizationNotificationDialog
+    AuthorizationNotificationDialog,
+    AddBorrowerBottomSheet
   ],
   imports: [
     BrowserModule,

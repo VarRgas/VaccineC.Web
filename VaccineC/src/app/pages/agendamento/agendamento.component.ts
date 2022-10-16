@@ -44,6 +44,8 @@ import { AuthorizationsNotificationsDispatcherService } from 'src/app/services/a
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { AuthorizationSuggestionModel } from 'src/app/models/authorization-suggestion-model';
 import { PersonModel } from 'src/app/models/person-model';
+import { MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { BudgetProductModel } from 'src/app/models/budget-product-model';
 
 defineFullCalendarElement()
 
@@ -370,6 +372,7 @@ export class AddAuthorizationDialog implements OnInit {
     private budgetsProductsDispatcherService: BudgetsProductsDispatcherService,
     private authorizationDispatcherService: AuthorizationsDispatcherService,
     private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
+    private _bottomSheet: MatBottomSheet,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -533,7 +536,8 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
-
+    this.selection.clear();
+    this.selectionJuridical.clear();
     this.personType = event.option.value.PersonType;
     this.personPrincipalInfoVisible = false;
     this.profilePicExhibition = `${this.imagePathUrlDefault}`;
@@ -597,7 +601,8 @@ export class AddAuthorizationDialog implements OnInit {
     this.budgetSearchId = event.option.value.ID;
     this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByBorrower(event.option.value.ID, this.authorizationForm.value.PersonId.ID, new Date(this.data.Start).toUTCString()).subscribe(
       response => {
-
+        this.selection.clear();
+        this.selectionJuridical.clear();
         this.dataSourceBudgetProduct = new MatTableDataSource(response);
         this.tableBudgetProductPhysicalVisible = true;
         this.isSuggestDosesVisible = true;
@@ -634,6 +639,9 @@ export class AddAuthorizationDialog implements OnInit {
     this.budgetSearchId = event.option.value.ID;
     this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByResponsible(event.option.value.ID, new Date(this.data.Start).toUTCString()).subscribe(
       response => {
+        this.selection.clear();
+        this.selectionJuridical.clear();
+
         this.isSuggestDosesVisible = true;
         this.tableBudgetProductJuridicalVisible = true;
         this.dataSourceBudgetProductJuridical = new MatTableDataSource(response);
@@ -719,10 +727,23 @@ export class AddAuthorizationDialog implements OnInit {
       return;
     }
 
+    let countAux = 0;
+
+    this.selectionJuridical.selected.forEach((register: any) => {
+      if(register.BorrowerPersonId == null){
+        countAux++;
+      }
+    });
+
+    if(countAux > 0){
+      this.messageHandler.showMessage("Existem produtos selecionados sem Tomador informado, verifique!", "warning-snackbar");
+      return;
+    }
+
     let listAuthorizationModel = new Array<AuthorizationModel>();
 
     this.selectionJuridical.selected.forEach((register: any) => {
-      console.log(register)
+
       let startTime = this.formatHour(new Date(register.ApplicationDate));
       let startDate = new Date(register.ApplicationDate);
       startDate.setHours(0, 0, 0, 0);
@@ -744,10 +765,8 @@ export class AddAuthorizationDialog implements OnInit {
       authorizationModel.BudgetProductId = register.ID;
       authorizationModel.Event = eventModel;
 
-
       listAuthorizationModel.push(authorizationModel);
     });
-    console.log(listAuthorizationModel)
 
     this.authorizationDispatcherService.createOnDemand(listAuthorizationModel).subscribe(
       response => {
@@ -885,22 +904,15 @@ export class AddAuthorizationDialog implements OnInit {
         this.selection.clear();
 
         this.dataSourceBudgetProduct.data.forEach((budgetProduct: any) => {
-
-
           response.forEach((budgetProductResponse: any) => {
             if (budgetProduct.ID == budgetProductResponse.ID) {
-              console.log(budgetProduct)
-              console.log(budgetProductResponse)
-              console.log(true)
-
               if (budgetProductResponse.ApplicationDate != null) {
                 budgetProduct.ApplicationDate = budgetProductResponse.ApplicationDate;
               }
             }
           });
-
         });
-        console.log(response)
+
         //this.dataSourceBudgetProduct = new MatTableDataSource(response);
 
       }, error => {
@@ -929,7 +941,10 @@ export class AddAuthorizationDialog implements OnInit {
       let authorizationSuggestionModel = new AuthorizationSuggestionModel();
       authorizationSuggestionModel.BudgetId = this.budgetSearchId;
       authorizationSuggestionModel.BudgetProductId = register.ID;
-      authorizationSuggestionModel.BorrowerId = register.BorrowerPersonId;
+
+      if (register.BorrowerPersonId != null) {
+        authorizationSuggestionModel.BorrowerId = register.BorrowerPersonId;
+      }
 
       if (register.ProductDose == null) {
         authorizationSuggestionModel.DoseType = "";
@@ -950,8 +965,16 @@ export class AddAuthorizationDialog implements OnInit {
     this.authorizationDispatcherService.suggestJuridicalDoses(listAuthorizationSuggestionModel).subscribe(
       response => {
         this.selectionJuridical.clear();
-        this.dataSourceBudgetProductJuridical = new MatTableDataSource(response);
 
+        this.dataSourceBudgetProductJuridical.data.forEach((budgetProduct: any) => {
+          response.forEach((budgetProductResponse: any) => {
+            if (budgetProduct.ID == budgetProductResponse.ID) {
+              if (budgetProductResponse.ApplicationDate != null) {
+                budgetProduct.ApplicationDate = budgetProductResponse.ApplicationDate;
+              }
+            }
+          });
+        });
       }, error => {
         console.log(error);
         this.errorHandler.handleError(error);
@@ -976,8 +999,54 @@ export class AddAuthorizationDialog implements OnInit {
     const timeDiff = Math.abs(Date.now() - bdate.getTime());
     return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
   }
-}
 
+  public personNameFormated!: string;
+  public personNameFormatedClass!: string;
+  public personNameFormatedIcon!: string;
+  public personNameFormatedTitle!: string
+
+  public formatPersonName(person: any) {
+
+    if (person == undefined || person == null) {
+      this.personNameFormatedIcon = 'fa-circle-plus'
+      this.personNameFormatedClass = 'insert-borrower';
+      this.personNameFormated = 'Inserir Tomador';
+      this.personNameFormatedTitle = 'Inserir Tomador'
+    } else {
+      this.personNameFormatedIcon = 'fa-pen-to-square'
+      this.personNameFormatedClass = 'insert-borrower';
+      this.personNameFormated = person.Name;
+      this.personNameFormatedTitle = 'Alterar Tomador'
+    }
+  }
+
+  public addEditBorrower(element: any) {
+
+    const bottomSheetRef = this._bottomSheet.open(AddBorrowerBottomSheet, {
+      data: {
+        ID: element.ID
+      }
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.budgetsProductsDispatcherService.GetAllPendingBudgetsProductsByResponsible(this.budgetSearchId, new Date(this.data.Start).toUTCString()).subscribe(
+            response => {
+              this.selection.clear();
+              this.selectionJuridical.clear();
+              this.isSuggestDosesVisible = true;
+              this.tableBudgetProductJuridicalVisible = true;
+              this.dataSourceBudgetProductJuridical = new MatTableDataSource(response);
+            },
+            error => {
+              console.log(error);
+            });
+        }
+      });
+  }
+
+}
 
 //DIALOG UPDATE AUTHORIZATION
 @Component({
@@ -1380,26 +1449,26 @@ export class SearchAuthorizationDialog implements OnInit {
   }
 
   public showSearchSituation() {
-    
-    if(this.isFilterResponsibleVisible == false){
+
+    if (this.isFilterResponsibleVisible == false) {
       this.searchPerson = new PersonModel();
     }
 
-    if(this.isFilterSituationVisible == false){
+    if (this.isFilterSituationVisible == false) {
       this.searchSituation = "T";
     }
-    
+
     this.isFilterVisible = true;
     this.isFilterSituationVisible = !this.isFilterSituationVisible;
   }
 
   public showSearchPerson() {
-    
-    if(this.isFilterResponsibleVisible == false){
+
+    if (this.isFilterResponsibleVisible == false) {
       this.searchPerson = new PersonModel();
     }
 
-    if(this.isFilterSituationVisible == false){
+    if (this.isFilterSituationVisible == false) {
       this.searchSituation = "T";
     }
 
@@ -1499,6 +1568,107 @@ export class AuthorizationNotificationDialog implements OnInit {
 
   public formatHour(hour: string) {
     return `${hour.substring(0, hour.length - 3)}`
+  }
+
+}
+
+@Component({
+  selector: 'add-borrower-bottom-sheet',
+  templateUrl: 'add-borrower-bottom-sheet.html',
+})
+export class AddBorrowerBottomSheet implements OnInit {
+
+  myPersonControl = new FormControl();
+  acPerson: string[] = [];
+  acPersons: Observable<any[]> | undefined;
+
+  public budgetProductId!: string;
+  public person!: any;
+
+  constructor(
+    private _bottomSheetRef: MatBottomSheetRef<AddBorrowerBottomSheet>,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+    private personAutocompleteService: PersonAutocompleteService,
+    private formBuilder: FormBuilder,
+    private messageHandler: MessageHandlerService,
+    private errorHandler: ErrorHandlerService,
+    private budgetsProductsDispatcherService: BudgetsProductsDispatcherService
+  ) { }
+
+  //Form
+  budgetProductForm: FormGroup = this.formBuilder.group({
+    Person: [null, [Validators.required]]
+  });
+
+  ngOnInit(): void {
+    this.budgetProductId = this.data.ID;
+    this.searchBudgetProductById();
+  }
+
+  openLink(event: MouseEvent): void {
+    this._bottomSheetRef.dismiss();
+    event.preventDefault();
+  }
+
+  public searchBudgetProductById() {
+    this.budgetsProductsDispatcherService.getBudgetProductById(this.budgetProductId).subscribe(
+      response => {
+        if (response.BorrowerPersonId != null) {
+          this.person = response.Person;
+        }
+      },
+      error => {
+        this.errorHandler.handleError(error);
+        console.log(error);
+      });
+  }
+
+  searchPersonByAutoComplete() {
+    this.acPersons = this.myPersonControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterPerson(val || '')
+      })
+    )
+  }
+
+  filterPerson(val: string): Observable<any[]> {
+    return this.personAutocompleteService.getPersonPhysicalData()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayStatePerson(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
+  addEditBorrower() {
+    if (!this.budgetProductForm.valid) {
+      console.log(this.budgetProductForm);
+      this.budgetProductForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+      return;
+    }
+
+    let budgetProduct = new BudgetProductModel();
+    budgetProduct.id = this.budgetProductId;
+    budgetProduct.borrowerPersonId = this.budgetProductForm.value.Person.ID;
+    budgetProduct.userId = localStorage.getItem('userId')!;
+
+    this.budgetsProductsDispatcherService.updateBudgetProductBorrower(budgetProduct.id, budgetProduct).subscribe(
+      response => {
+        this.messageHandler.showMessage("Tomador atualizado com sucesso!", "success-snackbar");
+        this._bottomSheetRef.dismiss(response);
+      },
+      error => {
+        this.errorHandler.handleError(error);
+        console.log(error);
+      });
   }
 
 }

@@ -53,4 +53,8 @@ export class BudgetsProductsDispatcherService {
         return this.httpClient.delete(`${baseURL}/${id}/${userId}/Delete`);
     }
 
+    public updateBudgetProductBorrower(id: string, data: object): Observable<any> {
+        return this.httpClient.put(`${baseURL}/${id}/UpdateBorrowerPerson`, data);
+    }
+
 }
