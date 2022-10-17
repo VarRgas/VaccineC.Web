@@ -259,7 +259,6 @@ export class OrcamentosComponent implements OnInit {
       this.isRemoveBudgetNegotiationHidden = true;
       this.isDefinePaymentVisible = false;
     } else if (situation == "F") {
-      console.log("F")
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;
@@ -1554,6 +1553,7 @@ export class UpdateBudgetProductDialog implements OnInit {
   ProductDose!: string;
   Situation!: string;
   SituationBudget!: string;
+  SituationBudgetProduct!: string;
   Details!: string;
   DosesList!: any;
 
@@ -1587,18 +1587,23 @@ export class UpdateBudgetProductDialog implements OnInit {
 
   ngOnInit(): void {
     this.Id = this.data.ID;
-    if (this.data.Situation != "P") {
-      this.isSaveButtonVisible = false;
-    } else {
-      this.isSaveButtonVisible = true;
-    }
+    this.SituationBudgetProduct = this.data.Situation;
     this.getBudgetProductById(this.Id);
   }
 
   getBudgetProductById(id: string): void {
     this.budgetProductService.getBudgetProductById(id).subscribe(
       result => {
-        console.log(result)
+        if (this.SituationBudgetProduct != "P") {
+          this.isSaveButtonVisible = false;
+        } else {
+          if (result.SituationProduct == "E") {
+            this.isSaveButtonVisible = false;
+          } else {
+            this.isSaveButtonVisible = true;
+          }
+        }
+
         this.Id = result.ID;
         this.PersonName = result.Person;
         this.ProductName = result.Product;

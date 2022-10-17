@@ -549,6 +549,8 @@ export class AddAuthorizationDialog implements OnInit {
     this.cellphonesList = "";
     this.isNotifyChecked = false;
     this.isSuggestDosesVisible = false;
+    this.tableBudgetProductPhysicalVisible = false;
+    this.tableBudgetProductJuridicalVisible = false;
 
     this.authorizationForm.clearValidators();
     this.authorizationForm.updateValueAndValidity();

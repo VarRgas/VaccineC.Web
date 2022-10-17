@@ -47,13 +47,17 @@
         cursor: pointer;
         color: var(--cor-produto);
     }
+
+    :host ::ng-deep .mat-dialog-content {
+        max-height: 76vh;
+    }
 </style>
 <div mat-dialog-title class="d-flex justify-content-between">
     <div mat-dialog-title>Agendamento</div>
     <div title="Data de Agendamento" id="teste" style="color:#858796;font-size: 13px;"><i
             class="fa-solid fa-calendar me-2"></i>{{authorizationDateFormated}}</div>
 </div>
-<mat-dialog-content class="mat-typography" style="max-height: 70vh">
+<mat-dialog-content class="mat-typography">
     <form [formGroup]="authorizationForm">
         <div class="div-row-input d-flex mb-3" style="align-items:center;justify-content: center;">
             <div>
