@@ -15,6 +15,9 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 export class AplicacaoComponent implements OnInit {
 
+  public imagePathUrl = 'http://localhost:5000/';
+  public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
+
   //Controle de habilitação de campos
   public searchButtonLoading = false;
 
@@ -26,12 +29,10 @@ export class AplicacaoComponent implements OnInit {
   public informationField!: string;
   public value = '';
 
+  public profilePicExhibition!: string;
+
   public displayedSearchColumns: string[] = ['imageUrl','pacient', 'date'];
   public dataSourceSearch = new MatTableDataSource<IApplication>();
-
-  public displayedColumns: string[] = ['product', 'scheduling', 'date'];
-  public dataSource = ELEMENT_DATA;
-
 
   @ViewChild('paginatorApplication') paginatorApplication!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -57,6 +58,7 @@ export class AplicacaoComponent implements OnInit {
     this.applicationsDispatcherService.getAllApplications()
       .subscribe(
         applications => {
+          console.log(applications)
           this.dataSourceSearch = new MatTableDataSource(applications);
           this.dataSourceSearch.paginator = this.paginatorApplication;
           this.dataSourceSearch.sort = this.sort;
@@ -83,15 +85,13 @@ export class AplicacaoComponent implements OnInit {
         this.searchButtonLoading = false;
       });
   }
-}
 
-export interface PersonElement {
-  product: string;
-  scheduling: string;
-  date: string;
-}
+  public formateProfilePicExhibition(profilePic: string){
+    if(profilePic == undefined || profilePic == null || profilePic == ""){
+      return `${this.imagePathUrlDefault}`;
+    }else{
+      return `${this.imagePathUrl}${profilePic}`;
+    }
+  }
 
-const ELEMENT_DATA: PersonElement[] = [
-  { product: 'VACINA INFLUENZA', scheduling: '12345', date: '15/08/2022 10:30' },
-  { product: 'VACINA BCG', scheduling: '67891', date: '16/08/2022 15:00' }
-];
+}
