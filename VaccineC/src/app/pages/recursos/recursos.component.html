@@ -4,7 +4,6 @@
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Recursos" containerPath="Gerencial" [information]="informationField">
             <mat-tab-group #tabGroup animationDuration="0ms">
-
                 <!-- SEARCH TAB -->
                 <mat-tab label="Pesquisa">
                     <div class="search-group">
@@ -16,26 +15,34 @@
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </mat-form-field>
-                            <button (click)="loadResourceData()" id="mat-search-button" mat-raised-button
-                                color="primary" class="mat-button-entry me-2" [disabled]="searchButtonLoading">
+                            <button 
+                                (click)="loadResourceData()" 
+                                id="mat-search-button" 
+                                mat-raised-button
+                                color="primary" 
+                                class="mat-button-entry me-2" 
+                                [disabled]="searchButtonLoading">
+
                                 <div class="spinner">
                                     <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
-                                    <span *ngIf="!searchButtonLoading"
-                                        class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
-                                    Pesquisar
+                                    <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span> Pesquisar
                                 </div>
                             </button>
-                            <button id="mat-add-button" mat-raised-button class="mat-button-entry create-button"
-                                matTooltip="Novo Recurso" matTooltipPosition="above" (click)="tabGroup.selectedIndex=1"
-                                (click)="addNewResource()"><span class="fa-solid fa-plus w-20px"></span></button>
+                            <button 
+                                id="mat-add-button" 
+                                mat-raised-button 
+                                class="mat-button-entry create-button"
+                                matTooltip="Novo Recurso" 
+                                matTooltipPosition="above" 
+                                (click)="tabGroup.selectedIndex=1"
+                                (click)="addNewResource()">
+                                <span class="fa-solid fa-plus w-20px"></span></button>
                         </div>
                     </div>
 
-
                     <div id="search-table">
                         <div class="col-sm-11 search-table-content mat-elevation-z2">
-                            <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
-                                matSortDirection="asc">
+                            <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name" matSortDirection="asc">
 
                                 <!-- Name Column -->
                                 <ng-container matColumnDef="Name">
@@ -58,10 +65,9 @@
                                 <ng-container matColumnDef="Options">
                                     <th mat-header-cell *matHeaderCellDef> </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <button mat-icon-button color="primary" title="Visualizar"><i
-                                                class="fa-solid fa-pen-to-square" (click)="tabGroup.selectedIndex=1"
-                                                (click)="editResource(row.ID)"></i></button>
-
+                                        <button mat-icon-button color="primary" title="Visualizar">
+                                            <i class="fa-solid fa-pen-to-square" (click)="tabGroup.selectedIndex=1" (click)="editResource(row.ID)"></i>
+                                        </button>
                                     </td>
                                 </ng-container>
 
@@ -87,8 +93,7 @@
                             <div class="offset-sm-1 col-sm-11 p-0">
 
                                 <mat-form-field [hidden]="true">
-                                    <input matInput #NameIdResource formControlName="IdResource" id="IdResource"
-                                        [(ngModel)]="IdResource">
+                                    <input matInput #NameIdResource formControlName="IdResource" id="IdResource" [(ngModel)]="IdResource">
                                 </mat-form-field>
 
                                 <div class="div-row-input">
@@ -106,46 +111,41 @@
                                 <div class="div-row-input">
                                     <mat-form-field appearance="fill" class="col-sm-6">
                                         <mat-label>URL</mat-label>
-                                        <input matInput #UrlNameInput formControlName="UrlName" maxlength="255"
-                                            placeholder="Ex. https://vaccinec.com.br/pessoas" id="UrlName"
-                                            [(ngModel)]="UrlName" required>
+                                        <input 
+                                            matInput 
+                                            #UrlNameInput 
+                                            formControlName="UrlName" 
+                                            maxlength="255"
+                                            placeholder="Ex. https://vaccinec.com.br/pessoas" 
+                                            id="UrlName"
+                                            [(ngModel)]="UrlName" 
+                                            required>
                                         <mat-hint align="end">{{UrlNameInput.value?.length || 0}}/255</mat-hint>
-                                        <mat-error
-                                            *ngIf="resourceForm.controls.UrlName.touched && resourceForm.controls.UrlName.invalid">
-                                            <span *ngIf="resourceForm.controls.UrlName.errors?.required">A URL é
-                                                obrigatória.</span>
-                                            <span *ngIf="resourceForm.controls.UrlName.errors?.maxlength">A URL deve ter
-                                                menos de 255 caracteres.</span>
+                                        <mat-error *ngIf="resourceForm.controls.UrlName.touched && resourceForm.controls.UrlName.invalid">
+                                            <span *ngIf="resourceForm.controls.UrlName.errors?.required">A URL é obrigatória.</span>
+                                            <span *ngIf="resourceForm.controls.UrlName.errors?.maxlength">A URL deve ter menos de 255 caracteres.</span>
                                         </mat-error>
                                     </mat-form-field>
                                 </div>
 
                                 <div class="div-row-input registration-button-row d-flex">
-
-                                    <button mat-raised-button class="create-button" (click)="createUpdateResource()"
-                                        type="button" [disabled]="createButtonLoading">
+                                    <button mat-raised-button class="create-button" (click)="createUpdateResource()" type="button" [disabled]="createButtonLoading">
                                         <div class="spinner">
                                             <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
-                                            <span *ngIf="!createButtonLoading"
-                                                class="fa-solid fa-floppy-disk me-1 w-20px"></span>
-                                            Salvar
+                                            <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span> Salvar
                                         </div>
                                     </button>
 
-                                    <button mat-raised-button color="warn" (click)="deleteResource()" type="button"
-                                        [disabled]="!IdResource">
+                                    <button mat-raised-button color="warn" (click)="deleteResource()" type="button" [disabled]="!IdResource">
                                         <div>
-                                            <span class="fa-solid fa-trash me-1 w-20px"></span>
-                                            Excluir
+                                            <span class="fa-solid fa-trash me-1 w-20px"></span> Excluir
                                         </div>
                                     </button>
                                 </div>
-
                             </div>
                         </div>
                     </form>
                 </mat-tab>
-
             </mat-tab-group>
         </app-container>
     </div>

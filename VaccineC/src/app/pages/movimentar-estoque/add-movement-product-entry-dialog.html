@@ -1,23 +1,30 @@
 <h2 mat-dialog-title>Produto</h2>
 <mat-dialog-content class="mat-typography" style="max-height: initial;">
     <form [formGroup]="movementProductForm">
+        
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>Produto</mat-label>
-                <input type="text" (click)="searchProductByAutoComplete()" formControlName="ProductName"
-                    [(ngModel)]="ProductName" placeholder="Selecione o Produto" aria-label="Number" matInput
-                    [formControl]="myControl" [matAutocomplete]="auto" required>
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState"
-                    (optionSelected)="onSelectionChanged($event)">
+                <input type="text" 
+                       (click)="searchProductByAutoComplete()" 
+                       formControlName="ProductName"
+                       [(ngModel)]="ProductName" 
+                       placeholder="Selecione o Produto" 
+                       aria-label="Number" 
+                       matInput
+                       [formControl]="myControl" 
+                       [matAutocomplete]="auto" 
+                       required>
+                <mat-autocomplete #auto="matAutocomplete" 
+                                  [displayWith]="displayState"
+                                  (optionSelected)="onSelectionChanged($event)">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                     </mat-option>
                 </mat-autocomplete>
                 <mat-icon matSuffix>search</mat-icon>
-                <mat-error
-                    *ngIf="movementProductForm.controls.ProductName.touched && movementProductForm.controls.ProductName.invalid">
-                    <span *ngIf="movementProductForm.controls.ProductName.errors?.required">O Produto é
-                        obrigatório.</span>
+                <mat-error *ngIf="movementProductForm.controls.ProductName.touched && movementProductForm.controls.ProductName.invalid">
+                    <span *ngIf="movementProductForm.controls.ProductName.errors?.required">O Produto é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -25,12 +32,15 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Quantidade</mat-label>
-                <input type="number" matInput formControlName="UnitsNumber" [(ngModel)]="UnitsNumber"
-                    (blur)="getAmount()" placeholder="Ex. 10" required>
-                <mat-error
-                    *ngIf="movementProductForm.controls.UnitsNumber.touched && movementProductForm.controls.UnitsNumber.invalid">
-                    <span *ngIf="movementProductForm.controls.UnitsNumber.errors?.required">A Quantidade é
-                        obrigatória.</span>
+                <input type="number" 
+                       matInput 
+                       formControlName="UnitsNumber" 
+                       [(ngModel)]="UnitsNumber"
+                       (blur)="getAmount()" 
+                       placeholder="Ex. 10" 
+                       required>
+                <mat-error *ngIf="movementProductForm.controls.UnitsNumber.touched && movementProductForm.controls.UnitsNumber.invalid">
+                    <span *ngIf="movementProductForm.controls.UnitsNumber.errors?.required">A Quantidade é obrigatória.</span>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -38,24 +48,37 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
                 <mat-label>R$ Unitário</mat-label>
-                <input matInput #NameInput formControlName="UnitaryValue" [(ngModel)]="UnitaryValue" placeholder="0,00"
-                    required readonly placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'"
-                    [decimalMarker]="','">
+                <input matInput 
+                       #NameInput 
+                       formControlName="UnitaryValue" 
+                       [(ngModel)]="UnitaryValue" 
+                       placeholder="0,00"
+                       required 
+                       readonly 
+                       placeholder="0,00" 
+                       mask="separator.2" 
+                       [thousandSeparator]="'.'"
+                       [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
-                <mat-error
-                    *ngIf="movementProductForm.controls.UnitaryValue.touched && movementProductForm.controls.UnitaryValue.invalid">
-                    <span *ngIf="movementProductForm.controls.UnitaryValue.errors?.required">O R$ Unitário é
-                        obrigatório.</span>
+                <mat-error *ngIf="movementProductForm.controls.UnitaryValue.touched && movementProductForm.controls.UnitaryValue.invalid">
+                    <span *ngIf="movementProductForm.controls.UnitaryValue.errors?.required">O R$ Unitário é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
                 <mat-label>R$ Total</mat-label>
-                <input matInput formControlName="Amount" [(ngModel)]="Amount" placeholder="0,00" required readonly
-                    placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
+                <input matInput 
+                       formControlName="Amount" 
+                       [(ngModel)]="Amount" 
+                       placeholder="0,00" 
+                       required 
+                       readonly
+                       placeholder="0,00"
+                       mask="separator.2" 
+                       [thousandSeparator]="'.'" 
+                       [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
-                <mat-error
-                    *ngIf="movementProductForm.controls.Amount.touched && movementProductForm.controls.Amount.invalid">
+                <mat-error *ngIf="movementProductForm.controls.Amount.touched && movementProductForm.controls.Amount.invalid">
                     <span *ngIf="movementProductForm.controls.Amount.errors?.required">O R$ Total é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
@@ -66,22 +89,27 @@
         <div class="div-row-input mt-3">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Lote</mat-label>
-                <input matInput formControlName="Batch" [(ngModel)]="Batch" placeholder="Ex. A1B2C3" (blur)="getBatch()"
-                    required>
-                <mat-error
-                    *ngIf="movementProductForm.controls.Batch.touched && movementProductForm.controls.Batch.invalid">
+                <input matInput 
+                       formControlName="Batch" 
+                       [(ngModel)]="Batch" 
+                       placeholder="Ex. A1B2C3" 
+                       (blur)="getBatch()"
+                       required>
+                <mat-error *ngIf="movementProductForm.controls.Batch.touched && movementProductForm.controls.Batch.invalid">
                     <span *ngIf="movementProductForm.controls.Batch.errors?.required">O Lote é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Fabricante</mat-label>
-                <input matInput formControlName="Manufacturer" [(ngModel)]="Manufacturer" placeholder="Ex. Fluarix"
-                    required [readonly]="isFieldReadonly">
-                <mat-error
-                    *ngIf="movementProductForm.controls.Manufacturer.touched && movementProductForm.controls.Manufacturer.invalid">
-                    <span *ngIf="movementProductForm.controls.Manufacturer.errors?.required">O Fabricante é
-                        obrigatório.</span>
+                <input matInput 
+                       formControlName="Manufacturer" 
+                       [(ngModel)]="Manufacturer" 
+                       placeholder="Ex. Fluarix"
+                       required 
+                       [readonly]="isFieldReadonly">
+                <mat-error *ngIf="movementProductForm.controls.Manufacturer.touched && movementProductForm.controls.Manufacturer.invalid">
+                    <span *ngIf="movementProductForm.controls.Manufacturer.errors?.required">O Fabricante é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -89,33 +117,38 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Data de Fabricação</mat-label>
-                <input matInput formControlName="BatchManufacturingDate" [(ngModel)]="BatchManufacturingDate"
-                    [matDatepicker]="picker" required [readonly]="isFieldReadonly">
+                <input matInput 
+                       formControlName="BatchManufacturingDate" 
+                       [(ngModel)]="BatchManufacturingDate"
+                       [matDatepicker]="picker" 
+                       required 
+                       [readonly]="isFieldReadonly">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
-                <mat-error
-                    *ngIf="movementProductForm.controls.BatchManufacturingDate.touched && movementProductForm.controls.BatchManufacturingDate.invalid">
-                    <span *ngIf="movementProductForm.controls.BatchManufacturingDate.errors?.required">A Data de
-                        Fabricação é obrigatória.</span>
+                <mat-error *ngIf="movementProductForm.controls.BatchManufacturingDate.touched && movementProductForm.controls.BatchManufacturingDate.invalid">
+                    <span *ngIf="movementProductForm.controls.BatchManufacturingDate.errors?.required">A Data de Fabricação é obrigatória.</span>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Data de Validade</mat-label>
-                <input matInput formControlName="BatchExpirationDate" [(ngModel)]="BatchExpirationDate"
-                    [matDatepicker]="picker2" required [readonly]="isFieldReadonly">
+                <input matInput 
+                       formControlName="BatchExpirationDate" 
+                       [(ngModel)]="BatchExpirationDate"
+                       [matDatepicker]="picker2" 
+                       required 
+                       [readonly]="isFieldReadonly">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
-                <mat-error
-                    *ngIf="movementProductForm.controls.BatchExpirationDate.touched && movementProductForm.controls.BatchExpirationDate.invalid">
-                    <span *ngIf="movementProductForm.controls.BatchExpirationDate.errors?.required">A Data de Validade é
-                        obrigatória.</span>
+                <mat-error *ngIf="movementProductForm.controls.BatchExpirationDate.touched && movementProductForm.controls.BatchExpirationDate.invalid">
+                    <span *ngIf="movementProductForm.controls.BatchExpirationDate.errors?.required">A Data de Validade é obrigatória.</span>
                 </mat-error>
             </mat-form-field>
         </div>
     </form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
-    <button mat-flat-button (click)="saveMovementProductEntry()" cdkFocusInitial class="create-button">Salvar</button>
+    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
+    <button mat-flat-button (click)="saveMovementProductEntry()" class="create-button">Salvar</button>
 </mat-dialog-actions>

@@ -2,11 +2,17 @@
 <mat-dialog-content class="mat-typography">
     <p>Tem certeza que deseja descartar todas as unidades desse lote?</p>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
     <button mat-flat-button
-            mat-dialog-close color="primary">Cancelar</button>
+            mat-dialog-close 
+            color="primary"
+            cdkFocusInitial>
+            Cancelar
+    </button>
     <button mat-flat-button
             color="warn"
-            [mat-dialog-close]="true"
-            cdkFocusInitial>Descartar</button>
+            [mat-dialog-close]="true">
+            Descartar
+    </button>
 </mat-dialog-actions>

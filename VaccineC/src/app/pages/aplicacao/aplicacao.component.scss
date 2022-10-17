@@ -7,16 +7,12 @@
   margin-bottom: 2rem;
 }
 
-#search-table {
-  display: flex;
-  justify-content: center;
-  overflow-x: initial;
-  margin: 0.5rem;
-  border: none
+.search-table-content {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
-
-:host ::ng-deep .mat-form-field-wrapper {
+:host ::ng-deep .search-group .mat-form-field-wrapper {
   padding: 0px;
 }
 
@@ -25,17 +21,182 @@
   align-self: center !important;
 }
 
-img {
-  width: 30px;
-  height: 30px;
+form {
+  width: 100% !important;
 }
 
-.mat-column-Select, .mat-column-imageUrl {
-  flex: 0 0 80px !important;
+.spinner-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-container {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 0px !important;
+  align-self: center !important;
+}
+
+.spinner {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-button {
+  height: 40px;
+  bottom: 6px;
+  margin-left: 5px;
+}
+
+.edit-button {
+  height: 40px;
+  bottom: 6px;
+  margin-left: 10px;
+}
+
+.float-btn {
+  z-index: 100;
+  position: absolute;
+  bottom: 24px;
+  right: 36px;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  height: 100% !important;
+}
+
+:host ::ng-deep .mat-tab-group {
+  height: 100% !important;
+}
+
+:host ::ng-deep .mat-chip {
+  font-size: 12px !important;
+  color: #858796 !important;
+}
+
+.example-stepper {
+  font-size: 14px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+#movement-product-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
+.mat-footer-row {
+  font-weight: bold !important;
+}
+
+.mat-column-Select,
+.mat-column-Options {
+  flex: 0 0 100px !important;
   white-space: unset !important;
 }
 
-.mat-cell-Select, .mat-cell-imageUrl {
-  flex: 0 0 80px !important;
+.mat-cell-Select,
+.mat-cell-Options {
+  flex: 0 0 100px !important;
   white-space: unset !important;
+}
+
+.mat-column-BudgetNumber {
+  flex: 0 0 150px !important;
+  white-space: unset !important;
+}
+
+.mat-cell-BudgetNumber {
+  flex: 0 0 150px !important;
+  white-space: unset !important;
+}
+
+
+#budget-product-table {
+  display: flex;
+  justify-content: center;
+  overflow-x: initial;
+  margin: 0.5rem;
+  border: none
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+
+::ng-deep .mat-mini-fab.mat-accent.mat-button-disabled {
+  color: rgba(0, 0, 0, 0.26) !important;
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.budget-aproved {
+  color: #59b0dd;
+  opacity: 0.5;
+}
+
+.budget-pending {
+  color: #ffc107;
+  opacity: 0.5;
+}
+
+.budget-canceled {
+  color: #dc3545;
+  opacity: 0.5;
+}
+
+.budget-expired {
+  color: #9BA7C0;
+  opacity: 0.5;
+}
+
+.budget-finished {
+  color: #198754;
+  opacity: 0.5;
+}
+
+.budget-negotiation {
+  color: #820263;
+  opacity: 0.5;
+}
+
+.values {
+  font-size: 20px;
+  margin-bottom: 0.75rem;
+  margin-top: 2rem;
+  margin-left: 0.75rem;
+}
+
+#budget-payment-table {
+  padding-left: 0.75rem;
+}
+
+.highlight {
+  background: #42A948;
+  /* green */
+}
+
+.selected {
+  background-color: whitesmoke !important;
+  font-weight: bold !important;
+}
+
+:host ::ng-deep.mat-spinner {
+  margin-right: 0.2rem !important;
+}
+
+#historic-table tr td {
+  white-space: pre-wrap !important;
+  padding-right: 1.5rem;
 }

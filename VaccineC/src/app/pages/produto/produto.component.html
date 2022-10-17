@@ -8,24 +8,36 @@
         <mat-tab label="Pesquisa">
           <div class="search-group">
             <div class="col-sm-11 p-0 d-flex">
+              
               <mat-form-field class="search-form-field col-sm-9" appearance="outline">
                 <mat-label>Digite o nome do produto</mat-label>
-                <input id="searchProductName" matInput type="text" [(ngModel)]="searchProductName"
-                  placeholder="(mínimo 3 caracteres)">
+                <input id="searchProductName" matInput type="text" [(ngModel)]="searchProductName" placeholder="(mínimo 3 caracteres)">
                 <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
                   <mat-icon>close</mat-icon>
                 </button>
               </mat-form-field>
-              <button id="mat-search-button" mat-raised-button color="primary" class="mat-button-entry me-2"
-                (click)="loadProductData()" [disabled]="searchButtonLoading">
+
+              <button 
+                id="mat-search-button" 
+                mat-raised-button 
+                color="primary" 
+                class="mat-button-entry me-2"
+                (click)="loadProductData()" 
+                [disabled]="searchButtonLoading">
                 <div class="spinner">
                   <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
                   <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
                   <span>Pesquisar</span>
                 </div>
               </button>
-              <button id="mat-add-button" (click)="addNewProduct(); tabGroup.selectedIndex=1" mat-raised-button
-                class="mat-button-entry create-button" matTooltip="Novo Produto" matTooltipPosition="above">
+
+              <button 
+                id="mat-add-button" 
+                (click)="addNewProduct(); tabGroup.selectedIndex=1" 
+                mat-raised-button
+                class="mat-button-entry create-button" 
+                matTooltip="Novo Produto" 
+                matTooltipPosition="above">
                 <span class="fa-solid fa-plus w-20px"></span>
               </button>
             </div>
@@ -33,8 +45,7 @@
 
           <div id="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
-              <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
-                matSortDirection="asc">
+              <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name" matSortDirection="asc">
 
                 <!-- Product name -->
                 <ng-container matColumnDef="Name">
@@ -63,8 +74,11 @@
                 <ng-container matColumnDef="Options">
                   <mat-header-cell *matHeaderCellDef></mat-header-cell>
                   <mat-cell *matCellDef="let row">
-                    <button (click)="editProduct(row.ID); tabGroup.selectedIndex=1" mat-icon-button color="primary"
-                      title="Visualizar"><i class="fa-solid fa-pen-to-square"></i>
+                    <button 
+                      (click)="editProduct(row.ID); tabGroup.selectedIndex=1" 
+                      mat-icon-button color="primary"
+                      title="Visualizar">
+                      <i class="fa-solid fa-pen-to-square"></i>
                     </button>
                   </mat-cell>
                 </ng-container>
@@ -96,17 +110,31 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Vacina SBIM</mat-label>
-                    <input type="text" (click)="searchVaccineByAutoComplete()" placeholder="Selecione a Vacina"
-                      aria-label="Number" matInput #sbimVaccinesIdinput formControlName="SbimVaccinesId"
-                      [matAutocomplete]="auto" [(ngModel)]="sbimVaccinesId" (ngModelChange)="onChanged($event)">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState" (optionSelected)="onSelectionChanged($event)">
+                    <input 
+                      type="text" 
+                      (click)="searchVaccineByAutoComplete()" 
+                      placeholder="Selecione a Vacina"
+                      aria-label="Number" 
+                      matInput 
+                      #sbimVaccinesIdinput 
+                      formControlName="SbimVaccinesId"
+                      [matAutocomplete]="auto" 
+                      [(ngModel)]="sbimVaccinesId" 
+                      (ngModelChange)="onChanged($event)">
+
+                    <mat-autocomplete 
+                      #auto="matAutocomplete" 
+                      [displayWith]="displayState" 
+                      (optionSelected)="onSelectionChanged($event)">
+
                       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                       </mat-option>
                     </mat-autocomplete>
+
                     <span matSuffix>
-                      <img src="../../../../assets/img/logo-sbim.png" style="height:15px;width:50px;"
-                        title="Sociedade Brasileira de Imunizações"></span>
+                      <img src="../../../../assets/img/logo-sbim.png" style="height:15px;width:50px;" title="Sociedade Brasileira de Imunizações">
+                    </span>
                   </mat-form-field>
                 </div>
 
@@ -114,14 +142,19 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Produto</mat-label>
-                    <input matInput #productNameInput id="name" required="true" [(ngModel)]="name"
-                      formControlName="Name" [readonly]="isNameProductReadonly">
+                    
+                    <input 
+                      matInput 
+                      #productNameInput 
+                      id="name" 
+                      required="true" 
+                      [(ngModel)]="name"
+                      formControlName="Name" 
+                      [readonly]="isNameProductReadonly">
+
                     <mat-hint align="end">{{productNameInput.value?.length || 0}}/255</mat-hint>
-                    <mat-error *ngIf="productForm.controls.Name.touched && productForm.controls.Name.invalid">
-                      <span *ngIf="productForm.controls.Name.errors?.required">
-                        O Produto é obrigatório.</span>
-                      <span *ngIf="productForm.controls.Name.errors?.maxlength">
-                        O Nome deve ter menos de 255 caracteres.</span>
+                    <mat-error *ngIf="productForm.controls.Name.touched && productForm.controls.Name.invalid"> O Produto é obrigatório.
+                      <span *ngIf="productForm.controls.Name.errors?.maxlength"> O Nome deve ter menos de 255 caracteres.</span>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -130,27 +163,38 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-6">
                     <mat-label>Situação</mat-label>
-                    <mat-select formControlName="Situation" #SituationInput id="situation" [(ngModel)]="situation"
+                    <mat-select 
+                      formControlName="Situation" 
+                      #SituationInput 
+                      id="situation" 
+                      [(ngModel)]="situation"
                       required>
+
                       <mat-option value="A" selected>Ativo</mat-option>
                       <mat-option value="I">Inativo</mat-option>
                     </mat-select>
+
                     <mat-error *ngIf="productForm.controls.Situation.touched && productForm.controls.Situation.invalid">
-                      <span *ngIf="productForm.controls.Situation.errors?.required">
-                        A Situação é obrigatória.</span>
+                      <span *ngIf="productForm.controls.Situation.errors?.required"> A Situação é obrigatória.</span>
                     </mat-error>
                   </mat-form-field>
 
                   <!-- Estoque mínimo -->
                   <mat-form-field appearance="fill" class="col-sm-5">
                     <mat-label>Estoque Mínimo</mat-label>
-                    <input formControlName="MinimumStock" type="number" matInput #input id="minimumStock"
-                      placeholder="Ex. 20" [(ngModel)]="minimumStock" required="true">
-                    <mat-error
-                      *ngIf="productForm.controls.MinimumStock.touched && productForm.controls.MinimumStock.invalid">
-                      <span
-                        *ngIf="productForm.controls.MinimumStock.errors?.required || productForm.controls.MinimumStock.errors?.email">
-                        O Estoque Mínimo é obrigatório.</span>
+                    <input 
+                      formControlName="MinimumStock" 
+                      type="number" 
+                      matInput 
+                      #input 
+                      id="minimumStock"
+                      placeholder="Ex. 20" 
+                      [(ngModel)]="minimumStock" 
+                      required>
+                    <mat-error *ngIf="productForm.controls.MinimumStock.touched && productForm.controls.MinimumStock.invalid">
+                      <span *ngIf="productForm.controls.MinimumStock.errors?.required || productForm.controls.MinimumStock.errors?.email">
+                        O Estoque Mínimo é obrigatório.
+                      </span>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -159,14 +203,23 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" floatLabel="always" class="col-sm-4">
                     <mat-label>Valor de Venda</mat-label>
-                    <input [(ngModel)]="saleValue" formControlName="SaleValue" matInput type="text"
-                      class="example-right-align" placeholder="0,00" id="saleValue" required="true" mask="separator.2"
-                      [thousandSeparator]="'.'" [decimalMarker]="','">
+                    <input 
+                      [(ngModel)]="saleValue" 
+                      formControlName="SaleValue" 
+                      matInput 
+                      type="text"
+                      class="example-right-align" 
+                      placeholder="0,00" 
+                      id="saleValue" 
+                      required
+                      mask="separator.2"
+                      [thousandSeparator]="'.'" 
+                      [decimalMarker]="','">
                     <span matPrefix>R$&nbsp;</span>
                     <mat-error *ngIf="productForm.controls.SaleValue.touched && productForm.controls.SaleValue.invalid">
-                      <span
-                        *ngIf="productForm.controls.SaleValue.errors?.required || productForm.controls.SaleValue.errors?.email">
-                        O Valor de Venda é obrigatório.</span>
+                      <span *ngIf="productForm.controls.SaleValue.errors?.required || productForm.controls.SaleValue.errors?.email">
+                        O Valor de Venda é obrigatório.
+                      </span>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -175,27 +228,35 @@
                 <div class="div-row-input">
                   <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
                     <mat-label>Detalhes</mat-label>
-                    <textarea [(ngModel)]="details" formControlName="Details" matInput
-                      placeholder="Informações complementares" id="details"></textarea>
+                    <textarea [(ngModel)]="details" formControlName="Details" matInput placeholder="Informações complementares" id="details"></textarea>
                   </mat-form-field>
                 </div>
 
                 <!-- Criar e excluir -->
                 <div class="div-row-input registration-button-row d-flex">
-                  <button (click)="createUpdateProduct()" mat-raised-button class="create-button" type="button"
+                  <button 
+                    (click)="createUpdateProduct()" 
+                    mat-raised-button 
+                    class="create-button" 
+                    type="button"
                     [disabled]="createButtonLoading">
+
                     <div class="spinner">
                       <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
-                      <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
-                      Salvar
+                      <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span> Salvar
                     </div>
                   </button>
 
                   <!-- EXCLUIR -->
-                  <button (click)="deleteProduct()" mat-raised-button color="warn" type="button"
+                  <button 
+                    (click)="deleteProduct()" 
+                    mat-raised-button 
+                    color="warn" 
+                    type="button"
                     [disabled]="!productId">
-                    <div><span class="fa-solid fa-trash me-1 w-20px"></span>
-                      Excluir
+
+                    <div>
+                      <span class="fa-solid fa-trash me-1 w-20px"></span> Excluir
                     </div>
                   </button>
                 </div>
@@ -232,13 +293,23 @@
                 <ng-container matColumnDef="Options">
                   <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                   <mat-cell *matCellDef="let row">
-                    <button mat-icon-button (click)="openUpdateProductDosesDialog(row.ID)" color="primary"
-                    title="Editar" style="float:right;">
+                    <button 
+                      mat-icon-button 
+                      (click)="openUpdateProductDosesDialog(row.ID)" 
+                      color="primary"
+                      title="Editar" 
+                      style="float:right;">
+
                     <i class="fa-solid fa-pen-to-square"></i>
                   </button>
                     
-                    <button mat-icon-button (click)="deleteProductDoses(row.ID)" color="warn" title="Remover"
+                    <button 
+                      mat-icon-button 
+                      (click)="deleteProductDoses(row.ID)" 
+                      color="warn" 
+                      title="Remover"
                       style="float:right;">
+
                       <i class="fa-solid fa-trash"></i>
                     </button>
                   </mat-cell>
@@ -246,7 +317,6 @@
 
                 <mat-header-row *matHeaderRowDef="displayedColumnsDoses"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumnsDoses;"class="hover-element-row" style="cursor:pointer;" (dblclick)="openUpdateProductDosesDialog(row.ID)"></mat-row>
-
 
                 <!-- Row shown when there is no matching data. -->
                 <tr class="mat-row" *matNoDataRow>
@@ -257,13 +327,14 @@
               <mat-paginator #paginatorDoses="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
             </div>
           </div>
-          <button mat-fab
-                  id="add-dose-btn"
-                  class="float-btn create-button"
-                  (click)="openDoseDialog()"
-                  aria-label="Add button"
-                  matTooltip="Inserir Dose"
-                  matTooltipPosition="above">
+          <button 
+              mat-fab
+              id="add-dose-btn"
+              class="float-btn create-button"
+              (click)="openDoseDialog()"
+              aria-label="Add button"
+              matTooltip="Inserir Dose"
+              matTooltipPosition="above">
             <mat-icon>add</mat-icon>
           </button>
         </mat-tab>
@@ -271,13 +342,13 @@
         <!-- RESUMO -->
         <mat-tab label="Estoque" [disabled]="tabIsDisabled">
           <div class="col-sm-11 p-0" style="margin-left:2.5rem;">
-          <div class="div-row-input">
-            <mat-form-field appearance="outline" class="col-sm-3" style="font-size:14px;">
-            <mat-label>Filtrar</mat-label>
-            <input matInput (keyup)="applyFilter($event)" #input>
-          </mat-form-field>
+            <div class="div-row-input">
+              <mat-form-field appearance="outline" class="col-sm-3" style="font-size:14px;">
+              <mat-label>Filtrar</mat-label>
+              <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            </div>
           </div>
-        </div>
           <div class="search-table">
             <div class="col-sm-11 search-table-content mat-elevation-z2">
               <table class="col-sm-12" mat-table [dataSource]="dataSourceBatches">
@@ -332,7 +403,6 @@
                 <tr class="mat-row" *matNoDataRow>
                   <td class="mat-cell" colspan="2">Nenhum registro encontrado.</td>
                 </tr>
-
               </table>
             </div>
           </div>

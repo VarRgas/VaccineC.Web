@@ -8,44 +8,59 @@
                             <div class="row h-100">
                                 <img class="col-lg-8 d-none d-lg-block" src="../../../assets/img/login-bg-pic.png">
                                 <div class="col-lg-4">
+                                    
                                     <div class="p-5">
                                         <div class="row mb-5 d-flex justify-content-center">
-                                            <img src="../../../assets/img/logo-vaccine-c_preto.png"
-                                                style="height: 35px;width: 190px;" class="mb-3">
+                                            <img src="../../../assets/img/logo-vaccine-c_preto.png" style="height: 35px;width: 190px;" class="mb-3">
                                             <div class="subtitle text-center">Saúde Modernizada</div>
                                         </div>
+
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
                                             </div>
                                         </div>
+
                                         <form [formGroup]="loginForm" class="user">
                                             <div class="form-group">
-                                                <input type="email" formControlName="email" class="form-control form-control-user"
-                                                    id="userEmail" aria-describedby="emailHelp"
-                                                    placeholder="Digite seu e-mail" [(ngModel)]="userEmail">
+                                                <input type="email" 
+                                                       formControlName="email" 
+                                                       class="form-control form-control-user"
+                                                       id="userEmail" 
+                                                       aria-describedby="emailHelp"
+                                                       placeholder="Digite seu e-mail" 
+                                                       [(ngModel)]="userEmail">
                                             </div>
 
                                             <div class="input-group mb-3">
-                                                <input [type]="hide ? 'password' : 'text'"  formControlName="password" class="form-control form-control-user input-password" id="userPassword" placeholder="Digite sua senha" [(ngModel)]="userPassword">
+                                                <input [type]="hide ? 'password' : 'text'"  
+                                                       formControlName="password" 
+                                                       class="form-control form-control-user input-password" 
+                                                       id="userPassword" 
+                                                       placeholder="Digite sua senha" 
+                                                       [(ngModel)]="userPassword">
                                                     <span class="input-group-text eye-icon">
-                                                        <i [class]="hide ? 'far fa-eye-slash' : 'far fa-eye'" id="togglePassword" style="cursor: pointer" (click)="showHiddePassword()"></i>
+                                                        <i [class]="hide ? 'far fa-eye-slash' : 'far fa-eye'" 
+                                                           id="togglePassword" 
+                                                           style="cursor: pointer" 
+                                                           (click)="showHiddePassword()">
+                                                        </i>
                                                     </span>
                                             </div>
 
                                             <div class="form-group">
                                                 <div class="custom-control custom-checkbox small">
-                                                    <input type="checkbox" class="custom-control-input"
-                                                        id="customCheck">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck">
                                                 </div>
                                             </div>
-                                            <a (click)="validateLogin()" class="btn btn-primary btn-user btn-block">
-                                                ENTRAR
-                                            </a>
-
+                                            <a (click)="validateLogin()" class="btn btn-primary btn-user btn-block"> ENTRAR </a>
                                         </form>
+
                                         <div class="mt-2" style="float:right;">
-                                            <a class="small" href="/forgot-password"><i class="fa fa-paper-plane me-1"></i>Esqueci minha senha</a>
+                                            <a class="small" href="/forgot-password">
+                                                <i class="fa fa-paper-plane me-1"></i>
+                                                Esqueci minha senha
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

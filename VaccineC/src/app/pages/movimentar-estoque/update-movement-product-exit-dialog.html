@@ -4,20 +4,24 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>Produto</mat-label>
-                <input type="text" (click)="searchProductByAutoComplete()" formControlName="ProductName"
-                    [(ngModel)]="ProductName" placeholder="Selecione o Produto" aria-label="Number" matInput
-                    [formControl]="myControl" [matAutocomplete]="auto" required>
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState"
-                    (optionSelected)="onSelectionChanged($event)">
+                <input type="text" 
+                       (click)="searchProductByAutoComplete()" 
+                       formControlName="ProductName"
+                       [(ngModel)]="ProductName" 
+                       placeholder="Selecione o Produto" 
+                       aria-label="Number" 
+                       matInput
+                       [formControl]="myControl" 
+                       [matAutocomplete]="auto" 
+                       required>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState" (optionSelected)="onSelectionChanged($event)">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                     </mat-option>
                 </mat-autocomplete>
                 <mat-icon matSuffix>search</mat-icon>
-                <mat-error
-                    *ngIf="movementProductForm.controls.ProductName.touched && movementProductForm.controls.ProductName.invalid">
-                    <span *ngIf="movementProductForm.controls.ProductName.errors?.required">O Produto é
-                        obrigatório.</span>
+                <mat-error *ngIf="movementProductForm.controls.ProductName.touched && movementProductForm.controls.ProductName.invalid">
+                    <span *ngIf="movementProductForm.controls.ProductName.errors?.required">O Produto é  obrigatório.</span>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -25,12 +29,15 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>Quantidade</mat-label>
-                <input type="number" matInput formControlName="UnitsNumber" [(ngModel)]="UnitsNumber"
-                    (blur)="getAmount()" placeholder="Ex. 10" required>
-                <mat-error
-                    *ngIf="movementProductForm.controls.UnitsNumber.touched && movementProductForm.controls.UnitsNumber.invalid">
-                    <span *ngIf="movementProductForm.controls.UnitsNumber.errors?.required">A Quantidade é
-                        obrigatória.</span>
+                <input type="number" 
+                       matInput 
+                       formControlName="UnitsNumber" 
+                       [(ngModel)]="UnitsNumber"
+                       (blur)="getAmount()"
+                       placeholder="Ex. 10" 
+                       required>
+                <mat-error *ngIf="movementProductForm.controls.UnitsNumber.touched && movementProductForm.controls.UnitsNumber.invalid">
+                    <span *ngIf="movementProductForm.controls.UnitsNumber.errors?.required">A Quantidade é obrigatória.</span>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -38,23 +45,36 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
                 <mat-label>R$ Unitário</mat-label>
-                <input matInput formControlName="UnitaryValue" [(ngModel)]="UnitaryValue" placeholder="0,00" required
-                    readonly placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
+                <input matInput 
+                       formControlName="UnitaryValue" 
+                       [(ngModel)]="UnitaryValue" 
+                       placeholder="0,00" 
+                       required
+                       readonly 
+                       placeholder="0,00" 
+                       mask="separator.2" 
+                       [thousandSeparator]="'.'" 
+                       [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
-                <mat-error
-                    *ngIf="movementProductForm.controls.UnitaryValue.touched && movementProductForm.controls.UnitaryValue.invalid">
-                    <span *ngIf="movementProductForm.controls.UnitaryValue.errors?.required">O R$ Unitário é
-                        obrigatório.</span>
+                <mat-error *ngIf="movementProductForm.controls.UnitaryValue.touched && movementProductForm.controls.UnitaryValue.invalid">
+                    <span *ngIf="movementProductForm.controls.UnitaryValue.errors?.required">O R$ Unitário é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-6" floatLabel="always">
                 <mat-label>R$ Total</mat-label>
-                <input matInput formControlName="Amount" [(ngModel)]="Amount" placeholder="0,00" required readonly
-                    placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'" [decimalMarker]="','">
+                <input matInput 
+                       formControlName="Amount" 
+                       [(ngModel)]="Amount" 
+                       placeholder="0,00" 
+                       required 
+                       readonly
+                       placeholder="0,00" 
+                       mask="separator.2" 
+                       [thousandSeparator]="'.'" 
+                       [decimalMarker]="','">
                 <span matPrefix>R$&nbsp;</span>
-                <mat-error
-                    *ngIf="movementProductForm.controls.Amount.touched && movementProductForm.controls.Amount.invalid">
+                <mat-error *ngIf="movementProductForm.controls.Amount.touched && movementProductForm.controls.Amount.invalid">
                     <span *ngIf="movementProductForm.controls.Amount.errors?.required">O R$ Total é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
@@ -64,21 +84,25 @@
             <mat-divider></mat-divider>
             <div id="search-table" style="margin-top:2rem;">
                 <div class="col-sm-12 search-table-content mat-elevation-z2">
-                    <table mat-table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
-                        matSortDirection="asc">
+                    <table mat-table 
+                           class="col-sm-12" 
+                           mat-table 
+                           [dataSource]="dataSource" 
+                           matSort 
+                           matSortActive="Name"
+                           matSortDirection="asc">
 
                         <ng-container matColumnDef="Select">
-                            <mat-header-cell *matHeaderCellDef
-                                style="flex: 0 0 100px !important;white-space: unset !important;"></mat-header-cell>
-                            <mat-cell *matCellDef="let row"
-                                style="flex: 0 0 100px !important;white-space: unset !important;">
-                                <mat-checkbox (click)="$event.stopPropagation()" (change)="selectHandler(row)"
-                                    [checked]="selection.isSelected(row)">
+                            <mat-header-cell *matHeaderCellDef style="flex: 0 0 100px !important;white-space: unset !important;"></mat-header-cell>
+                            <mat-cell *matCellDef="let row" style="flex: 0 0 100px !important;white-space: unset !important;">
+                                <mat-checkbox (click)="$event.stopPropagation()" 
+                                              (change)="selectHandler(row)"
+                                              [checked]="selection.isSelected(row)">
                                 </mat-checkbox>
                             </mat-cell>
                         </ng-container>
 
-                        <!-- Name Column -->
+                        <!-- LOTE -->
                         <ng-container matColumnDef="Batch">
                             <mat-header-cell *matHeaderCellDef mat-sort-header> Lote </mat-header-cell>
                             <mat-cell *matCellDef="let row">
@@ -111,9 +135,11 @@
                         <ng-container matColumnDef="Warning">
                             <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             <mat-cell *matCellDef="let row">
-                                <i class="fa-solid fa-circle-exclamation" style="margin:3px;color:red;"
-                                    title="Atenção: Lote vencido"
-                                    [hidden]=!isExpired(row.NumberOfUnitsBatch,row.ValidityBatchDate)></i>
+                                <i class="fa-solid fa-circle-exclamation" 
+                                   style="margin:3px;color:red;"
+                                   title="Atenção: Lote vencido"
+                                   [hidden]=!isExpired(row.NumberOfUnitsBatch,row.ValidityBatchDate)>
+                                </i>
                             </mat-cell>
                             <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
                         </ng-container>
@@ -132,14 +158,13 @@
                             <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
                         </tr>
                     </table>
-
                 </div>
             </div>
         </div>
-
     </form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
-    <button mat-flat-button (click)="updateMovementProductExit()" cdkFocusInitial class="create-button">Salvar</button>
+    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
+    <button mat-flat-button (click)="updateMovementProductExit()" class="create-button">Salvar</button>
 </mat-dialog-actions>

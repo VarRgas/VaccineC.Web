@@ -7,12 +7,19 @@
         <input matInput formControlName="UsersId" id="UsersId" [(ngModel)]="UsersId">
       </mat-form-field>
 
-
       <mat-form-field appearance="fill" class="col-sm-12">
         <mat-label>Recurso</mat-label>
-        <input type="text" (click)="searchResourceByAutoComplete()" id="ResourcesId" placeholder="Selecione o Recurso"
-          aria-label="Number" matInput #ResourcesIdinput formControlName="ResourcesId" [matAutocomplete]="auto"
-          [(ngModel)]="ResourcesId" required>
+        <input type="text" 
+               (click)="searchResourceByAutoComplete()" 
+               id="ResourcesId" 
+               placeholder="Selecione o Recurso"
+               aria-label="Number" 
+               matInput 
+               #ResourcesIdinput 
+               formControlName="ResourcesId" 
+               [matAutocomplete]="auto"
+               [(ngModel)]="ResourcesId" 
+               required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
           <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{option.Name}}
@@ -23,11 +30,11 @@
           <span *ngIf="userResourceForm.controls.ResourcesId.errors?.required">O Recurso é obrigatório.</span>
       </mat-error>
       </mat-form-field>
-
     </div>
   </form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-  <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
-  <button mat-flat-button cdkFocusInitial (click)="saveUserResource()" class="create-button">Salvar</button>
+  <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
+  <button mat-flat-button (click)="saveUserResource()" class="create-button">Salvar</button>
 </mat-dialog-actions>

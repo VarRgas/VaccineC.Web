@@ -358,7 +358,7 @@ export class AddAuthorizationDialog implements OnInit {
   selectionJuridical = new SelectionModel<IBudgetProduct>(true, []);
 
   ngOnInit(): void {
-    this.authorizationDateFormated = `${this.formatDate(new Date(this.data.Start))} - ${this.formatHour(new Date(this.data.Start))} até ${this.formatHour(new Date(this.data.End))}`;
+    this.authorizationDateFormated = `${this.formatDate(new Date(this.data.Start))} - ${this.formatHour(new Date(this.data.Start))}`;
     this.startDate = this.data.Start;
     this.endDate = this.data.Start;
     this.startTime = this.formatHour(new Date(this.data.Start));

@@ -3,20 +3,27 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <section id="center" class="section-main is-content mt-5">
-            <div class="row my-account-card">
+            <div class="row my-account-card"> 
+                
                 <div class="col-lg-4">
                     <div class="card mb-4 is-card">
                         <div class="card-body text-center">
-                            <img src="{{userPersonProfilePic}}" alt="avatar"
-                                class="rounded-circle img-fluid" style="width: 150px;height: 150px;">
+                            <img src="{{userPersonProfilePic}}" 
+                                 alt="avatar"
+                                 class="rounded-circle img-fluid" 
+                                 style="width: 150px;height: 150px;">
                             <h5 class="my-3 text-gray-800">{{userPersonName}}</h5>
                             <p class="text-muted mb-4">{{userEmail}}</p>
                             <div class="d-flex justify-content-center mb-2">
-                                <button mat-raised-button color="primary" (click)="openPasswordDialog()"><span class="fa-solid fa-pen-to-square me-1 w-20px"></span><span>Alterar Senha</span></button>
+                                <button mat-raised-button color="primary" (click)="openPasswordDialog()">
+                                    <span class="fa-solid fa-pen-to-square me-1 w-20px"></span>
+                                    <span>Alterar Senha</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-8">
                     <div class="card mb-4 is-card">
                         <div class="card-body">
@@ -28,7 +35,9 @@
                                     <p class="text-muted mb-0">{{userPersonNameComplete}}</p>
                                 </div>
                             </div>
+
                             <hr>
+
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="mb-0 text-gray-800">Função</p>
@@ -37,7 +46,9 @@
                                     <p class="text-muted mb-0">{{userFunction}}</p>
                                 </div>
                             </div>
+
                             <hr>
+
                             <div class="row">
                                 <div class="col-sm-3 text-gray-800">
                                     <p class="mb-0">E-mail</p>
@@ -46,7 +57,9 @@
                                     <p class="text-muted mb-0">{{userEmail}}</p>
                                 </div>
                             </div>
+
                             <hr>
+
                             <div class="row">
                                 <div class="col-sm-3 text-gray-800">
                                     <p class="mb-0">Telefone</p>
@@ -55,7 +68,9 @@
                                     <p class="text-muted mb-0">{{userPersonPhone}}</p>
                                 </div>
                             </div>
+
                             <hr>
+
                             <div class="row">
                                 <div class="col-sm-3 text-gray-800">
                                     <p class="mb-0">Endereço</p>
@@ -67,6 +82,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
         </section>
     </div>

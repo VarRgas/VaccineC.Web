@@ -3,27 +3,35 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Movimentar Estoque" containerPath="Estoque" [information]="informationField">
+           
             <mat-tab-group #tabGroup animationDuration="0ms">
                 <mat-tab label="Pesquisa">
                     <div class="search-group">
                         <div class="col-sm-11 p-0 d-flex">
                             <mat-form-field class="search-form-field col-sm-9" appearance="outline">
                                 <mat-label>Digite o nome do produto ou o nº do movimento</mat-label>
-                                <input matInput type="text" [(ngModel)]="searchMovementNumber"
-                                    id="searchMovementNumber">
+                                <input matInput type="text" [(ngModel)]="searchMovementNumber" id="searchMovementNumber">
                             </mat-form-field>
-                            <button (click)="loadMovementData()" id="mat-search-button" mat-raised-button
-                                color="primary" class="mat-button-entry me-2" [disabled]="searchButtonLoading">
+
+                            <button (click)="loadMovementData()" 
+                                    id="mat-search-button" 
+                                    mat-raised-button
+                                    color="primary" 
+                                    class="mat-button-entry me-2" 
+                                    [disabled]="searchButtonLoading">
                                 <div class="spinner">
                                     <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
-                                    <span *ngIf="!searchButtonLoading"
-                                        class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
+                                    <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px"></span>
                                     Pesquisar
                                 </div>
                             </button>
-                            <button (click)="addNewMovement(); tabGroup.selectedIndex=1" id="mat-add-button"
-                                mat-raised-button class="mat-button-entry create-button" matTooltip="Novo Movimento"
-                                matTooltipPosition="above">
+
+                            <button (click)="addNewMovement(); tabGroup.selectedIndex=1" 
+                                    id="mat-add-button"
+                                    mat-raised-button 
+                                    class="mat-button-entry create-button" 
+                                    matTooltip="Novo Movimento"
+                                    matTooltipPosition="above">
                                 <span class="fa-solid fa-plus w-20px"></span>
                             </button>
                         </div>
@@ -31,35 +39,35 @@
 
                     <div id="search-table">
                         <div class="col-sm-11 search-table-content mat-elevation-z2">
-                            <table class="col-sm-12" mat-table [dataSource]="dataSource" matSort matSortActive="Name"
-                                matSortDirection="asc">
+                            <table class="col-sm-12" 
+                                   mat-table 
+                                   [dataSource]="dataSource" 
+                                   matSort 
+                                   matSortActive="Name"
+                                   matSortDirection="asc">
 
                                 <ng-container matColumnDef="MovementNumber">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Movimento </mat-header-cell>
                                     <mat-cell *matCellDef="let element"> 
-                                        
                                         {{resolveExibitionSituation(element.Situation)}} 
                                         <span title="{{situationTitle}}" class="me-3 fa-solid fa-circle {{situationColor}}"></span>
-                                        
                                         <span>
                                             <div>{{element.MovementNumber}}</div>
                                             <div title="Data do Movimento" class="small-text">{{element.Register| date: 'dd/MM/yyyy'}}</div>
                                         </span>
-
                                     </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="MovementType">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Operação </mat-header-cell>
-                                    <mat-cell *matCellDef="let element"> {{element.MovementType == 'E' ? 'Entrada' :
-                                        'Saída'}}
+                                    <mat-cell *matCellDef="let element"> 
+                                        {{element.MovementType == 'E' ? 'Entrada' : 'Saída'}}
                                     </mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="ProductsInfo">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header> Produtos </mat-header-cell>
-                                    <mat-cell *matCellDef="let element">
-                                        {{element.ProductsInfo}} </mat-cell>
+                                    <mat-cell *matCellDef="let element"> {{element.ProductsInfo}} </mat-cell>
                                 </ng-container>
 
                                 <!-- Id Hidden Column -->
@@ -71,8 +79,10 @@
                                 <ng-container matColumnDef="Options">
                                     <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                     <mat-cell *matCellDef="let row">
-                                        <button mat-icon-button (click)="editMovement(row.ID); tabGroup.selectedIndex=1"
-                                            color="primary" title="Visualizar">
+                                        <button mat-icon-button 
+                                                (click)="editMovement(row.ID); tabGroup.selectedIndex=1"
+                                                color="primary" 
+                                                title="Visualizar">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                     </mat-cell>
@@ -80,15 +90,18 @@
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row class="hover-element-row" *matRowDef="let row; columns: displayedColumns;" (dblclick)="editMovement(row.ID)" (dblclick)="tabGroup.selectedIndex=1" style="cursor:pointer;"></mat-row>
+                                
                                 <!-- Row shown when there is no matching data. -->
                                 <tr class="mat-row" *matNoDataRow>
                                     <td class="mat-cell" colspan="3">Nenhum registro encontrado.</td>
                                 </tr>
                             </table>
-                            <mat-paginator  #paginatorMovement="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+
+                            <mat-paginator #paginatorMovement="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
                         </div>
                     </div>
                 </mat-tab>
+
                 <mat-tab label="Movimento">
                     <form [formGroup]="movementForm">
                         <div class="registration-group">
@@ -96,24 +109,27 @@
                                 <div class="div-row-input">
                                     <mat-form-field appearance="fill" class="col-sm-6" [hidden]="isInputsHidden">
                                         <mat-label>Movimento</mat-label>
-                                        <input matInput formControlName="MovementNumber" [(ngModel)]="MovementNumber"
-                                            readonly >
+                                        <input matInput formControlName="MovementNumber" [(ngModel)]="MovementNumber" readonly>
                                     </mat-form-field>
                                 </div>
 
                                 <div class="div-row-input">
                                     <mat-form-field appearance="fill" class="col-sm-6">
                                         <mat-label>Tipo de Operação</mat-label>
-                                        <mat-select formControlName="MovementType" [(ngModel)]="MovementType"
-                                            [disabled]="isMovementTypeDisabled" (selectionChange)="onSelectionMovementTypeChanged($event.value)" required>
+                                        <mat-select formControlName="MovementType" 
+                                                    [(ngModel)]="MovementType"
+                                                    [disabled]="isMovementTypeDisabled" 
+                                                    (selectionChange)="onSelectionMovementTypeChanged($event.value)" 
+                                                    required>
                                             <mat-option value="E">Entrada</mat-option>
                                             <mat-option value="S">Saída</mat-option>
                                             <mat-option value="D">Descarte</mat-option>
                                         </mat-select>
                                         <mat-error *ngIf="movementForm.controls.MovementType.touched && movementForm.controls.MovementType.invalid">
-                                            <span *ngIf="movementForm.controls.MovementType.errors?.required">O Tipo de Operação é
-                                              obrigatório.</span>
-                                          </mat-error>
+                                            <span *ngIf="movementForm.controls.MovementType.errors?.required">
+                                                O Tipo de Operação é obrigatório.
+                                            </span>
+                                        </mat-error>
                                     </mat-form-field>
 
                                     <mat-form-field appearance="fill" class="col-sm-5" [hidden]="isInputsHidden">
@@ -123,86 +139,99 @@
                                             <mat-option value="F">Finalizado</mat-option>
                                             <mat-option value="C">Cancelado</mat-option>
                                         </mat-select>
-
                                     </mat-form-field>
                                 </div>
+
                                 <div id="discard" *ngIf="isDiscardVisible">
                                     <form [formGroup]="discardForm">
-                                    <div class="div-row-input">
-                                        <mat-form-field appearance="fill" class="col-sm-6">
-                                            <mat-label>Lote</mat-label>
-                                            <input type="text" (click)="searchProductSummaryBatchByAutoComplete()" formControlName="ProductSummaryBatchName"
-                                                [(ngModel)]="ProductSummaryBatchName" placeholder="Selecione o Lote" aria-label="Number" matInput
-                                                [formControl]="myControlProductSummaryBatch" [matAutocomplete]="auto">
-                                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProductSummaryBatch" (optionSelected)="onSelectionChanged($event)">
-                                                <mat-option *ngFor="let acProductSummaryBatch of acProductSummaryBatches | async" [value]="acProductSummaryBatch" multiLineOption>
-                                                    <div matLine>{{acProductSummaryBatch.Batch}}</div>
-                                                    <div class="small-text" matLine>{{acProductSummaryBatch.Products.Name}}</div>
-                                                </mat-option>
-                                            </mat-autocomplete>
-                                            <mat-icon matSuffix>search</mat-icon>
-                                            <mat-hint align="end">{{ProductBatchHint}}</mat-hint>
-                                            <mat-error *ngIf="discardForm.controls.ProductSummaryBatchName.touched && discardForm.controls.ProductSummaryBatchName.invalid">
-                                                <span *ngIf="discardForm.controls.ProductSummaryBatchName.errors?.required">O Lote é obrigatório.</span>
-                                            </mat-error>
-                                        </mat-form-field>
+                                        <div class="div-row-input">
+                                            <mat-form-field appearance="fill" class="col-sm-6">
+                                                <mat-label>Lote</mat-label>
+                                                <input type="text" 
+                                                    (click)="searchProductSummaryBatchByAutoComplete()" 
+                                                    formControlName="ProductSummaryBatchName"
+                                                    [(ngModel)]="ProductSummaryBatchName" 
+                                                    placeholder="Selecione o Lote" 
+                                                    aria-label="Number" 
+                                                    matInput
+                                                    [formControl]="myControlProductSummaryBatch" 
+                                                    [matAutocomplete]="auto">
 
-                                        <mat-form-field appearance="fill" class="col-sm-5">
-                                            <mat-label>Unidades</mat-label>
-                                            <input type="number" matInput #NumberOfUnitsBatchInput formControlName="NumberOfUnitsBatch" [(ngModel)]="NumberOfUnitsBatch" readonly>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="div-row-input">
-                                        <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
-                                            <mat-label>Motivo do Descarte</mat-label>
-                                            <textarea matInput #ReasonInput formControlName="Reason" [(ngModel)]="Reason" placeholder="Motivo do Descarte"></textarea>
-                                            <mat-hint align="end">{{ReasonInput.value?.length || 0}}/100</mat-hint>
-                                            <mat-error *ngIf="discardForm.controls.Reason.touched && discardForm.controls.Reason.invalid">
-                                                <span *ngIf="discardForm.controls.Reason.errors?.required">O Motivo é obrigatório.</span>
-                                                <span *ngIf="discardForm.controls.Reason.errors?.minlength">O Motivo deve ter no mínimo 5 caracteres.</span>
-                                                <span *ngIf="discardForm.controls.Reason.errors?.maxlength">O Motivo deve ter até 100 caracteres.</span>
-                                            </mat-error>
-                                        </mat-form-field>
+                                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProductSummaryBatch" (optionSelected)="onSelectionChanged($event)">
+                                                    <mat-option *ngFor="let acProductSummaryBatch of acProductSummaryBatches | async" [value]="acProductSummaryBatch" multiLineOption>
+                                                        <div matLine>{{acProductSummaryBatch.Batch}}</div>
+                                                        <div class="small-text" matLine>{{acProductSummaryBatch.Products.Name}}</div>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                                <mat-icon matSuffix>search</mat-icon>
+                                                <mat-hint align="end">{{ProductBatchHint}}</mat-hint>
+                                                <mat-error *ngIf="discardForm.controls.ProductSummaryBatchName.touched && discardForm.controls.ProductSummaryBatchName.invalid">
+                                                    <span *ngIf="discardForm.controls.ProductSummaryBatchName.errors?.required">O Lote é obrigatório.</span>
+                                                </mat-error>
+                                            </mat-form-field>
 
-                                    </div>
-                                </form>
+                                            <mat-form-field appearance="fill" class="col-sm-5">
+                                                <mat-label>Unidades</mat-label>
+                                                <input type="number" 
+                                                    matInput 
+                                                    #NumberOfUnitsBatchInput 
+                                                    formControlName="NumberOfUnitsBatch" 
+                                                    [(ngModel)]="NumberOfUnitsBatch" 
+                                                    readonly>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="div-row-input">
+                                            <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
+                                                <mat-label>Motivo do Descarte</mat-label>
+                                                <textarea matInput #ReasonInput formControlName="Reason" [(ngModel)]="Reason" placeholder="Motivo do Descarte"></textarea>
+                                                <mat-hint align="end">{{ReasonInput.value?.length || 0}}/100</mat-hint>
+                                                <mat-error *ngIf="discardForm.controls.Reason.touched && discardForm.controls.Reason.invalid">
+                                                    <span *ngIf="discardForm.controls.Reason.errors?.required">O Motivo é obrigatório.</span>
+                                                    <span *ngIf="discardForm.controls.Reason.errors?.minlength">O Motivo deve ter no mínimo 5 caracteres.</span>
+                                                    <span *ngIf="discardForm.controls.Reason.errors?.maxlength">O Motivo deve ter até 100 caracteres.</span>
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </form>
                                 </div>
+
                                 <div id="tableProducts" class="mt-3 mb-4" *ngIf="isVisible">
                                     <div class="demo-button-container col-sm-11">
-                                        <button mat-mini-fab class="demo-button me-2 create-button"
-                                            matTooltip="Inserir Produto" matTooltipPosition="right"
-                                            [hidden]="isAddNewProductButtonHidden" (click)="openDialogAddMovementProduct()">
+                                        <button mat-mini-fab 
+                                                class="demo-button me-2 create-button"
+                                                matTooltip="Inserir Produto" 
+                                                matTooltipPosition="right"
+                                                [hidden]="isAddNewProductButtonHidden" 
+                                                (click)="openDialogAddMovementProduct()">
                                             <mat-icon>add</mat-icon>
                                         </button>
                                     </div>
+
                                     <div id="movement-product-table">
                                         <div class="col-sm-12 search-table-content mat-elevation-z2">
                                             <table mat-table [dataSource]="dataSourceMovementProduct" class="col-sm-12">
 
                                                 <ng-container matColumnDef="UnitsNumber">
                                                     <th mat-header-cell *matHeaderCellDef> Quantidade </th>
-                                                    <td mat-cell *matCellDef="let element"> {{element.UnitsNumber}}
-                                                    </td>
+                                                    <td mat-cell *matCellDef="let element"> {{element.UnitsNumber}} </td>
                                                     <td mat-footer-cell *matFooterCellDef> Total </td>
                                                 </ng-container>
 
                                                 <ng-container matColumnDef="Name">
                                                     <th mat-header-cell *matHeaderCellDef> Produto </th>
                                                     <td mat-cell *matCellDef="let element"> 
-                                                        
                                                         <div>
                                                             <div>{{element.Product.Name}}</div>
                                                             <div title="Fabricante" class="small-text">{{element.Batch}}</div>
                                                         </div>
-                                                
                                                     </td>
                                                     <td mat-footer-cell *matFooterCellDef> </td>
                                                 </ng-container>
 
                                                 <ng-container matColumnDef="UnitaryValue">
                                                     <th mat-header-cell *matHeaderCellDef> R$ Unitário </th>
-                                                    <td mat-cell *matCellDef="let element"> {{element.UnitaryValue | currency : 'R$' }}
-                                                    </td>
+                                                    <td mat-cell *matCellDef="let element"> {{element.UnitaryValue | currency : 'R$' }}</td>
                                                     <td mat-footer-cell *matFooterCellDef> </td>
                                                 </ng-container>
 
@@ -222,24 +251,36 @@
                                                 <ng-container matColumnDef="Options">
                                                     <th mat-header-cell *matHeaderCellDef> </th>
                                                     <td mat-cell *matCellDef="let row">
-                                                        <button mat-icon-button color="warn" title="Remover"
-                                                        style="float:right;" [disabled]="isButtonsTableDisabled" (click)="deleteMovementProduct(row.ID)">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                      </button>
-                                                      <button mat-icon-button color="primary"
-                                                        title="Editar" style="float:right;" [disabled]="isButtonsTableDisabled" (click)="openUpdateMovementProductEntryDialog(row.ID)">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                      </button>
+                                                        <button mat-icon-button 
+                                                                color="warn" 
+                                                                title="Remover"
+                                                                style="float:right;" 
+                                                                [disabled]="isButtonsTableDisabled" 
+                                                                (click)="deleteMovementProduct(row.ID)">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+
+                                                        <button mat-icon-button 
+                                                                color="primary"
+                                                                title="Editar" 
+                                                                style="float:right;" 
+                                                                [disabled]="isButtonsTableDisabled" 
+                                                                (click)="openUpdateMovementProductEntryDialog(row.ID)">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </button>
                                                     </td>
                                                     <td mat-footer-cell *matFooterCellDef> </td>
                                                 </ng-container>
-                                                <tr mat-header-row *matHeaderRowDef="displayedColumnsMovementProduct">
+
+                                                <tr mat-header-row *matHeaderRowDef="displayedColumnsMovementProduct"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: displayedColumnsMovementProduct;" 
+                                                            class="hover-element-row" 
+                                                            style="cursor:pointer;" 
+                                                            (dblclick)="isButtonsTableDisabled ? $event.stopPropagation() : openUpdateMovementProductEntryDialog(row.ID)">
                                                 </tr>
-                                                <tr mat-row
-                                                    *matRowDef="let row; columns: displayedColumnsMovementProduct;" class="hover-element-row" style="cursor:pointer;" (dblclick)="isButtonsTableDisabled ? $event.stopPropagation() : openUpdateMovementProductEntryDialog(row.ID)">
-                                                </tr>
-                                                <tr mat-footer-row *matFooterRowDef="displayedColumnsMovementProduct">
-                                                </tr>
+
+                                                <tr mat-footer-row *matFooterRowDef="displayedColumnsMovementProduct"></tr>
+                                                
                                                 <!-- Row shown when there is no matching data. -->
                                                 <tr class="mat-row" *matNoDataRow>
                                                     <td class="mat-cell" colspan="6">Nenhum registro encontrado.</td>
@@ -248,50 +289,61 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="div-row-input registration-button-row d-flex">
 
-                                    <button mat-raised-button class="create-button" type="button"
-                                        [hidden]="isSaveButtonHidden" (click)="saveMovement()">
+                                <div class="div-row-input registration-button-row d-flex">
+                                    <button mat-raised-button 
+                                            class="create-button" 
+                                            type="button"
+                                            [hidden]="isSaveButtonHidden" 
+                                            (click)="saveMovement()">
+
                                         <div class="spinner">
                                             <mat-spinner *ngIf="createButtonLoading" [diameter]="15"></mat-spinner>
-                                            <span *ngIf="!createButtonLoading"
-                                                class="fa-solid fa-floppy-disk me-1 w-20px"></span>
+                                            <span *ngIf="!createButtonLoading" class="fa-solid fa-floppy-disk me-1 w-20px"></span>
                                             Salvar
                                         </div>
                                     </button>
-                                    <button mat-raised-button class="create-button" type="button"
-                                        [hidden]="isFinishButtonHidden" (click)="finishMovement()">
+
+                                    <button mat-raised-button 
+                                            class="create-button" 
+                                            type="button"
+                                            [hidden]="isFinishButtonHidden" 
+                                            (click)="finishMovement()">
+
                                         <div class="spinner">
                                             <mat-spinner *ngIf="finishButtonLoading" [diameter]="15"></mat-spinner>
-                                            <span *ngIf="!finishButtonLoading"
-                                                class="fa-solid fa-check me-1 w-20px"></span>
+                                            <span *ngIf="!finishButtonLoading" class="fa-solid fa-check me-1 w-20px"></span>
                                             Finalizar
                                         </div>
                                     </button>
-                                    <button mat-raised-button color="warn" type="button" [hidden]="isCancelButtonHidden"
-                                        (click)="cancelMovement()">
+
+                                    <button mat-raised-button 
+                                            color="warn" 
+                                            type="button" 
+                                            [hidden]="isCancelButtonHidden"
+                                            (click)="cancelMovement()">
                                         <div class="spinner">
                                             <mat-spinner *ngIf="cancelButtonLoading" [diameter]="15"></mat-spinner>
-                                            <span *ngIf="!cancelButtonLoading"
-                                                class="fa-solid fa-xmark me-1 w-20px"></span>
+                                            <span *ngIf="!cancelButtonLoading" class="fa-solid fa-xmark me-1 w-20px"></span>
                                             Cancelar
                                         </div>
                                     </button>
-                                    <button mat-raised-button color="warn" type="button"
-                                    [hidden]="isDiscardButtonHidden" (click)="discardBatch()">
-                                    <div class="spinner">
-                                        <mat-spinner *ngIf="discardButtonLoading" [diameter]="15"></mat-spinner>
-                                        <span *ngIf="!discardButtonLoading"
-                                            class="fa-solid fa-trash me-1 w-20px"></span>
-                                        Descartar
-                                    </div>
-                                </button>
-                                </div>
 
+                                    <button mat-raised-button 
+                                            color="warn" 
+                                            type="button"
+                                            [hidden]="isDiscardButtonHidden" 
+                                            (click)="discardBatch()">
+                                        <div class="spinner">
+                                            <mat-spinner *ngIf="discardButtonLoading" [diameter]="15"></mat-spinner>
+                                            <span *ngIf="!discardButtonLoading" class="fa-solid fa-trash me-1 w-20px"></span>
+                                            Descartar
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>
-
                 </mat-tab>
             </mat-tab-group>
         </app-container>

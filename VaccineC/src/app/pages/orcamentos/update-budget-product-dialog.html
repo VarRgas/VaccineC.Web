@@ -5,9 +5,16 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>Tomador</mat-label>
-                <input (click)="searchPersonByAutoComplete()" type="text" #PersonNameinput
-                    placeholder="Selecione o Tomador" aria-label="Number" matInput formControlName="PersonName"
-                    [matAutocomplete]="autoPerson" [(ngModel)]="PersonName" [readonly]="!isSaveButtonVisible">
+                <input (click)="searchPersonByAutoComplete()" 
+                        type="text" 
+                        #PersonNameinput
+                        placeholder="Selecione o Tomador" 
+                        aria-label="Number" 
+                        matInput 
+                        formControlName="PersonName"
+                        [matAutocomplete]="autoPerson" 
+                        [(ngModel)]="PersonName" 
+                        [readonly]="!isSaveButtonVisible">
                 <mat-autocomplete #autoPerson="matAutocomplete" [displayWith]="displayStatePerson">
                     <mat-option *ngFor="let acPerson of acPersons | async" [value]="acPerson">
                         {{acPerson.Name}}
@@ -20,20 +27,25 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-12">
                 <mat-label>Produto</mat-label>
-                <input (click)="searchProductByAutoComplete()" type="text" #ProcutNameinput
-                    placeholder="Selecione o Produto" aria-label="Number" matInput formControlName="ProductName"
-                    [matAutocomplete]="auto" [(ngModel)]="ProductName" required [readonly]="!isSaveButtonVisible">
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState"
-                    (optionSelected)="onSelectionChanged($event)">
+                <input (click)="searchProductByAutoComplete()" 
+                        type="text" 
+                        #ProcutNameinput
+                        placeholder="Selecione o Produto" 
+                        aria-label="Number" 
+                        matInput 
+                        formControlName="ProductName"
+                        [matAutocomplete]="auto" 
+                        [(ngModel)]="ProductName" 
+                        required 
+                        [readonly]="!isSaveButtonVisible">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState" (optionSelected)="onSelectionChanged($event)">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                     </mat-option>
                 </mat-autocomplete>
                 <mat-icon matSuffix>search</mat-icon>
-                <mat-error
-                    *ngIf="budgetProductForm.controls.ProductName.touched && budgetProductForm.controls.ProductName.invalid">
-                    <span *ngIf="budgetProductForm.controls.ProductName.errors?.required">O Produto é
-                        obrigatório.</span>
+                <mat-error *ngIf="budgetProductForm.controls.ProductName.touched && budgetProductForm.controls.ProductName.invalid">
+                    <span *ngIf="budgetProductForm.controls.ProductName.errors?.required">O Produto é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -41,22 +53,26 @@
         <div class="div-row-input">
             <mat-form-field appearance="fill" class="col-sm-4" floatLabel="always">
                 <mat-label>R$ Venda</mat-label>
-                <input matInput formControlName="EstimatedSalesValue" [(ngModel)]="EstimatedSalesValue"
-                    placeholder="0,00" required placeholder="0,00" mask="separator.2" [thousandSeparator]="'.'"
-                    [decimalMarker]="','" [readonly]="!isSaveButtonVisible">
+                <input matInput 
+                       formControlName="EstimatedSalesValue" 
+                       [(ngModel)]="EstimatedSalesValue"
+                       placeholder="0,00" 
+                       required 
+                       placeholder="0,00" 
+                       mask="separator.2" 
+                       [thousandSeparator]="'.'"
+                       [decimalMarker]="','" 
+                       [readonly]="!isSaveButtonVisible">
                 <span matPrefix>R$&nbsp;</span>
-                <mat-error
-                    *ngIf="budgetProductForm.controls.EstimatedSalesValue.touched && budgetProductForm.controls.EstimatedSalesValue.invalid">
-                    <span *ngIf="budgetProductForm.controls.EstimatedSalesValue.errors?.required">O R$ Venda é
-                        obrigatório.</span>
+                <mat-error *ngIf="budgetProductForm.controls.EstimatedSalesValue.touched && budgetProductForm.controls.EstimatedSalesValue.invalid">
+                    <span *ngIf="budgetProductForm.controls.EstimatedSalesValue.errors?.required">O R$ Venda é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="col-sm-4" [hidden]="isProductDoseHidden">
                 <mat-label>Dose</mat-label>
                 <mat-select formControlName="ProductDose" #ProductDoseInput [(ngModel)]="ProductDose">
-                    <mat-option *ngFor="let dose of DosesList" [value]="dose">{{ formatDoseType(dose.DoseType) }}
-                    </mat-option>
+                    <mat-option *ngFor="let dose of DosesList" [value]="dose">{{ formatDoseType(dose.DoseType) }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -72,15 +88,20 @@
         <div class="div-row-input">
             <mat-form-field class="example-full-width" appearance="fill" class="col-sm-12">
                 <mat-label>Detalhes</mat-label>
-                <textarea matInput #DetailsInput formControlName="Details" [(ngModel)]="Details"
-                    placeholder="Informações complementares" maxlength="255"
-                    [readonly]="!isSaveButtonVisible"></textarea>
+                <textarea matInput 
+                          #DetailsInput 
+                          formControlName="Details" 
+                          [(ngModel)]="Details"
+                          placeholder="Informações complementares" 
+                          maxlength="255"
+                          [readonly]="!isSaveButtonVisible">
+                </textarea>
             </mat-form-field>
         </div>
     </form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close cdkFocusInitial color="primary">Cancelar</button>
-    <button mat-flat-button (click)="updateBudgetProduct()" class="create-button"
-        *ngIf="isSaveButtonVisible">Salvar</button>
+    <button mat-flat-button (click)="updateBudgetProduct()" class="create-button" *ngIf="isSaveButtonVisible">Salvar</button>
 </mat-dialog-actions>

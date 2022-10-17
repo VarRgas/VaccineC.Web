@@ -2,7 +2,8 @@
 <mat-dialog-content class="mat-typography">
     <p>Tem certeza que deseja excluir essa Forma de Pagamento?</p>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close color="primary">Cancelar</button>
-    <button mat-flat-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Excluir</button>
+    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
+    <button mat-flat-button color="warn" [mat-dialog-close]="true">Excluir</button>
 </mat-dialog-actions>
