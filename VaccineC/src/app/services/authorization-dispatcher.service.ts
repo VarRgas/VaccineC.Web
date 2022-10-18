@@ -17,6 +17,10 @@ export class AuthorizationsDispatcherService {
         return this.httpClient.get(baseURL);
     }
 
+    public getAllAuthorizationsForApplication(): Observable<any> {
+        return this.httpClient.get(`${baseURL}/GetAuthorizationsForApplication`);
+    }
+
     public getAuthorizationById(id: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${id}`);
     }

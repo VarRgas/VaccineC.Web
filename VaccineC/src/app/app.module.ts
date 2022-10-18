@@ -20,7 +20,7 @@ import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog,
 import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDialog, ConfirmCompanyScheduleRemoveDialog, UpdateCompanyScheduleDialog } from './pages/empresa/empresas.component';
 import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, ConfirmProductDosesRemoveDialog, UpdateDialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent, AddBorrowerBottomSheet, AddAuthorizationDialog, UpdateAuthorizationDialog, ConfirmCancelAuthorizationDialog, SearchAuthorizationDialog, AuthorizationNotificationDialog } from './pages/agendamento/agendamento.component';
-import { AplicacaoComponent } from './pages/aplicacao/aplicacao.component';
+import { AplicacaoComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao.component';
 import { AddBudgetProductDialog, OrcamentosComponent, ConfirmBudgetProductRemoveDialog, UpdateBudgetProductDialog, ConfirmBudgetCancelationDialog, RepeatBudgetProductDialog } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent, ConfirmDiscardDialog, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
@@ -33,7 +33,6 @@ import { VisaoFaturamentoPesquisaComponent } from './pages/visao-faturamento/vis
 import { NgChartsModule } from 'ng2-charts';
 import { NgxMaskModule } from 'ngx-mask'
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { AplicacaoCadastroComponent, AplicationDialog, BatchDialog } from './pages/aplicacao/aplicacao-cadastro/aplicacao-cadastro.component';
 import { GlobalErrorDialog } from './shared/components/global-error-dialog/global-error-dialog.component';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPortuguesePaginatorIntl } from './utils/custom-mat-paginator-intl';
@@ -94,10 +93,7 @@ export const MY_FORMATS = {
     PasswordDialog,
     ResetPasswordDialog,
     AddBudgetProductDialog,
-    AplicacaoCadastroComponent,
     UploadFileComponent,
-    AplicationDialog,
-    BatchDialog,
     GlobalErrorDialog,
     ConfirmPaymentFormRemoveDialog,
     ConfirmResourceRemoveDialog,
@@ -131,7 +127,9 @@ export const MY_FORMATS = {
     ConfirmCancelAuthorizationDialog,
     SearchAuthorizationDialog,
     AuthorizationNotificationDialog,
-    AddBorrowerBottomSheet
+    AddBorrowerBottomSheet,
+    AplicationDialog,
+    BatchDialog
   ],
   imports: [
     BrowserModule,
