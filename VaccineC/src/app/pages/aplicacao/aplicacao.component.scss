@@ -202,22 +202,38 @@ form {
 }
 
 #profilePic {
-  background-image: url(../../../assets/img/default-profile-pic.png); 
-  width: 80px; 
-  height: 80px; 
-  background-size: cover; 
-  background-position: top center; 
-  border-radius: 50%; 
+  background-image: url(../../../assets/img/default-profile-pic.png);
+  width: 80px;
+  height: 80px;
+  background-size: cover;
+  background-position: top center;
+  border-radius: 50%;
   margin: 0.5rem;
 }
 
-
-.mat-column-imageUrl {
-  flex: 0 0 150px !important;
+.mat-column-borrower {
+  flex: 0 0 400px !important;
   white-space: unset !important;
 }
 
-.mat-cell-imageUrl {
-  flex: 0 0 150px !important;
+.mat-cell-borrower {
+  flex: 0 0 400px !important;
   white-space: unset !important;
+}
+
+.mat-column-color {
+  flex: 0 0 10px !important;
+  white-space: unset !important;
+  padding: 0px !important;
+}
+
+.mat-cell-color {
+  flex: 0 0 10px !important;
+  white-space: unset !important;
+  padding: 0px !important;
+}
+
+#color-td {
+  height: 96px !important;
+  border-left: 1px solid rgba(231, 234, 243, .7) !important;
 }

@@ -7,7 +7,7 @@
                 <mat-tab label="Pesquisa">
                   <div class="search-group">
                     <div class="col-sm-11 p-0 d-flex">
-                        <mat-form-field class="search-form-field col-sm-10" appearance="outline">
+                        <mat-form-field class="search-form-field col-sm-8" appearance="outline">
                             <mat-label>Digite o nome da pessoa ou o CPF</mat-label>
                             <input id="searchApplicationName"
                                    matInput
@@ -22,14 +22,34 @@
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
-                        <button (click)="loadData()" id="mat-search-button" mat-raised-button color="primary"
-                        class="mat-button-entry me-2" [disabled]="searchButtonLoading">
+
+                        <button (click)="loadData()" 
+                                id="mat-search-button" 
+                                mat-raised-button color="primary"
+                                class="mat-button-entry me-2" 
+                                [disabled]="searchButtonLoading">
                         <div class="spinner">
                             <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
                             <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px">
                             </span>Pesquisar
                         </div>
-                    </button>
+                        </button>
+
+                        <button id="mat-add-button" 
+                                mat-raised-button
+                                class="mat-button-entry create-button me-2" 
+                                matTooltip="Disponíveis do Dia" 
+                                matTooltipPosition="above"
+                                (click)="getAvailableApplications()">
+                                <span class="fa-solid fa-calendar-check w-20px"></span>                            </button>
+
+                        <button mat-raised-button
+                                class="mat-button-entry" 
+                                color="accent"
+                                matTooltip="Filtros Adicionais" 
+                                matTooltipPosition="above">
+                                <span class="fa-solid fa-filter w-20px"></span>
+                        </button>
                     </div>
                 </div>
 
@@ -37,25 +57,37 @@
                   <div class="col-sm-11 search-table-content mat-elevation-z2">
                     <table mat-table [dataSource]="dataSourceSearch" class="col-sm-12" matSort
                     matSortDirection="asc">
-
-                        <ng-container matColumnDef="imageUrl">
-                            <mat-header-cell *matHeaderCellDef> Foto </mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                              <img id="profilePic" src="{{formateProfilePicExhibition(element.Authorization.Person.ProfilePic)}}"/> </mat-cell>
+                        
+                        <ng-container matColumnDef="color">
+                            <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                            <mat-cell *matCellDef="let element" id="color-td" style.background-color="{{formatTdColor(element.Authorization.Person.PersonsPhysical.Gender)}}"> 
+                                
+                            </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="pacient">
-                            <mat-header-cell *matHeaderCellDef> Tomador </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.Authorization.Person.Name}} </mat-cell>
+                        <ng-container matColumnDef="borrower">
+                            <mat-header-cell *matHeaderCellDef style="padding-left: 24px;"> Tomador </mat-header-cell>
+                            <mat-cell *matCellDef="let element" style="padding-left: 12px;"> 
+                                <img id="profilePic" src="{{formateProfilePicExhibition(element.Authorization.Person.ProfilePic)}}"/>
+                                <div style="margin-left:0.5rem;">
+                                    <div>{{element.Authorization.Person.Name}}</div>
+                                    <div class="small-text">{{getPersonAge(element.Authorization.Person.CommemorativeDate)}} anos</div> 
+                                </div>
+                            </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="date">
                             <mat-header-cell *matHeaderCellDef> Data e Hora </mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{element.Authorization.Event.StartDate | date: 'dd/MM/yyyy'}} às {{element.Authorization.Event.StartTime}}</mat-cell>
+                            <mat-cell *matCellDef="let element"> {{formatDateExhibition(element.Authorization.Event.StartDate, element.Authorization.Event.StartTime)}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="product">
+                            <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.Authorization.BudgetProduct.Product.Name}}</mat-cell>
                         </ng-container>
 
                         <mat-header-row *matHeaderRowDef="displayedSearchColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedSearchColumns;"></mat-row>
+                        <mat-row *matRowDef="let row; columns: displayedSearchColumns;" style="cursor:pointer;" class="hover-element-row"></mat-row>
 
                       <!-- Row shown when there is no matching data. -->
                       <tr class="mat-row" *matNoDataRow>

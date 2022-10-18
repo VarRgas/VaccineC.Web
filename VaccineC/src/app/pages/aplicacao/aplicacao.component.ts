@@ -28,10 +28,10 @@ export class AplicacaoComponent implements OnInit {
   public searchPersonName!: string;
   public informationField!: string;
   public value = '';
-
+  public tdColor = '#efefef';
   public profilePicExhibition!: string;
 
-  public displayedSearchColumns: string[] = ['imageUrl','pacient', 'date'];
+  public displayedSearchColumns: string[] = ['color', 'borrower', 'date', 'product'];
   public dataSourceSearch = new MatTableDataSource<IApplication>();
 
   @ViewChild('paginatorApplication') paginatorApplication!: MatPaginator;
@@ -42,23 +42,26 @@ export class AplicacaoComponent implements OnInit {
     private errorHandler: ErrorHandlerService) { }
 
   ngOnInit(): void {
-    this.getAllApplications();
+    this.getAvailableApplications();
   }
 
   public loadData(): void {
+    
     this.searchButtonLoading = true;
 
-    if (this.searchApplicationName == "" || this.searchApplicationName == null || this.searchApplicationName == undefined)
-        this.getAllApplications();
-    else
-      this.getApplicationsByPersoName();
+    if (this.searchApplicationName == "" || this.searchApplicationName == null || this.searchApplicationName == undefined) {
+
+    }
+    else {
+
+    }
+    
   }
 
-  public getAllApplications(): void {
+  public getAvailableApplications(): void {
     this.applicationsDispatcherService.getAllApplications()
       .subscribe(
         applications => {
-          console.log(applications)
           this.dataSourceSearch = new MatTableDataSource(applications);
           this.dataSourceSearch.paginator = this.paginatorApplication;
           this.dataSourceSearch.sort = this.sort;
@@ -86,12 +89,49 @@ export class AplicacaoComponent implements OnInit {
       });
   }
 
-  public formateProfilePicExhibition(profilePic: string){
-    if(profilePic == undefined || profilePic == null || profilePic == ""){
+  public formateProfilePicExhibition(profilePic: string) {
+    if (profilePic == undefined || profilePic == null || profilePic == "") {
       return `${this.imagePathUrlDefault}`;
-    }else{
+    } else {
       return `${this.imagePathUrl}${profilePic}`;
     }
+  }
+
+  public getPersonAge(commemorativeDate: Date) {
+    const bdate = new Date(commemorativeDate);
+    const timeDiff = Math.abs(Date.now() - bdate.getTime());
+    return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
+  }
+
+  public formatTdColor(gender: string) {
+    if (gender == "F") {
+      return "#f8e3fa";
+    } else if (gender == "M") {
+      return "#cfe2f7";
+    } else {
+      return "#efefef";
+    }
+  }
+
+  public formatDate(date: Date) {
+    return [
+      this.padTo2Digits(date.getDate()),
+      this.padTo2Digits(date.getMonth() + 1),
+      date.getFullYear(),
+    ].join('/');
+  }
+
+  public padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
+  public formatHour(time: string) {
+    const timeArray = time.split(":");
+    return `${timeArray[0]}:${timeArray[1]}`
+  }
+
+  public formatDateExhibition(startDate: Date, startTime: string) {
+    return `${this.formatDate(new Date(startDate))} às ${this.formatHour(startTime)}`;
   }
 
 }
