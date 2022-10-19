@@ -3,7 +3,7 @@
     <div id="content-wrapper" class="d-flex flex-column">
         <app-toolbar></app-toolbar>
         <app-container containerTitle="Aplicação" containerPath="Operacional" [information]="informationField">
-            <mat-tab-group>
+            <mat-tab-group #tabGroup animationDuration="0ms">
                 <mat-tab label="Pesquisa">
                   <div class="search-group">
                     <div class="col-sm-11 p-0 d-flex">
@@ -14,13 +14,6 @@
                                    type="text"
                                    [(ngModel)]="searchApplicationName"
                                    placeholder="(mínimo 3 caracteres)">
-                            <button *ngIf="value"
-                                    matSuffix
-                                    mat-icon-button
-                                    aria-label="Clear"
-                                    (click)="value=''">
-                                <mat-icon>close</mat-icon>
-                            </button>
                         </mat-form-field>
 
                         <button (click)="loadData()" 
@@ -41,15 +34,22 @@
                                 matTooltip="Disponíveis do Dia" 
                                 matTooltipPosition="above"
                                 (click)="getAvailableApplications()">
-                                <span class="fa-solid fa-clock w-20px"></span>                            </button>
+                                <span class="fa-solid fa-clock w-20px"></span>                            
+                        </button>
 
                         <button mat-raised-button
                                 class="mat-button-entry" 
                                 color="accent"
                                 matTooltip="Filtros Adicionais" 
-                                matTooltipPosition="above">
+                                matTooltipPosition="above"
+                                [matMenuTriggerFor]="menu">
                                 <span class="fa-solid fa-filter w-20px"></span>
                         </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>Data de Aplicação</button>
+                            <mat-divider></mat-divider>
+                            <button mat-menu-item>Responsável Financeiro</button>
+                        </mat-menu>
                     </div>
                 </div>
 
@@ -91,7 +91,12 @@
                         </ng-container>
 
                         <mat-header-row *matHeaderRowDef="displayedSearchApplicationColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedSearchApplicationColumns;" style="cursor:pointer;" class="hover-element-row"></mat-row>
+                        <mat-row *matRowDef="let row; columns: displayedSearchApplicationColumns;" 
+                                  style="cursor:pointer;" 
+                                  class="hover-element-row"
+                                  (dblclick)="getPersonApplicationInfoByAuth(row.ID, row.Person.ID)"
+                                  (dblclick)="tabGroup.selectedIndex=1">
+                        </mat-row>
 
                       <!-- Row shown when there is no matching data. -->
                       <tr class="mat-row" *matNoDataRow>
@@ -129,7 +134,12 @@
                           </ng-container>
   
                           <mat-header-row *matHeaderRowDef="displayedSearchPersonColumns"></mat-header-row>
-                          <mat-row *matRowDef="let row; columns: displayedSearchPersonColumns;" style="cursor:pointer;" class="hover-element-row"></mat-row>
+                          <mat-row *matRowDef="let row; columns: displayedSearchPersonColumns;" 
+                                    style="cursor:pointer;" 
+                                    class="hover-element-row"
+                                    (dblclick)="getPersonApplicationInfoByPerson(row.ID)"
+                                    (dblclick)="tabGroup.selectedIndex=1">
+                          </mat-row>
   
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
@@ -143,7 +153,7 @@
                   </div>
                 </mat-tab>
 
-                <mat-tab label="Aplicação">
+                <mat-tab label="Aplicação" [disabled]="isApplicationTabDisabled">
                     <div class="row first-card">
                         <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
                             <div class="card-resumo-paciente shadow-sm ms-0">
@@ -153,24 +163,24 @@
                                             <img class="mouse-pointer img-paciente" 
                                                  id="imgPaciente"
                                                  style="display: block; border-radius: 18%;"
-                                                 src="../../../assets/img/default-profile-pic.png">
+                                                 src="{{personProfilePic}}">
                                             <div class="informacoes-complementares-paciente">
-                                                <span id="nmPessoaPaciente" class="informacao-principal fw-bold">JOHN DOE</span>
-                                                <span id="nmIdadeExtenso" class="informacao-secundaria d-block">25 anos</span>
-                                                <span id="nmCidadeEstado" class="informacao-secundaria">54991223344</span>
+                                                <span id="nmPessoaPaciente" class="informacao-principal fw-bold">{{personName}}</span>
+                                                <span id="nmIdadeExtenso" class="informacao-secundaria d-block">{{personAge}}</span>
+                                                <span id="nmCidadeEstado" class="informacao-secundaria">{{personPrincipalPhone}}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xxl-7 col-sm-7 secondary-content-resumo-paciente ps-0">
                                         <div class="w-100">
-                                            <div class="row col-sm-10 offset-sm-1 mb-4">
-                                                <div class="col-sm-8">
+                                            <div class="row col-sm-10 offset-sm-1 mb-4 p-0">
+                                                <div class="col-sm-9">
                                                     <span class="informacao-secundaria-auxiliar">Endereço</span>
-                                                    <span class="informacao-principal-auxiliar" id="nmOcupacao">Rua Sinimbu, 1010 - Centro - Caxias do Sul/RS</span>
+                                                    <span class="informacao-principal-auxiliar" id="nmOcupacao">{{personPrincipalAddress}}</span>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3">
                                                     <span class="informacao-secundaria-auxiliar">Atendimentos</span>
-                                                    <span class="informacao-principal-auxiliar" id="nrAtendimento">1º atendimento</span>
+                                                    <span class="informacao-principal-auxiliar" id="nrAtendimento">{{numberOfApplications}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,10 +192,12 @@
                     <div class="row second-card">
                         <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
                             <div class="card mb-4 shadow-sm right-border-product">
-                                <mat-tab-group>
+                                <mat-tab-group #tabGroup2 animationDuration="0ms">
                                     <mat-tab label="Aplicações Disponíveis">
-                                        <div id="search-table">
-                                            <mat-table [dataSource]="dataSource" class="col-sm-11">
+                                        <div id="search-table" style="margin-bottom:3rem;">
+                                            <div class="col-sm-11 search-table-content mat-elevation-z2">
+                                             
+                                            <mat-table [dataSource]="dataSource" class="col-sm-12">
                     
                                                 <ng-container matColumnDef="product">
                                                     <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
@@ -218,6 +230,7 @@
                                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
                                             </mat-table>
+                                            </div>
                                         </div>
                                     </mat-tab>
                                     <mat-tab label="Histórico">

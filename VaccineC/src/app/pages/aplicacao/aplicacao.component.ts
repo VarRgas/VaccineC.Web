@@ -3,12 +3,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatTabGroup } from '@angular/material/tabs';
 import { IApplication } from 'src/app/interfaces/i-application';
+import { PersonPhysicalModel } from 'src/app/models/person-physical-model';
 import { ApplicationsDispatcherService } from 'src/app/services/application-dispatcher.service';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { PersonsAddressesDispatcherService } from 'src/app/services/person-address-dispatcher.service';
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
+import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
+import { PersonsPhysicalsDispatcherService } from 'src/app/services/person-physical-dispatcher.service';
 
 export interface AplicationElement {
   product: string;
@@ -29,6 +34,8 @@ const ELEMENT_DATA: AplicationElement[] = [
 
 export class AplicacaoComponent implements OnInit {
 
+  @ViewChild("tabGroup2") tabGroup2!: MatTabGroup;
+
   public imagePathUrl = 'http://localhost:5000/';
   public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
 
@@ -37,17 +44,27 @@ export class AplicacaoComponent implements OnInit {
 
   //Variáveis dos inputs
   public searchApplicationName!: string;
+  public isTableApplicationVisible = true;
+  public isApplicationTabDisabled = true;
+
+  //Variáveis de exibição
+  public personName!: string;
+  public personAge!: string;
+  public personPrincipalPhone!: string;
+  public personPrincipalAddress!: string;
+  public personProfilePic!: string;
+  public numberOfApplications!: string;
 
   //Outros
   public informationField!: string;
-  public value = '';
   public tdColor = '#efefef';
   public profilePicExhibition!: string;
-  public isTableApplicationVisible = true;
 
+  //Table Pesquisa Aplicação
   public displayedSearchApplicationColumns: string[] = ['color', 'borrower', 'date', 'product', 'ID'];
   public dataSourceSearchApplication = new MatTableDataSource<IApplication>();
 
+  //Table Pesquisa Pessoas
   public displayedSearchPersonColumns: string[] = ['color', 'borrower', 'ID'];
   public dataSourceSearchPerson = new MatTableDataSource<IApplication>();
 
@@ -61,6 +78,9 @@ export class AplicacaoComponent implements OnInit {
     private applicationsDispatcherService: ApplicationsDispatcherService,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private personsDispatcherService: PersonDispatcherService,
+    private personsPhysicalDispatcherService: PersonsPhysicalsDispatcherService,
+    private personsPhoneDispatcherService: PersonsPhonesDispatcherService,
+    private personsAddressDispatcherService: PersonsAddressesDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     public dialog: MatDialog
@@ -71,7 +91,6 @@ export class AplicacaoComponent implements OnInit {
   }
 
   public loadData(): void {
-
     this.searchButtonLoading = true;
 
     if (this.searchApplicationName == undefined || this.searchApplicationName == null || this.searchApplicationName == "") {
@@ -81,7 +100,6 @@ export class AplicacaoComponent implements OnInit {
     else {
       this.getAllPersonsByInfo();
     }
-
   }
 
   public getAvailableApplications(): void {
@@ -173,7 +191,6 @@ export class AplicacaoComponent implements OnInit {
     return `${this.formatDate(new Date(startDate))} às ${this.formatHour(startTime)}`;
   }
 
-
   openAplicationDialog() {
     const dialogRef = this.dialog.open(AplicationDialog, { width: '60vw' });
 
@@ -188,6 +205,94 @@ export class AplicacaoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
+  }
+
+  public getPersonApplicationInfoByAuth(authId: string, personId: string) {
+
+    this.cleanPersonInfo();
+    this.getPersonInfo(personId);
+    this.getPersonPhysicalInfo(personId);
+    this.getPersonPrincipalInfo(personId);
+    this.isApplicationTabDisabled = false;
+    this.tabGroup2.selectedIndex = 0;
+  }
+
+  public getPersonApplicationInfoByPerson(personId: string) {
+    
+    this.cleanPersonInfo();
+    this.getPersonInfo(personId);
+    this.getPersonPhysicalInfo(personId);
+    this.getPersonPrincipalInfo(personId);
+    this.isApplicationTabDisabled = false;
+    this.tabGroup2.selectedIndex = 0;
+
+  }
+
+  public getPersonInfo(personId: string) {
+
+    this.personsDispatcherService.getPersonById(personId).subscribe(
+      person => {
+        this.personName = person.Name;
+        this.personProfilePic = this.formateProfilePicExhibition(person.ProfilePic);
+        this.personAge = `${this.getPersonAge(person.CommemorativeDate)} anos`;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
+
+  }
+
+  public getPersonPhysicalInfo(personId: string) {
+
+    this.personsPhysicalDispatcherService.GetPersonPhysicalByPersonId(personId).subscribe(
+      personPhysical => {
+        console.log(personPhysical);
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
+
+  }
+
+  public getPersonPrincipalInfo(personId: string) {
+
+    this.personsPhoneDispatcherService.getPrincipalPersonPhoneByPersonId(personId).subscribe(
+      personPrincipalPhone => {
+        if (personPrincipalPhone != null) {
+          this.personPrincipalPhone = `(${personPrincipalPhone.CodeArea})${personPrincipalPhone.NumberPhone}`;
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
+
+    this.personsAddressDispatcherService.getPrincipalPersonAddressByPersonId(personId).subscribe(
+      personPrincipalAddress => {
+        if (personPrincipalAddress != null) {
+          this.personPrincipalAddress = `${personPrincipalAddress.PublicPlace}, ${personPrincipalAddress.AddressNumber} - ${personPrincipalAddress.District} - ${personPrincipalAddress.City}/${personPrincipalAddress.State}`;
+        } else {
+          this.personPrincipalAddress = `Não Informado`;
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
+  }
+
+  public cleanPersonInfo(){
+    this.personAge = "";
+    this.personName = "";
+    this.personPrincipalAddress = "";
+    this.personPrincipalPhone = "";
+    this.personProfilePic = `${this.imagePathUrlDefault}`;
   }
 
 }
