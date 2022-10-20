@@ -267,10 +267,12 @@ form {
 }
 
 .img-paciente {
-  margin-right: 2rem;
+  margin-right: 1.5rem;
   height: 90px;
   width: 90px;
-  box-shadow: 0 0.125rem 0.25rem 0 rgb(58 59 69 / 20%) !important
+  box-shadow: 0 0.125rem 0.25rem 0 rgb(58 59 69 / 20%) !important;
+  display: block; 
+  border-radius: 50%;
 }
 
 .informacao-secundaria {
@@ -373,6 +375,7 @@ form {
   border: medium solid white;
   border-width: 10px 0 10px 10px;
   border-color: transparent transparent transparent white;
+  display: none;
 }
 
 /* Add arrows to the right container (pointing left) */
@@ -385,6 +388,7 @@ form {
   border: medium solid white;
   border-width: 10px 10px 10px 0;
   border-color: transparent white transparent transparent;
+  display: none;
 }
 
 /* Fix the circle for containers on the right side */

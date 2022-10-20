@@ -162,7 +162,6 @@
                                         <div class="dados-principais-paciente">
                                             <img class="mouse-pointer img-paciente" 
                                                  id="imgPaciente"
-                                                 style="display: block; border-radius: 18%;"
                                                  src="{{personProfilePic}}">
                                             <div class="informacoes-complementares-paciente">
                                                 <span id="nmPessoaPaciente" class="informacao-principal fw-bold">{{personName}}</span>
@@ -236,43 +235,39 @@
                                     <mat-tab label="Histórico">
                                         <div class="container py-5">
                                             <div class="main-timeline-2">
-                                                <div class="timeline-2 left-2">
+                                                <div class="timeline-2  {{indexOfelement % 2 == 0 ? 'left' : 'right'}}-2" *ngFor="let element of applicationsHistory; let indexOfelement=index;">
                                                     <div class="card">
                                                         <div class="card-body p-4">
-                                                            <h4 class="fw-bold mb-2 titulo-historico">VACINA BCG</h4>
-                                                            <p class="text-muted mb-4 horario-historico">
-                                                                <i class="fas fa-calendar me-1" aria-hidden="true"></i>
-                                                                 10/01/2022 10:32
+                                                            <h4 class="fw-bold titulo-historico"> {{element.ProductName}} </h4>
+                                                            <p class="mb-0 texto-historico"> 
+                                                                <span title="Tipo de Dose"> {{formatDoseType(element.DoseType)}} </span> 
                                                             </p>
-                                                            <p class="mb-0 texto-historico"> DOSE 1 </p>
-                                                            <p class="mb-0 texto-historico"> Aplicador Fulano </p>
+                                                            <p class="mb-0 texto-historico"> 
+                                                                <span title="Local de Aplicação"> {{formatApplicationPlace(element.ApplicationPlace).toUpperCase()}} </span> 
+                                                            </p>
+                                                            <p class="mb-0 texto-historico mb-4">
+                                                                <span title="Via de Administração"> {{formatRouteOfAdministration(element.RouteOfAdministration).toUpperCase()}} </span>
+                                                            </p>
+                                                            
+                                                            <p class="mb-0 text-muted horario-historico">
+                                                                <i class="fas fa-calendar me-1" aria-hidden="true"></i>
+                                                                 <span title="Data de Aplicação">{{element.ApplicationDate | date: 'dd/MM/yyyy H:mm'}}</span>
+                                                            </p>
+                                                            <p class="mb-0 text-muted horario-historico">
+                                                                <i class="fas fa-user-nurse me-1" aria-hidden="true"></i>
+                                                                <span title="Usuário Aplicador">Aplicador {{element.UserPersonName}}</span>
+                                                            </p>
+                                                            <p class="text-muted mb-4 horario-historico">
+                                                                <i class="fas fa-comments-dollar me-1" aria-hidden="true"></i>
+                                                                <span title="Informações do Orçamento">Orçamento nº {{element.BudgetNumber}} - {{element.PersonResponsible}}</span>
+                                                            </p>
+                                                          
                                                             <p title="Informações do Lote" 
                                                                class="mb-0 texto-historico"
                                                                style="float:right;">
-                                                               <a (click)="openBatchDialog()">
+                                                               <a (click)="openBatchDialog(element.ProductSummaryBatchId)">
                                                                 <i class="fa-solid fa-box-open me-1"></i>
-                                                                F1G2H3
-                                                               </a>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-2 right-2">
-                                                    <div class="card">
-                                                        <div class="card-body p-4">
-                                                            <h4 class="fw-bold mb-2 titulo-historico">VACINA TETRAVALENTE</h4>
-                                                            <p class="text-muted mb-4 horario-historico">
-                                                                <i class="fas fa-calendar me-1" aria-hidden="true"></i>
-                                                                15/05/2022 14:41
-                                                            </p>
-                                                            <p class="mb-0 texto-historico"> DOSE 1  </p>
-                                                            <p class="mb-0 texto-historico">Aplicador Ciclano</p>
-                                                            <p title="Informações do Lote" 
-                                                               class="mb-0 texto-historico"
-                                                               style="float:right;">
-                                                               <a (click)="openBatchDialog()">
-                                                                <i class="fa-solid fa-box-open me-1"></i>
-                                                                A1B2C3
+                                                                {{element.Batch}}
                                                                </a>
                                                             </p>
                                                         </div>

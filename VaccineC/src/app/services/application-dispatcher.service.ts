@@ -19,7 +19,11 @@ export class ApplicationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${id}`);
     }
 
-    public getApplicationsByName(name: string): Observable<any> {
-      return this.httpClient.get(`${baseURL}/${name}/GetByName`);
+    public getPersonApplicationNumber(personId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${personId}/GetPersonApplicationNumber`);
+    }
+
+    public getHistoryApplicationsByPersonId(personId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${personId}/GetHistoryApplicationsByPersonId`);
     }
 }

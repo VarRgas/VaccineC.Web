@@ -59,6 +59,7 @@ export class AplicacaoComponent implements OnInit {
   public informationField!: string;
   public tdColor = '#efefef';
   public profilePicExhibition!: string;
+  public applicationsHistory!: any;
 
   //Table Pesquisa Aplicação
   public displayedSearchApplicationColumns: string[] = ['color', 'borrower', 'date', 'product', 'ID'];
@@ -109,10 +110,7 @@ export class AplicacaoComponent implements OnInit {
     this.authorizationsDispatcherService.getAllAuthorizationsForApplication()
       .subscribe(
         applications => {
-          console.log(applications)
-
           this.dataSourceSearchApplication = new MatTableDataSource(applications);
-
           this.isTableApplicationVisible = true;
           this.searchButtonLoading = false;
         },
@@ -129,13 +127,9 @@ export class AplicacaoComponent implements OnInit {
 
     this.personsDispatcherService.getPersonsByName(searchPersonNameFormated).subscribe(
       persons => {
-
-        console.log(persons)
         this.dataSourceSearchPerson = new MatTableDataSource(persons);
         this.dataSourceSearchPerson.paginator = this.paginatorPerson;
-
         this.dataSourceSearchPerson.sort = this.sort;
-
         this.isTableApplicationVisible = false;
         this.searchButtonLoading = false;
       },
@@ -199,7 +193,7 @@ export class AplicacaoComponent implements OnInit {
     });
   }
 
-  openBatchDialog() {
+  openBatchDialog(productSummaryBatchId: string) {
     const dialogRef = this.dialog.open(BatchDialog, { width: '40vw' });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -213,19 +207,73 @@ export class AplicacaoComponent implements OnInit {
     this.getPersonInfo(personId);
     this.getPersonPhysicalInfo(personId);
     this.getPersonPrincipalInfo(personId);
+
+    this.applicationsDispatcherService.getPersonApplicationNumber(personId).subscribe(
+      applicationNumber => {
+
+        if (applicationNumber > 1) {
+          this.numberOfApplications = `${applicationNumber + 1}º Atendimentos`;
+        } else if (applicationNumber == 0) {
+          this.numberOfApplications = `1º Atendimento`
+        } else {
+          this.numberOfApplications = ``
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
+
+    this.getApplicationHistory(personId);
+
     this.isApplicationTabDisabled = false;
     this.tabGroup2.selectedIndex = 0;
   }
 
   public getPersonApplicationInfoByPerson(personId: string) {
-    
+
     this.cleanPersonInfo();
     this.getPersonInfo(personId);
     this.getPersonPhysicalInfo(personId);
     this.getPersonPrincipalInfo(personId);
+
+    this.applicationsDispatcherService.getPersonApplicationNumber(personId).subscribe(
+      applicationNumber => {
+
+        if (applicationNumber == 1) {
+          this.numberOfApplications = `1 Atendimento`;
+        } else if (applicationNumber == 0) {
+          this.numberOfApplications = `Nenhum`
+        } else if (applicationNumber > 1) {
+          this.numberOfApplications = `${applicationNumber} Atendimentos`
+        } else {
+          this.numberOfApplications = ``
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
+
+    this.getApplicationHistory(personId);
+
     this.isApplicationTabDisabled = false;
     this.tabGroup2.selectedIndex = 0;
 
+  }
+
+  public getApplicationHistory(personId: string) {
+    this.applicationsDispatcherService.getHistoryApplicationsByPersonId(personId).subscribe(
+      applicationsHistory => {
+        this.applicationsHistory = applicationsHistory;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
   }
 
   public getPersonInfo(personId: string) {
@@ -248,7 +296,6 @@ export class AplicacaoComponent implements OnInit {
 
     this.personsPhysicalDispatcherService.GetPersonPhysicalByPersonId(personId).subscribe(
       personPhysical => {
-        console.log(personPhysical);
       },
       error => {
         console.log(error);
@@ -287,12 +334,61 @@ export class AplicacaoComponent implements OnInit {
       });
   }
 
-  public cleanPersonInfo(){
+  public cleanPersonInfo() {
     this.personAge = "";
     this.personName = "";
     this.personPrincipalAddress = "";
     this.personPrincipalPhone = "";
     this.personProfilePic = `${this.imagePathUrlDefault}`;
+  }
+
+  formatDoseType(doseType: string) {
+    if (doseType == "DU") {
+      return "DOSE ÚNICA"
+    } else if (doseType == "D1") {
+      return "DOSE 1"
+    } else if (doseType == "D2") {
+      return "DOSE 2"
+    } else if (doseType == "D3") {
+      return "DOSE 3"
+    } else if (doseType == "DR") {
+      return "DOSE DE REFORÇO"
+    } else {
+      return ""
+    }
+  }
+
+  formatApplicationPlace(applicationPlace: string) {
+
+    if (applicationPlace == '00') {
+      return 'Músculo deltóide no terço proximal';
+    } else if (applicationPlace == '01') {
+      return 'Face superior externa do braço';
+    } else if (applicationPlace == '02') {
+      return 'Face anterior da coxa';
+    } else if (applicationPlace == '03') {
+      return 'Face anterior do antebraço';
+    } else if (applicationPlace == '04') {
+      return 'Dorso glúteo/Músculo grande glúteo';
+    } else if (applicationPlace == '05') {
+      return 'Veias das extremidades/periféricas'
+    } else {
+      return ''
+    }
+  }
+
+  formatRouteOfAdministration(routeOfAdministration: string) {
+    if (routeOfAdministration == 'O') {
+      return 'Oral';
+    } else if (routeOfAdministration == 'I') {
+      return 'Intradérmica';
+    } else if (routeOfAdministration == 'S') {
+      return 'Subcutânea';
+    } else if (routeOfAdministration == 'D') {
+      return 'Intramuscular';
+    } else {
+      return '';
+    }
   }
 
 }
