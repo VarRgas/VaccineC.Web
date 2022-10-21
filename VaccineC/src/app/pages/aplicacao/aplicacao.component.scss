@@ -271,7 +271,7 @@ form {
   height: 90px;
   width: 90px;
   box-shadow: 0 0.125rem 0.25rem 0 rgb(58 59 69 / 20%) !important;
-  display: block; 
+  display: block;
   border-radius: 50%;
 }
 
@@ -340,18 +340,6 @@ form {
   width: 50%;
 }
 
-/* The circles on the timeline */
-.timeline-2::after {
-  content: '';
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  right: -11px;
-  background-color: #4895ef;
-  top: 15px;
-  border-radius: 50%;
-  z-index: 1;
-}
 
 /* Place the container to the left */
 .left-2 {
@@ -403,6 +391,10 @@ form {
 .horario-historico,
 .texto-historico {
   font-size: 12px;
+}
+
+.history-icon {
+  min-width: 15px;
 }
 
 /* Media queries - Responsive timeline on screens less than 600px wide */
@@ -465,4 +457,59 @@ a:hover {
   color: #5099dd !important;
   text-decoration: underline !important;
   cursor: pointer;
+}
+
+.bolota {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: #4895ef;
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bolota-left {
+  right: -24px;
+}
+
+.bolota-right {
+  right: 447px;
+}
+
+.dt-historico {
+  font-size: 10px;
+  line-height: 13px;
+  letter-spacing: 1px;
+  color: #FFFFFF;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .mat-tooltip {
+  white-space: pre-line !important;
+}
+
+.vaccine-icon {
+  visibility: hidden;
+  color: var(--cor-produto)
+}
+
+:host ::ng-deep .mat-row:hover .mat-column-action i{
+  visibility: visible;
+}
+
+.mat-column-action {
+  flex: 0 0 50px !important;
+  white-space: unset !important;
+}
+
+.mat-cell-action {
+  flex: 0 0 50px !important;
+  white-space: unset !important;
 }

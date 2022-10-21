@@ -26,4 +26,8 @@ export class ApplicationsDispatcherService {
     public getHistoryApplicationsByPersonId(personId: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${personId}/GetHistoryApplicationsByPersonId`);
     }
+
+    public getAvailableApplicationsByPersonId(personId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${personId}/GetAvailableApplicationsByPersonId`);
+    }
 }

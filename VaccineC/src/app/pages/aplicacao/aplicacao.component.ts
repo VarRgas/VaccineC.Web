@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,17 +15,7 @@ import { PersonsAddressesDispatcherService } from 'src/app/services/person-addre
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { PersonsPhysicalsDispatcherService } from 'src/app/services/person-physical-dispatcher.service';
-
-export interface AplicationElement {
-  product: string;
-  scheduling: string;
-  date: string;
-}
-
-const ELEMENT_DATA: AplicationElement[] = [
-  { product: 'VACINA INFLUENZA', scheduling: '12345', date: '15/08/2022 10:30' },
-  { product: 'VACINA BCG', scheduling: '67891', date: '16/08/2022 15:00' }
-];
+import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 
 @Component({
   selector: 'app-aplicacao',
@@ -69,8 +60,9 @@ export class AplicacaoComponent implements OnInit {
   public displayedSearchPersonColumns: string[] = ['color', 'borrower', 'ID'];
   public dataSourceSearchPerson = new MatTableDataSource<IApplication>();
 
-  displayedColumns: string[] = ['product', 'scheduling', 'date', 'action'];
-  dataSource = ELEMENT_DATA;
+  //Table Aplicações Disponíveis
+  public displayedApplicationColumns: string[] = ['product', 'scheduling', 'date', 'action'];
+  public dataSourceApplication = new MatTableDataSource<IApplication>();
 
   @ViewChild('paginatorPerson') paginatorPerson!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -82,6 +74,7 @@ export class AplicacaoComponent implements OnInit {
     private personsPhysicalDispatcherService: PersonsPhysicalsDispatcherService,
     private personsPhoneDispatcherService: PersonsPhonesDispatcherService,
     private personsAddressDispatcherService: PersonsAddressesDispatcherService,
+    private _bottomSheet: MatBottomSheet,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     public dialog: MatDialog
@@ -122,6 +115,12 @@ export class AplicacaoComponent implements OnInit {
   }
 
   public getAllPersonsByInfo(): void {
+
+    if (this.searchApplicationName.length < 3) {
+      this.messageHandler.showMessage("É necessário informar no mínimo 3 caracteres para realizar a busca!", "danger-snackbar");
+      this.searchButtonLoading = false;
+      return;
+    }
 
     const searchPersonNameFormated = this.searchApplicationName.replace(/[^a-zA-Z0-9 ]/g, '');
 
@@ -194,11 +193,18 @@ export class AplicacaoComponent implements OnInit {
   }
 
   openBatchDialog(productSummaryBatchId: string) {
-    const dialogRef = this.dialog.open(BatchDialog, { width: '40vw' });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    const bottomSheetRef = this._bottomSheet.open(BatchBottomSheet, {
+      data: {
+        ProductSummaryBatchId: productSummaryBatchId
+      }
     });
+
+    bottomSheetRef.afterDismissed().subscribe(
+      (res) => {
+        if (res != "") {
+
+        }
+      });
   }
 
   public getPersonApplicationInfoByAuth(authId: string, personId: string) {
@@ -212,7 +218,7 @@ export class AplicacaoComponent implements OnInit {
       applicationNumber => {
 
         if (applicationNumber > 1) {
-          this.numberOfApplications = `${applicationNumber + 1}º Atendimentos`;
+          this.numberOfApplications = `${applicationNumber + 1}º Atendimento`;
         } else if (applicationNumber == 0) {
           this.numberOfApplications = `1º Atendimento`
         } else {
@@ -226,6 +232,7 @@ export class AplicacaoComponent implements OnInit {
       });
 
     this.getApplicationHistory(personId);
+    this.getApplicationAvailable(personId);
 
     this.isApplicationTabDisabled = false;
     this.tabGroup2.selectedIndex = 0;
@@ -258,10 +265,24 @@ export class AplicacaoComponent implements OnInit {
       });
 
     this.getApplicationHistory(personId);
+    this.getApplicationAvailable(personId);
 
     this.isApplicationTabDisabled = false;
     this.tabGroup2.selectedIndex = 0;
 
+  }
+
+  public getApplicationAvailable(personId: string) {
+    this.applicationsDispatcherService.getAvailableApplicationsByPersonId(personId).subscribe(
+      applications => {
+        console.log(applications)
+        this.dataSourceApplication = new MatTableDataSource(applications);
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+        this.searchButtonLoading = false;
+      });
   }
 
   public getApplicationHistory(personId: string) {
@@ -358,6 +379,16 @@ export class AplicacaoComponent implements OnInit {
     }
   }
 
+  formatTypeOfService(typeOfService: string) {
+    if (typeOfService == "C") {
+      return "NA CLÍNICA"
+    } else if (typeOfService == "D") {
+      return "A DOMICÍLIO"
+    } else {
+      return ""
+    }
+  }
+
   formatApplicationPlace(applicationPlace: string) {
 
     if (applicationPlace == '00') {
@@ -391,6 +422,107 @@ export class AplicacaoComponent implements OnInit {
     }
   }
 
+  public formatDayTimelineDate(applicationDate: any) {
+    let dateFormated = this.formatDate(new Date(applicationDate));
+    let arrayDate = dateFormated.split("/");
+    return arrayDate[0];
+  }
+
+  public formatYearTimelineDate(applicationDate: any) {
+    let dateFormated = this.formatDate(new Date(applicationDate));
+    let arrayDate = dateFormated.split("/");
+    return arrayDate[2].substring(2, 4);
+  }
+
+  public formatMonthTimelineDate(applicationDate: any) {
+    const mapaMes = {
+      "01": "JAN",
+      "02": "FEV",
+      "03": "MAR",
+      "04": "ABR",
+      "05": "MAI",
+      "06": "JUN",
+      "07": "JUL",
+      "08": "AGO",
+      "09": "SET",
+      "10": "OUT",
+      "11": "NOV",
+      "12": "DEZ"
+    }
+    let dateFormated = this.formatDate(new Date(applicationDate));
+    let arrayDate = dateFormated.split("/");
+    return this.getFullNameMonthTimelineDate(arrayDate[1]);
+  }
+
+  public getFullNameMonthTimelineDate(month: string) {
+
+    let monthFormated = "";
+
+    switch (month) {
+      case '01': {
+        monthFormated = 'JAN'
+        break;
+      }
+      case '02': {
+        monthFormated = 'FEV'
+        break;
+      }
+      case '03': {
+        monthFormated = 'MAR'
+        break;
+      }
+      case '04': {
+        monthFormated = 'ABR'
+        break;
+      }
+      case '05': {
+        monthFormated = 'MAI'
+        break;
+      }
+      case '06': {
+        monthFormated = 'JUN'
+        break;
+      }
+      case '07': {
+        monthFormated = 'JUL'
+        break;
+      }
+      case '08': {
+        monthFormated = 'AGO'
+        break;
+      }
+      case '09': {
+        monthFormated = 'SET'
+        break;
+      }
+      case '10': {
+        monthFormated = 'OUT'
+        break;
+      }
+      case '11': {
+        monthFormated = 'NOV'
+        break;
+      }
+      case '12': {
+        monthFormated = 'DEZ'
+        break;
+      }
+      default: {
+        monthFormated = ''
+        break;
+      }
+    }
+    return monthFormated;
+  }
+
+  public positionTooltip(indexOfelement: number) {
+    if (indexOfelement % 2 == 0) {
+      return 'right'
+    } else {
+      return 'left'
+    }
+  }
+
 }
 
 @Component({
@@ -401,9 +533,48 @@ export class AplicationDialog { }
 
 
 @Component({
-  selector: 'batch-dialog',
-  templateUrl: 'batch-dialog.html',
+  selector: 'batch-bottom-sheet',
+  templateUrl: 'batch-bottom-sheet.html',
 })
-export class BatchDialog { }
+export class BatchBottomSheet implements OnInit {
+
+  public productSummaryBatchId!: string;
+  public Batch!: string;
+  public Manufacturer!: string;
+  public NumberOfUnitsBatch!: string;
+  public ManufacturingDate!: string;
+  public ValidityBatchDate!: string;
+  public ProductName!: string;
+
+  constructor(
+    private _bottomSheetRef: MatBottomSheetRef<BatchBottomSheet>,
+    private productsSummariesBatchesDispatcherService: ProductsSummariesBatchesDispatcherService,
+    private errorHandler: ErrorHandlerService,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+  ) { }
+
+  ngOnInit(): void {
+    this.productSummaryBatchId = this.data.ProductSummaryBatchId;
+    this.getProductSummaryBatch();
+  }
+
+  public getProductSummaryBatch() {
+    this.productsSummariesBatchesDispatcherService.getProductsSummariesBatchesById(this.productSummaryBatchId).subscribe(
+      productSummaryBatch => {
+        console.log(productSummaryBatch);
+        this.Batch = productSummaryBatch.Batch;
+        this.Manufacturer = productSummaryBatch.Manufacturer;
+        this.ManufacturingDate = productSummaryBatch.ManufacturingDate;
+        this.ValidityBatchDate = productSummaryBatch.ValidityBatchDate;
+        this.NumberOfUnitsBatch = productSummaryBatch.NumberOfUnitsBatch;
+        this.ProductName = productSummaryBatch.Products.Name;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+}
 
 
