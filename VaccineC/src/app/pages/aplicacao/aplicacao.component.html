@@ -205,8 +205,8 @@
                                                                             Responsável {{element.PersonBudget}}
                                                                             Total R${{element.TotalBudgetAmount.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}}"
                                                                             matTooltipPosition="left">
-                                                                <div>{{element.ProductName}}</div>
-                                                                <div class="small-text">{{formatDoseType(element.DoseType)}}</div>
+                                                                            <div>{{element.ProductName}}</div>
+                                                                            <div class="small-text">{{formatDoseType(element.DoseType)}}</div>
                                                             </div>
                                                     </mat-cell>
                                                 </ng-container>
@@ -218,7 +218,6 @@
                                                             <div>{{element.AuthorizationNumber}}</div>
                                                             <div class="small-text">{{formatTypeOfService(element.TypeOfService)}}</div>
                                                         </div>
-                                                        
                                                     </mat-cell>
                                                 </ng-container>
                 
@@ -227,6 +226,11 @@
                                                     <mat-cell *matCellDef="let element"> {{formatDateExhibition(element.StartDate, element.StartTime)}} </mat-cell>
                                                 </ng-container>
                     
+                                                <ng-container matColumnDef="authorizationId">
+                                                    <th mat-header-cell hidden="true" *matHeaderCellDef> ID </th>
+                                                    <td mat-cell hidden="true" *matCellDef="let element"> {{element.AuthorizationId}} </td>
+                                                </ng-container>
+
                                                 <ng-container matColumnDef="action">
                                                     <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                                     <mat-cell *matCellDef="let element">
@@ -240,7 +244,7 @@
                                                 </tr>
 
                                                 <mat-header-row *matHeaderRowDef="displayedApplicationColumns"></mat-header-row>
-                                                <mat-row class="hover-element-row" style="cursor:pointer;" (dblclick)="openAplicationDialog()" *matRowDef="let row; columns: displayedApplicationColumns;"></mat-row>
+                                                <mat-row class="hover-element-row" style="cursor:pointer;" (dblclick)="openAplicationDialog(row.AuthorizationId)" *matRowDef="let row; columns: displayedApplicationColumns;"></mat-row>
                                             </table>
                                             </div>
                                         </div>

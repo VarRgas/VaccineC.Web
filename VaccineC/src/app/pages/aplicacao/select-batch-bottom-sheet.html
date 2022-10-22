@@ -1,0 +1,6 @@
+<mat-nav-list>
+    <a mat-list-item (click)="openLink($event,element.ID)" *ngFor="let element of productsSummariesBatches">
+      <span style="font-weight: bold;" mat-line>{{element.Batch}}</span>
+      <span mat-line style="font-size: 12px;">{{element.Manufacturer}} - Valido até {{element.ValidityBatchDate | date: 'dd/MM/yyyy'}} - {{element.NumberOfUnitsBatch}} unidade(s)</span>
+    </a>
+</mat-nav-list>

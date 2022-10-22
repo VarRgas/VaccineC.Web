@@ -33,7 +33,8 @@ export class PessoasComponent implements OnInit {
 
   public imagePathUrl = 'http://localhost:5000/';
   public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
-
+  public today = new Date();
+  
   //Controle para o spinner do button
   public searchButtonLoading: boolean = false;
   public createButtonLoading: boolean = false;

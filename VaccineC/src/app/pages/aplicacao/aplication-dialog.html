@@ -1,66 +1,92 @@
+<style>
+  :host ::ng-deep .mat-dialog-content {
+    overflow: hidden;
+  }
+
+  .select-batch {
+    cursor: pointer;
+    color: var(--cor-produto);
+  }
+</style>
 <h2 mat-dialog-title>Aplicação</h2>
 <mat-dialog-content class="mat-typography" style="max-height: initial;">
-    <form>
-        <div class="div-row-input mt-3">
-            <mat-form-field appearance="fill" class="col-sm-12">
-                <mat-label>Produto</mat-label>
-                <input matInput #input id="product" required="true" readonly="true">
-            </mat-form-field>
-        </div>
+  <form [formGroup]="applicationForm">
+    <div class="div-row-input mt-3">
+      <mat-form-field appearance="fill" class="col-sm-12">
+        <mat-label>Produto</mat-label>
+        <input matInput 
+               required 
+               readonly 
+               [(ngModel)]="productName" 
+               formControlName="productName">
+      </mat-form-field>
+    </div>
 
-        <div class="div-row-input">
-            <mat-form-field appearance="fill" class="col-sm-6">
-                <mat-label>Tipo de Dose</mat-label>
-                <mat-select id="doseType" required="true">
-                    <mat-option value="D1">DOSE 1</mat-option>
-                    <mat-option value="D2">DOSE 2</mat-option>
-                    <mat-option value="D3">DOSE 3</mat-option>
-                    <mat-option value="DU">DOSE ÚNICA</mat-option>
-                    <mat-option value="DR">DOSE DE REFORÇO</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+    <div class="div-row-input">
+      <mat-form-field appearance="fill" class="col-sm-6">
+        <mat-label>Tipo de Dose</mat-label>
+        <mat-select required [(ngModel)]="doseType" formControlName="doseType" [disabled]="true">
+          <mat-option value="D1">DOSE 1</mat-option>
+          <mat-option value="D2">DOSE 2</mat-option>
+          <mat-option value="D3">DOSE 3</mat-option>
+          <mat-option value="DU">DOSE ÚNICA</mat-option>
+          <mat-option value="DR">DOSE DE REFORÇO</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        <div class="div-row-input">
-            <mat-form-field appearance="fill" class="col-sm-6">
-                <mat-label>Local de Aplicação</mat-label>
-                <mat-select id="localAplication" required="true">
-                    <mat-option value="00">Músculo deltóide no terço proximal</mat-option>
-                    <mat-option value="01">Face superior externa do braço</mat-option>
-                    <mat-option value="02">Face anterior da coxa</mat-option>
-                    <mat-option value="03">Face anterior do antebraço</mat-option>
-                    <mat-option value="04">Dorso glúteo/Músculo grande glúteo</mat-option>
-                    <mat-option value="05">Veias das extremidades/periféricas</mat-option>
-                </mat-select>
-            </mat-form-field>
+      <mat-form-field appearance="fill" class="col-sm-6">
+        <mat-label>Local de Aplicação</mat-label>
+        <mat-select required [(ngModel)]="applicationPlace" formControlName="applicationPlace">
+          <mat-option value="00">MÚSCULO DELTÓIDE NO TERÇO PROXIMAL</mat-option>
+          <mat-option value="01">FACE SUPERIOR EXTERNA DO BRAÇO</mat-option>
+          <mat-option value="02">FACE ANTERIOR DA COXA</mat-option>
+          <mat-option value="03">FACE ANTERIOR DO ANTEBRAÇO</mat-option>
+          <mat-option value="04">DORSO GLÚTEO/MÚSCULO GRANDE GLÚTEO</mat-option>
+          <mat-option value="05">VEIAS DAS EXTREMIDADES/PERIFÉRICAS</mat-option>
+        </mat-select>
+        <mat-error *ngIf="applicationForm.controls.applicationPlace.touched && applicationForm.controls.applicationPlace.invalid">
+          <span *ngIf="applicationForm.controls.applicationPlace.errors?.required">O Local de Aplicação é obrigatório.</span>
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-            <mat-form-field appearance="fill" class="col-sm-6">
-                <mat-label>Via de Administração</mat-label>
-                <mat-select id="administration" required="true">
-                    <mat-option value="O">Oral</mat-option>
-                    <mat-option value="I">Intradérmica</mat-option>
-                    <mat-option value="S">Subcutânea</mat-option>
-                    <mat-option value="D">Intramuscular</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <mat-divider class="mt-4 mb-4"></mat-divider>
-        <div class="div-row-input col-sm-12" style="font-size:16px">
-            <a href=""><i class="fa-solid fa-cart-flatbed me-1"></i> Selecionar Lote</a>
-        </div>
-        <mat-divider class="mt-4 mb-4"></mat-divider>
-        <div class="div-row-input">
-            <mat-form-field appearance="fill" class="col-sm-6">
-                <mat-label>Administrada em:</mat-label>
-                <input matInput [matDatepicker]="picker2" id="administrationDate" ng-model="cad.batchExpirationDate"
-                    mask="00/00/0009" required="true">
-                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field>
-        </div>
-    </form>
+    <div class="div-row-input">
+      <mat-form-field appearance="fill" class="col-sm-6">
+        <mat-label>Via de Administração</mat-label>
+        <mat-select required [(ngModel)]="routeOfAdministration" formControlName="routeOfAdministration">
+          <mat-option value="O">ORAL</mat-option>
+          <mat-option value="I">INTRADÉRMICA</mat-option>
+          <mat-option value="S">SUBCUTÂNEA</mat-option>
+          <mat-option value="D">INTRAMUSCULAR</mat-option>
+        </mat-select>
+        <mat-error *ngIf="applicationForm.controls.routeOfAdministration.touched && applicationForm.controls.routeOfAdministration.invalid">
+          <span *ngIf="applicationForm.controls.routeOfAdministration.errors?.required">A Via de Administração é obrigatória.</span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="col-sm-6">
+        <mat-label>Administrada em:</mat-label>
+        <input matInput [matDatepicker]="picker2" [(ngModel)]="applicationDate" formControlName="applicationDate"
+          required [max]="today">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+        <mat-error *ngIf="applicationForm.controls.applicationDate.touched && applicationForm.controls.applicationDate.invalid">
+          <span *ngIf="applicationForm.controls.applicationDate.errors?.required">A Data de Aplicação é obrigatória.</span>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-divider class="mt-4 mb-4"></mat-divider>
+
+    <div class="div-row-input col-sm-12" style="font-size:16px">
+      <span class="select-batch" (click)="openSelectBatchBottomSheet()">
+        <i class="fa-solid fa-cart-flatbed me-1"></i> 
+        {{batchSelected}}
+      </span>
+    </div>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
-    <button mat-flat-button class="create-button">Salvar</button>
+  <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
+  <button mat-flat-button class="create-button" (click)="saveApplication()">Aplicar</button>
 </mat-dialog-actions>

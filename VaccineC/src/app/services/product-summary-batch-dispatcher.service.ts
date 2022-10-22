@@ -32,8 +32,12 @@ export class ProductsSummariesBatchesDispatcherService {
         return this.httpClient.get(`${baseURL}/${productId}/${name}/GetProductSummaryBatchByName`);
     }
 
-    public getValidProductsSummariesBatches(productId: string): Observable<any> {
-        return this.httpClient.get(`${baseURL}/${productId}/GetValidProductsSummariesBatches`);
+    public getNotEmptyProductSummaryBatchByProductId(productId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${productId}/GetNotEmptyProductSummaryBatchByProductId`);
+    }
+
+    public getValidProductsSummariesBatchesByProductId(productId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${productId}/GetValidProductsSummariesBatchesByProductId`);
     }
 
     public getNotEmptyProductsSummariesBatches(): Observable<any> {

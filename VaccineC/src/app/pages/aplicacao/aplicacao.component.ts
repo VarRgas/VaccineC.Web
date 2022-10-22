@@ -1,11 +1,13 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabGroup } from '@angular/material/tabs';
 import { IApplication } from 'src/app/interfaces/i-application';
+import { ApplicationModel } from 'src/app/models/application-model';
 import { PersonPhysicalModel } from 'src/app/models/person-physical-model';
 import { ApplicationsDispatcherService } from 'src/app/services/application-dispatcher.service';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
@@ -61,7 +63,7 @@ export class AplicacaoComponent implements OnInit {
   public dataSourceSearchPerson = new MatTableDataSource<IApplication>();
 
   //Table Aplicações Disponíveis
-  public displayedApplicationColumns: string[] = ['product', 'scheduling', 'date', 'action'];
+  public displayedApplicationColumns: string[] = ['product', 'scheduling', 'date', 'action', 'authorizationId'];
   public dataSourceApplication = new MatTableDataSource<IApplication>();
 
   @ViewChild('paginatorPerson') paginatorPerson!: MatPaginator;
@@ -184,11 +186,22 @@ export class AplicacaoComponent implements OnInit {
     return `${this.formatDate(new Date(startDate))} às ${this.formatHour(startTime)}`;
   }
 
-  openAplicationDialog() {
-    const dialogRef = this.dialog.open(AplicationDialog, { width: '60vw' });
+  openAplicationDialog(authorizationId: string) {
+    const dialogRef = this.dialog.open(AplicationDialog, {
+      disableClose: true,
+      width: '60vw',
+      data: {
+        AuthorizationId: authorizationId
+      }
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      if (result == undefined || result == null) {
+
+      }else{
+        this.dataSourceApplication = new MatTableDataSource(result);
+        this.getApplicationHistory(this.personId);
+      }
     });
   }
 
@@ -285,7 +298,12 @@ export class AplicacaoComponent implements OnInit {
       });
   }
 
+  public personId!: string;
+
   public getApplicationHistory(personId: string) {
+
+    this.personId = personId;
+
     this.applicationsDispatcherService.getHistoryApplicationsByPersonId(personId).subscribe(
       applicationsHistory => {
         this.applicationsHistory = applicationsHistory;
@@ -529,7 +547,136 @@ export class AplicacaoComponent implements OnInit {
   selector: 'aplication-dialog',
   templateUrl: 'aplication-dialog.html',
 })
-export class AplicationDialog { }
+export class AplicationDialog implements OnInit {
+
+  public authorizationId!: string;
+  public productName!: string;
+  public doseType!: string;
+  public applicationPlace!: string;
+  public routeOfAdministration!: string;
+  public applicationDate!: Date;
+  public productId!: string;
+  public productSummaryBatchId!: string;
+  public budgetProductId!: string;
+
+  public today = new Date();
+  public batchSelected = 'Selecionar Lote'
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<AplicationDialog>,
+    private messageHandler: MessageHandlerService,
+    private errorHandler: ErrorHandlerService,
+    private authorizationDispatcherService: AuthorizationsDispatcherService,
+    private productSummaryBatchDispatcherService: ProductsSummariesBatchesDispatcherService,
+    private applicationDispatcherService: ApplicationsDispatcherService,
+    private _bottomSheet: MatBottomSheet
+  ) { }
+
+  ngOnInit(): void {
+    this.authorizationId = this.data.AuthorizationId;
+    this.getAuthorization();
+  }
+
+  //Form
+  applicationForm: FormGroup = this.formBuilder.group({
+    productName: [null, [Validators.required]],
+    doseType: [null, [Validators.required]],
+    applicationPlace: [null, [Validators.required]],
+    routeOfAdministration: [null, [Validators.required]],
+    applicationDate: [null, [Validators.required]]
+  });
+
+  public getAuthorization() {
+    this.authorizationDispatcherService.getAuthorizationById(this.authorizationId).subscribe(
+      authorization => {
+        console.log(authorization)
+        this.productName = authorization.BudgetProduct.Product.Name;
+        this.doseType = authorization.BudgetProduct.ProductDose;
+        this.applicationDate = new Date();
+        this.productId = authorization.BudgetProduct.Product.ID;
+        this.budgetProductId = authorization.BudgetProduct.ID;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  public openSelectBatchBottomSheet() {
+    const bottomSheetRef = this._bottomSheet.open(SelectBatchBottomSheet, {
+      data: {
+        ProductId: this.productId
+      }
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(
+      (res) => {
+        if (res == undefined || res == null || res == "") {
+
+        } else {
+          this.productSummaryBatchDispatcherService.getProductsSummariesBatchesById(res).subscribe(
+            productSummaryBatch => {
+              this.batchSelected = `${productSummaryBatch.Batch} (${productSummaryBatch.Manufacturer}) - Validade ${this.formatDate(new Date(productSummaryBatch.ValidityBatchDate))}`
+              this.productSummaryBatchId = productSummaryBatch.ID;
+            },
+            error => {
+              console.log(error);
+              this.errorHandler.handleError(error);
+            });
+        }
+      });
+  }
+
+  public formatDate(date: Date) {
+    return [
+      this.padTo2Digits(date.getDate()),
+      this.padTo2Digits(date.getMonth() + 1),
+      date.getFullYear(),
+    ].join('/');
+  }
+
+  public padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
+  public saveApplication() {
+
+    if (!this.applicationForm.valid) {
+      console.log(this.applicationForm);
+      this.applicationForm.markAllAsTouched();
+      this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
+      return;
+    }
+
+    if (this.productSummaryBatchId == null) {
+      this.messageHandler.showMessage("É necessário selecionar um Lote!", "warning-snackbar");
+      return;
+    }
+
+    let application = new ApplicationModel();
+    application.ApplicationDate = this.applicationDate;
+    application.ApplicationPlace = this.applicationPlace;
+    application.AuthorizationId = this.authorizationId;
+    application.DoseType = this.doseType;
+    application.ProductSummaryBatchId = this.productSummaryBatchId;
+    application.RouteOfAdministration = this.routeOfAdministration;
+    application.UserId = localStorage.getItem('userId')!;
+    application.BudgetProductId = this.budgetProductId;
+
+    this.applicationDispatcherService.createApplication(application).subscribe(
+      response => {
+        this.dialogRef.close(response);
+        this.messageHandler.showMessage("Aplicação realizada com sucesso!", "success-snackbar")
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+}
 
 
 @Component({
@@ -577,4 +724,41 @@ export class BatchBottomSheet implements OnInit {
 
 }
 
+@Component({
+  selector: 'select-batch-bottom-sheet',
+  templateUrl: 'select-batch-bottom-sheet.html',
+})
+export class SelectBatchBottomSheet implements OnInit {
 
+  public productId!: string;
+  public productsSummariesBatches!: any;
+
+  constructor(
+    private _bottomSheetRef: MatBottomSheetRef<SelectBatchBottomSheet>,
+    private productsSummariesBatchesDispatcherService: ProductsSummariesBatchesDispatcherService,
+    private errorHandler: ErrorHandlerService,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+  ) { }
+
+  ngOnInit(): void {
+    this.productId = this.data.ProductId;
+    this.getProductsSummariesBatches();
+  }
+
+  public getProductsSummariesBatches() {
+    this.productsSummariesBatchesDispatcherService.getValidProductsSummariesBatchesByProductId(this.productId).subscribe(
+      productsSummariesBatches => {
+        this.productsSummariesBatches = productsSummariesBatches;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  openLink(event: MouseEvent, produdctSummaryBatchId: string): void {
+    this._bottomSheetRef.dismiss(produdctSummaryBatchId);
+    event.preventDefault();
+  }
+
+}
