@@ -23,9 +23,9 @@
     </div>
 
     <div class="div-row-input">
-      <mat-form-field appearance="fill" class="col-sm-6">
+      <mat-form-field appearance="fill" class="col-sm-6" *ngIf="isDoseTypeVisible">
         <mat-label>Tipo de Dose</mat-label>
-        <mat-select required [(ngModel)]="doseType" formControlName="doseType" [disabled]="true">
+        <mat-select [(ngModel)]="doseType" formControlName="doseType" [disabled]="true">
           <mat-option value="D1">DOSE 1</mat-option>
           <mat-option value="D2">DOSE 2</mat-option>
           <mat-option value="D3">DOSE 3</mat-option>
@@ -43,6 +43,7 @@
           <mat-option value="03">FACE ANTERIOR DO ANTEBRAÇO</mat-option>
           <mat-option value="04">DORSO GLÚTEO/MÚSCULO GRANDE GLÚTEO</mat-option>
           <mat-option value="05">VEIAS DAS EXTREMIDADES/PERIFÉRICAS</mat-option>
+          <mat-option value="06">NÃO SE APLICA</mat-option>
         </mat-select>
         <mat-error *ngIf="applicationForm.controls.applicationPlace.touched && applicationForm.controls.applicationPlace.invalid">
           <span *ngIf="applicationForm.controls.applicationPlace.errors?.required">O Local de Aplicação é obrigatório.</span>
@@ -57,7 +58,8 @@
           <mat-option value="O">ORAL</mat-option>
           <mat-option value="I">INTRADÉRMICA</mat-option>
           <mat-option value="S">SUBCUTÂNEA</mat-option>
-          <mat-option value="D">INTRAMUSCULAR</mat-option>
+          <mat-option value="M">INTRAMUSCULAR</mat-option>
+          <mat-option value="E">NÃO SE APLICA</mat-option>
         </mat-select>
         <mat-error *ngIf="applicationForm.controls.routeOfAdministration.touched && applicationForm.controls.routeOfAdministration.invalid">
           <span *ngIf="applicationForm.controls.routeOfAdministration.errors?.required">A Via de Administração é obrigatória.</span>

@@ -20,7 +20,7 @@ import { PessoasComponent, DialogContentPhoneDialog, DialogContentAddressDialog,
 import { EmpresasComponent, DialogContentScheduleDialog, ConfirmCompanyRemoveDialog, ConfirmCompanyScheduleRemoveDialog, UpdateCompanyScheduleDialog } from './pages/empresa/empresas.component';
 import { ProdutoComponent, DialogContentDose, ConfirmProductRemoveDialog, ConfirmProductDosesRemoveDialog, UpdateDialogContentDose } from './pages/produto/produto.component';
 import { AgendamentoComponent, AddBorrowerBottomSheet, AddAuthorizationDialog, UpdateAuthorizationDialog, ConfirmCancelAuthorizationDialog, SearchAuthorizationDialog, AuthorizationNotificationDialog } from './pages/agendamento/agendamento.component';
-import { AplicacaoComponent, AplicationDialog, BatchBottomSheet, SelectBatchBottomSheet } from './pages/aplicacao/aplicacao.component';
+import { AplicacaoComponent, AplicationDialog, BatchBottomSheet, SelectBatchBottomSheet, AddressBottomSheet } from './pages/aplicacao/aplicacao.component';
 import { AddBudgetProductDialog, OrcamentosComponent, ConfirmBudgetProductRemoveDialog, UpdateBudgetProductDialog, ConfirmBudgetCancelationDialog, RepeatBudgetProductDialog } from './pages/orcamentos/orcamentos.component';
 import { MovimentarEstoqueComponent, ConfirmDiscardDialog, AddMovementProductEntryDialog, AddMovementProductExitDialog, ConfirmCancelMovementDialog, ConfirmCancelMovementProductDialog, UpdateMovementProductEntryDialog, UpdateMovementProductExitDialog } from './pages/movimentar-estoque/movimentar-estoque.component';
 import { SituacaoEstoqueComponent, BatchInformationDialog, ProductBatchsInformationDialog } from './pages/situacao-estoque/situacao-estoque.component';
@@ -131,7 +131,8 @@ export const MY_FORMATS = {
     AddBorrowerBottomSheet,
     AplicationDialog,
     BatchBottomSheet,
-    SelectBatchBottomSheet
+    SelectBatchBottomSheet,
+    AddressBottomSheet
   ],
   imports: [
     BrowserModule,

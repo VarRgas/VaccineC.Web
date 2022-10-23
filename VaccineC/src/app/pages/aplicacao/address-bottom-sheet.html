@@ -1,0 +1,10 @@
+<mat-nav-list>
+    <a mat-list-item *ngFor="let element of personAddresses" [hidden]="isPersonHasAddress">
+      <span style="font-weight: bold;" mat-line>{{resolveExibitionAddressType(element.AddressType)}}</span>
+      <span mat-line style="font-size: 12px;">{{element.PublicPlace}}, nº {{element.AddressNumber}} {{element.Complement == '' ? '' : '- ' + element.Complement}}</span>
+      <span mat-line style="font-size: 12px;">Bairro {{element.District}} - {{element.City}}/{{element.State}} - {{element.AddressCode}}</span>
+    </a>
+    <a mat-list-item [hidden]="!isPersonHasAddress">
+        <span style="font-weight: bold;" mat-line>Nenhum endereço cadastrado.</span>
+    </a>
+</mat-nav-list>

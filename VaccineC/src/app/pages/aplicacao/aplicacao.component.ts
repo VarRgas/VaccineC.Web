@@ -1,23 +1,27 @@
 import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabGroup } from '@angular/material/tabs';
+import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { IApplication } from 'src/app/interfaces/i-application';
 import { ApplicationModel } from 'src/app/models/application-model';
+import { PersonModel } from 'src/app/models/person-model';
 import { PersonPhysicalModel } from 'src/app/models/person-physical-model';
 import { ApplicationsDispatcherService } from 'src/app/services/application-dispatcher.service';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { PersonsAddressesDispatcherService } from 'src/app/services/person-address-dispatcher.service';
+import { PersonAutocompleteService } from 'src/app/services/person-autocomplete.service';
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { PersonsPhysicalsDispatcherService } from 'src/app/services/person-physical-dispatcher.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
+import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 
 @Component({
   selector: 'app-aplicacao',
@@ -29,6 +33,7 @@ export class AplicacaoComponent implements OnInit {
 
   @ViewChild("tabGroup2") tabGroup2!: MatTabGroup;
 
+  public today = new Date();
   public imagePathUrl = 'http://localhost:5000/';
   public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
 
@@ -39,6 +44,8 @@ export class AplicacaoComponent implements OnInit {
   public searchApplicationName!: string;
   public isTableApplicationVisible = true;
   public isApplicationTabDisabled = true;
+  public searchApplicationDate!: Date | null;
+  public searchResponsible!: any;
 
   //Variáveis de exibição
   public personName!: string;
@@ -47,12 +54,21 @@ export class AplicacaoComponent implements OnInit {
   public personPrincipalAddress!: string;
   public personProfilePic!: string;
   public numberOfApplications!: string;
+  public treatTypeOfService = true;
+  public isFilterDateVisible = false;
+  public isFilterResponsibleVisible = false;
+  public isFilterVisible = false;
 
   //Outros
   public informationField!: string;
   public tdColor = '#efefef';
   public profilePicExhibition!: string;
   public applicationsHistory!: any;
+
+  //Autocomplete Pessoa
+  public myControl = new FormControl();
+  public options: string[] = [];
+  public filteredOptions: Observable<any[]> | undefined;
 
   //Table Pesquisa Aplicação
   public displayedSearchApplicationColumns: string[] = ['color', 'borrower', 'date', 'product', 'ID'];
@@ -76,6 +92,7 @@ export class AplicacaoComponent implements OnInit {
     private personsPhysicalDispatcherService: PersonsPhysicalsDispatcherService,
     private personsPhoneDispatcherService: PersonsPhonesDispatcherService,
     private personsAddressDispatcherService: PersonsAddressesDispatcherService,
+    private personAutocompleteService: PersonAutocompleteService,
     private _bottomSheet: MatBottomSheet,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
@@ -84,6 +101,14 @@ export class AplicacaoComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAvailableApplications();
+  }
+
+  treatTypeOfServiceExhibition(typeOfService: string) {
+    if (typeOfService == 'D') {
+      this.treatTypeOfService = true;
+    } else {
+      this.treatTypeOfService = false;
+    }
   }
 
   public loadData(): void {
@@ -196,9 +221,10 @@ export class AplicacaoComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == undefined || result == null) {
-
-      }else{
+      if (result == undefined || result == null || result == '') {
+        this.getApplicationHistory(this.personId);
+        this.getApplicationAvailable(this.personId);
+      } else {
         this.dataSourceApplication = new MatTableDataSource(result);
         this.getApplicationHistory(this.personId);
       }
@@ -248,7 +274,6 @@ export class AplicacaoComponent implements OnInit {
     this.getApplicationAvailable(personId);
 
     this.isApplicationTabDisabled = false;
-    this.tabGroup2.selectedIndex = 0;
   }
 
   public getPersonApplicationInfoByPerson(personId: string) {
@@ -281,7 +306,6 @@ export class AplicacaoComponent implements OnInit {
     this.getApplicationAvailable(personId);
 
     this.isApplicationTabDisabled = false;
-    this.tabGroup2.selectedIndex = 0;
 
   }
 
@@ -307,6 +331,7 @@ export class AplicacaoComponent implements OnInit {
     this.applicationsDispatcherService.getHistoryApplicationsByPersonId(personId).subscribe(
       applicationsHistory => {
         this.applicationsHistory = applicationsHistory;
+        console.log(applicationsHistory);
       },
       error => {
         console.log(error);
@@ -381,6 +406,18 @@ export class AplicacaoComponent implements OnInit {
     this.personProfilePic = `${this.imagePathUrlDefault}`;
   }
 
+  public openAddressBottomSheet() {
+    const bottomSheetRef = this._bottomSheet.open(AddressBottomSheet, {
+      data: {
+        PersonId: this.personId
+      }
+    });
+
+    bottomSheetRef.afterDismissed().subscribe(
+      (res) => {
+      });
+  }
+
   formatDoseType(doseType: string) {
     if (doseType == "DU") {
       return "DOSE ÚNICA"
@@ -433,8 +470,10 @@ export class AplicacaoComponent implements OnInit {
       return 'Intradérmica';
     } else if (routeOfAdministration == 'S') {
       return 'Subcutânea';
-    } else if (routeOfAdministration == 'D') {
+    } else if (routeOfAdministration == 'M') {
       return 'Intramuscular';
+    } else if (routeOfAdministration == 'E') {
+      return 'Não se Aplica';
     } else {
       return '';
     }
@@ -541,6 +580,73 @@ export class AplicacaoComponent implements OnInit {
     }
   }
 
+  public openEditPersonDialog() {
+    const dialogRef = this.dialog.open(EditPersonDialog, {
+      disableClose: true,
+      width: '60vw',
+      data: {
+        PersonId: this.personId
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+  }
+
+  public showSearchDate() {
+
+    if (this.isFilterResponsibleVisible == false) {
+      this.searchResponsible = new PersonModel();
+    }
+
+    if (this.isFilterDateVisible == false) {
+      this.searchApplicationDate = null;
+    }
+
+    this.isFilterVisible = true;
+    this.isFilterDateVisible = !this.isFilterDateVisible;
+
+  }
+
+  public showSearchResponsible() {
+
+    if (this.isFilterResponsibleVisible == false) {
+      this.searchResponsible = new PersonModel();
+    }
+
+    if (this.isFilterDateVisible == false) {
+      this.searchApplicationDate = null;
+    }
+
+    this.isFilterVisible = true;
+    this.isFilterResponsibleVisible = !this.isFilterResponsibleVisible;
+  }
+
+  public searchPersonByAutoComplete(): void {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(val => {
+        return this.filterPersons(val || '')
+      })
+    )
+  }
+
+  public filterPersons(val: string): Observable<any[]> {
+    return this.personAutocompleteService.getAllPersonData()
+      .pipe(
+        map(response => response.filter((option: { Name: string; ID: string }) => {
+          return option.Name.toLowerCase()
+        }))
+      )
+  }
+
+  displayStatePerson(state: any) {
+    return state && state.Name ? state.Name : '';
+  }
+
 }
 
 @Component({
@@ -552,8 +658,8 @@ export class AplicationDialog implements OnInit {
   public authorizationId!: string;
   public productName!: string;
   public doseType!: string;
-  public applicationPlace!: string;
-  public routeOfAdministration!: string;
+  public applicationPlace = "00";
+  public routeOfAdministration = "I";
   public applicationDate!: Date;
   public productId!: string;
   public productSummaryBatchId!: string;
@@ -561,6 +667,8 @@ export class AplicationDialog implements OnInit {
 
   public today = new Date();
   public batchSelected = 'Selecionar Lote'
+
+  public isDoseTypeVisible = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -582,7 +690,7 @@ export class AplicationDialog implements OnInit {
   //Form
   applicationForm: FormGroup = this.formBuilder.group({
     productName: [null, [Validators.required]],
-    doseType: [null, [Validators.required]],
+    doseType: [null],
     applicationPlace: [null, [Validators.required]],
     routeOfAdministration: [null, [Validators.required]],
     applicationDate: [null, [Validators.required]]
@@ -591,12 +699,19 @@ export class AplicationDialog implements OnInit {
   public getAuthorization() {
     this.authorizationDispatcherService.getAuthorizationById(this.authorizationId).subscribe(
       authorization => {
-        console.log(authorization)
         this.productName = authorization.BudgetProduct.Product.Name;
         this.doseType = authorization.BudgetProduct.ProductDose;
         this.applicationDate = new Date();
         this.productId = authorization.BudgetProduct.Product.ID;
         this.budgetProductId = authorization.BudgetProduct.ID;
+
+        if (this.doseType == undefined || this.doseType == null || this.doseType == '') {
+          this.isDoseTypeVisible = false;
+          this.applicationPlace = "06";
+          this.routeOfAdministration = "E";
+        } else {
+          this.isDoseTypeVisible = true;
+        }
       },
       error => {
         console.log(error);
@@ -659,7 +774,12 @@ export class AplicationDialog implements OnInit {
     application.ApplicationDate = this.applicationDate;
     application.ApplicationPlace = this.applicationPlace;
     application.AuthorizationId = this.authorizationId;
-    application.DoseType = this.doseType;
+
+    if (this.doseType == null || this.doseType == "") {
+      application.DoseType = "";
+    } else {
+      application.DoseType = this.doseType;
+    }
     application.ProductSummaryBatchId = this.productSummaryBatchId;
     application.RouteOfAdministration = this.routeOfAdministration;
     application.UserId = localStorage.getItem('userId')!;
@@ -677,7 +797,6 @@ export class AplicationDialog implements OnInit {
   }
 
 }
-
 
 @Component({
   selector: 'batch-bottom-sheet',
@@ -761,4 +880,63 @@ export class SelectBatchBottomSheet implements OnInit {
     event.preventDefault();
   }
 
+}
+
+@Component({
+  selector: 'address-bottom-sheet',
+  templateUrl: 'address-bottom-sheet.html',
+})
+export class AddressBottomSheet implements OnInit {
+
+  public personId!: string;
+  public personAddresses!: any;
+  public isPersonHasAddress = false;
+
+  constructor(
+    private _bottomSheetRef: MatBottomSheetRef<SelectBatchBottomSheet>,
+    private personsAddressesDispatcherService: PersonsAddressesDispatcherService,
+    private errorHandler: ErrorHandlerService,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+  ) { }
+
+  ngOnInit(): void {
+    this.personId = this.data.PersonId;
+    this.getPersonAddresses();
+  }
+
+  public getPersonAddresses() {
+    this.personsAddressesDispatcherService.getAllPersonsAddressesByPersonId(this.personId).subscribe(
+      personsAddresses => {
+        console.log(personsAddresses);
+        if (personsAddresses.length == 0) {
+          this.isPersonHasAddress = true;
+        } else {
+          this.isPersonHasAddress = false;
+        }
+        this.personAddresses = personsAddresses;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  openLink(event: MouseEvent): void {
+    this._bottomSheetRef.dismiss();
+    event.preventDefault();
+  }
+
+  public resolveExibitionAddressType(addressType: string) {
+    if (addressType == "P") {
+      return "Principal"
+    } else if (addressType == "C") {
+      return "Comercial"
+    } else if (addressType == "R") {
+      return "Residencial"
+    } else if (addressType == "O") {
+      return "Outro"
+    } else {
+      return ""
+    }
+  }
 }

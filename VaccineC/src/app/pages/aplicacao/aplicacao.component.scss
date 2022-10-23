@@ -500,7 +500,7 @@ a:hover {
   color: var(--cor-produto)
 }
 
-:host ::ng-deep .mat-row:hover .mat-column-action i{
+:host ::ng-deep .mat-row:hover .mat-column-action i {
   visibility: visible;
 }
 
@@ -512,4 +512,24 @@ a:hover {
 .mat-cell-action {
   flex: 0 0 50px !important;
   white-space: unset !important;
+}
+
+.link-text {
+  color: #5099dd !important;
+  cursor: pointer;
+}
+
+.icone-cadastro-paciente {
+  margin-top: 40px;
+  margin-right: 15px;
+  color: #5099dd;
+  transition: transform 0.2s;
+  cursor: pointer !important;
+  position: absolute;
+  font-size: 12px;
+  z-index: 10000;
+}
+
+:host ::ng-deep .mat-table {
+  border-radius: 0.75rem;
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { EditPersonDialog } from './edit-person-modal/edit-person-dialog';
 import { ContainerComponent } from './components/container/container.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -14,7 +15,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MaterialExampleModule } from '../material.module';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,8 +23,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     ToolbarComponent,
     FooterComponent,
     ContainerComponent,
-    ConfirmModalComponent
-    ],
+    ConfirmModalComponent,
+    EditPersonDialog
+  ],
   imports: [
     CommonModule,
     MatIconModule,
@@ -38,14 +40,15 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     MaterialExampleModule,
     FormsModule,
     ReactiveFormsModule
-  ],
+    ],
   exports: [
     SideMenuComponent,
     ToolbarComponent,
     FooterComponent,
     ContainerComponent,
-    ConfirmModalComponent
-    ],
+    ConfirmModalComponent,
+    EditPersonDialog
+  ],
   bootstrap: [ConfirmModalComponent]
 })
 export class SharedModule { }

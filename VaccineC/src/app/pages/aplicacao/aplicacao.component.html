@@ -5,7 +5,7 @@
         <app-container containerTitle="Aplicação" containerPath="Operacional" [information]="informationField">
             <mat-tab-group #tabGroup animationDuration="0ms">
                 <mat-tab label="Pesquisa">
-                  <div class="search-group">
+                  <div class="search-group" style="margin-bottom:0.5rem">
                     <div class="col-sm-11 p-0 d-flex">
                         <mat-form-field class="search-form-field col-sm-8" appearance="outline">
                             <mat-label>Digite o nome da pessoa ou o CPF</mat-label>
@@ -13,7 +13,8 @@
                                    matInput
                                    type="text"
                                    [(ngModel)]="searchApplicationName"
-                                   placeholder="(mínimo 3 caracteres)">
+                                   placeholder="(mínimo 3 caracteres)"
+                                   >
                         </mat-form-field>
 
                         <button (click)="loadData()" 
@@ -46,10 +47,46 @@
                                 <span class="fa-solid fa-filter w-20px"></span>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item>Data de Aplicação</button>
+                            <button (click)="showSearchDate()" mat-menu-item>Data de Aplicação</button>
                             <mat-divider></mat-divider>
-                            <button mat-menu-item>Responsável Financeiro</button>
+                            <button (click)="showSearchResponsible()" mat-menu-item>Responsável Financeiro</button>
                         </mat-menu>
+                    </div>
+                </div>
+                <div class="search-group">
+                    <div class="col-sm-11 p-0 d-flex" *ngIf="isFilterVisible">
+                        <mat-form-field appearance="outline" class="col-sm-5" *ngIf="isFilterDateVisible">
+                            <mat-label>Data de Aplicação</mat-label>
+                            <input matInput 
+                                   [matDatepicker]="picker" 
+                                   #SearchApplicationDateInput 
+                                   [(ngModel)]="searchApplicationDate"
+                                   formControlName="searchApplicationDate"
+                                   [max]="today">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+            
+                        <mat-form-field appearance="outline" class="col-sm-7" *ngIf="isFilterResponsibleVisible">
+                            <mat-label>Responsável Financeiro</mat-label>
+                            <input 
+                                (click)="searchPersonByAutoComplete()" 
+                                type="text" 
+                                placeholder="Selecione a Pessoa" 
+                                aria-label="Number" matInput
+                                [matAutocomplete]="autoPerson"
+                                [(ngModel)]="searchResponsible">
+                            <mat-autocomplete 
+                                #autoPerson="matAutocomplete"
+                                [displayWith]="displayStatePerson">
+                                
+                                <mat-option *ngFor="let option of filteredOptions | async"
+                                    [value]="option">
+                                    {{option.Name}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-icon matSuffix>search</mat-icon>
+                        </mat-form-field>
                     </div>
                 </div>
 
@@ -154,32 +191,37 @@
                 </mat-tab>
 
                 <mat-tab label="Aplicação" [disabled]="isApplicationTabDisabled">
-                    <div class="row first-card">
-                        <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
-                            <div class="card-resumo-paciente shadow-sm ms-0">
-                                <div class="row ms-0">
-                                    <div class="col-xxl-5 col-sm-5 shadow-sm main-content-resumo-paciente">
-                                        <div class="dados-principais-paciente">
-                                            <img class="mouse-pointer img-paciente" 
-                                                 id="imgPaciente"
-                                                 src="{{personProfilePic}}">
-                                            <div class="informacoes-complementares-paciente">
-                                                <span id="nmPessoaPaciente" class="informacao-principal fw-bold">{{personName}}</span>
-                                                <span id="nmIdadeExtenso" class="informacao-secundaria d-block">{{personAge}}</span>
-                                                <span id="nmCidadeEstado" class="informacao-secundaria">{{personPrincipalPhone}}</span>
+                    <ng-template matTabContent>
+                        <div class="row first-card">
+                            <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
+                                <div class="card-resumo-paciente shadow-sm ms-0">
+                                    <div class="row ms-0">
+                                        <div class="d-flex justify-content-end align-items-center">
+                                            <span (click)="openEditPersonDialog()" class="fa-solid fa-user-pen ms-2 icone-cadastro-paciente" title="Cadastro do Paciente"></span>
+                                        </div>
+                                        <div class="col-xxl-5 col-sm-5 shadow-sm main-content-resumo-paciente">
+                                            <div class="dados-principais-paciente">
+                                                <img class="mouse-pointer img-paciente" 
+                                                    id="imgPaciente"
+                                                    src="{{personProfilePic}}">
+                                                <div class="informacoes-complementares-paciente">
+                                                    <span id="nmPessoaPaciente" class="informacao-principal fw-bold">{{personName}}</span>
+                                                    <span id="nmIdadeExtenso" class="informacao-secundaria d-block">{{personAge}}</span>
+                                                    <span id="nmCidadeEstado" class="informacao-secundaria">{{personPrincipalPhone}}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xxl-7 col-sm-7 secondary-content-resumo-paciente ps-0">
-                                        <div class="w-100">
-                                            <div class="row col-sm-10 offset-sm-1 mb-4 p-0">
-                                                <div class="col-sm-9">
-                                                    <span class="informacao-secundaria-auxiliar">Endereço</span>
-                                                    <span class="informacao-principal-auxiliar" id="nmOcupacao">{{personPrincipalAddress}}</span>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <span class="informacao-secundaria-auxiliar">Atendimentos</span>
-                                                    <span class="informacao-principal-auxiliar" id="nrAtendimento">{{numberOfApplications}}</span>
+                                        <div class="col-xxl-7 col-sm-7 secondary-content-resumo-paciente ps-0">
+                                            <div class="w-100">
+                                                <div class="row col-sm-10 offset-sm-1 mb-4 p-0">
+                                                    <div class="col-sm-9">
+                                                        <span class="informacao-secundaria-auxiliar">Endereço</span>
+                                                        <span class="informacao-principal-auxiliar" id="nmOcupacao">{{personPrincipalAddress}}</span>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <span class="informacao-secundaria-auxiliar">Atendimentos</span>
+                                                        <span class="informacao-principal-auxiliar" id="nrAtendimento">{{numberOfApplications}}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -187,116 +229,129 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row second-card">
-                        <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
-                            <div class="card mb-4 shadow-sm right-border-product">
-                                <mat-tab-group #tabGroup2 animationDuration="0ms">
-                                    <mat-tab label="Aplicações Disponíveis">
-                                        <div id="search-table" style="margin-bottom:3rem;">
-                                            <div class="col-sm-11 search-table-content mat-elevation-z2">
-                                             
-                                            <table mat-table [dataSource]="dataSourceApplication" class="col-sm-12">
-                    
-                                                <ng-container matColumnDef="product">
-                                                    <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> 
-                                                            <div matTooltip="Orçamento nº {{element.BudgetNumber}}
-                                                                            Responsável {{element.PersonBudget}}
-                                                                            Total R${{element.TotalBudgetAmount.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}}"
-                                                                            matTooltipPosition="left">
-                                                                            <div>{{element.ProductName}}</div>
-                                                                            <div class="small-text">{{formatDoseType(element.DoseType)}}</div>
+                        <div class="row second-card">
+                            <div class="col-md-12 offset-none-tablet fullsize-tablet p-0">
+                                <div class="card mb-4 shadow-sm right-border-product">
+                                    <mat-tab-group #tabGroup2 animationDuration="0ms">
+                                        <mat-tab label="Aplicações Disponíveis">
+                                            <div id="search-table" style="margin-bottom:3rem;">
+                                                <div class="col-sm-11 search-table-content mat-elevation-z2">
+                                                
+                                                <table mat-table [dataSource]="dataSourceApplication" class="col-sm-12">
+                        
+                                                    <ng-container matColumnDef="product">
+                                                        <mat-header-cell *matHeaderCellDef> Produto </mat-header-cell>
+                                                        <mat-cell *matCellDef="let element"> 
+                                                                <div>
+                                                                    <div>{{element.ProductName}}</div>
+                                                                    <div class="small-text">{{formatDoseType(element.DoseType)}}</div>
+                                                                </div>
+                                                        </mat-cell>
+                                                    </ng-container>
+
+                                                    <ng-container matColumnDef="scheduling">
+                                                        <mat-header-cell *matHeaderCellDef> Autorização </mat-header-cell>
+                                                        <mat-cell *matCellDef="let element"> 
+                                                            {{treatTypeOfServiceExhibition(element.TypeOfService)}}
+                                                            <div>
+                                                                <div>{{element.AuthorizationNumber}}</div>
+                                                                <div class="small-text" [hidden]="treatTypeOfService">
+                                                                   {{formatTypeOfService(element.TypeOfService)}}
+                                                                </div>
+                                                                <div class="small-text" [hidden]="!treatTypeOfService">
+                                                                    <span class="link-text" 
+                                                                          matTooltip="Visualizar Endereços"
+                                                                          matTooltipPosition="right"
+                                                                          (click)="openAddressBottomSheet()">
+                                                                          {{formatTypeOfService(element.TypeOfService)}}
+                                                                    </span>
+                                                                </div>
                                                             </div>
-                                                    </mat-cell>
-                                                </ng-container>
-
-                                                <ng-container matColumnDef="scheduling">
-                                                    <mat-header-cell *matHeaderCellDef> Autorização </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> 
-                                                        <div>
-                                                            <div>{{element.AuthorizationNumber}}</div>
-                                                            <div class="small-text">{{formatTypeOfService(element.TypeOfService)}}</div>
-                                                        </div>
-                                                    </mat-cell>
-                                                </ng-container>
-                
-                                                <ng-container matColumnDef="date">
-                                                    <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element"> {{formatDateExhibition(element.StartDate, element.StartTime)}} </mat-cell>
-                                                </ng-container>
+                                                        </mat-cell>
+                                                    </ng-container>
                     
-                                                <ng-container matColumnDef="authorizationId">
-                                                    <th mat-header-cell hidden="true" *matHeaderCellDef> ID </th>
-                                                    <td mat-cell hidden="true" *matCellDef="let element"> {{element.AuthorizationId}} </td>
-                                                </ng-container>
+                                                    <ng-container matColumnDef="date">
+                                                        <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
+                                                        <mat-cell *matCellDef="let element"> {{formatDateExhibition(element.StartDate, element.StartTime)}} </mat-cell>
+                                                    </ng-container>
+                        
+                                                    <ng-container matColumnDef="authorizationId">
+                                                        <th mat-header-cell hidden="true" *matHeaderCellDef> ID </th>
+                                                        <td mat-cell hidden="true" *matCellDef="let element"> {{element.AuthorizationId}} </td>
+                                                    </ng-container>
 
-                                                <ng-container matColumnDef="action">
-                                                    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-                                                    <mat-cell *matCellDef="let element">
-                                                        <i class="fa-solid fa-syringe vaccine-icon"></i>
-                                                    </mat-cell>
-                                                </ng-container>
+                                                    <ng-container matColumnDef="action">
+                                                        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">
+                                                            <i title="Aplicar" (click)="openAplicationDialog(element.AuthorizationId)" class="fa-solid fa-syringe vaccine-icon"></i>
+                                                        </mat-cell>
+                                                    </ng-container>
 
-                                                <!-- Row shown when there is no matching data. -->
-                                                <tr class="mat-row" *matNoDataRow>
-                                                    <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
-                                                </tr>
+                                                    <!-- Row shown when there is no matching data. -->
+                                                    <tr class="mat-row" *matNoDataRow>
+                                                        <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
+                                                    </tr>
 
-                                                <mat-header-row *matHeaderRowDef="displayedApplicationColumns"></mat-header-row>
-                                                <mat-row class="hover-element-row" style="cursor:pointer;" (dblclick)="openAplicationDialog(row.AuthorizationId)" *matRowDef="let row; columns: displayedApplicationColumns;"></mat-row>
-                                            </table>
+                                                    <mat-header-row *matHeaderRowDef="displayedApplicationColumns"></mat-header-row>
+                                                    <mat-row class="hover-element-row" style="cursor:pointer;" (dblclick)="openAplicationDialog(row.AuthorizationId)" *matRowDef="let row; columns: displayedApplicationColumns;"></mat-row>
+                                                </table>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </mat-tab>
-                                    <mat-tab label="Histórico">
-                                        <div class="container py-5" style="padding-top: 0.5rem !important; padding-bottom: 0.5rem !important;">
-                                            <div class="main-timeline-2">
-                                                <div class="timeline-2  {{indexOfelement % 2 == 0 ? 'left' : 'right'}}-2" *ngFor="let element of applicationsHistory; let indexOfelement=index;">
-                                                    <div class="card">
-                                                        <div class="card-body p-4">
-                                                            <h4 class="fw-bold titulo-historico"> {{element.ProductName}} </h4>
-                                                            <p class="mb-0 texto-historico"> 
-                                                                <span title="Tipo de Dose"> {{formatDoseType(element.DoseType)}} </span> 
-                                                            </p>
-                                                            <p class="mb-0 texto-historico"> 
-                                                                <span title="Local de Aplicação"> {{formatApplicationPlace(element.ApplicationPlace).toUpperCase()}} </span> 
-                                                            </p>
-                                                            <p class="mb-0 texto-historico mb-4">
-                                                                <span title="Via de Administração"> {{formatRouteOfAdministration(element.RouteOfAdministration).toUpperCase()}} </span>
-                                                            </p>
+                                        </mat-tab>
+                                        <mat-tab label="Histórico">
+                                            <div class="container py-5" style="padding-top: 0.5rem !important; padding-bottom: 0.5rem !important;">
+                                                <div class="main-timeline-2">
+                                                    <div class="timeline-2  {{indexOfelement % 2 == 0 ? 'left' : 'right'}}-2" *ngFor="let element of applicationsHistory; let indexOfelement=index;">
+                                                        <div class="card">
+                                                            <div class="card-body p-4">
+                                                                <h4 class="fw-bold titulo-historico"> {{element.ProductName}} </h4>
+                                                                <p class="mb-0 texto-historico"> 
+                                                                    <span title="Tipo de Dose"> {{formatDoseType(element.DoseType)}} </span> 
+                                                                </p>
+                                                                <p class="mb-0 texto-historico"> 
+                                                                    <span title="Local de Aplicação"> {{formatApplicationPlace(element.ApplicationPlace).toUpperCase()}} </span> 
+                                                                </p>
+                                                                <p class="mb-0 texto-historico mb-4">
+                                                                    <span title="Via de Administração"> {{formatRouteOfAdministration(element.RouteOfAdministration).toUpperCase()}} </span>
+                                                                </p>
+                                                                
+
+                                                                <p class="mb-0 text-muted horario-historico">
+                                                                    <i class="fas fa-calendar me-1 history-icon" aria-hidden="true"></i>
+                                                                    <span title="Data do Agendamento">{{formatDateExhibition(element.StartDate, element.StartTime)}}</span>
+                                                                </p>
+                                                                <p class="mb-0 text-muted horario-historico">
+                                                                    <i class="fas fa-user-nurse me-1 history-icon" aria-hidden="true"></i>
+                                                                    <span title="Usuário Aplicador">Aplicador {{element.UserPersonName}}</span>
+                                                                </p>
+                                                                <p class="text-muted mb-4 horario-historico">
+                                                                    <i class="fas fa-comments-dollar me-1 history-icon" aria-hidden="true"></i>
+                                                                    <span title="Informações do Orçamento">Orçamento nº {{element.BudgetNumber}} - {{element.PersonResponsible}}</span>
+                                                                </p>
                                                             
-                                                            <p class="mb-0 text-muted horario-historico">
-                                                                <i class="fas fa-user-nurse me-1 history-icon" aria-hidden="true"></i>
-                                                                <span title="Usuário Aplicador">Aplicador {{element.UserPersonName}}</span>
-                                                            </p>
-                                                            <p class="text-muted mb-4 horario-historico">
-                                                                <i class="fas fa-comments-dollar me-1 history-icon" aria-hidden="true"></i>
-                                                                <span title="Informações do Orçamento">Orçamento nº {{element.BudgetNumber}} - {{element.PersonResponsible}}</span>
-                                                            </p>
-                                                          
-                                                            <p class="mb-0 texto-historico"
-                                                               style="float:right;">
-                                                               <a (click)="openBatchDialog(element.ProductSummaryBatchId)" matTooltip="Informações do Lote" matTooltipPosition="above">
-                                                                <i class="fa-solid fa-box-open me-1"></i>
-                                                                {{element.Batch}}
-                                                               </a>
-                                                            </p>
+                                                                <p class="mb-0 texto-historico"
+                                                                style="float:right;">
+                                                                <a (click)="openBatchDialog(element.ProductSummaryBatchId)" matTooltip="Informações do Lote" matTooltipPosition="above">
+                                                                    <i class="fa-solid fa-box-open me-1"></i>
+                                                                    {{element.Batch}}
+                                                                </a>
+                                                                </p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="bolota {{indexOfelement % 2 == 0 ? 'bolota-left' : 'bolota-right'}}" 
-                                                         matTooltip="{{element.ApplicationDate | date: 'dd/MM/yyyy H:mm'}}" 
-                                                         [matTooltipPosition]="positionTooltip(indexOfelement)">
-                                                        <span class="dt-historico">{{formatDayTimelineDate(element.ApplicationDate)}}<br><b>{{formatMonthTimelineDate(element.ApplicationDate)}}</b>{{formatYearTimelineDate(element.ApplicationDate)}}</span>
+                                                        <div class="bolota {{indexOfelement % 2 == 0 ? 'bolota-left' : 'bolota-right'}}" 
+                                                            matTooltip="{{element.ApplicationDate | date: 'dd/MM/yyyy H:mm'}}" 
+                                                            [matTooltipPosition]="positionTooltip(indexOfelement)">
+                                                            <span class="dt-historico">{{formatDayTimelineDate(element.ApplicationDate)}}<br><b>{{formatMonthTimelineDate(element.ApplicationDate)}}</b>{{formatYearTimelineDate(element.ApplicationDate)}}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </mat-tab>
-                                </mat-tab-group>
+                                        </mat-tab>
+                                    </mat-tab-group>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </ng-template>
                 </mat-tab>
             </mat-tab-group>
         </app-container>
