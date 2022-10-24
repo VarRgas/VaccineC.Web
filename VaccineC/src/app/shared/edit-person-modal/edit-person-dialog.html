@@ -1,8 +1,234 @@
-<h2 mat-dialog-title>Editar Pessoa</h2>
-<mat-dialog-content class="mat-typography" style="max-height: initial;">
-    
+<h2 mat-dialog-title>Edição Rápida de Pessoa</h2>
+<mat-dialog-content class="mat-typography"
+                    style="max-height: initial;">
+  <form [formGroup]="personForm">
+    <div class="registration-group">
+      <div class="offset-sm-1 col-sm-11 p-0">
+        <div class="div-row-input-table p-0">
+
+          <mat-form-field [hidden]="true">
+            <input matInput
+                   #PersonId
+                   formControlName="PersonId"
+                   id="PersonId"
+                   [(ngModel)]="personId">
+          </mat-form-field>
+
+          <table class="example-full-width"
+                 cellspacing="0">
+            <tr>
+              <td>
+                <!-- Foto -->
+                <img class="mouse-pointer img-paciente"
+                     id="imgPaciente"
+                     src="{{personProfilePic}}">
+              </td>
+
+              <td class="table-name col-sm-11">
+                <!-- NOME DA PESSOA -->
+                <mat-form-field appearance="fill"
+                                class="col-sm-11 pl-0">
+                  <mat-label>Nome</mat-label>
+                  <input matInput
+                         type="text"
+                         #PersonNameInput
+                         formControlName="Name"
+                         [(ngModel)]="name"
+                         id="name"
+                         placeholder="Ex. Maria da Silva"
+                         required>
+                  <mat-hint align="end">{{PersonNameInput.value?.length || 0}}/255</mat-hint>
+                  <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
+                    <span *ngIf="personForm.controls.Name.errors?.required">O Nome é obrigatório.</span>
+                    <span *ngIf="personForm.controls.Name.errors?.maxlength">O Nome deve ter menos de 255
+                      caracteres.</span>
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!-- EMAIL -->
+        <div class="div-row-input">
+          <mat-form-field appearance="fill" class="col-sm-11">
+            <mat-label>E-mail</mat-label>
+            <input matInput
+                   #Emailinput
+                   formControlName="Email"
+                   [maxlength]="255"
+                   placeholder="email@exemplo.com.br"
+                   id="email"
+                   [(ngModel)]="email">
+            <mat-hint align="end">{{Emailinput.value?.length || 0}}/255</mat-hint>
+            <mat-error *ngIf="personForm.controls.Email.touched && personForm.controls.Email.invalid">
+              <span *ngIf="personForm.controls.Email.errors?.email">Informe um e-mail válido.</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- DETALHES -->
+        <div class="div-row-input">
+          <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
+            <mat-label>Detalhes</mat-label>
+            <textarea matInput
+                      #DetailsInput
+                      formControlName="Details"
+                      [(ngModel)]="details"
+                      id="details"
+                      placeholder="Informações complementares"
+                      maxlength="255">
+            </textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- PHYSICAL COMPLEMENT -->
+  <div *ngIf="showPhysicalRegister">
+    <form [formGroup]="physicalComplementForm">
+      <div class="complement-group">
+
+        <!-- REGISTRO DE PESSOA FISICA -->
+        <div class="offset-sm-1 col-sm-11 p-0" id="person-physical">
+          <div class="div-row-input">
+            <div class="div-row-input">
+
+              <mat-form-field [hidden]="true">
+                <input matInput
+                       #NamePersonPhysicalId
+                       formControlName="PersonPhysicalId"
+                       id="PersonPhysicalId"
+                       [(ngModel)]="personPhysicalId">
+              </mat-form-field>
+
+              <mat-form-field [hidden]="true">
+                <input matInput
+                       #NamePersonID
+                       formControlName="PersonId"
+                       [(ngModel)]="personId">
+              </mat-form-field>
+
+              <!-- CPF -->
+              <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>CPF</mat-label>
+                <input type="text"
+                       [(ngModel)]="cpfNumber"
+                       formControlName="CpfNumber"
+                       matInput
+                       #input
+                       maxlength="14"
+                       id="cpfNumber"
+                       mask="000.000.000-009"
+                       placeholder="000.000.000-00">
+              </mat-form-field>
+
+              <!-- CNS -->
+              <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                <mat-label>CNS</mat-label>
+                <input type="text"
+                       [(ngModel)]="cnsNumber"
+                       formControlName="CnsNumber"
+                       matInput
+                       #input
+                       maxlength="18"
+                       placeholder="000 0000 0000 0000"
+                       id="cnsNumber"
+                       mask="000 0000 0000 00009">
+              </mat-form-field>
+            </div>
+
+            <div class="div-row-input">
+              <!-- ESTADO CIVIL -->
+              <mat-form-field appearance="fill" class="col-sm-6">
+                <mat-label>Estado Civil</mat-label>
+                <mat-select id="maritalStatus" #MaritalStatusInput [(ngModel)]="maritalStatus"
+                  formControlName="MaritalStatus" required>
+                  <mat-option value="S" selected>Solteiro(a)</mat-option>
+                  <mat-option value="C" selected>Casado(a)</mat-option>
+                  <mat-option value="X" selected>Separado(a)</mat-option>
+                  <mat-option value="D" selected>Divorciado(a)</mat-option>
+                  <mat-option value="V" selected>Viúvo(a)</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="physicalComplementForm.controls.MaritalStatus.touched && physicalComplementForm.controls.MaritalStatus.invalid">
+                  <span *ngIf="physicalComplementForm.controls.MaritalStatus.errors?.required">O Estado Civil é
+                    obrigatório.</span>
+                </mat-error>
+              </mat-form-field>
+
+              <!-- GENERO -->
+              <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+                <mat-label>Gênero</mat-label>
+                <mat-select id="gender" required="true" [(ngModel)]="gender" formControlName="Gender">
+
+                  <mat-option value="M" selected>Masculino</mat-option>
+                  <mat-option value="F" selected>Feminino</mat-option>
+                  <mat-option value="O" selected>Outro</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="physicalComplementForm.controls.Gender.touched && physicalComplementForm.controls.Gender.invalid">
+                  <span *ngIf="physicalComplementForm.controls.Gender.errors?.required">O Gênero é obrigatório.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="div-row-input">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="showJuridicalRegister"
+        class="complement-group">
+    <form [formGroup]="juridicalComplementForm">
+      <div>
+        <!-- REGISTRO DE PESSOA JURIDICA -->
+        <div *ngIf="showJuridicalRegister"
+              class="offset-sm-1 col-sm-11 p-0"
+              id="person-juridical">
+          <div class="div-row-input">
+            <!-- NOME FANTASIA -->
+            <mat-form-field appearance="fill"
+                            class="col-sm-12">
+              <mat-label>Nome Fantasia</mat-label>
+              <input type="text"
+                     [(ngModel)]="fantasyName"
+                     formControlName="FantasyName"
+                     matInput
+                     #input
+                     maxlength="255"
+                     id="fantasyName">
+            </mat-form-field>
+          </div>
+          <div class="div-row-input">
+            <!-- CNPJ -->
+            <mat-form-field appearance="fill"
+                            class="col-sm-12">
+              <mat-label>CNPJ</mat-label>
+              <input type="text"
+                     [(ngModel)]="cnpjNumber"
+                     formControlName="CnpjNumber"
+                     matInput
+                     #input
+                     maxlength="18"
+                     id="cnpjNumber"
+                     mask="00.000.000/0000-00"
+                     placeholder="00.000.000/0000-00">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
-    <button mat-flat-button class="create-button">Salvar</button>
+  <button mat-flat-button
+          mat-dialog-close
+          color="primary"
+          cdkFocusInitial>Cancelar
+  </button>
+  <button (click)="updatePersonInformations()"
+          mat-flat-button
+          class="create-button">Salvar
+  </button>
 </mat-dialog-actions>
