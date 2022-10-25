@@ -70,7 +70,7 @@
 
         <!-- REGISTRO DE PESSOA FISICA -->
         <div class="col-sm-12 pr-0" id="person-physical">
-          <div class="div-row-input mt-4">
+          <div class="div-row-input mt-3">
             <div class="div-row-input">
 
               <mat-form-field [hidden]="true">
@@ -206,6 +206,13 @@
 
   <mat-tab-group mat-align-tabs="start" class="col-sm-12 pr-0">
     <mat-tab label="Telefones">
+      <div class="d-flex justify-content-end">
+        <i class="fa-solid fa-circle-plus add-button" 
+          (click)="openAddPhoneDialog()"  
+          matTooltip="Inserir Telefone" 
+          matTooltipPosition="left">
+        </i>
+      </div>
       <div class="search-table">
         <div class="col-sm-12 search-table-content mat-elevation-z2">
           <table class="col-sm-12" mat-table [dataSource]="dataSourcePhone">
@@ -236,12 +243,14 @@
                   mat-icon-button 
                   color="warn" 
                   title="Remover"
+                  (click)="deletePersonPhone(row.ID)" 
                   style="float:right;">
                   <i class="fa-solid fa-trash"></i>
                 </button>
                 <button mat-icon-button 
                   color="primary" 
                   title="Editar" 
+                  (click)="openUpdatePersonPhoneDialog(row.ID)"
                   style="float:right;">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </button>
@@ -249,76 +258,26 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumnsPhone"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsPhone;" style="cursor:pointer;" class="hover-element-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsPhone;" (dblclick)="openUpdatePersonPhoneDialog(row.ID)" style="cursor:pointer;" class="hover-element-row"></tr>
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
             </tr>
           </table>
-
-          <mat-paginator #paginatorPhone="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
         </div>
       </div>
     </mat-tab>
-    <div class="search-table">
-      <div class="col-sm-11 search-table-content mat-elevation-z2">
-        <table class="col-sm-12" mat-table [dataSource]="dataSourceAddress">
 
-          <!-- PhoneType Column -->
-          <ng-container matColumnDef="AddressType">
-            <th mat-header-cell *matHeaderCellDef> Tipo </th>
-            <td mat-cell *matCellDef="let row"> {{resolveExibitionAddressType(row.AddressType)}} </td>
-          </ng-container>
-
-          <!-- Address Column -->
-          <ng-container matColumnDef="Address">
-            <th mat-header-cell *matHeaderCellDef> Endereço </th>
-            <td mat-cell *matCellDef="let row"> 
-              <div>
-                <div>{{row.PublicPlace}}, nº {{row.AddressNumber}} {{row.Complement == '' ? '' : '- ' + row.Complement}}</div>
-                <div class="small-text">Bairro {{row.District}} - {{row.City}}/{{row.State}} - {{row.AddressCode}}</div>
-            </div>
-            </td>
-          </ng-container>
-
-          <!-- Id Hidden Column -->
-          <ng-container matColumnDef="ID">
-            <th mat-header-cell hidden *matHeaderCellDef> ID </th>
-            <td mat-cell hidden *matCellDef="let row"> {{row.ID}} </td>
-          </ng-container>
-
-          <!-- Options Column -->
-          <ng-container matColumnDef="Options">
-            <th mat-header-cell *matHeaderCellDef> </th>
-            <td mat-cell *matCellDef="let row">
-              <button mat-icon-button 
-                      color="warn" 
-                      title="Remover"
-                      style="float:right;">
-                      <i class="fa-solid fa-trash"></i>
-              </button>
-              <button mat-icon-button 
-                      color="primary"
-                      title="Editar" 
-                      style="float:right;">
-                      <i class="fa-solid fa-pen-to-square"></i>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumnsAddress"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsAddress;" class="hover-element-row" style="cursor:pointer;"></tr>
-
-          <!-- Row shown when there is no matching data. -->
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
-          </tr>
-        </table>
-        <mat-paginator #paginatorAddress="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
-      </div>
-    </div>
     <mat-tab label="Endereços">
+      <div class="d-flex justify-content-end">
+        <i class="fa-solid fa-circle-plus add-button" 
+          (click)="openAddressDialog()"  
+          matTooltip="Inserir Endereço" 
+          matTooltipPosition="left">
+        </i>
+      </div>
+
       <div class="search-table">
         <div class="col-sm-12 search-table-content mat-elevation-z2">
           <table class="col-sm-12" mat-table [dataSource]="dataSourceAddress">
@@ -353,12 +312,14 @@
                 <button mat-icon-button 
                         color="warn" 
                         title="Remover"
+                        (click)="deleteAddressPhone(row.ID)" 
                         style="float:right;">
                         <i class="fa-solid fa-trash"></i>
                 </button>
                 <button mat-icon-button 
                         color="primary"
                         title="Editar" 
+                        (click)="openUpdatePersonAddressDialog(row.ID)" 
                         style="float:right;">
                         <i class="fa-solid fa-pen-to-square"></i>
                 </button>
@@ -366,14 +327,13 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumnsAddress"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsAddress;" class="hover-element-row" style="cursor:pointer;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsAddress;" (dblclick)="openUpdatePersonAddressDialog(row.ID)" class="hover-element-row" style="cursor:pointer;"></tr>
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
             </tr>
           </table>
-          <mat-paginator #paginatorAddress="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
         </div>
       </div>
     </mat-tab>

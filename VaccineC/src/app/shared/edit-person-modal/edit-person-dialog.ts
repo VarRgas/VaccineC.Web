@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { cnpj, cpf } from 'cpf-cnpj-validator';
@@ -9,6 +9,7 @@ import { IPersonPhone } from 'src/app/interfaces/i-person-phone';
 import { PersonJuridicalModel } from 'src/app/models/person-juridical-model';
 import { PersonModel } from 'src/app/models/person-model';
 import { PersonPhysicalModel } from 'src/app/models/person-physical-model';
+import { ConfirmAddressPhoneRemoveDialog, ConfirmPersonPhoneRemoveDialog, DialogContentAddressDialog, DialogContentPhoneDialog, UpdatePersonAddressDialog, UpdatePersonPhoneDialog } from 'src/app/pages/pessoas/pessoas.component';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { PersonsAddressesDispatcherService } from 'src/app/services/person-address-dispatcher.service';
@@ -90,7 +91,7 @@ export class EditPersonDialog implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<EditPersonDialog>,
+    public dialogRef: MatDialogRef<any>,
     private messageHandler: MessageHandlerService,
     private errorHandler: ErrorHandlerService,
     private personsDispatcherService: PersonDispatcherService,
@@ -98,6 +99,7 @@ export class EditPersonDialog implements OnInit {
     private personsJuridicalsDispatcherService: PersonsJuridicalsDispatcherService,
     private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
     private personsAddressesDispatcherService: PersonsAddressesDispatcherService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -343,6 +345,124 @@ export class EditPersonDialog implements OnInit {
     } else {
       return ""
     }
+  }
+
+  public openUpdatePersonPhoneDialog(id: string): void {
+    const dialogRef = this.dialog.open(UpdatePersonPhoneDialog, {
+      disableClose: true,
+      width: '50vw',
+      data: {
+        ID: id
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourcePhone = new MatTableDataSource(res);
+          this.dataSourcePhone.paginator = this.paginatorPhone;
+        }
+      }
+    );
+  }
+
+  deletePersonPhone(id: string) {
+
+    const dialogRef = this.dialog.open(ConfirmPersonPhoneRemoveDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.personsPhonesDispatcherService.delete(id).subscribe(
+          success => {
+            this.dataSourcePhone = new MatTableDataSource(success);
+            this.dataSourcePhone.paginator = this.paginatorPhone;
+            this.messageHandler.showMessage("Telefone removido com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+      }
+    });
+
+  }
+
+  public openUpdatePersonAddressDialog(id: string): void {
+
+    const dialogRef = this.dialog.open(UpdatePersonAddressDialog, {
+      disableClose: true,
+      height: '100%',
+      data: {
+        ID: id
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourceAddress = new MatTableDataSource(res);
+          this.dataSourceAddress.paginator = this.paginatorAddress;
+        }
+      }
+    );
+  }
+
+  deleteAddressPhone(id: string) {
+
+    const dialogRef = this.dialog.open(ConfirmAddressPhoneRemoveDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.personsAddressesDispatcherService.delete(id).subscribe(
+          success => {
+            this.dataSourceAddress = new MatTableDataSource(success);
+            this.dataSourceAddress.paginator = this.paginatorAddress;
+            this.messageHandler.showMessage("Endereço removido com sucesso!", "success-snackbar")
+          },
+          error => {
+            console.log(error);
+            this.errorHandler.handleError(error);
+          });
+      }
+    });
+
+  }
+
+  public openAddressDialog(): void {
+    const dialogRef = this.dialog.open(DialogContentAddressDialog, {
+      height: '100%',
+      disableClose: true,
+      data: {
+        ID: this.personId
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourceAddress = new MatTableDataSource(res);
+          this.dataSourceAddress.paginator = this.paginatorAddress;
+        }
+      }
+    );
+  }
+
+  public openAddPhoneDialog(): void {
+    const dialogRef = this.dialog.open(DialogContentPhoneDialog, {
+      disableClose: true,
+      data: {
+        ID: this.personId
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(
+      (res) => {
+        if (res != "") {
+          this.dataSourcePhone = new MatTableDataSource(res);
+          this.dataSourcePhone.paginator = this.paginatorPhone;
+        }
+      }
+    );
   }
 
 }

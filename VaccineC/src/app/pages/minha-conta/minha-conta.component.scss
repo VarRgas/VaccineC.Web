@@ -1,19 +1,25 @@
 .my-account-card {
-    align-items: center;
+  align-items: center;
 }
 
 .section-main {
-    margin-left: 7.5rem;
+  margin-left: 7.5rem;
 }
 
 .container-retract {
-    margin-left: 14.5rem;
+  margin-left: 14.5rem;
 }
 
 .container-expand {
-    margin-left: 7.5rem;
+  margin-left: 7.5rem;
 }
 
 :host ::ng-deep.mat-spinner {
-    margin-right: 0.2rem !important;
+  margin-right: 0.2rem !important;
+}
+
+.icone-cadastro-paciente {
+  font-size: 12px;
+  color: #5099dd;
+  cursor: pointer;
 }

@@ -8,6 +8,13 @@
                 <div class="col-lg-4">
                     <div class="card mb-4 is-card">
                         <div class="card-body text-center">
+                            <div class="d-flex justify-content-end align-items-center">
+                                <span class="fa-solid fa-user-pen icone-cadastro-paciente" 
+                                      matTooltip="Cadastro da Pessoa"
+                                      (click)="openEditPersonDialog()" 
+                                      matTooltipPosition="above">
+                                </span>
+                            </div>
                             <img src="{{userPersonProfilePic}}" 
                                  alt="avatar"
                                  class="rounded-circle img-fluid" 

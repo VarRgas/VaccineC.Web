@@ -7,6 +7,7 @@ import { MessageHandlerService } from 'src/app/services/message-handler.service'
 import { PersonsAddressesDispatcherService } from 'src/app/services/person-address-dispatcher.service';
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 import { ResetPasswordDialog } from '../gerenciar-usuarios/gerenciar-usuarios.component';
 
 @Component({
@@ -24,6 +25,7 @@ export class MinhaContaComponent implements OnInit {
   public userPersonProfilePic = "";
   public userPersonAddress = "";
   public userPersonPhone = "";
+  public personId!: string;
 
   public imagePathUrl = 'http://localhost:5000/';
   public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
@@ -51,6 +53,8 @@ export class MinhaContaComponent implements OnInit {
 
         let userPersonName = user.Person.Name;
         let userPersonNameArray = userPersonName.split(" ");
+
+        this.personId = user.Person.ID;
 
         if (userPersonNameArray.length == 1) {
           this.userPersonName = userPersonName;
@@ -135,6 +139,56 @@ export class MinhaContaComponent implements OnInit {
       }
     );
   }
+
+  public openEditPersonDialog() {
+    const dialogRef = this.dialog.open(EditPersonDialog, {
+      disableClose: true,
+      width: '80vw',
+      data: {
+        PersonId: this.personId
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.usersService.getById(this.userId).subscribe(
+        user => {
+          this.getPrincipalPersonAddress(user.Person.ID);
+          this.getPrincipalPersonPhone(user.Person.ID);
+
+          let userPersonName = user.Person.Name;
+          let userPersonNameArray = userPersonName.split(" ");
+
+          this.personId = user.Person.ID;
+
+          if (userPersonNameArray.length == 1) {
+            this.userPersonName = userPersonName;
+          } else {
+            this.userPersonName = userPersonNameArray[0] + " " + userPersonNameArray[userPersonNameArray.length - 1];
+          }
+
+          this.userPersonNameComplete = userPersonName;
+          this.userEmail = user.Email;
+          this.userFunction = user.Function;
+
+          if (user.Function == "G") {
+            this.userFunction = "Gerente"
+          } else if (user.Function == "E") {
+            this.userFunction = "Aplicador"
+          } else {
+            this.userFunction = "Administrador"
+          }
+
+          if (user.Person.ProfilePic == null) {
+            this.userPersonProfilePic = `${this.imagePathUrlDefault}`;
+          } else {
+            this.userPersonProfilePic = `${this.imagePathUrl}${user.Person.ProfilePic}`;
+          }
+        },
+        error => {
+          console.log(error);
+        });
+    });
+  }
 }
 
 
@@ -158,7 +212,7 @@ export class PasswordDialog implements OnInit {
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ResetPasswordDialog>,
-
+    public dialog: MatDialog
   ) { }
 
   //Form
@@ -168,12 +222,12 @@ export class PasswordDialog implements OnInit {
     ConfirmPassword: [null, [Validators.required, Validators.maxLength(255)]]
   });
 
-  get passwordInput() { 
-    return this.userPasswordForm.get('Password'); 
+  get passwordInput() {
+    return this.userPasswordForm.get('Password');
   }
 
-  get confirmPasswordInput() { 
-    return this.userPasswordForm.get('ConfirmPassword'); 
+  get confirmPasswordInput() {
+    return this.userPasswordForm.get('ConfirmPassword');
   }
 
   ngOnInit(): void {
@@ -207,6 +261,6 @@ export class PasswordDialog implements OnInit {
           this.errorHandler.handleError(error);
           console.log(error);
         });
-
   }
+
 }
