@@ -31,6 +31,10 @@ export class ApplicationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${personId}/GetAvailableApplicationsByPersonId`);
     }
 
+    public getApplicationsByParameters(personName: string, responsibleId: string, applicationDate: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${personName}/${responsibleId}/${applicationDate}/GetApplicationsByParameters`);
+    }
+
     public createApplication(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }

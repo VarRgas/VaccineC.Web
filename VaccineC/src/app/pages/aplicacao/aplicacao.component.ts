@@ -45,7 +45,7 @@ export class AplicacaoComponent implements OnInit {
   public isTableApplicationVisible = true;
   public isApplicationTabDisabled = true;
   public searchApplicationDate!: Date | null;
-  public searchResponsible!: any;
+  public searchResponsible = new PersonModel();
 
   //Variáveis de exibição
   public personName!: string;
@@ -113,14 +113,7 @@ export class AplicacaoComponent implements OnInit {
 
   public loadData(): void {
     this.searchButtonLoading = true;
-
-    if (this.searchApplicationName == undefined || this.searchApplicationName == null || this.searchApplicationName == "") {
-      this.messageHandler.showMessage("É necessário informar no mínimo 3 caracteres para realizar a busca!", "danger-snackbar");
-      this.searchButtonLoading = false;
-    }
-    else {
-      this.getAllPersonsByInfo();
-    }
+    this.getAllPersonsByInfo();
   }
 
   public getAvailableApplications(): void {
@@ -143,27 +136,87 @@ export class AplicacaoComponent implements OnInit {
 
   public getAllPersonsByInfo(): void {
 
-    if (this.searchApplicationName.length < 3) {
-      this.messageHandler.showMessage("É necessário informar no mínimo 3 caracteres para realizar a busca!", "danger-snackbar");
-      this.searchButtonLoading = false;
-      return;
+    let responsibleEmpty = false;
+    let applicationDateEmpty = false;
+
+    if (this.searchResponsible == undefined || this.searchResponsible == null || this.searchResponsible.ID == undefined || this.searchResponsible.ID == null || this.searchResponsible.ID == "") {
+      responsibleEmpty = true;
     }
 
-    const searchPersonNameFormated = this.searchApplicationName.replace(/[^a-zA-Z0-9 ]/g, '');
+    if (this.isFilterResponsibleVisible == false) {
+      responsibleEmpty = true;
+    }
 
-    this.personsDispatcherService.getPersonsByName(searchPersonNameFormated).subscribe(
-      persons => {
-        this.dataSourceSearchPerson = new MatTableDataSource(persons);
-        this.dataSourceSearchPerson.paginator = this.paginatorPerson;
-        this.dataSourceSearchPerson.sort = this.sort;
-        this.isTableApplicationVisible = false;
+    if (this.searchApplicationDate == undefined || this.searchApplicationDate == null) {
+      applicationDateEmpty = true;
+    }
+
+    if (this.isFilterDateVisible == false) {
+      applicationDateEmpty = true;
+    }
+
+    if (applicationDateEmpty && responsibleEmpty) {
+
+      if (this.searchApplicationName.length < 3) {
+        this.messageHandler.showMessage("É necessário informar no mínimo 3 caracteres para realizar a busca!", "danger-snackbar");
         this.searchButtonLoading = false;
-      },
-      error => {
-        console.log(error);
-        this.errorHandler.handleError(error);
-        this.searchButtonLoading = false;
-      });
+        return;
+      }
+
+      const searchPersonNameFormated = this.searchApplicationName.replace(/[^a-zA-Z0-9 ]/g, '');
+
+      this.personsDispatcherService.getPersonsByName(searchPersonNameFormated).subscribe(
+        persons => {
+          this.dataSourceSearchPerson = new MatTableDataSource(persons);
+          this.dataSourceSearchPerson.paginator = this.paginatorPerson;
+          this.dataSourceSearchPerson.sort = this.sort;
+          this.isTableApplicationVisible = false;
+          this.searchButtonLoading = false;
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+          this.searchButtonLoading = false;
+        });
+
+    } else {
+
+      let date = "";
+      let responsibleId = "";
+      let name = "";
+
+      if (applicationDateEmpty) {
+        date = new Date("01/01/1901").toUTCString();
+      } else {
+        date = new Date(this.searchApplicationDate!).toUTCString();
+      }
+
+      if (responsibleEmpty) {
+        responsibleId = "00000000-0000-0000-0000-000000000000";
+      } else {
+        responsibleId = this.searchResponsible.ID;
+      }
+
+      if (this.searchApplicationName == undefined || this.searchApplicationName == null || this.searchApplicationName == "") {
+        name = "emptyName";
+      } else {
+        name = this.searchApplicationName;
+      }
+
+      this.applicationsDispatcherService.getApplicationsByParameters(name, responsibleId, date).subscribe(
+        persons => {
+          this.dataSourceSearchPerson = new MatTableDataSource(persons);
+          this.dataSourceSearchPerson.paginator = this.paginatorPerson;
+          this.dataSourceSearchPerson.sort = this.sort;
+          this.isTableApplicationVisible = false;
+          this.searchButtonLoading = false;
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+          this.searchButtonLoading = false;
+        });
+    }
   }
 
   public formateProfilePicExhibition(profilePic: string) {
@@ -583,13 +636,18 @@ export class AplicacaoComponent implements OnInit {
   public openEditPersonDialog() {
     const dialogRef = this.dialog.open(EditPersonDialog, {
       disableClose: true,
-      width: '60vw',
+      width: '80vw',
       data: {
         PersonId: this.personId
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
+
+      this.cleanPersonInfo();
+      this.getPersonInfo(this.personId);
+      this.getPersonPhysicalInfo(this.personId);
+      this.getPersonPrincipalInfo(this.personId);
 
     });
   }

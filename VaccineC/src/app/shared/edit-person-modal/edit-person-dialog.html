@@ -1,9 +1,8 @@
-<h2 mat-dialog-title>Edição Rápida de Pessoa</h2>
-<mat-dialog-content class="mat-typography"
-                    style="max-height: initial;">
+<h2 mat-dialog-title>Editar Pessoa</h2>
+<mat-dialog-content class="mat-typography" style="padding-right: 3rem;">
   <form [formGroup]="personForm">
     <div class="registration-group">
-      <div class="offset-sm-1 col-sm-11 p-0">
+      <div class="col-sm-12 p-0 m-0">
         <div class="div-row-input-table p-0">
 
           <mat-form-field [hidden]="true">
@@ -14,20 +13,18 @@
                    [(ngModel)]="personId">
           </mat-form-field>
 
-          <table class="example-full-width"
-                 cellspacing="0">
+          <table class="example-full-width" cellspacing="0">
             <tr>
-              <td>
+              <td class="person-pic">
                 <!-- Foto -->
                 <img class="mouse-pointer img-paciente"
                      id="imgPaciente"
                      src="{{personProfilePic}}">
               </td>
 
-              <td class="table-name col-sm-11">
+              <td class="table-name col-sm-5 pl-0">
                 <!-- NOME DA PESSOA -->
-                <mat-form-field appearance="fill"
-                                class="col-sm-11 pl-0">
+                <mat-form-field appearance="fill" class="col-sm-12 p-0 first-line">
                   <mat-label>Nome</mat-label>
                   <input matInput
                          type="text"
@@ -37,7 +34,6 @@
                          id="name"
                          placeholder="Ex. Maria da Silva"
                          required>
-                  <mat-hint align="end">{{PersonNameInput.value?.length || 0}}/255</mat-hint>
                   <mat-error *ngIf="personForm.controls.Name.touched && personForm.controls.Name.invalid">
                     <span *ngIf="personForm.controls.Name.errors?.required">O Nome é obrigatório.</span>
                     <span *ngIf="personForm.controls.Name.errors?.maxlength">O Nome deve ter menos de 255
@@ -45,39 +41,24 @@
                   </mat-error>
                 </mat-form-field>
               </td>
+
+              <td>
+                <mat-form-field appearance="fill" class="col-sm-12 pr-0 first-line">
+                  <mat-label>E-mail</mat-label>
+                  <input matInput
+                         #Emailinput
+                         formControlName="Email"
+                         [maxlength]="255"
+                         placeholder="email@exemplo.com.br"
+                         id="email"
+                         [(ngModel)]="email">
+                  <mat-error *ngIf="personForm.controls.Email.touched && personForm.controls.Email.invalid">
+                    <span *ngIf="personForm.controls.Email.errors?.email">Informe um e-mail válido.</span>
+                  </mat-error>
+                </mat-form-field>
+              </td>
             </tr>
           </table>
-        </div>
-        <!-- EMAIL -->
-        <div class="div-row-input">
-          <mat-form-field appearance="fill" class="col-sm-11">
-            <mat-label>E-mail</mat-label>
-            <input matInput
-                   #Emailinput
-                   formControlName="Email"
-                   [maxlength]="255"
-                   placeholder="email@exemplo.com.br"
-                   id="email"
-                   [(ngModel)]="email">
-            <mat-hint align="end">{{Emailinput.value?.length || 0}}/255</mat-hint>
-            <mat-error *ngIf="personForm.controls.Email.touched && personForm.controls.Email.invalid">
-              <span *ngIf="personForm.controls.Email.errors?.email">Informe um e-mail válido.</span>
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <!-- DETALHES -->
-        <div class="div-row-input">
-          <mat-form-field class="example-full-width" appearance="fill" class="col-sm-11">
-            <mat-label>Detalhes</mat-label>
-            <textarea matInput
-                      #DetailsInput
-                      formControlName="Details"
-                      [(ngModel)]="details"
-                      id="details"
-                      placeholder="Informações complementares"
-                      maxlength="255">
-            </textarea>
-          </mat-form-field>
         </div>
       </div>
     </div>
@@ -88,8 +69,8 @@
       <div class="complement-group">
 
         <!-- REGISTRO DE PESSOA FISICA -->
-        <div class="offset-sm-1 col-sm-11 p-0" id="person-physical">
-          <div class="div-row-input">
+        <div class="col-sm-12 pr-0" id="person-physical">
+          <div class="div-row-input mt-4">
             <div class="div-row-input">
 
               <mat-form-field [hidden]="true">
@@ -107,8 +88,52 @@
                        [(ngModel)]="personId">
               </mat-form-field>
 
-              <!-- CPF -->
-              <mat-form-field appearance="fill" class="col-sm-6">
+              <!-- GENERO -->
+              <mat-form-field appearance="fill" class="col-sm-4">
+                <mat-label>Gênero</mat-label>
+                <mat-select id="gender" required="true" [(ngModel)]="gender" formControlName="Gender">
+
+                  <mat-option value="M" selected>Masculino</mat-option>
+                  <mat-option value="F" selected>Feminino</mat-option>
+                  <mat-option value="O" selected>Outro</mat-option>
+                </mat-select>
+                <mat-error *ngIf="physicalComplementForm.controls.Gender.touched && physicalComplementForm.controls.Gender.invalid">
+                  <span *ngIf="physicalComplementForm.controls.Gender.errors?.required">O Gênero é obrigatório.</span>
+                </mat-error>
+              </mat-form-field>
+
+              <!-- DATA DE NASCIMENTO -->
+              <mat-form-field appearance="fill" class="col-sm-4">
+                <mat-label>Data de Nascimento</mat-label>
+                <input matInput 
+                      [matDatepicker]="picker"
+                      [(ngModel)]="commemorativeDate"
+                      formControlName="CommemorativeDate"
+                      [max]="today">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+
+              <!-- ESTADO CIVIL -->
+              <mat-form-field appearance="fill" class="col-sm-4 pr-0">
+                <mat-label>Estado Civil</mat-label>
+                <mat-select id="maritalStatus" #MaritalStatusInput [(ngModel)]="maritalStatus"
+                  formControlName="MaritalStatus" required>
+                  <mat-option value="S" selected>Solteiro(a)</mat-option>
+                  <mat-option value="C" selected>Casado(a)</mat-option>
+                  <mat-option value="X" selected>Separado(a)</mat-option>
+                  <mat-option value="D" selected>Divorciado(a)</mat-option>
+                  <mat-option value="V" selected>Viúvo(a)</mat-option>
+                </mat-select>
+                <mat-error *ngIf="physicalComplementForm.controls.MaritalStatus.touched && physicalComplementForm.controls.MaritalStatus.invalid">
+                  <span *ngIf="physicalComplementForm.controls.MaritalStatus.errors?.required">O Estado Civil é obrigatório.</span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="div-row-input">
+               <!-- CPF -->
+               <mat-form-field appearance="fill" class="col-sm-6">
                 <mat-label>CPF</mat-label>
                 <input type="text"
                        [(ngModel)]="cpfNumber"
@@ -122,7 +147,7 @@
               </mat-form-field>
 
               <!-- CNS -->
-              <mat-form-field appearance="fill" class="col-sm-5 ml-0">
+              <mat-form-field appearance="fill" class="col-sm-6 pr-0">
                 <mat-label>CNS</mat-label>
                 <input type="text"
                        [(ngModel)]="cnsNumber"
@@ -134,62 +159,23 @@
                        id="cnsNumber"
                        mask="000 0000 0000 00009">
               </mat-form-field>
-            </div>
-
-            <div class="div-row-input">
-              <!-- ESTADO CIVIL -->
-              <mat-form-field appearance="fill" class="col-sm-6">
-                <mat-label>Estado Civil</mat-label>
-                <mat-select id="maritalStatus" #MaritalStatusInput [(ngModel)]="maritalStatus"
-                  formControlName="MaritalStatus" required>
-                  <mat-option value="S" selected>Solteiro(a)</mat-option>
-                  <mat-option value="C" selected>Casado(a)</mat-option>
-                  <mat-option value="X" selected>Separado(a)</mat-option>
-                  <mat-option value="D" selected>Divorciado(a)</mat-option>
-                  <mat-option value="V" selected>Viúvo(a)</mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="physicalComplementForm.controls.MaritalStatus.touched && physicalComplementForm.controls.MaritalStatus.invalid">
-                  <span *ngIf="physicalComplementForm.controls.MaritalStatus.errors?.required">O Estado Civil é
-                    obrigatório.</span>
-                </mat-error>
-              </mat-form-field>
-
-              <!-- GENERO -->
-              <mat-form-field appearance="fill" class="col-sm-5 ml-0">
-                <mat-label>Gênero</mat-label>
-                <mat-select id="gender" required="true" [(ngModel)]="gender" formControlName="Gender">
-
-                  <mat-option value="M" selected>Masculino</mat-option>
-                  <mat-option value="F" selected>Feminino</mat-option>
-                  <mat-option value="O" selected>Outro</mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="physicalComplementForm.controls.Gender.touched && physicalComplementForm.controls.Gender.invalid">
-                  <span *ngIf="physicalComplementForm.controls.Gender.errors?.required">O Gênero é obrigatório.</span>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="div-row-input">
           </div>
         </div>
       </div>
     </form>
   </div>
 
-  <div *ngIf="showJuridicalRegister"
-        class="complement-group">
+  <div *ngIf="showJuridicalRegister" class="complement-group">
     <form [formGroup]="juridicalComplementForm">
       <div>
         <!-- REGISTRO DE PESSOA JURIDICA -->
         <div *ngIf="showJuridicalRegister"
-              class="offset-sm-1 col-sm-11 p-0"
+              class="col-sm-12 p-0"
               id="person-juridical">
-          <div class="div-row-input">
+          
+          <div class="div-row-input mt-4">
             <!-- NOME FANTASIA -->
-            <mat-form-field appearance="fill"
-                            class="col-sm-12">
+            <mat-form-field appearance="fill" class="col-sm-6" style="padding-left: 1.75rem;">
               <mat-label>Nome Fantasia</mat-label>
               <input type="text"
                      [(ngModel)]="fantasyName"
@@ -199,17 +185,14 @@
                      maxlength="255"
                      id="fantasyName">
             </mat-form-field>
-          </div>
-          <div class="div-row-input">
+
             <!-- CNPJ -->
-            <mat-form-field appearance="fill"
-                            class="col-sm-12">
+            <mat-form-field appearance="fill" class="col-sm-6 pr-0">
               <mat-label>CNPJ</mat-label>
               <input type="text"
                      [(ngModel)]="cnpjNumber"
                      formControlName="CnpjNumber"
                      matInput
-                     #input
                      maxlength="18"
                      id="cnpjNumber"
                      mask="00.000.000/0000-00"
@@ -220,15 +203,194 @@
       </div>
     </form>
   </div>
+
+  <mat-tab-group mat-align-tabs="start" class="col-sm-12 pr-0">
+    <mat-tab label="Telefones">
+      <div class="search-table">
+        <div class="col-sm-12 search-table-content mat-elevation-z2">
+          <table class="col-sm-12" mat-table [dataSource]="dataSourcePhone">
+
+            <!-- PhoneType Column -->
+            <ng-container matColumnDef="PhoneType">
+              <th mat-header-cell *matHeaderCellDef> Tipo </th>
+              <td mat-cell *matCellDef="let row"> {{resolveExibitionPhoneType(row.PhoneType)}} </td>
+            </ng-container>
+
+            <!-- CodeArea + PhoneNumber Column -->
+            <ng-container matColumnDef="NumberPhone">
+              <th mat-header-cell *matHeaderCellDef> Número </th>
+              <td mat-cell *matCellDef="let row"> ({{row.CodeArea}}) {{row.NumberPhone}}</td>
+            </ng-container>
+
+            <!-- Id Hidden Column -->
+            <ng-container matColumnDef="ID">
+              <th mat-header-cell hidden *matHeaderCellDef> ID </th>
+              <td mat-cell hidden *matCellDef="let row"> {{row.ID}} </td>
+            </ng-container>
+
+            <!-- Options Column -->
+            <ng-container matColumnDef="Options">
+              <th mat-header-cell *matHeaderCellDef> </th>
+              <td mat-cell *matCellDef="let row">
+                <button 
+                  mat-icon-button 
+                  color="warn" 
+                  title="Remover"
+                  style="float:right;">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+                <button mat-icon-button 
+                  color="primary" 
+                  title="Editar" 
+                  style="float:right;">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsPhone"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsPhone;" style="cursor:pointer;" class="hover-element-row"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
+            </tr>
+          </table>
+
+          <mat-paginator #paginatorPhone="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        </div>
+      </div>
+    </mat-tab>
+    <div class="search-table">
+      <div class="col-sm-11 search-table-content mat-elevation-z2">
+        <table class="col-sm-12" mat-table [dataSource]="dataSourceAddress">
+
+          <!-- PhoneType Column -->
+          <ng-container matColumnDef="AddressType">
+            <th mat-header-cell *matHeaderCellDef> Tipo </th>
+            <td mat-cell *matCellDef="let row"> {{resolveExibitionAddressType(row.AddressType)}} </td>
+          </ng-container>
+
+          <!-- Address Column -->
+          <ng-container matColumnDef="Address">
+            <th mat-header-cell *matHeaderCellDef> Endereço </th>
+            <td mat-cell *matCellDef="let row"> 
+              <div>
+                <div>{{row.PublicPlace}}, nº {{row.AddressNumber}} {{row.Complement == '' ? '' : '- ' + row.Complement}}</div>
+                <div class="small-text">Bairro {{row.District}} - {{row.City}}/{{row.State}} - {{row.AddressCode}}</div>
+            </div>
+            </td>
+          </ng-container>
+
+          <!-- Id Hidden Column -->
+          <ng-container matColumnDef="ID">
+            <th mat-header-cell hidden *matHeaderCellDef> ID </th>
+            <td mat-cell hidden *matCellDef="let row"> {{row.ID}} </td>
+          </ng-container>
+
+          <!-- Options Column -->
+          <ng-container matColumnDef="Options">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button 
+                      color="warn" 
+                      title="Remover"
+                      style="float:right;">
+                      <i class="fa-solid fa-trash"></i>
+              </button>
+              <button mat-icon-button 
+                      color="primary"
+                      title="Editar" 
+                      style="float:right;">
+                      <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsAddress"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsAddress;" class="hover-element-row" style="cursor:pointer;"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
+          </tr>
+        </table>
+        <mat-paginator #paginatorAddress="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+    <mat-tab label="Endereços">
+      <div class="search-table">
+        <div class="col-sm-12 search-table-content mat-elevation-z2">
+          <table class="col-sm-12" mat-table [dataSource]="dataSourceAddress">
+
+            <!-- PhoneType Column -->
+            <ng-container matColumnDef="AddressType">
+              <th mat-header-cell *matHeaderCellDef> Tipo </th>
+              <td mat-cell *matCellDef="let row"> {{resolveExibitionAddressType(row.AddressType)}} </td>
+            </ng-container>
+
+            <!-- Address Column -->
+            <ng-container matColumnDef="Address">
+              <th mat-header-cell *matHeaderCellDef> Endereço </th>
+              <td mat-cell *matCellDef="let row"> 
+                <div>
+                  <div>{{row.PublicPlace}}, nº {{row.AddressNumber}} {{row.Complement == '' ? '' : '- ' + row.Complement}}</div>
+                  <div class="small-text">Bairro {{row.District}} - {{row.City}}/{{row.State}} - {{row.AddressCode}}</div>
+              </div>
+              </td>
+            </ng-container>
+
+            <!-- Id Hidden Column -->
+            <ng-container matColumnDef="ID">
+              <th mat-header-cell hidden *matHeaderCellDef> ID </th>
+              <td mat-cell hidden *matCellDef="let row"> {{row.ID}} </td>
+            </ng-container>
+
+            <!-- Options Column -->
+            <ng-container matColumnDef="Options">
+              <th mat-header-cell *matHeaderCellDef> </th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-icon-button 
+                        color="warn" 
+                        title="Remover"
+                        style="float:right;">
+                        <i class="fa-solid fa-trash"></i>
+                </button>
+                <button mat-icon-button 
+                        color="primary"
+                        title="Editar" 
+                        style="float:right;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsAddress"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsAddress;" class="hover-element-row" style="cursor:pointer;"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">Nenhum registro encontrado.</td>
+            </tr>
+          </table>
+          <mat-paginator #paginatorAddress="matPaginator" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-flat-button
           mat-dialog-close
           color="primary"
-          cdkFocusInitial>Cancelar
+          cdkFocusInitial>
+          Cancelar
   </button>
   <button (click)="updatePersonInformations()"
           mat-flat-button
-          class="create-button">Salvar
+          class="create-button">
+          Salvar
   </button>
 </mat-dialog-actions>

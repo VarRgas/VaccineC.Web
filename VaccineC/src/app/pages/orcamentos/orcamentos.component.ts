@@ -32,6 +32,7 @@ import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.
 import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 
 @Component({
   selector: 'app-orcamentos',
@@ -1162,6 +1163,20 @@ export class OrcamentosComponent implements OnInit {
       }
     );
 
+  }
+
+  public openEditPersonDialog(){
+    const dialogRef = this.dialog.open(EditPersonDialog, {
+      disableClose: true,
+      width: '80vw',
+      data: {
+        PersonId: this.budgetForm.value.PersonId.ID
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
   }
 
   public searchPersonByAutoComplete(): void {

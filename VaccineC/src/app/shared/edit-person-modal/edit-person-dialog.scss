@@ -1,8 +1,41 @@
 .img-paciente {
-  margin-right: 1.5rem;
   height: 90px;
   width: 90px;
   box-shadow: 0 0.125rem 0.25rem 0 rgb(58 59 69 / 20%) !important;
   display: block;
   border-radius: 50%;
+}
+
+.person-pic{
+  display: flex;
+  justify-content: center;
+  width: 100px;
+  margin-right: -55px;
+  margin-left: 20px;
+}
+
+.example-full-width{
+  margin: 0px;
+  width: 100%;
+}
+
+:host ::ng-deep .first-line {
+  padding-top: 1.34375em !important;
+}
+
+
+:host ::ng-deep .mat-tab-group {
+  padding-left: 1.5rem;
+}
+
+:host ::ng-deep .mat-dialog-content {
+  max-height: 76vh;
+}
+
+:host ::ng-deep .mat-dialog-title {
+  margin-bottom: 0.5rem;
+}
+
+:host ::ng-deep .mat-tab-header {
+  margin-bottom: 0.5em !important;
 }

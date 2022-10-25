@@ -136,6 +136,11 @@
                                                 </mat-option>
                                             </mat-autocomplete>
                                             <mat-icon matSuffix>search</mat-icon>
+                                            <mat-icon matSuffix  
+                                                      matTooltip="Cadastro da Pessoa"
+                                                      matTooltipPosition="above"
+                                                      style="cursor:pointer;display: flex;justify-content: center;align-items: center;"
+                                                      (click)="openEditPersonDialog()"><i class="fa-solid fa-user-pen" style="font-size: 15px;"></i></mat-icon>
                                         </mat-form-field>
                                     </div>
 
@@ -493,6 +498,7 @@
                                                 </mat-option>
                                             </mat-autocomplete>
                                             <mat-icon matSuffix>search</mat-icon>
+                                          
                                             <mat-error *ngIf="budgetNegotiationForm.controls.PaymentFormId.touched && budgetNegotiationForm.controls.PaymentFormId.invalid">
                                                 <span *ngIf="budgetNegotiationForm.controls.PaymentFormId.errors?.required">
                                                     A Forma de Pagamento é obrigatória.

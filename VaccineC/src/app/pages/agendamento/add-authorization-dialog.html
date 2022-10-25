@@ -12,6 +12,10 @@
         margin-top: 5px !important;
     }
 
+    :host ::ng-deep .mat-form-field-suffix {
+        display: flex;
+    }
+
     .cdk-overlay-pane,
     .md-overlay-pane {
         height: auto !important;
@@ -114,6 +118,11 @@
                         <span *ngIf="authorizationForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
                     </mat-error>
                     <mat-icon matSuffix>search</mat-icon>
+                    <mat-icon matSuffix  
+                            matTooltip="Cadastro da Pessoa"
+                            matTooltipPosition="above"
+                            style="cursor:pointer;display: flex;justify-content: center;align-items: center;"
+                            (click)="openEditPersonDialog()"><i class="fa-solid fa-user-pen" style="font-size: 15px;"></i></mat-icon>
                 </mat-form-field>
 
                 <div style="padding-left: 1.2em;" *ngIf="dataInfoVisible">

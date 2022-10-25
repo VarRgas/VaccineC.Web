@@ -364,7 +364,7 @@ export class PessoasComponent implements OnInit {
     }
 
     let person = new PersonModel();
-    person.id = this.personId;
+    person.ID = this.personId;
     person.name = this.name;
     person.personType = this.personType;
     person.email = this.email;

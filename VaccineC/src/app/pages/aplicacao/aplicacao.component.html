@@ -13,8 +13,7 @@
                                    matInput
                                    type="text"
                                    [(ngModel)]="searchApplicationName"
-                                   placeholder="(mínimo 3 caracteres)"
-                                   >
+                                   placeholder="(mínimo 3 caracteres)">
                         </mat-form-field>
 
                         <button (click)="loadData()" 
@@ -61,7 +60,6 @@
                                    [matDatepicker]="picker" 
                                    #SearchApplicationDateInput 
                                    [(ngModel)]="searchApplicationDate"
-                                   formControlName="searchApplicationDate"
                                    [max]="today">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
@@ -197,7 +195,7 @@
                                 <div class="card-resumo-paciente shadow-sm ms-0">
                                     <div class="row ms-0">
                                         <div class="d-flex justify-content-end align-items-center">
-                                            <span (click)="openEditPersonDialog()" class="fa-solid fa-user-pen ms-2 icone-cadastro-paciente" title="Cadastro do Paciente"></span>
+                                            <span (click)="openEditPersonDialog()" class="fa-solid fa-user-pen ms-2 icone-cadastro-paciente" matTooltip="Cadastro da Pessoa" matTooltipPosition="above"></span>
                                         </div>
                                         <div class="col-xxl-5 col-sm-5 shadow-sm main-content-resumo-paciente">
                                             <div class="dados-principais-paciente">

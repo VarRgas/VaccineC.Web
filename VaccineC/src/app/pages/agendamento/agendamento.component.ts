@@ -46,6 +46,7 @@ import { AuthorizationSuggestionModel } from 'src/app/models/authorization-sugge
 import { PersonModel } from 'src/app/models/person-model';
 import { MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { BudgetProductModel } from 'src/app/models/budget-product-model';
+import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 
 defineFullCalendarElement()
 
@@ -377,7 +378,8 @@ export class AddAuthorizationDialog implements OnInit {
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
-    public dialogRef: MatDialogRef<AddAuthorizationDialog>
+    public dialogRef: MatDialogRef<AddAuthorizationDialog>,
+    private dialog: MatDialog,
   ) { }
 
   //Form
@@ -1048,6 +1050,20 @@ export class AddAuthorizationDialog implements OnInit {
       });
   }
 
+  public openEditPersonDialog(){
+    const dialogRef = this.dialog.open(EditPersonDialog, {
+      disableClose: true,
+      width: '80vw',
+      data: {
+        PersonId: this.authorizationForm.value.PersonId.ID
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+  }
+
 }
 
 //DIALOG UPDATE AUTHORIZATION
@@ -1367,7 +1383,6 @@ export class SearchAuthorizationDialog implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<UpdateAuthorizationDialog>,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
-    private eventsDispatcherService: EventsDispatcherService,
     private personAutocompleteService: PersonAutocompleteService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,

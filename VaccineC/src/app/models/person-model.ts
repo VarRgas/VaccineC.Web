@@ -1,5 +1,5 @@
 export class PersonModel {
-    public id!: string;
+    public ID!: string;
     public name: string = '';
     public personType: string = '';
     public email: string = '';

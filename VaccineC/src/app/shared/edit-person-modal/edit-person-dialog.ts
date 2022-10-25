@@ -1,14 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { cnpj, cpf } from 'cpf-cnpj-validator';
+import { IPersonAddress } from 'src/app/interfaces/i-person-address';
+import { IPersonPhone } from 'src/app/interfaces/i-person-phone';
 import { PersonJuridicalModel } from 'src/app/models/person-juridical-model';
 import { PersonModel } from 'src/app/models/person-model';
 import { PersonPhysicalModel } from 'src/app/models/person-physical-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { PersonsAddressesDispatcherService } from 'src/app/services/person-address-dispatcher.service';
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
 import { PersonsJuridicalsDispatcherService } from 'src/app/services/person-juridical-dispatcher.service';
+import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { PersonsPhysicalsDispatcherService } from 'src/app/services/person-physical-dispatcher.service';
 
 @Component({
@@ -17,6 +23,7 @@ import { PersonsPhysicalsDispatcherService } from 'src/app/services/person-physi
   styleUrls: ['./edit-person-dialog.scss']
 })
 export class EditPersonDialog implements OnInit {
+
   public imagePathUrl = 'http://localhost:5000/';
   public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
   public today = new Date();
@@ -33,7 +40,6 @@ export class EditPersonDialog implements OnInit {
   public cnsNumber!: string;
   public maritalStatus!: string;
   public gender!: string;
-  public deathDate!: Date;
   public commemorativeDate!: Date;
   public fantasyName!: string;
   public profilePic!: string;
@@ -43,7 +49,17 @@ export class EditPersonDialog implements OnInit {
   public personType!: string;
   public email!: string;
   public details!: string;
-  public informationField!: string;
+
+  //Table Phones
+  public displayedColumnsPhone: string[] = ['PhoneType', 'NumberPhone', 'ID', 'Options'];
+  public dataSourcePhone = new MatTableDataSource<IPersonPhone>();
+
+  //Table Addresses
+  public displayedColumnsAddress: string[] = ['AddressType', 'Address', 'ID', 'Options'];
+  public dataSourceAddress = new MatTableDataSource<IPersonAddress>();
+
+  @ViewChild('paginatorPhone') paginatorPhone!: MatPaginator;
+  @ViewChild('paginatorAddress') paginatorAddress!: MatPaginator;
 
   //Form de pessoas
   public personForm: FormGroup = this.formBuilder.group({
@@ -61,8 +77,8 @@ export class EditPersonDialog implements OnInit {
     CpfNumber: [null, Validators.minLength(11)],
     CnsNumber: [null, Validators.minLength(15)],
     MaritalStatus: [null, [Validators.required]],
-    Gender: [null, [Validators.required]],
-    DeathDate: [null],
+    CommemorativeDate: [null],
+    Gender: [null, [Validators.required]]
   });
 
   public juridicalComplementForm: FormGroup = this.formBuilder.group({
@@ -79,8 +95,9 @@ export class EditPersonDialog implements OnInit {
     private errorHandler: ErrorHandlerService,
     private personsDispatcherService: PersonDispatcherService,
     private personsPhysicalsDispatcherService: PersonsPhysicalsDispatcherService,
-    private personsJuridicalsDispatcherService: PersonsJuridicalsDispatcherService
-
+    private personsJuridicalsDispatcherService: PersonsJuridicalsDispatcherService,
+    private personsPhonesDispatcherService: PersonsPhonesDispatcherService,
+    private personsAddressesDispatcherService: PersonsAddressesDispatcherService,
   ) { }
 
   ngOnInit(): void {
@@ -100,16 +117,36 @@ export class EditPersonDialog implements OnInit {
           this.details = person.Details;
           this.profilePic = person.ProfilePic;
           this.personProfilePic = this.formateProfilePicExhibition(person.ProfilePic);
-          this.informationField = person.Name;
 
           this.treatButtons(this.personType, this.personId);
         },
         error => {
           console.log(error);
         });
+
+        this.personsPhonesDispatcherService.getAllPersonsPhonesByPersonId(personId)
+        .subscribe(
+          result => {
+            this.dataSourcePhone = new MatTableDataSource(result);
+            this.dataSourcePhone.paginator = this.paginatorPhone;
+          },
+          error => {
+            console.log(error);
+          });
+  
+      this.personsAddressesDispatcherService.getAllPersonsAddressesByPersonId(personId)
+        .subscribe(
+          result => {
+            this.dataSourceAddress = new MatTableDataSource(result);
+            this.dataSourceAddress.paginator = this.paginatorAddress;
+          },
+          error => {
+            console.log(error);
+          });
   }
 
   public updatePersonInformations(): void {
+
     if (!this.personForm.valid) {
       console.log(this.personForm);
       this.personForm.markAllAsTouched();
@@ -118,7 +155,7 @@ export class EditPersonDialog implements OnInit {
     }
 
     let person = new PersonModel();
-    person.id = this.personId;
+    person.ID = this.personId;
     person.name = this.name;
     person.personType = this.personType;
     person.email = this.email;
@@ -129,6 +166,7 @@ export class EditPersonDialog implements OnInit {
     this.personsDispatcherService.updatePerson(this.personId, person)
       .subscribe(
         response => {
+          console.log(response)
           this.personId = response.ID;
           this.name = response.Name;
           this.email = response.Email;
@@ -136,8 +174,6 @@ export class EditPersonDialog implements OnInit {
           this.commemorativeDate = response.CommemorativeDate;
           this.details = response.Details;
           this.profilePic = response.ProfilePic;
-          this.informationField = response.Name;
-
           this.treatButtons(this.personType, this.personId);
         },
         error => {
@@ -145,13 +181,12 @@ export class EditPersonDialog implements OnInit {
           console.log(error);
         });
 
-    if (this.personType == "F")
+    if (this.personType == "F") {
       this.updatePhysicalComplement();
-    else if (this.personType == "J")
+    } else if (this.personType == "J") {
       this.updateJuridicalComplement();
+    }
 
-    this.messageHandler.showMessage("Dados da pessoa alterados com sucesso!", "success-snackbar");
-    this.dialogRef.close();
   }
 
   public updatePhysicalComplement(): void {
@@ -173,20 +208,21 @@ export class EditPersonDialog implements OnInit {
     physicalComplement.personId = this.personId;
     physicalComplement.maritalStatus = this.maritalStatus;
     physicalComplement.gender = this.gender;
-    physicalComplement.deathDate = this.deathDate;
     physicalComplement.cpfNumber = this.cpfNumber;
     physicalComplement.cnsNumber = this.cnsNumber;
 
     this.personsPhysicalsDispatcherService.updatePhysicalComplements(this.personPhysicalId, physicalComplement)
       .subscribe(
         response => {
-          console.log(response);
           this.personPhysicalId = response.ID;
           this.personId = response.PersonID;
           this.cpfNumber = response.CpfNumber;
           this.cnsNumber = response.CnsNumber;
           this.maritalStatus = response.MaritalStatus;
           this.gender = response.Gender;
+        
+          this.messageHandler.showMessage("Pessoa alterada com sucesso!", "success-snackbar");
+          this.dialogRef.close();
         },
         error => {
           this.errorHandler.handleError(error);
@@ -194,6 +230,7 @@ export class EditPersonDialog implements OnInit {
   }
 
   public updateJuridicalComplement(): void {
+
     if (!this.juridicalComplementForm.valid) {
       console.log(this.juridicalComplementForm);
       this.juridicalComplementForm.markAllAsTouched();
@@ -219,6 +256,9 @@ export class EditPersonDialog implements OnInit {
           this.personId = response.PersonID;
           this.cnpjNumber = response.CnpjNumber;
           this.fantasyName = response.FantasyName;
+         
+          this.messageHandler.showMessage("Pessoa alterada com sucesso!", "success-snackbar");
+          this.dialogRef.close();
         },
         error => {
           this.errorHandler.handleError(error);
@@ -245,7 +285,6 @@ export class EditPersonDialog implements OnInit {
             this.cnsNumber = result.CnsNumber;
             this.maritalStatus = result.MaritalStatus;
             this.gender = result.Gender;
-            this.deathDate = result.DeathDate;
           }
           console.log(result);
         });
@@ -273,6 +312,37 @@ export class EditPersonDialog implements OnInit {
       return `${this.imagePathUrlDefault}`;
     else
       return `${this.imagePathUrl}${profilePic}`;
+  }
+
+  
+  public resolveExibitionPhoneType(phoneType: string) {
+    if (phoneType == "P") {
+      return "Principal"
+    } else if (phoneType == "C") {
+      return "Celular"
+    } else if (phoneType == "E") {
+      return "Comercial"
+    } else if (phoneType == "R") {
+      return "Residencial"
+    } else if (phoneType == "O") {
+      return "Outro"
+    } else {
+      return ""
+    }
+  }
+
+  public resolveExibitionAddressType(addressType: string) {
+    if (addressType == "P") {
+      return "Principal"
+    } else if (addressType == "C") {
+      return "Comercial"
+    } else if (addressType == "R") {
+      return "Residencial"
+    } else if (addressType == "O") {
+      return "Outro"
+    } else {
+      return ""
+    }
   }
 
 }

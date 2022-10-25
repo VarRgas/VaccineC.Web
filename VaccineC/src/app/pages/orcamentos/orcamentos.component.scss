@@ -200,3 +200,7 @@ form {
   white-space: pre-wrap !important;
   padding-right: 1.5rem;
 }
+
+:host ::ng-deep .mat-form-field-suffix {
+  display: flex;
+}
