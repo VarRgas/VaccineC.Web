@@ -111,6 +111,46 @@ export class AplicacaoComponent implements OnInit {
     }
   }
 
+  public isIntegrationVisible = false;
+  public colorIntegration = "";
+
+  public formatIntegration(situationIntegration: string) {
+    if (situationIntegration == 'invalid') {
+      this.isIntegrationVisible = false;
+      this.colorIntegration = "";
+    } else if (situationIntegration == 'success') {
+      this.isIntegrationVisible = true;
+      this.colorIntegration = "success-integration";
+    } else if (situationIntegration == 'error') {
+      this.isIntegrationVisible = true;
+      this.colorIntegration = "error-integration";
+    } else {
+      this.isIntegrationVisible = false;
+      this.colorIntegration = "";
+    }
+  }
+
+  public openIntegrationInfo(authId: string, integrationSituation: string) {
+    
+    if (integrationSituation == 'error') {
+      const bottomSheetRef = this._bottomSheet.open(SipniIntegrationErrorBottomSheet, {
+        data: {
+          AuthorizationId: authId
+        }
+      });
+
+      bottomSheetRef.afterDismissed().subscribe();
+    } else {
+      const bottomSheetRef = this._bottomSheet.open(SipniIntegrationSuccessBottomSheet, {
+        data: {
+          AuthorizationId: authId
+        }
+      });
+      bottomSheetRef.afterDismissed().subscribe();
+    }
+
+  }
+
   public loadData(): void {
     this.searchButtonLoading = true;
     this.getAllPersonsByInfo();
@@ -365,7 +405,6 @@ export class AplicacaoComponent implements OnInit {
   public getApplicationAvailable(personId: string) {
     this.applicationsDispatcherService.getAvailableApplicationsByPersonId(personId).subscribe(
       applications => {
-        console.log(applications)
         this.dataSourceApplication = new MatTableDataSource(applications);
       },
       error => {
@@ -996,5 +1035,23 @@ export class AddressBottomSheet implements OnInit {
     } else {
       return ""
     }
+  }
+}
+
+@Component({
+  selector: 'sipni-integration-success-bottom-sheet',
+  templateUrl: 'sipni-integration-success-bottom-sheet.html',
+})
+export class SipniIntegrationSuccessBottomSheet implements OnInit {
+  ngOnInit(): void {
+  }
+}
+
+@Component({
+  selector: 'sipni-integration-error-bottom-sheet',
+  templateUrl: 'sipni-integration-error-bottom-sheet.html',
+})
+export class SipniIntegrationErrorBottomSheet implements OnInit {
+  ngOnInit(): void {
   }
 }

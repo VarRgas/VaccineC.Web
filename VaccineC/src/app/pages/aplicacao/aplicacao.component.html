@@ -302,6 +302,7 @@
                                                     <div class="timeline-2  {{indexOfelement % 2 == 0 ? 'left' : 'right'}}-2" *ngFor="let element of applicationsHistory; let indexOfelement=index;">
                                                         <div class="card">
                                                             <div class="card-body p-4">
+                                                                {{formatIntegration(element.IntegrationSituation)}}
                                                                 <h4 class="fw-bold titulo-historico"> {{element.ProductName}} </h4>
                                                                 <p class="mb-0 texto-historico"> 
                                                                     <span title="Tipo de Dose"> {{formatDoseType(element.DoseType)}} </span> 
@@ -327,8 +328,12 @@
                                                                     <span title="Informações do Orçamento">Orçamento nº {{element.BudgetNumber}} - {{element.PersonResponsible}}</span>
                                                                 </p>
                                                             
-                                                                <p class="mb-0 texto-historico"
-                                                                style="float:right;">
+                                                                <p class="mb-0 texto-historico d-flex justify-content-between">
+                                                                
+                                                                <span matTooltip="Integração SIPNI" matTooltipPosition="below" *ngIf="isIntegrationVisible">
+                                                                    <i class="fa-solid fa-circle me-1 {{colorIntegration}}"></i>
+                                                                    <a (click)="openIntegrationInfo(element.ApplicationId, element.IntegrationSituation)">SIPNI</a>
+                                                                </span>
                                                                 <a (click)="openBatchDialog(element.ProductSummaryBatchId)" matTooltip="Informações do Lote" matTooltipPosition="above">
                                                                     <i class="fa-solid fa-box-open me-1"></i>
                                                                     {{element.Batch}}

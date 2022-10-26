@@ -533,3 +533,13 @@ a:hover {
 :host ::ng-deep .mat-table {
   border-radius: 0.75rem;
 }
+
+.success-integration {
+  color: #198754;
+  opacity: 0.5;
+}
+
+.error-integration {
+  color: #dc3545;
+  opacity: 0.5;
+}
