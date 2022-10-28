@@ -111,6 +111,7 @@
                                 matTooltip="Cadastro da Pessoa"
                                 matTooltipPosition="left"
                                 style="cursor:pointer;"
+                                *ngIf="isEditPersonVisible"
                                 (click)="openEditPersonDialog()">
                             </i>
                         </mat-hint>

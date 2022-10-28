@@ -7,6 +7,14 @@
     cursor: pointer;
     color: var(--cor-produto);
   }
+
+  .spinner {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 36px;
+  }
 </style>
 <h2 mat-dialog-title>Aplicação</h2>
 <mat-dialog-content class="mat-typography" style="max-height: initial;">
@@ -90,5 +98,17 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
-  <button mat-flat-button class="create-button" (click)="saveApplication()">Aplicar</button>
+  <button mat-flat-button  
+          class="create-button" 
+          (click)="saveApplication()"
+          [disabled]="searchButtonLoading">
+          
+          <div class="spinner">
+            <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
+            <span *ngIf="!searchButtonLoading">
+            </span>
+            Aplicar
+          </div>
+  </button>
 </mat-dialog-actions>
+

@@ -1,15 +1,22 @@
+<style>
+    :host ::ng-deep .situation-input{
+        width: 355px !important;
+    }
+
+    :host ::ng-deep .comunication-button{
+        top: -6px !important;
+    }
+</style>
 <mat-nav-list>
-    
         <div class="div-row-input">
-            <mat-form-field appearance="fill" class="col-sm-8">
+            <mat-form-field appearance="fill" class="col-sm-9 pl-0 situation-input">
                 <mat-label>Situação</mat-label>
                 <input matInput [(ngModel)]="situation" readonly>
             </mat-form-field>
 
-            <button mat-flat-button color="primary">
+            <button mat-flat-button color="primary" class="comunication-button">
                 <span class="fa-solid fa-wifi me-1 w-20px"></span>
                 Comunicar
             </button>
         </div>
-   
 </mat-nav-list>

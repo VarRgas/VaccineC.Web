@@ -21,20 +21,27 @@
                                 mat-raised-button color="primary"
                                 class="mat-button-entry me-2" 
                                 [disabled]="searchButtonLoading">
-                        <div class="spinner">
-                            <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
-                            <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px">
-                            </span>Pesquisar
-                        </div>
+                                <div class="spinner">
+                                    <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
+                                    <span *ngIf="!searchButtonLoading" class="fa-solid fa-magnifying-glass me-1 w-20px">
+                                    </span>Pesquisar
+                                </div>
                         </button>
 
                         <button id="mat-add-button" 
                                 mat-raised-button
-                                class="mat-button-entry cyan-button me-2" 
+                                class="mat-button-entry cyan-button me-2 available-button" 
                                 matTooltip="Disponíveis do Dia" 
                                 matTooltipPosition="above"
-                                (click)="getAvailableApplications()">
-                                <span class="fa-solid fa-clock w-20px"></span>                            
+                                (click)="getAvailableApplications()"
+                                [disabled]="searchAvailableLoading">
+
+                                <div class="spinner">
+                                    <mat-spinner *ngIf="searchAvailableLoading" [diameter]="15"></mat-spinner>
+                                    <span *ngIf="!searchAvailableLoading">
+                                        <span class="fa-solid fa-clock w-20px"></span>
+                                    </span>
+                                </div>
                         </button>
 
                         <button mat-raised-button
@@ -328,13 +335,16 @@
                                                                     <span title="Informações do Orçamento">Orçamento nº {{element.BudgetNumber}} - {{element.PersonResponsible}}</span>
                                                                 </p>
                                                             
-                                                                <p class="mb-0 texto-historico d-flex justify-content-between">
+                                                                <p class="mb-0 texto-historico">
                                                                 
-                                                                <span matTooltip="Integração SIPNI" matTooltipPosition="below" *ngIf="isIntegrationVisible">
+                                                                <span matTooltip="Integração SIPNI" matTooltipPosition="below" *ngIf="isIntegrationVisible" style="float: left;align-items: center;" class="d-flex">
                                                                     <i class="fa-solid fa-circle me-1 {{colorIntegration}}"></i>
                                                                     <a (click)="openIntegrationInfo(element.ApplicationId, element.IntegrationSituation)">SIPNI</a>
+                                                                    <span>
+                                                                        <mat-spinner class="mat-spinner-sipni ml-1" *ngIf="searchSipniLoading" [diameter]="15"></mat-spinner>
+                                                                    </span>
                                                                 </span>
-                                                                <a (click)="openBatchDialog(element.ProductSummaryBatchId)" matTooltip="Informações do Lote" matTooltipPosition="above">
+                                                                <a (click)="openBatchDialog(element.ProductSummaryBatchId)" matTooltip="Informações do Lote" matTooltipPosition="above" style="float:right">
                                                                     <i class="fa-solid fa-box-open me-1"></i>
                                                                     {{element.Batch}}
                                                                 </a>

@@ -334,6 +334,7 @@ export class AddAuthorizationDialog implements OnInit {
   public isNotifyChecked = false;
   public personBirthdayTitle!: string;
   public personBirthdayIcon!: string;
+  public isEditPersonVisible = false;
 
   //Autocomplete Pessoa
   public myControl = new FormControl();
@@ -555,6 +556,7 @@ export class AddAuthorizationDialog implements OnInit {
     this.isSuggestDosesVisible = false;
     this.tableBudgetProductPhysicalVisible = false;
     this.tableBudgetProductJuridicalVisible = false;
+    this.isEditPersonVisible = true;
 
     this.authorizationForm.clearValidators();
     this.authorizationForm.updateValueAndValidity();

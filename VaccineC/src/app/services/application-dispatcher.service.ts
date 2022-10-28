@@ -39,6 +39,10 @@ export class ApplicationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${applicationId}/GetSipniImunizationById`);
     }
 
+    public getPersonApplicationProductSameDay(personId: string, productId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${personId}/${productId}/GetPersonApplicationProductSameDay`);
+    }
+
     public createApplication(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }

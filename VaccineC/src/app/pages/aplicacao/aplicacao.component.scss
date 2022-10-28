@@ -49,6 +49,13 @@ form {
   align-content: center;
   justify-content: space-between;
   align-items: center;
+  min-height: 36px;
+}
+
+.available-button{
+  display: flex;
+  justify-content: center;
+  min-height: 36px;
 }
 
 .search-button {
@@ -193,6 +200,10 @@ form {
 }
 
 :host ::ng-deep.mat-spinner {
+  margin-right: 0.2rem !important;
+}
+
+:host ::ng-deep.mat-spinner-sipni {
   margin-right: 0.2rem !important;
 }
 

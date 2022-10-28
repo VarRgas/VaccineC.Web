@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Confirmar Aplicação</h2>
+<mat-dialog-content class="mat-typography">
+  <div>Já existe uma aplicação realizada na data de hoje deste Produto para este Tomador.</div>
+  <div>Deseja prosseguir com essa aplicação mesmo assim?</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>
+    Cancelar
+  </button>
+  <button mat-flat-button class="create-button" [mat-dialog-close]="true">
+    Aplicar
+  </button>
+</mat-dialog-actions>

@@ -39,6 +39,7 @@ export class AplicacaoComponent implements OnInit {
 
   //Controle de habilitação de campos
   public searchButtonLoading = false;
+  public searchAvailableLoading = false;
 
   //Variáveis dos inputs
   public searchApplicationName!: string;
@@ -64,6 +65,9 @@ export class AplicacaoComponent implements OnInit {
   public tdColor = '#efefef';
   public profilePicExhibition!: string;
   public applicationsHistory!: any;
+  public isIntegrationVisible = false;
+  public colorIntegration = "";
+  public searchSipniLoading = false;
 
   //Autocomplete Pessoa
   public myControl = new FormControl();
@@ -111,9 +115,6 @@ export class AplicacaoComponent implements OnInit {
     }
   }
 
-  public isIntegrationVisible = false;
-  public colorIntegration = "";
-
   public formatIntegration(situationIntegration: string) {
     if (situationIntegration == 'invalid') {
       this.isIntegrationVisible = false;
@@ -142,12 +143,28 @@ export class AplicacaoComponent implements OnInit {
 
       bottomSheetRef.afterDismissed().subscribe();
     } else {
-      const bottomSheetRef = this._bottomSheet.open(SipniIntegrationSuccessBottomSheet, {
-        data: {
-          ApplicationId: applicationId
+
+      this.searchSipniLoading = true;
+
+      this.applicationsDispatcherService.getSipniImunizationById(applicationId).subscribe(
+        sipniImunization => {
+         
+          this.searchSipniLoading = false;
+
+          const bottomSheetRef = this._bottomSheet.open(SipniIntegrationSuccessBottomSheet, {
+            data: {
+              ApplicationId: applicationId,
+              SipniImunization: sipniImunization
+            }
+          });
+          bottomSheetRef.afterDismissed().subscribe();
+        },
+        error => {
+          console.log(error);
+          this.errorHandler.handleError(error);
+          this.searchSipniLoading = false;
         }
-      });
-      bottomSheetRef.afterDismissed().subscribe();
+      )
     }
 
   }
@@ -160,18 +177,19 @@ export class AplicacaoComponent implements OnInit {
   public getAvailableApplications(): void {
 
     this.searchApplicationName = "";
+    this.searchAvailableLoading = true;
 
     this.authorizationsDispatcherService.getAllAuthorizationsForApplication()
       .subscribe(
         applications => {
           this.dataSourceSearchApplication = new MatTableDataSource(applications);
           this.isTableApplicationVisible = true;
-          this.searchButtonLoading = false;
+          this.searchAvailableLoading = false;
         },
         error => {
           console.log(error);
           this.errorHandler.handleError(error);
-          this.searchButtonLoading = false;
+          this.searchAvailableLoading = false;
         });
   }
 
@@ -762,11 +780,13 @@ export class AplicationDialog implements OnInit {
   public productId!: string;
   public productSummaryBatchId!: string;
   public budgetProductId!: string;
+  public personId!: string;
 
   public today = new Date();
   public batchSelected = 'Selecionar Lote'
 
   public isDoseTypeVisible = true;
+  public searchButtonLoading = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -777,6 +797,7 @@ export class AplicationDialog implements OnInit {
     private authorizationDispatcherService: AuthorizationsDispatcherService,
     private productSummaryBatchDispatcherService: ProductsSummariesBatchesDispatcherService,
     private applicationDispatcherService: ApplicationsDispatcherService,
+    private dialog: MatDialog,
     private _bottomSheet: MatBottomSheet
   ) { }
 
@@ -797,11 +818,13 @@ export class AplicationDialog implements OnInit {
   public getAuthorization() {
     this.authorizationDispatcherService.getAuthorizationById(this.authorizationId).subscribe(
       authorization => {
+        console.log(authorization)
         this.productName = authorization.BudgetProduct.Product.Name;
         this.doseType = authorization.BudgetProduct.ProductDose;
         this.applicationDate = new Date();
         this.productId = authorization.BudgetProduct.Product.ID;
         this.budgetProductId = authorization.BudgetProduct.ID;
+        this.personId = authorization.Person.ID;
 
         if (this.doseType == undefined || this.doseType == null || this.doseType == '') {
           this.isDoseTypeVisible = false;
@@ -868,32 +891,68 @@ export class AplicationDialog implements OnInit {
       return;
     }
 
-    let application = new ApplicationModel();
-    application.ApplicationDate = this.applicationDate;
-    application.ApplicationPlace = this.applicationPlace;
-    application.AuthorizationId = this.authorizationId;
-
-    if (this.doseType == null || this.doseType == "") {
-      application.DoseType = "";
-    } else {
-      application.DoseType = this.doseType;
-    }
-    application.ProductSummaryBatchId = this.productSummaryBatchId;
-    application.RouteOfAdministration = this.routeOfAdministration;
-    application.UserId = localStorage.getItem('userId')!;
-    application.BudgetProductId = this.budgetProductId;
-
-    this.applicationDispatcherService.createApplication(application).subscribe(
+    this.applicationDispatcherService.getPersonApplicationProductSameDay(this.personId, this.productId).subscribe(
       response => {
-        this.dialogRef.close(response);
-        this.messageHandler.showMessage("Aplicação realizada com sucesso!", "success-snackbar")
+
+        let application = new ApplicationModel();
+        application.ApplicationDate = this.applicationDate;
+        application.ApplicationPlace = this.applicationPlace;
+        application.AuthorizationId = this.authorizationId;
+
+        if (this.doseType == null || this.doseType == "") {
+          application.DoseType = "";
+        } else {
+          application.DoseType = this.doseType;
+        }
+        application.ProductSummaryBatchId = this.productSummaryBatchId;
+        application.RouteOfAdministration = this.routeOfAdministration;
+        application.UserId = localStorage.getItem('userId')!;
+        application.BudgetProductId = this.budgetProductId;
+
+        if (response) {
+          const dialogRef = this.dialog.open(ConfirmApplicationDialog);
+
+          dialogRef.afterClosed()
+            .subscribe(result => {
+              if (!!result) {
+
+                this.searchButtonLoading = true;
+
+                this.applicationDispatcherService.createApplication(application).subscribe(
+                  response => {
+                    this.dialogRef.close(response);
+                    this.messageHandler.showMessage("Aplicação realizada com sucesso!", "success-snackbar");
+                    this.searchButtonLoading = false;
+                  },
+                  error => {
+                    console.log(error);
+                    this.errorHandler.handleError(error);
+                    this.searchButtonLoading = false;
+                  });
+              }
+            });
+        } else {
+
+          this.searchButtonLoading = true;
+          
+          this.applicationDispatcherService.createApplication(application).subscribe(
+            response => {
+              this.dialogRef.close(response);
+              this.messageHandler.showMessage("Aplicação realizada com sucesso!", "success-snackbar");
+              this.searchButtonLoading = false;
+            },
+            error => {
+              console.log(error);
+              this.errorHandler.handleError(error);
+              this.searchButtonLoading = false;
+            });
+        }
       },
       error => {
         console.log(error);
-        this.errorHandler.handleError(error);
+
       });
   }
-
 }
 
 @Component({
@@ -1053,35 +1112,24 @@ export class SipniIntegrationSuccessBottomSheet implements OnInit {
   public communicationDate!: string;
 
   constructor(
-    private _bottomSheetRef: MatBottomSheetRef<SipniIntegrationSuccessBottomSheet>,
-    private applicationsDispatcherService: ApplicationsDispatcherService,
-    private errorHandler: ErrorHandlerService,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
     this.applicationId = this.data.ApplicationId;
-    this.getSipniImunization();
+    console.log(this.data.SipniImunization)
+    this.populateSipniImunization(this.data.SipniImunization);
   }
 
-  public getSipniImunization() {
-    this.applicationsDispatcherService.getSipniImunizationById(this.applicationId).subscribe(
-      sipniImunization => {
-        console.log(sipniImunization);
-        this.authorDocument = sipniImunization.AuthorDocument;
-        this.communicationDate = this.formatDate(sipniImunization.ComunicationDate);
-        this.pacientDocument = sipniImunization.PacientDocument;
-        this.sipniIntegrationId = sipniImunization.SipniIntegrationId;
-        this.situation = sipniImunization.Situation;
-      },
-      error => {
-        console.log(error);
-        this.errorHandler.handleError(error);
-      }
-    )
+  public populateSipniImunization(sipniImunization: any) {
+    this.authorDocument = sipniImunization.AuthorDocument;
+    this.communicationDate = this.formatDate(sipniImunization.ComunicationDate);
+    this.pacientDocument = sipniImunization.PacientDocument;
+    this.sipniIntegrationId = sipniImunization.SipniIntegrationId;
+    this.situation = sipniImunization.Situation;
   }
 
-  public formatDate(dateUs: string): string{
+  public formatDate(dateUs: string): string {
     const [year, month, day] = dateUs.split('-');
     const dateBr = [day, month, year].join('/');
     return dateBr;
@@ -1093,10 +1141,21 @@ export class SipniIntegrationSuccessBottomSheet implements OnInit {
   templateUrl: 'sipni-integration-error-bottom-sheet.html',
 })
 export class SipniIntegrationErrorBottomSheet implements OnInit {
- 
+
   public situation = "Não Comunicado";
 
   ngOnInit(): void {
   }
 
+}
+
+//DIALOG CONFIRM APPLICATION
+@Component({
+  selector: 'confirm-application-dialog',
+  templateUrl: 'confirm-application-dialog.html',
+})
+export class ConfirmApplicationDialog implements OnInit {
+  ngOnInit(): void {
+
+  }
 }
