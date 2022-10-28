@@ -130,12 +130,13 @@ export class AplicacaoComponent implements OnInit {
     }
   }
 
-  public openIntegrationInfo(authId: string, integrationSituation: string) {
-    
+  public openIntegrationInfo(applicationId: string, integrationSituation: string) {
+
     if (integrationSituation == 'error') {
       const bottomSheetRef = this._bottomSheet.open(SipniIntegrationErrorBottomSheet, {
+        panelClass: 'custom-width',
         data: {
-          AuthorizationId: authId
+          ApplicationId: applicationId
         }
       });
 
@@ -143,7 +144,7 @@ export class AplicacaoComponent implements OnInit {
     } else {
       const bottomSheetRef = this._bottomSheet.open(SipniIntegrationSuccessBottomSheet, {
         data: {
-          AuthorizationId: authId
+          ApplicationId: applicationId
         }
       });
       bottomSheetRef.afterDismissed().subscribe();
@@ -1043,7 +1044,47 @@ export class AddressBottomSheet implements OnInit {
   templateUrl: 'sipni-integration-success-bottom-sheet.html',
 })
 export class SipniIntegrationSuccessBottomSheet implements OnInit {
+
+  public applicationId!: string;
+  public sipniIntegrationId!: string;
+  public authorDocument!: string;
+  public pacientDocument!: string;
+  public situation!: string;
+  public communicationDate!: string;
+
+  constructor(
+    private _bottomSheetRef: MatBottomSheetRef<SipniIntegrationSuccessBottomSheet>,
+    private applicationsDispatcherService: ApplicationsDispatcherService,
+    private errorHandler: ErrorHandlerService,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+  ) { }
+
   ngOnInit(): void {
+    this.applicationId = this.data.ApplicationId;
+    this.getSipniImunization();
+  }
+
+  public getSipniImunization() {
+    this.applicationsDispatcherService.getSipniImunizationById(this.applicationId).subscribe(
+      sipniImunization => {
+        console.log(sipniImunization);
+        this.authorDocument = sipniImunization.AuthorDocument;
+        this.communicationDate = this.formatDate(sipniImunization.ComunicationDate);
+        this.pacientDocument = sipniImunization.PacientDocument;
+        this.sipniIntegrationId = sipniImunization.SipniIntegrationId;
+        this.situation = sipniImunization.Situation;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      }
+    )
+  }
+
+  public formatDate(dateUs: string): string{
+    const [year, month, day] = dateUs.split('-');
+    const dateBr = [day, month, year].join('/');
+    return dateBr;
   }
 }
 
@@ -1052,6 +1093,10 @@ export class SipniIntegrationSuccessBottomSheet implements OnInit {
   templateUrl: 'sipni-integration-error-bottom-sheet.html',
 })
 export class SipniIntegrationErrorBottomSheet implements OnInit {
+ 
+  public situation = "Não Comunicado";
+
   ngOnInit(): void {
   }
+
 }

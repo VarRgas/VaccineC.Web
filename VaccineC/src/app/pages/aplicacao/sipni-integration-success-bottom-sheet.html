@@ -1,3 +1,32 @@
 <mat-nav-list>
-    <p>success</p>
+    <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Nº Identificador Integração</mat-label>
+            <input matInput [(ngModel)]="sipniIntegrationId" readonly>
+        </mat-form-field>
+        
+        <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Realizada em</mat-label>
+            <input matInput [(ngModel)]="communicationDate" readonly>
+        </mat-form-field>
+    </div>
+
+    <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Documento Principal do Aplicador</mat-label>
+            <input matInput [(ngModel)]="authorDocument" readonly>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-sm-6">
+            <mat-label>Documento Principal do Paciente</mat-label>
+            <input matInput [(ngModel)]="pacientDocument" readonly>
+        </mat-form-field>
+    </div>
+
+    <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-12">
+            <mat-label>Situação</mat-label>
+            <input matInput [(ngModel)]="situation" readonly>
+        </mat-form-field>
+    </div>
 </mat-nav-list>

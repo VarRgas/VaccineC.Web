@@ -34,7 +34,7 @@ export class PessoasComponent implements OnInit {
   public imagePathUrl = 'http://localhost:5000/';
   public imagePathUrlDefault = "../../../assets/img/default-profile-pic.png";
   public today = new Date();
-  
+
   //Controle para o spinner do button
   public searchButtonLoading: boolean = false;
   public createButtonLoading: boolean = false;
@@ -53,8 +53,10 @@ export class PessoasComponent implements OnInit {
   public profilePicExhibition!: string;
   public document!: string;
   public personType!: string;
+  public personAge = "";
   public details!: string;
   public informationField!: string;
+  public labelDate = "Comemorativa";
 
   //Complementos
   public personPhysicalId!: string;
@@ -219,6 +221,12 @@ export class PessoasComponent implements OnInit {
         });
   }
 
+  public getPersonAge(commemorativeDate: Date) {
+    const bdate = new Date(commemorativeDate);
+    const timeDiff = Math.abs(Date.now() - bdate.getTime());
+    return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
+  }
+
   public getPersonsByName(): void {
 
     const searchPersonNameFormated = this.searchPersonName.replace(/[^a-zA-Z0-9 ]/g, '');
@@ -239,6 +247,7 @@ export class PessoasComponent implements OnInit {
   }
 
   public editPerson(id: string): void {
+
     this.resetForms();
 
     this.personsDispatcherService.getPersonById(id)
@@ -254,8 +263,14 @@ export class PessoasComponent implements OnInit {
           this.profilePic = person.ProfilePic;
           this.treatProfilePicExhibition(person.ProfilePic);
 
-          this.tabIsDisabled = false;
+          if (person.CommemorativeDate == null || person.CommemorativeDate == "") {
+            this.personAge = "";
+          } else {
+            this.personAge = `${this.getPersonAge(person.CommemorativeDate)} ano(s)`;
+          }
 
+          this.tabIsDisabled = false;
+          this.treatCommemorativeDateLabel(person.PersonType);
           this.treatButtons(this.personType, this.personId);
         },
         error => {
@@ -289,7 +304,10 @@ export class PessoasComponent implements OnInit {
   public addNewPerson(): void {
 
     this.resetForms();
+    this.treatCommemorativeDateLabel("");
+
     this.informationField = "";
+    this.personAge = "";
 
     this.inputIsDisabled = false;
     this.tabIsDisabled = true;
@@ -337,11 +355,19 @@ export class PessoasComponent implements OnInit {
           this.informationField = response.Name;
 
           this.treatProfilePicExhibition(response.ProfilePic);
+          this.treatCommemorativeDateLabel(response.PersonType);
 
           this.tabIsDisabled = false;
           this.createButtonLoading = false;
 
           this.getAllPersons();
+
+          if (response.CommemorativeDate == null || response.CommemorativeDate == "") {
+            this.personAge = "";
+          } else {
+            this.personAge = `${this.getPersonAge(response.CommemorativeDate)} ano(s)`;
+          }
+
           this.treatButtons(this.personType, this.personId);
           this.inputIsDisabled = false;
           this.messageHandler.showMessage("Pessoa criada com sucesso!", "success-snackbar")
@@ -384,11 +410,18 @@ export class PessoasComponent implements OnInit {
           this.informationField = response.Name;
           this.profilePic = response.ProfilePic;
           this.treatProfilePicExhibition(response.ProfilePic);
+          this.treatCommemorativeDateLabel(response.PersonType);
 
           this.createButtonLoading = false;
 
           this.getAllPersons();
           this.treatButtons(this.personType, this.personId);
+
+          if (response.CommemorativeDate == null || response.CommemorativeDate == "") {
+            this.personAge = "";
+          } else {
+            this.personAge = `${this.getPersonAge(response.CommemorativeDate)} ano(s)`;
+          }
 
           this.messageHandler.showMessage("Pessoa alterada com sucesso!", "success-snackbar")
         },
@@ -601,7 +634,9 @@ export class PessoasComponent implements OnInit {
             .subscribe(
               success => {
                 this.informationField = "";
+                this.personAge = "";
                 this.resetForms();
+                this.treatCommemorativeDateLabel("");
                 this.profilePicExhibition = `${this.imagePathUrlDefault}`;
                 this.tabIsDisabled = true;
                 this.getAllPersons();
@@ -629,6 +664,10 @@ export class PessoasComponent implements OnInit {
     this.juridicalComplementForm.updateValueAndValidity();
   }
 
+  public updateAge() {
+    this.personAge = `${this.getPersonAge(this.CommemorativeDate)} ano(s)`;
+  }
+
   public treatButtons(personTypeSelected: string, personId: string) {
 
     if (personTypeSelected == "F" || personTypeSelected == "f") {
@@ -646,7 +685,6 @@ export class PessoasComponent implements OnInit {
             this.cnsNumber = "";
             this.gender = "";
             this.inputIsDisabled = false;
-            //this.deathDate = ;
             this.physicalComplementForm.clearValidators();
             this.physicalComplementForm.updateValueAndValidity();
           } else {
@@ -679,6 +717,16 @@ export class PessoasComponent implements OnInit {
             this.fantasyName = result.FantasyName;
           }
         });
+    }
+  }
+
+  public treatCommemorativeDateLabel(personType: string) {
+    if (personType == null || personType == "") {
+      this.labelDate = "Comemorativa";
+    } else if (personType == "F") {
+      this.labelDate = "de Nascimento";
+    } else {
+      this.labelDate = "de Fundação";
     }
   }
 

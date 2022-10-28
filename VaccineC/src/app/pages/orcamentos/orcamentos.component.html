@@ -126,25 +126,30 @@
                                                     [(ngModel)]="personId" 
                                                     [readonly]="isPersonReadOnly" 
                                                     required>
+                                            <mat-hint align="end">
+                                                <i class="fa-solid fa-user-pen" 
+                                                    matTooltip="Cadastro da Pessoa"
+                                                    matTooltipPosition="right"
+                                                    style="cursor:pointer;"
+                                                    (click)="openEditPersonDialog()"
+                                                    *ngIf="isPersonIconVisible">
+                                                </i>
+                                            </mat-hint>
                                             <mat-error *ngIf="budgetForm.controls.PersonId.touched && budgetForm.controls.PersonId.invalid">
                                                 <span *ngIf="budgetForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
                                             </mat-error>
                                             <mat-autocomplete #autoPerson="matAutocomplete"
-                                                              [displayWith]="displayStatePerson">
+                                                              [displayWith]="displayStatePerson"
+                                                              (optionSelected)="onSelectionPersonChanged($event)">
                                                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                                                     {{option.Name}}
                                                 </mat-option>
                                             </mat-autocomplete>
                                             <mat-icon matSuffix>search</mat-icon>
-                                            <mat-icon matSuffix  
-                                                      matTooltip="Cadastro da Pessoa"
-                                                      matTooltipPosition="above"
-                                                      style="cursor:pointer;display: flex;justify-content: center;align-items: center;"
-                                                      (click)="openEditPersonDialog()"><i class="fa-solid fa-user-pen" style="font-size: 15px;"></i></mat-icon>
                                         </mat-form-field>
                                     </div>
 
-                                    <div class="div-row-input">
+                                    <div class="div-row-input mt-2">
                                         
                                         <!-- USUÁRIO -->
                                         <mat-form-field appearance="fill" class="col-sm-7">

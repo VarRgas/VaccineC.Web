@@ -47,6 +47,8 @@ import { PersonModel } from 'src/app/models/person-model';
 import { MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { BudgetProductModel } from 'src/app/models/budget-product-model';
 import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
+import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
+import { PersonsAddressesDispatcherService } from 'src/app/services/person-address-dispatcher.service';
 
 defineFullCalendarElement()
 
@@ -734,12 +736,12 @@ export class AddAuthorizationDialog implements OnInit {
     let countAux = 0;
 
     this.selectionJuridical.selected.forEach((register: any) => {
-      if(register.BorrowerPersonId == null){
+      if (register.BorrowerPersonId == null) {
         countAux++;
       }
     });
 
-    if(countAux > 0){
+    if (countAux > 0) {
       this.messageHandler.showMessage("Existem produtos selecionados sem Tomador informado, verifique!", "warning-snackbar");
       return;
     }
@@ -917,8 +919,6 @@ export class AddAuthorizationDialog implements OnInit {
           });
         });
 
-        //this.dataSourceBudgetProduct = new MatTableDataSource(response);
-
       }, error => {
         console.log(error);
         this.errorHandler.handleError(error);
@@ -1050,7 +1050,7 @@ export class AddAuthorizationDialog implements OnInit {
       });
   }
 
-  public openEditPersonDialog(){
+  public openEditPersonDialog() {
     const dialogRef = this.dialog.open(EditPersonDialog, {
       disableClose: true,
       width: '80vw',
@@ -1080,6 +1080,7 @@ export class UpdateAuthorizationDialog implements OnInit {
   public authorizationId!: string;
   public profilePicExhibition!: string;
   public personName!: string;
+  public personId!: string;
   public personPrincipalAddress!: string;
   public personPrincipalPhone!: string;
   public personBirthday!: string;
@@ -1092,6 +1093,7 @@ export class UpdateAuthorizationDialog implements OnInit {
   public notifyInformation!: string;
 
   public isDisabled = false;
+  public isPersonIconVisible = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -1100,6 +1102,9 @@ export class UpdateAuthorizationDialog implements OnInit {
     public dialogNotRef: MatDialogRef<AuthorizationNotificationDialog>,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private budgetDispatcherService: BudgetsDispatcherService,
+    private personDispatcherService: PersonDispatcherService,
+    private personAddressDispatcherService: PersonsAddressesDispatcherService,
+    private personPhoneDispatcherService: PersonsPhonesDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     public dialog: MatDialog
@@ -1129,6 +1134,51 @@ export class UpdateAuthorizationDialog implements OnInit {
   public budgetTooltipValidity!: string;
   public budgetTooltipTotalBudgetAmount!: string;
 
+  public openEditPersonDialog() {
+
+    const dialogRef = this.dialog.open(EditPersonDialog, {
+      disableClose: true,
+      width: '80vw',
+      data: {
+        PersonId: this.personId
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != "") {
+        this.personDispatcherService.getPersonById(result).subscribe(
+          person => {
+
+            this.personAddressDispatcherService.getPrincipalPersonAddressByPersonId(person.ID).subscribe(
+              personAddress => {
+                person.PersonPrincipalAddress = personAddress;
+              },
+              error => {
+                this.errorHandler.handleError(error);
+              });
+
+            this.personPhoneDispatcherService.getPrincipalPersonPhoneByPersonId(person.ID).subscribe(
+              personPhone => {
+                person.PersonPrincipalPhone = personPhone;
+              },
+              error => {
+                this.errorHandler.handleError(error);
+              });
+            
+            this.personName = person.Name;
+            setTimeout(() => {
+              this.treatPersonInfoExhibition(person);              
+            }, 200);
+            this.treatBirthdayExhibition(person.CommemorativeDate)
+
+          },
+          error => {
+            this.errorHandler.handleError(error);
+          });
+      }
+    });
+  }
+
   public getAuthorizationByEventId() {
     this.authorizationsDispatcherService.getAuthorizationByEventId(this.eventId).subscribe(
       authorization => {
@@ -1139,6 +1189,7 @@ export class UpdateAuthorizationDialog implements OnInit {
         this.treatProfilePicExhibition(authorization.Person.ProfilePic);
         this.treatPersonInfoExhibition(authorization.Person);
         this.personName = authorization.Person.Name;
+        this.personId = authorization.Person.ID;
         this.typeOfService = authorization.TypeOfService;
 
         if (authorization.BudgetProduct.ProductDose == null || authorization.BudgetProduct.ProductDose == '' || authorization.BudgetProduct.ProductDose == undefined) {
@@ -1168,7 +1219,6 @@ export class UpdateAuthorizationDialog implements OnInit {
         this.budgetTooltipResponsible = `Responsável: ${budget.Persons.Name}`
         this.budgetTooltipValidity = `Validade: ${this.formatDate(new Date(budget.ExpirationDate))}`
         this.budgetTooltipTotalBudgetAmount = `Total: ${budget.TotalBudgetAmount.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}`
-        console.log(budget);
       },
       error => {
         console.log(error);
@@ -1262,10 +1312,13 @@ export class UpdateAuthorizationDialog implements OnInit {
   public treatSituationAuth(situation: string) {
     if (situation == 'P') {
       this.isDisabled = true;
+      this.isPersonIconVisible = false;
     } else if (situation == 'X') {
       this.isDisabled = true;
+      this.isPersonIconVisible = false;
     } else {
       this.isDisabled = false;
+      this.isPersonIconVisible = true;
     }
   }
 

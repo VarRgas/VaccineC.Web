@@ -50,6 +50,8 @@ export class EditPersonDialog implements OnInit {
   public personType!: string;
   public email!: string;
   public details!: string;
+  public labelDate = "Comemorativa";
+  public personAge = "";
 
   //Table Phones
   public displayedColumnsPhone: string[] = ['PhoneType', 'NumberPhone', 'ID', 'Options'];
@@ -86,6 +88,7 @@ export class EditPersonDialog implements OnInit {
     PersonId: [null],
     FantasyName: [null],
     CnpjNumber: [null],
+    CommemorativeDate: [null]
   });
 
   constructor(
@@ -107,6 +110,16 @@ export class EditPersonDialog implements OnInit {
     this.getPersonInformationsById(this.personId);
   }
 
+  public getPersonAge(commemorativeDate: Date) {
+    const bdate = new Date(commemorativeDate);
+    const timeDiff = Math.abs(Date.now() - bdate.getTime());
+    return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
+  }
+
+  public updateAge() {
+    this.personAge = `${this.getPersonAge(this.commemorativeDate)} ano(s)`;
+  }
+
   public getPersonInformationsById(personId: string): void {
     this.personsDispatcherService.getPersonById(personId)
       .subscribe(
@@ -118,33 +131,51 @@ export class EditPersonDialog implements OnInit {
           this.commemorativeDate = person.CommemorativeDate;
           this.details = person.Details;
           this.profilePic = person.ProfilePic;
-          this.personProfilePic = this.formateProfilePicExhibition(person.ProfilePic);
 
+          if (person.CommemorativeDate == null || person.CommemorativeDate == "") {
+            this.personAge = "";
+          } else {
+            this.personAge = `${this.getPersonAge(person.CommemorativeDate)} ano(s)`;
+          }
+
+          this.personProfilePic = this.formateProfilePicExhibition(person.ProfilePic);
+          this.treatCommemorativeDateLabel(person.PersonType);
           this.treatButtons(this.personType, this.personId);
         },
         error => {
           console.log(error);
         });
 
-        this.personsPhonesDispatcherService.getAllPersonsPhonesByPersonId(personId)
-        .subscribe(
-          result => {
-            this.dataSourcePhone = new MatTableDataSource(result);
-            this.dataSourcePhone.paginator = this.paginatorPhone;
-          },
-          error => {
-            console.log(error);
-          });
-  
-      this.personsAddressesDispatcherService.getAllPersonsAddressesByPersonId(personId)
-        .subscribe(
-          result => {
-            this.dataSourceAddress = new MatTableDataSource(result);
-            this.dataSourceAddress.paginator = this.paginatorAddress;
-          },
-          error => {
-            console.log(error);
-          });
+    this.personsPhonesDispatcherService.getAllPersonsPhonesByPersonId(personId)
+      .subscribe(
+        result => {
+          this.dataSourcePhone = new MatTableDataSource(result);
+          this.dataSourcePhone.paginator = this.paginatorPhone;
+        },
+        error => {
+          console.log(error);
+        });
+
+    this.personsAddressesDispatcherService.getAllPersonsAddressesByPersonId(personId)
+      .subscribe(
+        result => {
+          this.dataSourceAddress = new MatTableDataSource(result);
+          this.dataSourceAddress.paginator = this.paginatorAddress;
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+
+  public treatCommemorativeDateLabel(personType: string) {
+    if (personType == null || personType == "") {
+      this.labelDate = "Comemorativa";
+    } else if (personType == "F") {
+      this.labelDate = "de Nascimento";
+    } else {
+      this.labelDate = "de Fundação";
+    }
   }
 
   public updatePersonInformations(): void {
@@ -168,7 +199,6 @@ export class EditPersonDialog implements OnInit {
     this.personsDispatcherService.updatePerson(this.personId, person)
       .subscribe(
         response => {
-          console.log(response)
           this.personId = response.ID;
           this.name = response.Name;
           this.email = response.Email;
@@ -222,9 +252,9 @@ export class EditPersonDialog implements OnInit {
           this.cnsNumber = response.CnsNumber;
           this.maritalStatus = response.MaritalStatus;
           this.gender = response.Gender;
-        
+
           this.messageHandler.showMessage("Pessoa alterada com sucesso!", "success-snackbar");
-          this.dialogRef.close();
+          this.dialogRef.close(this.personId);
         },
         error => {
           this.errorHandler.handleError(error);
@@ -258,9 +288,9 @@ export class EditPersonDialog implements OnInit {
           this.personId = response.PersonID;
           this.cnpjNumber = response.CnpjNumber;
           this.fantasyName = response.FantasyName;
-         
+
           this.messageHandler.showMessage("Pessoa alterada com sucesso!", "success-snackbar");
-          this.dialogRef.close();
+          this.dialogRef.close(this.personId);
         },
         error => {
           this.errorHandler.handleError(error);
@@ -288,7 +318,6 @@ export class EditPersonDialog implements OnInit {
             this.maritalStatus = result.MaritalStatus;
             this.gender = result.Gender;
           }
-          console.log(result);
         });
     } else if (personTypeSelected == "J" || personTypeSelected == "j") {
       this.showPhysicalRegister = false;
@@ -316,7 +345,7 @@ export class EditPersonDialog implements OnInit {
       return `${this.imagePathUrl}${profilePic}`;
   }
 
-  
+
   public resolveExibitionPhoneType(phoneType: string) {
     if (phoneType == "P") {
       return "Principal"

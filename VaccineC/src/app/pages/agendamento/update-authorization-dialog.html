@@ -21,6 +21,15 @@
                 <mat-form-field appearance="fill" class="col-sm-12 person-field" style="padding-right:0px">
                     <mat-label>Tomador</mat-label>
                     <input matInput #PersonNameinput formControlName="PersonName" [(ngModel)]="personName" readonly>
+                    <mat-hint align="end">
+                        <i class="fa-solid fa-user-pen" 
+                            matTooltip="Cadastro da Pessoa"
+                            matTooltipPosition="left"
+                            style="cursor:pointer;"
+                            (click)="openEditPersonDialog()"
+                            *ngIf="isPersonIconVisible">
+                        </i>
+                    </mat-hint>
                 </mat-form-field>
                 <div style="padding-left: 1.2em;" >
                     <div class="mt-2" title="Aniversário">

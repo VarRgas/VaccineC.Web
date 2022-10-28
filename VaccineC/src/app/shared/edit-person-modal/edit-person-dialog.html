@@ -104,12 +104,14 @@
 
               <!-- DATA DE NASCIMENTO -->
               <mat-form-field appearance="fill" class="col-sm-4">
-                <mat-label>Data de Nascimento</mat-label>
+                <mat-label>Data {{labelDate}}</mat-label>
                 <input matInput 
                       [matDatepicker]="picker"
                       [(ngModel)]="commemorativeDate"
                       formControlName="CommemorativeDate"
+                      (blur)="updateAge()" 
                       [max]="today">
+                <mat-hint align="end">{{personAge}}</mat-hint>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -175,7 +177,7 @@
           
           <div class="div-row-input mt-4">
             <!-- NOME FANTASIA -->
-            <mat-form-field appearance="fill" class="col-sm-6" style="padding-left: 1.75rem;">
+            <mat-form-field appearance="fill" class="col-sm-4" style="padding-left: 1.75rem;">
               <mat-label>Nome Fantasia</mat-label>
               <input type="text"
                      [(ngModel)]="fantasyName"
@@ -187,7 +189,7 @@
             </mat-form-field>
 
             <!-- CNPJ -->
-            <mat-form-field appearance="fill" class="col-sm-6 pr-0">
+            <mat-form-field appearance="fill" class="col-sm-4">
               <mat-label>CNPJ</mat-label>
               <input type="text"
                      [(ngModel)]="cnpjNumber"
@@ -197,6 +199,20 @@
                      id="cnpjNumber"
                      mask="00.000.000/0000-00"
                      placeholder="00.000.000/0000-00">
+            </mat-form-field>
+
+            <!-- DATA DE FUNDAÇÃO -->
+            <mat-form-field appearance="fill" class="col-sm-4 pr-0">
+              <mat-label>Data {{labelDate}}</mat-label>
+              <input matInput 
+                    [matDatepicker]="picker"
+                    [(ngModel)]="commemorativeDate"
+                    formControlName="CommemorativeDate"
+                    (blur)="updateAge()" 
+                    [max]="today">
+              <mat-hint align="end">{{personAge}}</mat-hint>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
         </div>

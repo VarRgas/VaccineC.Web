@@ -33,6 +33,7 @@ import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-
 import { UsersService } from 'src/app/services/user-dispatcher.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
+import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
 
 @Component({
   selector: 'app-orcamentos',
@@ -67,6 +68,7 @@ export class OrcamentosComponent implements OnInit {
   public firstStepLoading = false;
   public tabBudgetIsDisabled = true;
   public tabHistoricIsDisabled = true;
+  public isPersonIconVisible = false;
 
   public DefaultCompanyParameter!: any;
 
@@ -175,7 +177,8 @@ export class OrcamentosComponent implements OnInit {
     private paymentFormsDispatcherService: PaymentFormsDispatcherService,
     private budgetsHistoricsDispatcherService: BudgetsHistoricsDispatcherService,
     private companiesParametersDispatcherService: CompaniesParametersDispatcherService,
-    private usersService: UsersService) {
+    private usersService: UsersService,
+    private personDispatcherService: PersonDispatcherService) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
@@ -912,6 +915,7 @@ export class OrcamentosComponent implements OnInit {
       this.budgetId = "";
       this.informationField = "";
       this.isPersonReadOnly = false;
+      this.isPersonIconVisible = false;
 
       this.treatBudgetSituation("P");
     }, 200);
@@ -977,6 +981,7 @@ export class OrcamentosComponent implements OnInit {
           this.isPersonReadOnly = true;
           this.tabBudgetIsDisabled = false;
           this.tabHistoricIsDisabled = false;
+          this.isPersonIconVisible = true;
 
         },
         error => {
@@ -1165,7 +1170,7 @@ export class OrcamentosComponent implements OnInit {
 
   }
 
-  public openEditPersonDialog(){
+  public openEditPersonDialog() {
     const dialogRef = this.dialog.open(EditPersonDialog, {
       disableClose: true,
       width: '80vw',
@@ -1175,7 +1180,16 @@ export class OrcamentosComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
+      if (result != "") {
+        this.personDispatcherService.getPersonById(result).subscribe(
+          person => {
+            this.budgetForm.value.PersonId = person;
+            this.personId = person;
+          },
+          error => {
+            this.errorHandler.handleError(error);
+          });
+      }
     });
   }
 
@@ -1302,6 +1316,10 @@ export class OrcamentosComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+
+  onSelectionPersonChanged(event: MatAutocompleteSelectedEvent) {
+    this.isPersonIconVisible = true;
   }
 
 }
@@ -1575,6 +1593,7 @@ export class UpdateBudgetProductDialog implements OnInit {
   isFieldReadonly = false;
   isProductDoseHidden = false;
   isSaveButtonVisible = false;
+  isPersonIconVisible = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
