@@ -106,6 +106,14 @@
                            [matAutocomplete]="autoPerson" 
                            [(ngModel)]="personId" 
                            required>
+                        <mat-hint align="end">
+                            <i class="fa-solid fa-user-pen" 
+                                matTooltip="Cadastro da Pessoa"
+                                matTooltipPosition="left"
+                                style="cursor:pointer;"
+                                (click)="openEditPersonDialog()">
+                            </i>
+                        </mat-hint>
                     <mat-autocomplete #autoPerson="matAutocomplete" 
                                       [displayWith]="displayStatePerson"
                                       (optionSelected)="onSelectionChanged($event)">
@@ -118,11 +126,6 @@
                         <span *ngIf="authorizationForm.controls.PersonId.errors?.required">A Pessoa é obrigatória.</span>
                     </mat-error>
                     <mat-icon matSuffix>search</mat-icon>
-                    <mat-icon matSuffix  
-                            matTooltip="Cadastro da Pessoa"
-                            matTooltipPosition="above"
-                            style="cursor:pointer;display: flex;justify-content: center;align-items: center;"
-                            (click)="openEditPersonDialog()"><i class="fa-solid fa-user-pen" style="font-size: 15px;"></i></mat-icon>
                 </mat-form-field>
 
                 <div style="padding-left: 1.2em;" *ngIf="dataInfoVisible">
