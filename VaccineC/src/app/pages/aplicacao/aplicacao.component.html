@@ -340,9 +340,6 @@
                                                                 <span matTooltip="Integração SIPNI" matTooltipPosition="below" *ngIf="isIntegrationVisible" style="float: left;align-items: center;" class="d-flex">
                                                                     <i class="fa-solid fa-circle me-1 {{colorIntegration}}"></i>
                                                                     <a (click)="openIntegrationInfo(element.ApplicationId, element.IntegrationSituation)">SIPNI</a>
-                                                                    <span>
-                                                                        <mat-spinner class="mat-spinner-sipni ml-1" *ngIf="searchSipniLoading" [diameter]="15"></mat-spinner>
-                                                                    </span>
                                                                 </span>
                                                                 <a (click)="openBatchDialog(element.ProductSummaryBatchId)" matTooltip="Informações do Lote" matTooltipPosition="above" style="float:right">
                                                                     <i class="fa-solid fa-box-open me-1"></i>

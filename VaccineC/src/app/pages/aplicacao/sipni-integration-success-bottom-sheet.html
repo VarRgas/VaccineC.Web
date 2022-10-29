@@ -1,5 +1,14 @@
 <mat-nav-list>
-    <div class="div-row-input">
+
+    <div class="div-row-input" *ngIf="!contentLoaded" style="padding-right: 0.75rem; padding-left: 0.75rem;">
+        <ngx-skeleton-loader
+            count="3"
+            [theme]="{ 'border-radius': '0', height: '50px' }"
+            *ngIf="!contentLoaded">
+        </ngx-skeleton-loader>
+    </div>
+
+    <div class="div-row-input" *ngIf="contentLoaded">
         <mat-form-field appearance="fill" class="col-sm-6">
             <mat-label>Nº Identificador Integração</mat-label>
             <input matInput [(ngModel)]="sipniIntegrationId" readonly>
@@ -11,7 +20,7 @@
         </mat-form-field>
     </div>
 
-    <div class="div-row-input">
+    <div class="div-row-input" *ngIf="contentLoaded">
         <mat-form-field appearance="fill" class="col-sm-6">
             <mat-label>Documento Principal do Aplicador</mat-label>
             <input matInput [(ngModel)]="authorDocument" readonly>
@@ -23,7 +32,7 @@
         </mat-form-field>
     </div>
 
-    <div class="div-row-input">
+    <div class="div-row-input" *ngIf="contentLoaded">
         <mat-form-field appearance="fill" class="col-sm-12">
             <mat-label>Situação</mat-label>
             <input matInput [(ngModel)]="situation" readonly>

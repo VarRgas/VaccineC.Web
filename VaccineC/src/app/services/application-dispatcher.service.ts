@@ -46,4 +46,8 @@ export class ApplicationsDispatcherService {
     public createApplication(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }
+
+    public AddSipniImunizationById(applicationId: string, personId: string): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${applicationId}/${personId}/AddSipniImunizationById`, "");
+    }
 }

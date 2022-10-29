@@ -46,6 +46,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { ConectionErrorComponent } from './pages/error/conection-error/conection-error.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 registerLocaleData(localePt, 'pt');
 
@@ -153,7 +154,8 @@ export const MY_FORMATS = {
     NgxLoadingButtonsModule,
     NgxViacepModule,
     MatSortModule,
-    MatSidenavModule
+    MatSidenavModule,
+    NgxSkeletonLoaderModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },

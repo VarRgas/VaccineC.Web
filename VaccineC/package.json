@@ -48,6 +48,7 @@
     "ngx-bootstrap": "^9.0.0",
     "ngx-loading-buttons": "^14.0.0",
     "ngx-mask": "^14.0.3",
+    "ngx-skeleton-loader": "^6.0.0",
     "popper": "^1.0.1",
     "popper.js": "^1.16.1",
     "rx-subject": "^3.1.0",

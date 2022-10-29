@@ -6,6 +6,14 @@
     :host ::ng-deep .comunication-button{
         top: -6px !important;
     }
+
+    .spinner {
+        display: flex;
+        align-content: center;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 36px;
+    }
 </style>
 <mat-nav-list>
         <div class="div-row-input">
@@ -14,9 +22,15 @@
                 <input matInput [(ngModel)]="situation" readonly>
             </mat-form-field>
 
-            <button mat-flat-button color="primary" class="comunication-button">
-                <span class="fa-solid fa-wifi me-1 w-20px"></span>
-                Comunicar
+            <button mat-flat-button 
+                    color="primary" 
+                    class="comunication-button" 
+                    (click)="addSipniImunization()"
+                    [disabled]="comunicateButtonLoading">
+                    <div class="spinner">
+                        <mat-spinner *ngIf="comunicateButtonLoading" [diameter]="15"></mat-spinner>
+                        <span *ngIf="!comunicateButtonLoading" class="fa-solid fa-wifi me-1 w-20px"></span> Comunicar
+                    </div>
             </button>
         </div>
 </mat-nav-list>

@@ -67,7 +67,6 @@ export class AplicacaoComponent implements OnInit {
   public applicationsHistory!: any;
   public isIntegrationVisible = false;
   public colorIntegration = "";
-  public searchSipniLoading = false;
 
   //Autocomplete Pessoa
   public myControl = new FormControl();
@@ -137,34 +136,24 @@ export class AplicacaoComponent implements OnInit {
       const bottomSheetRef = this._bottomSheet.open(SipniIntegrationErrorBottomSheet, {
         panelClass: 'custom-width',
         data: {
+          ApplicationId: applicationId,
+          PersonId: this.personId
+        }
+      });
+      bottomSheetRef.afterDismissed().subscribe(
+        (res) => {
+          if (res != "") { 
+            this.applicationsHistory = res;
+          }
+        }
+      );
+    } else {
+      const bottomSheetRef = this._bottomSheet.open(SipniIntegrationSuccessBottomSheet, {
+        data: {
           ApplicationId: applicationId
         }
       });
-
       bottomSheetRef.afterDismissed().subscribe();
-    } else {
-
-      this.searchSipniLoading = true;
-
-      this.applicationsDispatcherService.getSipniImunizationById(applicationId).subscribe(
-        sipniImunization => {
-         
-          this.searchSipniLoading = false;
-
-          const bottomSheetRef = this._bottomSheet.open(SipniIntegrationSuccessBottomSheet, {
-            data: {
-              ApplicationId: applicationId,
-              SipniImunization: sipniImunization
-            }
-          });
-          bottomSheetRef.afterDismissed().subscribe();
-        },
-        error => {
-          console.log(error);
-          this.errorHandler.handleError(error);
-          this.searchSipniLoading = false;
-        }
-      )
     }
 
   }
@@ -934,7 +923,7 @@ export class AplicationDialog implements OnInit {
         } else {
 
           this.searchButtonLoading = true;
-          
+
           this.applicationDispatcherService.createApplication(application).subscribe(
             response => {
               this.dialogRef.close(response);
@@ -1110,23 +1099,34 @@ export class SipniIntegrationSuccessBottomSheet implements OnInit {
   public pacientDocument!: string;
   public situation!: string;
   public communicationDate!: string;
+  public contentLoaded = false;
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+    private applicationsDispatcherService: ApplicationsDispatcherService,
+    private errorHandler: ErrorHandlerService
   ) { }
 
   ngOnInit(): void {
     this.applicationId = this.data.ApplicationId;
-    console.log(this.data.SipniImunization)
-    this.populateSipniImunization(this.data.SipniImunization);
+    this.getSipniImunization();
   }
 
-  public populateSipniImunization(sipniImunization: any) {
-    this.authorDocument = sipniImunization.AuthorDocument;
-    this.communicationDate = this.formatDate(sipniImunization.ComunicationDate);
-    this.pacientDocument = sipniImunization.PacientDocument;
-    this.sipniIntegrationId = sipniImunization.SipniIntegrationId;
-    this.situation = sipniImunization.Situation;
+  public getSipniImunization() {
+
+    this.applicationsDispatcherService.getSipniImunizationById(this.applicationId).subscribe(
+      sipniImunization => {
+        this.authorDocument = sipniImunization.AuthorDocument;
+        this.communicationDate = this.formatDate(sipniImunization.ComunicationDate);
+        this.pacientDocument = sipniImunization.PacientDocument;
+        this.sipniIntegrationId = sipniImunization.SipniIntegrationId;
+        this.situation = sipniImunization.Situation;
+        this.contentLoaded = true;
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   public formatDate(dateUs: string): string {
@@ -1143,8 +1143,37 @@ export class SipniIntegrationSuccessBottomSheet implements OnInit {
 export class SipniIntegrationErrorBottomSheet implements OnInit {
 
   public situation = "Não Comunicado";
+  public applicationId!: string;
+  public personId!: string;
+  public comunicateButtonLoading = false;
+
+  constructor(
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
+    private applicationsDispatcherService: ApplicationsDispatcherService,
+    private _bottomSheetRef: MatBottomSheetRef<SipniIntegrationErrorBottomSheet>,
+    private errorHandler: ErrorHandlerService,
+    private messageHandler: MessageHandlerService) { }
 
   ngOnInit(): void {
+    this.applicationId = this.data.ApplicationId;
+    this.personId = this.data.PersonId;
+  }
+
+  public addSipniImunization() {
+
+    this.comunicateButtonLoading = true;
+
+    this.applicationsDispatcherService.AddSipniImunizationById(this.applicationId, this.personId).subscribe(
+      response => {
+        this.comunicateButtonLoading = false;
+        this.messageHandler.showMessage("Comunicação SIPNI realizada com sucesso!", "success-snackbar");
+        this._bottomSheetRef.dismiss(response);
+      },
+      error => {
+        this.comunicateButtonLoading = false;
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
 }
