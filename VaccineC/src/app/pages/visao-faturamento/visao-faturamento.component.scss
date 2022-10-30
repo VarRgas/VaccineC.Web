@@ -1,0 +1,82 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-size: 14px;
+  background-color: red;
+}
+
+.card-header {
+    background-color: #fafafa !important;
+}
+
+.card-dash {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px !important;
+}
+
+#calendar {
+  max-width: 1100px;
+  margin: 40px auto;
+}
+
+:host ::ng-deep .mat-tab-body-content {
+  overflow: unset !important;
+}
+
+
+:host ::ng-deep .fc-event-time {
+  font-size: 0px;
+}
+
+:host ::ng-deep .fc-timegrid-slots table tbody tr {
+  height: 2rem !important;
+}
+
+:host ::ng-deep .fc-timegrid-now-indicator-line {
+  left: 44px !important;
+  right: 0;
+  background-color: var(--cor-produto) !important;
+  height: 2px;
+  margin: 0;
+  border: none;
+  opacity: 0.5;
+  margin-left: -45px;
+}
+
+:host ::ng-deep .mat-tab-body.mat-tab-body-active {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+:host ::ng-deep .fc-timegrid-now-indicator-arrow {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  margin-top: -7px;
+  opacity: 0.5;
+  margin-left: 37px;
+  border-left: 10px solid var(--cor-produto) !important;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+}
+
+:host ::ng-deep .fc-timegrid-event-harness {
+  cursor: pointer !important;
+}
+
+:host ::ng-deep #is-content {
+  padding-right: 3rem !important;
+  padding-left: 3rem !important;
+}
+
+.situation-pending {
+  background-color: #3788d8 !important;
+  border-color: #3788d8 !important;
+}
+
+.situation-finalized {
+  background-color: #37d89d !important;
+  border-color: #37d89d !important;
+}

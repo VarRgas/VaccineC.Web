@@ -1,23 +1,23 @@
 #is-content {
-    padding: 5.5rem;
-    padding-bottom: 0;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    transition: width 0.3s, margin 0.3s;
+  padding: 5.5rem;
+  padding-bottom: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  transition: width 0.3s, margin 0.3s;
 }
 
 #is-content.is-content-grow {
-    margin-left: -11.5em !important;
-    padding-right: 2rem !important;
+  margin-left: -11.5em !important;
+  padding-right: 2rem !important;
 }
 
 .card-header {
-    background-color: #ffffff !important;
+  background-color: #ffffff !important;
 }
 
 .card-area {
-    height: 20rem;
+  height: 20rem;
 }
 
 #search-table {
@@ -37,12 +37,16 @@
   margin-bottom: 2rem;
 }
 
-.mat-column-Warning, .mat-column-Total, .mat-column-TotalUnits {
+.mat-column-Warning,
+.mat-column-Total,
+.mat-column-TotalUnits {
   flex: 0 0 50px !important;
   white-space: unset !important;
 }
 
-.mat-cell-Warning, .mat-cell-Total, .mat-cell-TotalUnits {
+.mat-cell-Warning,
+.mat-cell-Total,
+.mat-cell-TotalUnits {
   flex: 0 0 50px !important;
   white-space: unset !important;
 }
@@ -64,7 +68,7 @@
   text-decoration: underline;
 }
 
-:host ::ng-deep.mat-spinner{
+:host ::ng-deep.mat-spinner {
   margin-right: 0.2rem !important;
 }
 

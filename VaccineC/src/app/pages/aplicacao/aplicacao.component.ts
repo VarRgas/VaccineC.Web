@@ -142,7 +142,9 @@ export class AplicacaoComponent implements OnInit {
       });
       bottomSheetRef.afterDismissed().subscribe(
         (res) => {
-          if (res != "") { 
+          console.log(res)
+          if(res == undefined || res == null || res == ""){
+          }else { 
             this.applicationsHistory = res;
           }
         }
