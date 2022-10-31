@@ -80,3 +80,9 @@ body {
   background-color: #37d89d !important;
   border-color: #37d89d !important;
 }
+
+
+:host ::ng-deep .mat-chip {
+  font-size: 12px !important;
+  color: #858796 !important;
+}

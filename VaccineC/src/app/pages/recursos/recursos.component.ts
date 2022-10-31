@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IResource } from 'src/app/interfaces/i-resource';
@@ -53,7 +52,6 @@ export class RecursosComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar,
     private dialog: MatDialog,
   ) { }
 
@@ -203,7 +201,6 @@ export class RecursosComponent implements OnInit {
   }
 
   editResource(id: string): void {
-
     this.resourcesService.getById(id).subscribe(
       resource => {
         this.IdResource = resource.ID;

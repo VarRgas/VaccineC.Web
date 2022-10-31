@@ -2,7 +2,7 @@
   <app-side-menu></app-side-menu>
   <div id="content-wrapper" class="d-flex flex-column">
     <app-toolbar></app-toolbar>
-    <app-container containerTitle="Visão de faturamento" containerPath="Gerencial" [information]="informationField">
+    <app-container containerTitle="Visão de faturamento" containerPath="Gerencial" [information]="informationField" [isClickable]=true [year]=year [month]=month (responseMonthYear)="reciveMonth($event)">
       <mat-tab-group #tabGroup animationDuration="0ms">
 
         <mat-tab label="Orçamento"></mat-tab>
@@ -18,7 +18,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    TOTAL DE APLICAÇÕES REALIZADAS</div>
+                                    APLICAÇÕES REALIZADAS</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{applicationsCompleted}}</div>
                             </div>
                             <div class="col-auto">
@@ -58,24 +58,7 @@
                   <canvas baseChart 
                           [data]="barChartApplicationGenderData" 
                           [plugins]="barChartApplicationGenderPlugins" 
-                          [type]="barChartApplicationGenderType" 
-                          [options]>
-                         
-                  </canvas>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-4 mb-1">
-              <div class="card shadow mb-4 card-dash">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-gray-600">Aplicadas por Produto</h6>
-                </div>
-                <div class="card-body">
-                  <canvas baseChart 
-                          [data]="barChartApplicationProductData" 
-                          [plugins]="barChartApplicationProductPlugins" 
-                          [type]="barChartApplicationProductType" >
+                          [type]="barChartApplicationGenderType">
                   </canvas>
                 </div>
               </div>
@@ -95,10 +78,40 @@
                 </div>
               </div>
             </div>
+
+            <div class="col-lg-4 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Formas de Aplicação</h6>
+                </div>
+                <div class="card-body">
+                  <canvas baseChart 
+                          [data]="barChartApplicationTypeData" 
+                          [plugins]="barChartApplicationTypePlugins" 
+                          [type]="barChartApplicationTypeType" >
+                  </canvas>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="row" style="margin:0.5rem">
-            <div class="col-lg-12 mb-4">
+            <div class="col-lg-6 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Aplicadas por Produto</h6>
+                </div>
+                <div class="card-body">
+                  <canvas baseChart 
+                          [data]="barChartApplicationProductData" 
+                          [plugins]="barChartApplicationProductPlugins" 
+                          [type]="barChartApplicationProductType" >
+                  </canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
               <div class="card shadow mb-4 card-dash">
                 <div class="card-header py-3">
                   <h6 class="m-0 font-weight-bold text-gray-600">Aplicadas por Faixa Etária</h6>

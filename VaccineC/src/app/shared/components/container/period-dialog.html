@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Período de Busca</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="div-row-input">
+        <mat-form-field appearance="fill" class="col-sm-6" >
+          <mat-label>Mês</mat-label>
+          <mat-select required [(ngModel)]="monthSelect">
+            <mat-option value="1">JANEIRO</mat-option>
+            <mat-option value="2">FEVEREIRO</mat-option>
+            <mat-option value="3">MARÇO</mat-option>
+            <mat-option value="4">ABRIL</mat-option>
+            <mat-option value="5">MAIO</mat-option>
+            <mat-option value="6">JUNHO</mat-option>
+            <mat-option value="7">JULHO</mat-option>
+            <mat-option value="8">AGOSTO</mat-option>
+            <mat-option value="9">SETEMBRO</mat-option>
+            <mat-option value="10">OUTUBRO</mat-option>
+            <mat-option value="11">NOVEMBRO</mat-option>
+            <mat-option value="12">DEZEMBRO</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill" class="col-sm-6">
+          <mat-label>Ano</mat-label>
+          <mat-select required [(ngModel)]="yearSelect">
+            <mat-option value="2022">2022</mat-option>
+            <mat-option value="2021">2021</mat-option>
+            <mat-option value="2020">2020</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close color="primary" cdkFocusInitial>Cancelar</button>
+    <button mat-flat-button class="create-button" (click)="updateSearchPeriod()">Buscar</button>
+</mat-dialog-actions>

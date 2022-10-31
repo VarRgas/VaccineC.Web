@@ -63,6 +63,10 @@ export class ApplicationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${month}/${year}/GetApplicationsByAge`);
     }
 
+    public getApplicationsByType(month: number, year: number): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${month}/${year}/GetApplicationsByType`);
+    }
+
     public createApplication(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }

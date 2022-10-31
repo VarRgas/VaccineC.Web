@@ -10,7 +10,7 @@
                 </ol>
             </nav>
             <mat-chip-list aria-label="Fish selection" [hidden]="isInformationHidden">
-                <mat-chip>{{information}}</mat-chip>
+                <mat-chip style="cursor:pointer;" (click)="isClickable ? openPeriodDialog(month, year) : $event.stopPropagation()">{{information}}</mat-chip>
             </mat-chip-list>
 
         </div>
