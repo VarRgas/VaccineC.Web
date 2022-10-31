@@ -32,6 +32,10 @@ export class AuthorizationsDispatcherService {
     public getAuthorizationByParameter(information: string, situation: string, responsible: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${information}/${situation}/${responsible}/GetAuthorizationByParameter`);
     }
+    
+    public getAuthorizationsDashInfo(month: number, year: number): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${month}/${year}/GetAuthorizationsDashInfo`);
+    }
 
     public GetSummarySituationAuthorization(): Observable<any> {
         return this.httpClient.get(`${baseURL}/GetSummarySituationAuthorization`);

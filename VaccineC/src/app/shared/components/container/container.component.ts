@@ -37,10 +37,10 @@ export class ContainerComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
-    if(changes.information == undefined){
 
-    }else{
+    if (changes.information == undefined) {
+
+    } else {
       if (changes.information.currentValue == undefined || changes.information.currentValue == null || changes.information.currentValue == "") {
         this.isInformationHidden = true;
       } else {
@@ -55,7 +55,7 @@ export class ContainerComponent implements OnInit, OnChanges {
   }
 
   public openPeriodDialog(month: number, year: number) {
-    
+
     this.dialogRef = this.dialog.open(PeriodDialog, {
       disableClose: true,
       width: '40vw',
@@ -67,14 +67,16 @@ export class ContainerComponent implements OnInit, OnChanges {
 
     this.dialogRef.afterClosed().subscribe(
       (res) => {
-        this.information = res.InfoChip;
-        this.month = res.Month;
-        this.year = res.Year;
-        const monthYear = {
-          Month : res.Month,
-          Year: res.Year
+        if (res != "") {
+          this.information = res.InfoChip;
+          this.month = res.Month;
+          this.year = res.Year;
+          const monthYear = {
+            Month: res.Month,
+            Year: res.Year
+          }
+          this.responseMonthYear.emit(monthYear);
         }
-        this.responseMonthYear.emit(monthYear);
       }
     );
 
@@ -108,9 +110,9 @@ export class PeriodDialog implements OnInit {
   public updateSearchPeriod() {
     let updatedInformationField = `${this.getFullNameMonthDate(this.monthSelect)}/${this.yearSelect}`;
     let infos = {
-      InfoChip : updatedInformationField,
-      Month : parseInt(this.monthSelect),
-      Year : parseInt(this.yearSelect)
+      InfoChip: updatedInformationField,
+      Month: parseInt(this.monthSelect),
+      Year: parseInt(this.yearSelect)
     }
     this.dialogRef.close(infos);
   }

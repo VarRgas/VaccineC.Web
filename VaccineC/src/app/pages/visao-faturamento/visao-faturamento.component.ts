@@ -2,11 +2,13 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { FormControl } from '@angular/forms';
 import { ListView } from '@fullcalendar/list';
 import * as Chart from 'chart.js';
+import { ChartOptions } from 'chart.js';
 import { ChartConfiguration, ChartData, ChartEvent, ChartType, ControllerDatasetOptions } from 'chart.js';
 import plugin from 'chartjs-plugin-datalabels';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { options } from 'preact';
 import { ApplicationsDispatcherService } from 'src/app/services/application-dispatcher.service';
+import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 
@@ -31,17 +33,27 @@ export class VisaoFaturamentoComponent implements OnInit {
   ageList = new Array<string>();
   typeList = new Array<string>();
   integrationList = new Array<string>();
+  smsSituationList = new Array<string>();
   genderApplicationsNumber = new Array<number>();
   productApplicationsNumber = new Array<number>();
   ageApplicationsNumber = new Array<number>();
   typeApplicationsNumber = new Array<number>();
   integrationApplicationsNumber = new Array<number>();
+  smsSituationNumber = new Array<number>();
   randomColorProduct = new Array<string>();
   randomColorAge = new Array<string>();
+  randomColorSms = new Array<string>();
 
+  //Authorizations
+  authorizationScheduleNumber!: number;
+  authorizationCanceledNumber!: number;
+  authorizationConcludedNumber!: number;
+  authorizationWithoutNotification!: number;
+  authorizationWithNotification!: number;
 
   constructor(
     private applicationsDispatcherService: ApplicationsDispatcherService,
+    private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService
   ) { }
@@ -54,6 +66,7 @@ export class VisaoFaturamentoComponent implements OnInit {
       this.getSipniIntegrationSituation();
       this.getApplicationNumbers();
       this.getApplicationByType();
+      this.getAuthorizationsDashInfo();
       this.informationField = `${this.formatMonthDate(new Date())}/${this.formatYearDate(new Date())}`;
     }, 200);
   }
@@ -96,11 +109,14 @@ export class VisaoFaturamentoComponent implements OnInit {
         '#36b9cc',
         '#858796'
       ],
+      hoverBorderColor: [
+        '#36b9cc',
+        '#858796'
+      ],
       circumference: 180,
       rotation: -90
     }]
   };
-
 
   public barChartApplicationAgeType: ChartType = 'bar';
   public barChartApplicationAgePlugins = [];
@@ -113,8 +129,10 @@ export class VisaoFaturamentoComponent implements OnInit {
       hoverBackgroundColor: this.randomColorAge,
       borderColor: this.randomColorAge,
       hoverBorderColor: this.randomColorAge,
-      borderWidth: 1
+      borderWidth: 1,
+
     }],
+
   };
 
 
@@ -157,11 +175,49 @@ export class VisaoFaturamentoComponent implements OnInit {
     }]
   };
 
+
+  public barChartAuthorizationNotificationType: ChartType = 'doughnut';
+  public barChartAuthorizationNotificationPlugins = [
+  ];
+  public barChartAuthorizationNotificationData: ChartData<'doughnut'> = {
+    labels: ['Notificação Ativada', 'Notificação Desativada'],
+    datasets: [{
+      data: [this.authorizationWithNotification, this.authorizationWithoutNotification],
+      backgroundColor: [
+        '#1cc88a',
+        '#e74a3b'
+      ],
+      hoverBackgroundColor: [
+        '#1cc88a',
+        '#e74a3b'
+      ],
+      hoverBorderColor: [
+        '#1cc88a',
+        '#e74a3b'
+      ],
+      circumference: 180,
+      rotation: -90
+    }]
+  };
+
+
+  public barChartAuthotizationSmsType: ChartType = 'bar';
+  public barChartAuthotizationSmsPlugins = [];
+  public barChartAuthotizationSmsData: ChartData<'bar'> = {
+    labels: this.smsSituationList,
+    datasets: [{
+      data: this.smsSituationNumber,
+      backgroundColor: this.randomColorSms,
+      hoverBackgroundColor: this.randomColorSms,
+      borderColor: this.randomColorSms,
+      hoverBorderColor: this.randomColorSms,
+      borderWidth: 1
+    }]
+  };
+
   public getApplicationsByPersonGender() {
     this.applicationsDispatcherService.getApplicationsByPersonGender(this.month, this.year).subscribe(
       response => {
-
-        console.log(this.genderApplicationsNumber);
 
         response.forEach((element: any) => {
           this.genderList.push(element.Gender);
@@ -187,8 +243,6 @@ export class VisaoFaturamentoComponent implements OnInit {
             rotation: -90
           }]
         };
-
-        console.log(this.genderApplicationsNumber);
       },
       error => {
         console.log(error);
@@ -321,10 +375,71 @@ export class VisaoFaturamentoComponent implements OnInit {
               '#36b9cc',
               '#858796'
             ],
+            hoverBorderColor: [
+              '#36b9cc',
+              '#858796'
+            ],
             circumference: 180,
             rotation: -90
           }]
         }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  public getAuthorizationsDashInfo() {
+    this.authorizationsDispatcherService.getAuthorizationsDashInfo(this.month, this.year).subscribe(
+      response => {
+
+        this.authorizationCanceledNumber = response.AuthorizationCanceledNumber;
+        this.authorizationScheduleNumber = response.AuthorizationScheduleNumber;
+        this.authorizationConcludedNumber = response.AuthorizationConcludedNumber;
+        this.authorizationWithNotification = response.AuthorizationsWithNotification;
+        this.authorizationWithoutNotification = response.AuthorizationsWithoutNotification;
+
+        this.barChartAuthorizationNotificationData = {
+          labels: ['Notificação Ativada', 'Notificação Desativada'],
+          datasets: [{
+            data: [this.authorizationWithNotification, this.authorizationWithoutNotification],
+            backgroundColor: [
+              '#1cc88a',
+              '#e74a3b'
+            ],
+            hoverBackgroundColor: [
+              '#1cc88a',
+              '#e74a3b'
+            ],
+            hoverBorderColor: [
+              '#1cc88a',
+              '#e74a3b'
+            ],
+            circumference: 180,
+            rotation: -90
+          }]
+        };
+
+        response.authorizationNotificationDashInfos.forEach((element: any) => {
+
+          this.smsSituationList.push(element.Description);
+          this.smsSituationNumber.push(element.Quantity);
+
+          this.randomColorSms.push(this.randomRGB());
+        });
+
+        this.barChartAuthotizationSmsData = {
+          labels: this.smsSituationList,
+          datasets: [{
+            data: this.smsSituationNumber,
+            backgroundColor: this.randomColorSms,
+            hoverBackgroundColor: this.randomColorSms,
+            borderColor: this.randomColorSms,
+            hoverBorderColor: this.randomColorSms,
+            borderWidth: 1
+          }]
+        };
       },
       error => {
         console.log(error);
@@ -445,6 +560,7 @@ export class VisaoFaturamentoComponent implements OnInit {
       this.getSipniIntegrationSituation();
       this.getApplicationNumbers();
       this.getApplicationByType();
+      this.getAuthorizationsDashInfo();
     }, 200);
   }
 
@@ -454,10 +570,12 @@ export class VisaoFaturamentoComponent implements OnInit {
     this.ageList = [];
     this.integrationList = [];
     this.typeList = [];
+    this.smsSituationList = [];
     this.genderApplicationsNumber = [];
     this.productApplicationsNumber = [];
     this.ageApplicationsNumber = [];
     this.integrationApplicationsNumber = [];
     this.typeApplicationsNumber = [];
+    this.smsSituationNumber = [];
   }
 }
