@@ -5,7 +5,101 @@
     <app-container containerTitle="Dashboard Operacional" containerPath="Gerencial" [information]="informationField" [isClickable]=true [year]=year [month]=month (responseMonthYear)="reciveMonth($event)">
       <mat-tab-group #tabGroup animationDuration="0ms">
 
-        <mat-tab label="Orçamento"></mat-tab>
+        <mat-tab label="Orçamento">
+
+          <div class="row" style="margin:0.5rem">
+
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2 card-dash">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    TOTAL DE ORÇAMENTOS
+                                  </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{totalBudgetNumber}}</div>
+                                <div class="small-text mt-1" title="Total Mês Anterior">Anterior {{totalBudgetNumberPrevious}}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-hand-holding-dollar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2 card-dash">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    R$ TOTAL NEGOCIADO
+                                  </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{totalBudgetAmount | currency : 'R$' }}</div>
+                                <div class="small-text mt-1" title="Total Mês Anterior">Anterior {{totalBudgetAmountPrevious | currency : 'R$' }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-sack-dollar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  
+            <div class="col-xl-4 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2 card-dash">
+                  <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                          <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                              R$ TOTAL DESCONTO CONCEDIDO
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{totalBudgetDiscount | currency : 'R$' }}</div>
+                            <div class="small-text mt-1" title="Total Mês Anterior">Anterior {{totalBudgetDiscountPrevious | currency : 'R$' }}</div>
+                          </div>
+                          <div class="col-auto">
+                              <i class="fas fa-filter-circle-dollar fa-2x text-gray-300"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+          <div class="row" style="margin:0.5rem">
+            <div class="col-lg-4 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Orçamentos por Situação</h6>
+                </div>
+                <div class="card-body">
+                  <canvas baseChart 
+                          [data]="barChartBudgetSituationData" 
+                          [plugins]="barChartBudgetSituationPlugins" 
+                          [type]="barChartBudgetSituationType">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Orçamentos por Tipo de Pessoa</h6>
+                </div>
+                <div class="card-body">
+                  <canvas baseChart 
+                          [data]="barChartBudgetPersonData" 
+                          [plugins]="barChartBudgetPersonPlugins" 
+                          [type]="barChartBudgetPersonType">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+            </div>
+
+        </mat-tab>
 
         <mat-tab label="Agendamento">
 

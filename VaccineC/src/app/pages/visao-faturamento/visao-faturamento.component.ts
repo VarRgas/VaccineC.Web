@@ -9,6 +9,7 @@ import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { options } from 'preact';
 import { ApplicationsDispatcherService } from 'src/app/services/application-dispatcher.service';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
+import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 
@@ -43,6 +44,7 @@ export class VisaoFaturamentoComponent implements OnInit {
   randomColorProduct = new Array<string>();
   randomColorAge = new Array<string>();
   randomColorSms = new Array<string>();
+  randomColorBudgetSituation = new Array<string>();
 
   //Authorizations
   authorizationScheduleNumber!: number;
@@ -51,9 +53,26 @@ export class VisaoFaturamentoComponent implements OnInit {
   authorizationWithoutNotification!: number;
   authorizationWithNotification!: number;
 
+  //Budgets
+  budgetAprovedNumber!: number;
+  budgetPendingNumber!: number;
+  budgetCanceledNumber!: number;
+  budgetOverduedNumber!: number;
+  budgetFinalizedNumber!: number;
+  budgetNegotiationNumber!: number;
+  budgetPfNumber!: number;
+  budgetPjNumber!: number;
+  totalBudgetNumber!: number;
+  totalBudgetNumberPrevious!: number;
+  totalBudgetAmount!: number;
+  totalBudgetAmountPrevious!: number;
+  totalBudgetDiscount!: number;
+  totalBudgetDiscountPrevious!: number;
+
   constructor(
     private applicationsDispatcherService: ApplicationsDispatcherService,
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
+    private budgetsDispatcherService: BudgetsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService
   ) { }
@@ -67,6 +86,7 @@ export class VisaoFaturamentoComponent implements OnInit {
       this.getApplicationNumbers();
       this.getApplicationByType();
       this.getAuthorizationsDashInfo();
+      this.getBudgetsDashInfo();
       this.informationField = `${this.formatMonthDate(new Date())}/${this.formatYearDate(new Date())}`;
     }, 200);
   }
@@ -118,6 +138,7 @@ export class VisaoFaturamentoComponent implements OnInit {
     }]
   };
 
+
   public barChartApplicationAgeType: ChartType = 'bar';
   public barChartApplicationAgePlugins = [];
   public barChartApplicationAgeData: ChartData<'bar'> = {
@@ -130,9 +151,7 @@ export class VisaoFaturamentoComponent implements OnInit {
       borderColor: this.randomColorAge,
       hoverBorderColor: this.randomColorAge,
       borderWidth: 1,
-
     }],
-
   };
 
 
@@ -215,6 +234,67 @@ export class VisaoFaturamentoComponent implements OnInit {
     }]
   };
 
+
+  public barChartBudgetSituationType: ChartType = 'doughnut';
+  public barChartBudgetSituationPlugins = [];
+  public barChartBudgetSituationData: ChartData<'doughnut'> = {
+    labels: ['Aprovado', 'Pendente', 'Cancelado', 'Vencido', 'Finalizado', 'Em Negociação'],
+    datasets: [{
+      data: [this.budgetAprovedNumber, this.budgetPendingNumber, this.budgetCanceledNumber, this.budgetOverduedNumber, this.budgetFinalizedNumber, this.budgetNegotiationNumber],
+      backgroundColor: [
+        '#8AA29E',
+        '#686963',
+        '#DB5461',
+        '#3D5467',
+        '#9AD2CB',
+        '#141B41'
+      ],
+      hoverBackgroundColor: [
+        '#8AA29E',
+        '#686963',
+        '#DB5461',
+        '#3D5467',
+        '#9AD2CB',
+        '#141B41'
+      ],
+      hoverBorderColor: [
+        '#8AA29E',
+        '#686963',
+        '#DB5461',
+        '#3D5467',
+        '#9AD2CB',
+        '#141B41'
+      ],
+      circumference: 180,
+      rotation: -90
+    }]
+  };
+
+
+  public barChartBudgetPersonType: ChartType = 'doughnut';
+  public barChartBudgetPersonPlugins = [
+  ];
+  public barChartBudgetPersonData: ChartData<'doughnut'> = {
+    labels: ['Pessoa Física', 'Pessoa Jurídica'],
+    datasets: [{
+      data: [this.budgetPfNumber, this.budgetPjNumber],
+      backgroundColor: [
+        '#F0B67F',
+        '#FE5F55'
+      ],
+      hoverBackgroundColor: [
+        '#F0B67F',
+        '#FE5F55'
+      ],
+      hoverBorderColor: [
+        '#F0B67F',
+        '#FE5F55'
+      ],
+      circumference: 180,
+      rotation: -90
+    }]
+  };
+
   public getApplicationsByPersonGender() {
     this.applicationsDispatcherService.getApplicationsByPersonGender(this.month, this.year).subscribe(
       response => {
@@ -222,7 +302,6 @@ export class VisaoFaturamentoComponent implements OnInit {
         response.forEach((element: any) => {
           this.genderList.push(element.Gender);
           this.genderApplicationsNumber.push(element.NumberOfApplications);
-
         });
 
         this.barChartApplicationGenderData = {
@@ -447,6 +526,84 @@ export class VisaoFaturamentoComponent implements OnInit {
       });
   }
 
+  public getBudgetsDashInfo() {
+    this.budgetsDispatcherService.getBudgetsDashInfo(this.month, this.year).subscribe(
+      response => {
+        this.budgetAprovedNumber = response.budgetAprovedNumber;
+        this.budgetPendingNumber = response.budgetPendingNumber;
+        this.budgetCanceledNumber = response.budgetCanceledNumber;
+        this.budgetOverduedNumber = response.budgetOverduedNumber;
+        this.budgetFinalizedNumber = response.budgetFinalizedNumber;
+        this.budgetNegotiationNumber = response.budgetNegotiationNumber;
+        this.budgetPfNumber = response.personPhysicalNumber;
+        this.budgetPjNumber = response.personJuridicalNumber;
+        this.totalBudgetNumber = response.totalBudgetNumber;
+        this.totalBudgetNumberPrevious = response.totalBudgetNumberPrevious;
+        this.totalBudgetAmount = response.totalBudgetAmount;
+        this.totalBudgetAmountPrevious = response.totalBudgetAmountPrevious;
+        this.totalBudgetDiscount = response.totalBudgetDiscount;
+        this.totalBudgetDiscountPrevious = response.totalBudgetDiscountPrevious;
+
+        this.barChartBudgetSituationData = {
+          labels: ['Aprovado', 'Pendente', 'Cancelado', 'Vencido', 'Finalizado', 'Em Negociação'],
+          datasets: [{
+            data: [this.budgetAprovedNumber, this.budgetPendingNumber, this.budgetCanceledNumber, this.budgetOverduedNumber, this.budgetFinalizedNumber, this.budgetNegotiationNumber],
+            backgroundColor: [
+              '#8AA29E',
+              '#686963',
+              '#DB5461',
+              '#3D5467',
+              '#9AD2CB',
+              '#141B41'
+            ],
+            hoverBackgroundColor: [
+              '#8AA29E',
+              '#686963',
+              '#DB5461',
+              '#3D5467',
+              '#9AD2CB',
+              '#141B41'
+            ],
+            hoverBorderColor: [
+              '#8AA29E',
+              '#686963',
+              '#DB5461',
+              '#3D5467',
+              '#9AD2CB',
+              '#141B41'
+            ],
+            circumference: 180,
+            rotation: -90
+          }]
+        }
+
+        this.barChartBudgetPersonData = {
+          labels: ['Pessoa Física', 'Pessoa Jurídica'],
+          datasets: [{
+            data: [this.budgetPfNumber, this.budgetPjNumber],
+            backgroundColor: [
+              '#F0B67F',
+              '#FE5F55'
+            ],
+            hoverBackgroundColor: [
+              '#F0B67F',
+              '#FE5F55'
+            ],
+            hoverBorderColor: [
+              '#F0B67F',
+              '#FE5F55'
+            ],
+            circumference: 180,
+            rotation: -90
+          }]
+        };
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
   public randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
   public randomRGB = () => `rgb(${this.randomNum()}, ${this.randomNum()}, ${this.randomNum()})`;
 
@@ -561,6 +718,7 @@ export class VisaoFaturamentoComponent implements OnInit {
       this.getApplicationNumbers();
       this.getApplicationByType();
       this.getAuthorizationsDashInfo();
+      this.getBudgetsDashInfo();
     }, 200);
   }
 
