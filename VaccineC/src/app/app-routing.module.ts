@@ -26,34 +26,36 @@ import { InternalServerErrorComponent } from './pages/error/internal-server-erro
 import { UnauthorizedComponent } from './pages/error/unauthorized/unauthorized.component';
 import { MinhaContaComponent } from './pages/minha-conta/minha-conta.component';
 import { ConectionErrorComponent } from './pages/error/conection-error/conection-error.component';
+import { AuthorizeGuard } from './services/authorize-guard';
 
 const routes: Routes = [
+  //canActivate: [AuthorizeGuard]: É oq vai dizer se o usuário logado vai ter acesso ou não;
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthorizeGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [AuthorizeGuard] },
 
-  { path: 'formas-pagamento', component: FormasPagamentoComponent },
-  { path: 'pessoas', component: PessoasComponent },
-  { path: 'empresas', component: EmpresasComponent },
-  { path: 'produto', component: ProdutoComponent },
+  { path: 'formas-pagamento', component: FormasPagamentoComponent, canActivate: [AuthorizeGuard] },
+  { path: 'pessoas', component: PessoasComponent, canActivate: [AuthorizeGuard] },
+  { path: 'empresas', component: EmpresasComponent, canActivate: [AuthorizeGuard] },
+  { path: 'produto', component: ProdutoComponent, canActivate: [AuthorizeGuard] },
 
-  { path: 'agendamento', component: AgendamentoComponent },
-  { path: 'aplicacao', component: AplicacaoComponent },
-  { path: 'orcamentos', component: OrcamentosComponent },
+  { path: 'agendamento', component: AgendamentoComponent, canActivate: [AuthorizeGuard] },
+  { path: 'aplicacao', component: AplicacaoComponent, canActivate: [AuthorizeGuard] },
+  { path: 'orcamentos', component: OrcamentosComponent, canActivate: [AuthorizeGuard] },
 
-  { path: 'movimentar-estoque', component: MovimentarEstoqueComponent },
-  { path: 'situacao-estoque', component: SituacaoEstoqueComponent },
+  { path: 'movimentar-estoque', component: MovimentarEstoqueComponent, canActivate: [AuthorizeGuard] },
+  { path: 'situacao-estoque', component: SituacaoEstoqueComponent, canActivate: [AuthorizeGuard] },
 
-  { path: 'gerenciar-usuarios', component: GerenciarUsuariosComponent },
-  { path: 'recursos', component: RecursosComponent },
-  { path: 'visao-faturamento', component: VisaoFaturamentoComponent },
+  { path: 'gerenciar-usuarios', component: GerenciarUsuariosComponent, canActivate: [AuthorizeGuard] },
+  { path: 'recursos', component: RecursosComponent, canActivate: [AuthorizeGuard]  },
+  { path: 'visao-faturamento', component: VisaoFaturamentoComponent, canActivate: [AuthorizeGuard] },
 
-  { path: 'minha-conta', component: MinhaContaComponent },
+  { path: 'minha-conta', component: MinhaContaComponent, canActivate: [AuthorizeGuard] },
 
-  { path: 'not-found-404', component: NotFoundComponent },
-  { path: 'internal-server-error-500', component: InternalServerErrorComponent },
-  { path: 'unauthorized-error-401', component: UnauthorizedComponent },
-  { path: 'conection-error', component: ConectionErrorComponent }
+  { path: 'not-found-404', component: NotFoundComponent, canActivate: [AuthorizeGuard] },
+  { path: 'internal-server-error-500', component: InternalServerErrorComponent, canActivate: [AuthorizeGuard] },
+  { path: 'unauthorized-error-401', component: UnauthorizedComponent, canActivate: [AuthorizeGuard] },
+  { path: 'conection-error', component: ConectionErrorComponent, canActivate: [AuthorizeGuard] }
 ];
 
 @NgModule({

@@ -47,6 +47,9 @@ import { ConectionErrorComponent } from './pages/error/conection-error/conection
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { LoginService } from './services/login.service';
+import { AuthorizeGuard } from './services/authorize-guard';
+import { InterceptorModule } from './services/interceptor-module';
 
 registerLocaleData(localePt, 'pt');
 
@@ -155,7 +158,8 @@ export const MY_FORMATS = {
     NgxViacepModule,
     MatSortModule,
     MatSidenavModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    InterceptorModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
@@ -168,7 +172,9 @@ export const MY_FORMATS = {
       useValue: 'BRL'
     },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+     LoginService,
+     AuthorizeGuard
 
   ],
   bootstrap: [AppComponent],
