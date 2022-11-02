@@ -35,16 +35,19 @@ export class VisaoFaturamentoComponent implements OnInit {
   typeList = new Array<string>();
   integrationList = new Array<string>();
   smsSituationList = new Array<string>();
+  budgetProductList = new Array<string>();
   genderApplicationsNumber = new Array<number>();
   productApplicationsNumber = new Array<number>();
   ageApplicationsNumber = new Array<number>();
   typeApplicationsNumber = new Array<number>();
   integrationApplicationsNumber = new Array<number>();
   smsSituationNumber = new Array<number>();
+  budgetProductNumber = new Array<number>();
   randomColorProduct = new Array<string>();
   randomColorAge = new Array<string>();
   randomColorSms = new Array<string>();
   randomColorBudgetSituation = new Array<string>();
+  randomColorBudgetProduct = new Array<string>();
 
   //Authorizations
   authorizationScheduleNumber!: number;
@@ -295,6 +298,21 @@ export class VisaoFaturamentoComponent implements OnInit {
     }]
   };
 
+  public barChartBudgetProductType: ChartType = 'doughnut';
+  public barChartBudgetProductPlugins = [
+  ];
+  public barChartBudgetProductData: ChartData<'doughnut'> = {
+    labels: this.budgetProductList,
+    datasets: [{
+      data: this.budgetProductNumber,
+      backgroundColor: this.randomColorBudgetProduct,
+      hoverBackgroundColor: this.randomColorBudgetProduct,
+      hoverBorderColor: this.randomColorBudgetProduct,
+      circumference: 180,
+      rotation: -90
+    }]
+  };
+
   public getApplicationsByPersonGender() {
     this.applicationsDispatcherService.getApplicationsByPersonGender(this.month, this.year).subscribe(
       response => {
@@ -529,6 +547,7 @@ export class VisaoFaturamentoComponent implements OnInit {
   public getBudgetsDashInfo() {
     this.budgetsDispatcherService.getBudgetsDashInfo(this.month, this.year).subscribe(
       response => {
+        console.log(response)
         this.budgetAprovedNumber = response.budgetAprovedNumber;
         this.budgetPendingNumber = response.budgetPendingNumber;
         this.budgetCanceledNumber = response.budgetCanceledNumber;
@@ -543,6 +562,12 @@ export class VisaoFaturamentoComponent implements OnInit {
         this.totalBudgetAmountPrevious = response.totalBudgetAmountPrevious;
         this.totalBudgetDiscount = response.totalBudgetDiscount;
         this.totalBudgetDiscountPrevious = response.totalBudgetDiscountPrevious;
+
+        response.listProductBudgetDashInfoViewModel.forEach((element: any) => {
+          this.budgetProductList.push(element.Name);
+          this.budgetProductNumber.push(element.Quantity);
+          this.randomColorBudgetProduct.push(this.randomRGB());
+        });
 
         this.barChartBudgetSituationData = {
           labels: ['Aprovado', 'Pendente', 'Cancelado', 'Vencido', 'Finalizado', 'Em Negociação'],
@@ -596,6 +621,18 @@ export class VisaoFaturamentoComponent implements OnInit {
             circumference: 180,
             rotation: -90
           }]
+        };
+
+        this.barChartBudgetProductData = {
+          labels: this.budgetProductList,
+          datasets: [{
+            data: this.budgetProductNumber,
+            backgroundColor: this.randomColorBudgetProduct,
+            hoverBackgroundColor: this.randomColorBudgetProduct,
+            hoverBorderColor: this.randomColorBudgetProduct,
+            circumference: 180,
+            rotation: -90
+          },]
         };
       },
       error => {
@@ -729,11 +766,13 @@ export class VisaoFaturamentoComponent implements OnInit {
     this.integrationList = [];
     this.typeList = [];
     this.smsSituationList = [];
+    this.budgetProductList = [];
     this.genderApplicationsNumber = [];
     this.productApplicationsNumber = [];
     this.ageApplicationsNumber = [];
     this.integrationApplicationsNumber = [];
     this.typeApplicationsNumber = [];
     this.smsSituationNumber = [];
+    this.budgetProductNumber = [];
   }
 }

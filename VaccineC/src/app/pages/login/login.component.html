@@ -53,7 +53,12 @@
                                                     <input type="checkbox" class="custom-control-input" id="customCheck">
                                                 </div>
                                             </div>
-                                            <a (click)="validateLogin()" class="btn btn-primary btn-user btn-block"> ENTRAR </a>
+                                            <a (click)="validateLogin()" class="btn btn-primary btn-user btn-block" disabled="loading"> 
+                                                <div class="d-flex" style="justify-content: center;align-content: center;">
+                                                    <div class="spinner-grow spinner-grow-sm me-1" role="status" *ngIf="loading"></div>
+                                                    <div>ENTRAR</div>
+                                                </div>  
+                                            </a>
                                         </form>
 
                                         <div class="mt-2" style="float:right;">

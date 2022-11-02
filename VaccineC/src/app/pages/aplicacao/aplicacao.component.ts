@@ -143,8 +143,8 @@ export class AplicacaoComponent implements OnInit {
       bottomSheetRef.afterDismissed().subscribe(
         (res) => {
           console.log(res)
-          if(res == undefined || res == null || res == ""){
-          }else { 
+          if (res == undefined || res == null || res == "") {
+          } else {
             this.applicationsHistory = res;
           }
         }
@@ -1148,6 +1148,8 @@ export class SipniIntegrationErrorBottomSheet implements OnInit {
   public applicationId!: string;
   public personId!: string;
   public comunicateButtonLoading = false;
+  public isComunicateButtonVisible = true;
+  public classField = "situation-input-button";
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
@@ -1159,17 +1161,34 @@ export class SipniIntegrationErrorBottomSheet implements OnInit {
   ngOnInit(): void {
     this.applicationId = this.data.ApplicationId;
     this.personId = this.data.PersonId;
+    this.verifyApplicationAbleUpdate();
   }
 
   public addSipniImunization() {
 
     this.comunicateButtonLoading = true;
 
-    this.applicationsDispatcherService.AddSipniImunizationById(this.applicationId, this.personId).subscribe(
+    this.applicationsDispatcherService.AddSipniImunizationById(this.applicationId, this.personId, localStorage.getItem('userId')!).subscribe(
       response => {
         this.comunicateButtonLoading = false;
         this.messageHandler.showMessage("Comunicação SIPNI realizada com sucesso!", "success-snackbar");
         this._bottomSheetRef.dismiss(response);
+      },
+      error => {
+        this.comunicateButtonLoading = false;
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  public verifyApplicationAbleUpdate() {
+    this.applicationsDispatcherService.verifyApplicationAbleUpdate(this.applicationId, localStorage.getItem('userId')!).subscribe(
+      response => {
+        if (response) {
+          this.isComunicateButtonVisible = true;
+        } else {
+          this.isComunicateButtonVisible = false;
+        }
       },
       error => {
         this.comunicateButtonLoading = false;

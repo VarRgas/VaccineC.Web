@@ -26,7 +26,8 @@
                     color="primary" 
                     class="comunication-button" 
                     (click)="addSipniImunization()"
-                    [disabled]="comunicateButtonLoading">
+                    [disabled]="comunicateButtonLoading"
+                    *ngIf="isComunicateButtonVisible">
                     <div class="spinner">
                         <mat-spinner *ngIf="comunicateButtonLoading" [diameter]="15"></mat-spinner>
                         <span *ngIf="!comunicateButtonLoading" class="fa-solid fa-wifi me-1 w-20px"></span> Comunicar

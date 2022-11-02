@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
 
   public userEmail!: string;
   public userPassword!: string;
+  public loading = false;
 
   hide: boolean = true;
 
@@ -59,6 +60,7 @@ export class LoginComponent implements OnInit {
   }
 
   public validateLogin(): void {
+    this.loading = true;
 
     let login = new LoginModel();
     login.email = this.userEmail;
@@ -77,7 +79,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('profilePic', response.PersonProfilePic);
         localStorage.setItem('userId', response.ID);
         localStorage.setItem('showNotification', response.ShowNotification);
-
+        this.loading = false;
         //Salva o token no localStorage
         this.loginService.setLogin(response.Token)
         this.messageHandlerService.showMessage("Logado com sucesso!", 'success-snackbar')
@@ -89,6 +91,7 @@ export class LoginComponent implements OnInit {
         this.errorHandler.handleError(error);
         this.userEmail = '';
         this.userPassword = '';
+        this.loading = false;
       });
   }
 }

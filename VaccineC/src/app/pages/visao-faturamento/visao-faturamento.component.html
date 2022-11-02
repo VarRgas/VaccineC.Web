@@ -2,7 +2,13 @@
   <app-side-menu></app-side-menu>
   <div id="content-wrapper" class="d-flex flex-column">
     <app-toolbar></app-toolbar>
-    <app-container containerTitle="Dashboard Operacional" containerPath="Gerencial" [information]="informationField" [isClickable]=true [year]=year [month]=month (responseMonthYear)="reciveMonth($event)">
+    <app-container containerTitle="Dashboard Operacional" 
+                   containerPath="Gerencial" 
+                   [information]="informationField"
+                   [isClickable]=true 
+                   [year]=year 
+                   [month]=month 
+                   (responseMonthYear)="reciveMonth($event)">
       <mat-tab-group #tabGroup animationDuration="0ms">
 
         <mat-tab label="Orçamento">
@@ -10,62 +16,70 @@
           <div class="row" style="margin:0.5rem">
 
             <div class="col-xl-4 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2 card-dash">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    TOTAL DE ORÇAMENTOS
-                                  </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{totalBudgetNumber}}</div>
-                                <div class="small-text mt-1" title="Total Mês Anterior">Anterior {{totalBudgetNumberPrevious}}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-hand-holding-dollar fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+              <div class="card border-left-success shadow h-100 py-2 card-dash">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        TOTAL DE ORÇAMENTOS
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{totalBudgetNumber}}</div>
+                      <div class="small-text mt-1" title="Total Mês Anterior">Anterior {{totalBudgetNumberPrevious}}
+                      </div>
                     </div>
+                    <div class="col-auto">
+                      <i class="fas fa-hand-holding-dollar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-  
+
             <div class="col-xl-4 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2 card-dash">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    R$ TOTAL NEGOCIADO
-                                  </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{totalBudgetAmount | currency : 'R$' }}</div>
-                                <div class="small-text mt-1" title="Total Mês Anterior">Anterior {{totalBudgetAmountPrevious | currency : 'R$' }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-sack-dollar fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+              <div class="card border-left-info shadow h-100 py-2 card-dash">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        R$ TOTAL NEGOCIADO
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{totalBudgetAmount | currency : 'R$' }}
+                      </div>
+                      <div class="small-text mt-1" title="Total Mês Anterior">
+                        Anterior {{totalBudgetAmountPrevious | currency : 'R$' }}
+                      </div>
                     </div>
+                    <div class="col-auto">
+                      <i class="fas fa-sack-dollar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-  
+
             <div class="col-xl-4 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2 card-dash">
-                  <div class="card-body">
-                      <div class="row no-gutters align-items-center">
-                          <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                              R$ TOTAL DESCONTO CONCEDIDO
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{totalBudgetDiscount | currency : 'R$' }}</div>
-                            <div class="small-text mt-1" title="Total Mês Anterior">Anterior {{totalBudgetDiscountPrevious | currency : 'R$' }}</div>
-                          </div>
-                          <div class="col-auto">
-                              <i class="fas fa-filter-circle-dollar fa-2x text-gray-300"></i>
-                          </div>
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        R$ TOTAL DESCONTO CONCEDIDO
                       </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{totalBudgetDiscount | currency : 'R$' }}
+                      </div>
+                      <div class="small-text mt-1" title="Total Mês Anterior">Anterior
+                        {{totalBudgetDiscountPrevious | currency : 'R$' }}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-filter-circle-dollar fa-2x text-gray-300"></i>
+                    </div>
                   </div>
+                </div>
               </div>
+            </div>
           </div>
-        </div>
 
           <div class="row" style="margin:0.5rem">
             <div class="col-lg-4 mb-1">
@@ -76,7 +90,7 @@
                 <div class="card-body">
                   <canvas baseChart 
                           [data]="barChartBudgetSituationData" 
-                          [plugins]="barChartBudgetSituationPlugins" 
+                          [plugins]="barChartBudgetSituationPlugins"
                           [type]="barChartBudgetSituationType">
                   </canvas>
                 </div>
@@ -91,14 +105,40 @@
                 <div class="card-body">
                   <canvas baseChart 
                           [data]="barChartBudgetPersonData" 
-                          [plugins]="barChartBudgetPersonPlugins" 
+                          [plugins]="barChartBudgetPersonPlugins"
                           [type]="barChartBudgetPersonType">
                   </canvas>
                 </div>
               </div>
             </div>
-            </div>
 
+            <div class="col-lg-4 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Produtos Orçados</h6>
+                </div>
+                <div class="card-body">
+                  <canvas baseChart [data]="barChartBudgetProductData" 
+                                    [plugins]="barChartBudgetProductPlugins"
+                                    [type]="barChartBudgetProductType">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="margin:0.5rem">
+            <div class="col-lg-12 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Visão de Faturamento</h6>
+                </div>
+                <div class="card-body">
+  
+                </div>
+              </div>
+            </div>
+          </div>
         </mat-tab>
 
         <mat-tab label="Agendamento">
@@ -106,90 +146,95 @@
           <div class="row" style="margin:0.5rem">
 
             <div class="col-xl-4 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2 card-dash">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    AGENDAMENTOS CONCLUÍDOS</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{authorizationConcludedNumber}}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+              <div class="card border-left-success shadow h-100 py-2 card-dash">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        AGENDAMENTOS CONCLUÍDOS</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{authorizationConcludedNumber}}
+                      </div>
                     </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-  
+
             <div class="col-xl-4 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2 card-dash">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    AGENDAMENTOS CONFIRMADOS</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{authorizationScheduleNumber}}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+              <div class="card border-left-warning shadow h-100 py-2 card-dash">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        AGENDAMENTOS CONFIRMADOS
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{authorizationScheduleNumber}}
+                      </div>
                     </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-  
+
             <div class="col-xl-4 col-md-6 mb-4">
               <div class="card border-left-danger shadow h-100 py-2 card-dash">
-                  <div class="card-body">
-                      <div class="row no-gutters align-items-center">
-                          <div class="col mr-2">
-                              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                  AGENDAMENTOS CANCELADOS</div>
-                              <div class="h5 mb-0 font-weight-bold text-gray-800">{{authorizationCanceledNumber}}</div>
-                          </div>
-                          <div class="col-auto">
-                              <i class="fas fa-calendar-xmark fa-2x text-gray-300"></i>
-                          </div>
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                        AGENDAMENTOS CANCELADOS
                       </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{authorizationCanceledNumber}}
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar-xmark fa-2x text-gray-300"></i>
+                    </div>
                   </div>
-              </div>
-          </div>
-        </div>
-
-        <div class="row" style="margin:0.5rem">
-          <div class="col-lg-4 mb-1">
-            <div class="card shadow mb-4 card-dash">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-gray-600">Notificações SMS por Agendamento</h6>
-              </div>
-              <div class="card-body" style="min-height: 370px;">
-                <canvas baseChart 
-                        [data]="barChartAuthorizationNotificationData" 
-                        [plugins]="barChartAuthorizationNotificationPlugins" 
-                        [type]="barChartAuthorizationNotificationType">
-                </canvas>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="col-lg-8 mb-1">
-            <div class="card shadow mb-4 card-dash">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-gray-600">Notificações SMS por Situação</h6>
-              </div>
-              <div class="card-body" style="min-height: 370px;">
-                <canvas baseChart 
-                        [data]="barChartAuthotizationSmsData" 
-                        [plugins]="barChartAuthotizationSmsPlugins" 
-                        [type]="barChartAuthotizationSmsType" 
-                        [legend]="false">
-                </canvas>
+          <div class="row" style="margin:0.5rem">
+            <div class="col-lg-4 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Notificações SMS por Agendamento</h6>
+                </div>
+                <div class="card-body" style="min-height: 370px;">
+                  <canvas baseChart [data]="barChartAuthorizationNotificationData" 
+                                    [plugins]="barChartAuthorizationNotificationPlugins"
+                                    [type]="barChartAuthorizationNotificationType">
+                  </canvas>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
+            <div class="col-lg-8 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600">Notificações SMS por Situação</h6>
+                </div>
+                <div class="card-body" style="min-height: 370px;">
+                  <canvas baseChart [data]="barChartAuthotizationSmsData" 
+                                    [plugins]="barChartAuthotizationSmsPlugins"
+                                    [type]="barChartAuthotizationSmsType" 
+                                    [legend]="false">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+          </div>  
         </mat-tab>
 
 
@@ -197,40 +242,45 @@
           <div class="row" style="margin:0.5rem">
 
             <div class="col-xl-6 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2 card-dash">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    APLICAÇÕES REALIZADAS</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{applicationsCompleted}}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-vial-circle-check fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+              <div class="card border-left-success shadow h-100 py-2 card-dash">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        APLICAÇÕES REALIZADAS
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{applicationsCompleted}}
+                      </div>
                     </div>
+                    <div class="col-auto">
+                      <i class="fas fa-vial-circle-check fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
 
             <div class="col-xl-6 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2 card-dash">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    APLICAÇÕES PENDENTES</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{applicationsPending}}</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-vial-virus fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
+              <div class="card border-left-warning shadow h-100 py-2 card-dash">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        APLICAÇÕES PENDENTES
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{applicationsPending}}
+                      </div>
                     </div>
+                    <div class="col-auto">
+                      <i class="fas fa-vial-virus fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-
+          </div>
 
           <div class="row" style="margin:0.5rem">
             <div class="col-lg-4 mb-1">
@@ -239,10 +289,9 @@
                   <h6 class="m-0 font-weight-bold text-gray-600">Aplicadas por Gênero</h6>
                 </div>
                 <div class="card-body">
-                  <canvas baseChart 
-                          [data]="barChartApplicationGenderData" 
-                          [plugins]="barChartApplicationGenderPlugins" 
-                          [type]="barChartApplicationGenderType">
+                  <canvas baseChart [data]="barChartApplicationGenderData" 
+                                    [plugins]="barChartApplicationGenderPlugins"
+                                    [type]="barChartApplicationGenderType">
                   </canvas>
                 </div>
               </div>
@@ -254,10 +303,9 @@
                   <h6 class="m-0 font-weight-bold text-gray-600">Integrações SIPNI</h6>
                 </div>
                 <div class="card-body">
-                  <canvas baseChart 
-                          [data]="barChartApplicationIntegrationData" 
-                          [plugins]="barChartApplicationIntegrationPlugins" 
-                          [type]="barChartApplicationIntegrationType" >
+                  <canvas baseChart [data]="barChartApplicationIntegrationData"
+                                    [plugins]="barChartApplicationIntegrationPlugins" 
+                                    [type]="barChartApplicationIntegrationType">
                   </canvas>
                 </div>
               </div>
@@ -269,10 +317,9 @@
                   <h6 class="m-0 font-weight-bold text-gray-600">Formas de Aplicação</h6>
                 </div>
                 <div class="card-body">
-                  <canvas baseChart 
-                          [data]="barChartApplicationTypeData" 
-                          [plugins]="barChartApplicationTypePlugins" 
-                          [type]="barChartApplicationTypeType">
+                  <canvas baseChart [data]="barChartApplicationTypeData" 
+                                    [plugins]="barChartApplicationTypePlugins"
+                                    [type]="barChartApplicationTypeType">
                   </canvas>
                 </div>
               </div>
@@ -286,11 +333,10 @@
                   <h6 class="m-0 font-weight-bold text-gray-600">Aplicadas por Produto</h6>
                 </div>
                 <div class="card-body">
-                  <canvas baseChart 
-                          [data]="barChartApplicationProductData" 
-                          [plugins]="barChartApplicationProductPlugins" 
-                          [type]="barChartApplicationProductType" 
-                          [legend]="false">
+                  <canvas baseChart [data]="barChartApplicationProductData"
+                                    [plugins]="barChartApplicationProductPlugins" 
+                                    [type]="barChartApplicationProductType"
+                                    [legend]="false">
                   </canvas>
                 </div>
               </div>
@@ -302,12 +348,10 @@
                   <h6 class="m-0 font-weight-bold text-gray-600">Aplicadas por Faixa Etária</h6>
                 </div>
                 <div class="card-body">
-                  <canvas 
-                          baseChart 
-                          [data]="barChartApplicationAgeData" 
-                          [plugins]="barChartApplicationAgePlugins" 
-                          [type]="barChartApplicationAgeType"
-                          [legend]="false">
+                  <canvas baseChart [data]="barChartApplicationAgeData" 
+                                    [plugins]="barChartApplicationAgePlugins"
+                                    [type]="barChartApplicationAgeType" 
+                                    [legend]="false">
                   </canvas>
                 </div>
               </div>

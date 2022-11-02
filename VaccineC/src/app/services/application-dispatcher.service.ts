@@ -67,11 +67,15 @@ export class ApplicationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${month}/${year}/GetApplicationsByType`);
     }
 
+    public verifyApplicationAbleUpdate(applicationId: string, userId: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${applicationId}/${userId}/VerifyApplicationAbleUpdate`);
+    }
+
     public createApplication(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }
 
-    public AddSipniImunizationById(applicationId: string, personId: string): Observable<any> {
-        return this.httpClient.post(`${baseURL}/${applicationId}/${personId}/AddSipniImunizationById`, "");
+    public AddSipniImunizationById(applicationId: string, personId: string, userId: string): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${applicationId}/${personId}/${userId}/AddSipniImunizationById`, "");
     }
 }
