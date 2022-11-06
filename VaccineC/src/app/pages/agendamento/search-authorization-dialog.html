@@ -139,7 +139,8 @@
                     placeholder="Selecione a Pessoa" 
                     aria-label="Number" matInput
                     [matAutocomplete]="autoPerson"
-                    [(ngModel)]="searchPerson">
+                    [(ngModel)]="searchPerson"
+                    [formControl]="myControl">
                 <mat-autocomplete 
                     #autoPerson="matAutocomplete"
                     [displayWith]="displayStatePerson">

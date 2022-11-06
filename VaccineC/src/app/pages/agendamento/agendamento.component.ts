@@ -337,17 +337,14 @@ export class AddAuthorizationDialog implements OnInit {
   public isEditPersonVisible = false;
 
   //Autocomplete Pessoa
-  public myControl = new FormControl();
   public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
 
   //Autocomplete Orçamento PF
-  public myControlBudget = new FormControl();
   public acBudgets: string[] = [];
   public filteredBudgets: Observable<any[]> | undefined;
 
   //Autocomplete Orçamento PJ
-  public myControlBudgetJuridical = new FormControl();
   public acBudgetsJuridical: string[] = [];
   public filteredBudgetsJ: Observable<any[]> | undefined;
 
@@ -388,9 +385,9 @@ export class AddAuthorizationDialog implements OnInit {
   //Form
   authorizationForm: FormGroup = this.formBuilder.group({
     AuthorizationDateFormated: [null],
-    PersonId: [null],
+    PersonId: new FormControl(null),
     TypeOfService: [null],
-    BudgetId: [null],
+    BudgetId: new FormControl(null),
     ApplicationDate: [null],
     Notify: [null],
     PersonPhone: [null]
@@ -398,7 +395,7 @@ export class AddAuthorizationDialog implements OnInit {
 
   //Form Juridical
   authorizationJuridicalForm: FormGroup = this.formBuilder.group({
-    BudgetJuridicalId: [null],
+    BudgetJuridicalId: new FormControl(null),
     TypeOfServiceJuridical: [null],
     ApplicationDateJ: [null]
   });
@@ -469,7 +466,7 @@ export class AddAuthorizationDialog implements OnInit {
   }
 
   public searchBudgetJuridicalByAutoComplete(): void {
-    this.filteredBudgetsJ = this.myControlBudgetJuridical.valueChanges.pipe(
+    this.filteredBudgetsJ = this.authorizationJuridicalForm.controls.BudgetJuridicalId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -482,14 +479,15 @@ export class AddAuthorizationDialog implements OnInit {
   public filterBudgetsJ(val: string): Observable<any[]> {
     return this.budgetsDispatcherService.getBudgetsByResponsible(this.personBorrowerId)
       .pipe(
-        map((response: any[]) => response.filter((option: { ID: string }) => {
-          return option.ID.toLowerCase()
+        map((response: any[]) => response.filter((option: { BudgetNumber: number }) => {
+          console.log(option)
+          return option.BudgetNumber.toString().toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
 
   public searchBudgetByAutoComplete(): void {
-    this.filteredBudgets = this.myControlBudget.valueChanges.pipe(
+    this.filteredBudgets = this.authorizationForm.controls.BudgetId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -502,14 +500,14 @@ export class AddAuthorizationDialog implements OnInit {
   public filterBudgets(val: string): Observable<any[]> {
     return this.budgetsDispatcherService.getBudgetsByBorrower(this.personBorrowerId)
       .pipe(
-        map((response: any[]) => response.filter((option: { ID: string }) => {
-          return option.ID.toLowerCase()
+        map((response: any[]) => response.filter((option: { BudgetNumber: number }) => {
+          return option.BudgetNumber.toString().toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
 
   public searchPersonByAutoComplete(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.authorizationForm.controls.PersonId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -531,7 +529,7 @@ export class AddAuthorizationDialog implements OnInit {
     return this.personAutocompleteService.getPersonAuthorizationAutocomplete()
       .pipe(
         map((response: any[]) => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -1120,13 +1118,13 @@ export class UpdateAuthorizationDialog implements OnInit {
   //Form
   authorizationForm: FormGroup = this.formBuilder.group({
     AuthorizationDateFormated: [null],
-    PersonName: [null],
+    PersonName: new FormControl(null),
     PersonId: [null],
     TypeOfService: [null],
     BudgetId: [null],
     ApplicationDate: [null, [Validators.required]],
     Notify: [null],
-    BudgetNumber: [null],
+    BudgetNumber: new FormControl(null),
     Product: [null]
   });
 
@@ -1564,7 +1562,7 @@ export class SearchAuthorizationDialog implements OnInit {
     return this.personAutocompleteService.getAllPersonData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -1650,7 +1648,6 @@ export class AuthorizationNotificationDialog implements OnInit {
 })
 export class AddBorrowerBottomSheet implements OnInit {
 
-  myPersonControl = new FormControl();
   acPerson: string[] = [];
   acPersons: Observable<any[]> | undefined;
 
@@ -1669,7 +1666,7 @@ export class AddBorrowerBottomSheet implements OnInit {
 
   //Form
   budgetProductForm: FormGroup = this.formBuilder.group({
-    Person: [null, [Validators.required]]
+    Person: new FormControl(null, Validators.required),
   });
 
   ngOnInit(): void {
@@ -1696,7 +1693,7 @@ export class AddBorrowerBottomSheet implements OnInit {
   }
 
   searchPersonByAutoComplete() {
-    this.acPersons = this.myPersonControl.valueChanges.pipe(
+    this.acPersons = this.budgetProductForm.controls.Person.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1710,7 +1707,7 @@ export class AddBorrowerBottomSheet implements OnInit {
     return this.personAutocompleteService.getPersonPhysicalData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }

@@ -7,12 +7,11 @@
                 <mat-label>Produto</mat-label>
                 <input type="text" 
                        (click)="searchProductByAutoComplete()" 
-                       formControlName="ProductName"
                        [(ngModel)]="ProductName" 
                        placeholder="Selecione o Produto" 
                        aria-label="Number" 
                        matInput
-                       [formControl]="myControl" 
+                       [formControl]="$any(movementProductForm).get('ProductName')"
                        [matAutocomplete]="auto" 
                        required>
                 <mat-autocomplete #auto="matAutocomplete" 

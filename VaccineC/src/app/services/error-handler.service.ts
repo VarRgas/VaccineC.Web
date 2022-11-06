@@ -45,6 +45,7 @@ export class ErrorHandlerService {
     }
 
     private handle404Error = (error: HttpErrorResponse) => {
+        localStorage.clear();
         this.router.navigate(['/', 'not-found-404']);
     }
 

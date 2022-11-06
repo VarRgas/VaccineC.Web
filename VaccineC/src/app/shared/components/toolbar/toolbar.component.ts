@@ -86,6 +86,7 @@ export class ToolbarComponent implements OnInit {
 
     this.notificationDispatcherService.getAllNotificationsByUserId(this.userId).subscribe(
       notifications => {
+        console.log(notifications)
         this.notifications = notifications;
         this.treatNotifications(notifications);
       },

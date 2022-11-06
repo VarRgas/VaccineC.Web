@@ -78,9 +78,11 @@
                                 (click)="searchPersonByAutoComplete()" 
                                 type="text" 
                                 placeholder="Selecione a Pessoa" 
-                                aria-label="Number" matInput
+                                aria-label="Number" 
+                                matInput
                                 [matAutocomplete]="autoPerson"
-                                [(ngModel)]="searchResponsible">
+                                [(ngModel)]="searchResponsible"
+                                [formControl]="myControl">
                             <mat-autocomplete 
                                 #autoPerson="matAutocomplete"
                                 [displayWith]="displayStatePerson">

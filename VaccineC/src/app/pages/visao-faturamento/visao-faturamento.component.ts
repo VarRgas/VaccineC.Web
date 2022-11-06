@@ -36,6 +36,7 @@ export class VisaoFaturamentoComponent implements OnInit {
   integrationList = new Array<string>();
   smsSituationList = new Array<string>();
   budgetProductList = new Array<string>();
+  invoicingList = new Array<string>();
   genderApplicationsNumber = new Array<number>();
   productApplicationsNumber = new Array<number>();
   ageApplicationsNumber = new Array<number>();
@@ -43,11 +44,13 @@ export class VisaoFaturamentoComponent implements OnInit {
   integrationApplicationsNumber = new Array<number>();
   smsSituationNumber = new Array<number>();
   budgetProductNumber = new Array<number>();
+  invoicingNumber = new Array<number>();
   randomColorProduct = new Array<string>();
   randomColorAge = new Array<string>();
   randomColorSms = new Array<string>();
   randomColorBudgetSituation = new Array<string>();
   randomColorBudgetProduct = new Array<string>();
+  randomColorInvoicing = new Array<string>();
 
   //Authorizations
   authorizationScheduleNumber!: number;
@@ -71,6 +74,15 @@ export class VisaoFaturamentoComponent implements OnInit {
   totalBudgetAmountPrevious!: number;
   totalBudgetDiscount!: number;
   totalBudgetDiscountPrevious!: number;
+  currentYear!: number;
+  currentMonth!: string;
+  totalBudgetAmountDecrease = 0;
+  totalBudgetAmountDecreasePercent = 0;
+  totalBudgetAmountIncrease = 0;
+  totalBudgetAmountIncreasePercent = 0;
+  phraseIncrease!: string;
+  phraseDecrease!: string;
+  showPhrase!: boolean;
 
   constructor(
     private applicationsDispatcherService: ApplicationsDispatcherService,
@@ -98,19 +110,11 @@ export class VisaoFaturamentoComponent implements OnInit {
   public barChartApplicationGenderPlugins = [
   ];
   public barChartApplicationGenderData: ChartData<'doughnut'> = {
-    labels: this.genderList,
+    labels: [],
     datasets: [{
-      data: this.genderApplicationsNumber,
-      backgroundColor: [
-        'rgb(255, 99, 132)',
-        '#36b9cc',
-        '#858796'
-      ],
-      hoverBackgroundColor: [
-        'rgb(255, 99, 132)',
-        '#36b9cc',
-        '#858796'
-      ],
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
       circumference: 180,
       rotation: -90
     }]
@@ -121,21 +125,12 @@ export class VisaoFaturamentoComponent implements OnInit {
   public barChartApplicationTypePlugins = [
   ];
   public barChartApplicationTypeData: ChartData<'doughnut'> = {
-    labels: this.typeList,
+    labels: [],
     datasets: [{
-      data: this.typeApplicationsNumber,
-      backgroundColor: [
-        '#36b9cc',
-        '#858796'
-      ],
-      hoverBackgroundColor: [
-        '#36b9cc',
-        '#858796'
-      ],
-      hoverBorderColor: [
-        '#36b9cc',
-        '#858796'
-      ],
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+      hoverBorderColor: [],
       circumference: 180,
       rotation: -90
     }]
@@ -145,15 +140,31 @@ export class VisaoFaturamentoComponent implements OnInit {
   public barChartApplicationAgeType: ChartType = 'bar';
   public barChartApplicationAgePlugins = [];
   public barChartApplicationAgeData: ChartData<'bar'> = {
-    labels: this.ageList,
+    labels: [],
     datasets: [{
-      label: "Aplicações",
-      data: this.ageApplicationsNumber,
-      backgroundColor: this.randomColorAge,
-      hoverBackgroundColor: this.randomColorAge,
-      borderColor: this.randomColorAge,
-      hoverBorderColor: this.randomColorAge,
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+      borderColor: [],
+      hoverBorderColor: [],
       borderWidth: 1,
+      maxBarThickness: 70,
+      minBarLength: 10
+    }],
+  };
+
+  public barChartInvoicingType: ChartType = 'bar';
+  public barChartInvoicingPlugins = [];
+  public barChartInvoicingData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+      borderColor: [],
+      hoverBorderColor: [],
+      borderWidth: 1,
+      maxBarThickness: 70
     }],
   };
 
@@ -163,13 +174,14 @@ export class VisaoFaturamentoComponent implements OnInit {
   public barChartApplicationProductData: ChartData<'bar'> = {
     labels: this.productList,
     datasets: [{
-      label: "Aplicações",
-      data: this.productApplicationsNumber,
-      backgroundColor: this.randomColorProduct,
-      hoverBackgroundColor: this.randomColorProduct,
-      borderColor: this.randomColorProduct,
-      hoverBorderColor: this.randomColorProduct,
-      borderWidth: 1
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+      borderColor: [],
+      hoverBorderColor: [],
+      borderWidth: 1,
+      maxBarThickness: 70,
+      minBarLength: 10
     }]
   };
 
@@ -177,21 +189,12 @@ export class VisaoFaturamentoComponent implements OnInit {
   public barChartApplicationIntegrationType: ChartType = 'doughnut';
   public barChartApplicationIntegrationPlugins = [];
   public barChartApplicationIntegrationData: ChartData<'doughnut'> = {
-    labels: this.integrationList,
+    labels: [],
     datasets: [{
-      data: this.integrationApplicationsNumber,
-      backgroundColor: [
-        '#1cc88a',
-        '#e74a3b'
-      ],
-      hoverBackgroundColor: [
-        '#1cc88a',
-        '#e74a3b'
-      ],
-      hoverBorderColor: [
-        '#1cc88a',
-        '#e74a3b'
-      ],
+      data: [],
+      backgroundColor: [],
+      hoverBackgroundColor: [],
+      hoverBorderColor: [],
       circumference: 180,
       rotation: -90
     }]
@@ -233,9 +236,13 @@ export class VisaoFaturamentoComponent implements OnInit {
       hoverBackgroundColor: this.randomColorSms,
       borderColor: this.randomColorSms,
       hoverBorderColor: this.randomColorSms,
-      borderWidth: 1
+      borderWidth: 1,
+      barPercentage: 0.4,
+      maxBarThickness: 70,
+      minBarLength: 10
     }]
   };
+
 
 
   public barChartBudgetSituationType: ChartType = 'doughnut';
@@ -269,7 +276,7 @@ export class VisaoFaturamentoComponent implements OnInit {
         '#141B41'
       ],
       circumference: 180,
-      rotation: -90
+      rotation: -90,
     }]
   };
 
@@ -365,7 +372,9 @@ export class VisaoFaturamentoComponent implements OnInit {
             hoverBackgroundColor: this.randomColorProduct,
             hoverBorderColor: this.randomColorProduct,
             borderColor: this.randomColorProduct,
-            borderWidth: 1
+            borderWidth: 1,
+            maxBarThickness: 70,
+            minBarLength: 10
           }]
         };
       },
@@ -394,7 +403,9 @@ export class VisaoFaturamentoComponent implements OnInit {
               hoverBackgroundColor: this.randomColorAge,
               borderColor: this.randomColorAge,
               hoverBorderColor: this.randomColorAge,
-              borderWidth: 1
+              borderWidth: 1,
+              maxBarThickness: 70,
+              minBarLength: 10
             }],
           };
         });
@@ -519,11 +530,11 @@ export class VisaoFaturamentoComponent implements OnInit {
         };
 
         response.authorizationNotificationDashInfos.forEach((element: any) => {
-
-          this.smsSituationList.push(element.Description);
-          this.smsSituationNumber.push(element.Quantity);
-
-          this.randomColorSms.push(this.randomRGB());
+          if (element.Quantity > 0) {
+            this.smsSituationList.push(element.Description);
+            this.smsSituationNumber.push(element.Quantity);
+            this.randomColorSms.push(this.randomRGB());
+          }
         });
 
         this.barChartAuthotizationSmsData = {
@@ -534,7 +545,9 @@ export class VisaoFaturamentoComponent implements OnInit {
             hoverBackgroundColor: this.randomColorSms,
             borderColor: this.randomColorSms,
             hoverBorderColor: this.randomColorSms,
-            borderWidth: 1
+            borderWidth: 1,
+            maxBarThickness: 70,
+            minBarLength: 10
           }]
         };
       },
@@ -562,11 +575,30 @@ export class VisaoFaturamentoComponent implements OnInit {
         this.totalBudgetAmountPrevious = response.totalBudgetAmountPrevious;
         this.totalBudgetDiscount = response.totalBudgetDiscount;
         this.totalBudgetDiscountPrevious = response.totalBudgetDiscountPrevious;
+        this.currentYear = response.year;
+        this.currentMonth = this.getFullNameMonthDateInt(response.month);
+
+        if(response.totalBudgetAmountDecrease < 0 && response.totalBudgetAmountDecreasePercent < 0){
+          this.phraseDecrease = `Decréscimo de: ${Math.abs(response.totalBudgetAmountDecrease).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})} (${Math.abs(Math.trunc(response.totalBudgetAmountDecreasePercent))}%)`;
+          this.showPhrase = false;
+        }else if(response.totalBudgetAmountIncrease > 0 && response.totalBudgetAmountIncreasePercent > 0){
+          this.phraseIncrease = `Acréscimo de: ${response.totalBudgetAmountIncrease.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})} (${Math.trunc(response.totalBudgetAmountIncreasePercent)}%)`;
+          this.showPhrase = true;
+        }else{
+          this.phraseDecrease = "";
+          this.phraseIncrease = "";
+        }
 
         response.listProductBudgetDashInfoViewModel.forEach((element: any) => {
           this.budgetProductList.push(element.Name);
           this.budgetProductNumber.push(element.Quantity);
           this.randomColorBudgetProduct.push(this.randomRGB());
+        });
+
+        response.listBudgetProfitMonthViewModel.forEach((element: any) => {
+          this.invoicingList.push(this.getFullNameMonthDateInt(element.Month));
+          this.invoicingNumber.push(element.Amount);
+          this.randomColorInvoicing.push(this.randomRGB());
         });
 
         this.barChartBudgetSituationData = {
@@ -633,6 +665,19 @@ export class VisaoFaturamentoComponent implements OnInit {
             circumference: 180,
             rotation: -90
           },]
+        };
+
+        this.barChartInvoicingData = {
+          labels: this.invoicingList,
+          datasets: [{
+            data: this.invoicingNumber,
+            backgroundColor: this.randomColorInvoicing,
+            hoverBackgroundColor: this.randomColorInvoicing,
+            borderColor: this.randomColorInvoicing,
+            hoverBorderColor: this.randomColorInvoicing,
+            borderWidth: 1,
+            maxBarThickness: 70
+          }],
         };
       },
       error => {
@@ -741,6 +786,67 @@ export class VisaoFaturamentoComponent implements OnInit {
     return monthFormated;
   }
 
+  public getFullNameMonthDateInt(month: number) {
+
+    let monthFormated = "";
+
+    switch (month) {
+      case 1: {
+        monthFormated = 'JAN'
+        break;
+      }
+      case 2: {
+        monthFormated = 'FEV'
+        break;
+      }
+      case 3: {
+        monthFormated = 'MAR'
+        break;
+      }
+      case 4: {
+        monthFormated = 'ABR'
+        break;
+      }
+      case 5: {
+        monthFormated = 'MAI'
+        break;
+      }
+      case 6: {
+        monthFormated = 'JUN'
+        break;
+      }
+      case 7: {
+        monthFormated = 'JUL'
+        break;
+      }
+      case 8: {
+        monthFormated = 'AGO'
+        break;
+      }
+      case 9: {
+        monthFormated = 'SET'
+        break;
+      }
+      case 10: {
+        monthFormated = 'OUT'
+        break;
+      }
+      case 11: {
+        monthFormated = 'NOV'
+        break;
+      }
+      case 12: {
+        monthFormated = 'DEZ'
+        break;
+      }
+      default: {
+        monthFormated = ''
+        break;
+      }
+    }
+    return monthFormated;
+  }
+
   reciveMonth(response: any) {
     this.clearLists();
 
@@ -767,6 +873,7 @@ export class VisaoFaturamentoComponent implements OnInit {
     this.typeList = [];
     this.smsSituationList = [];
     this.budgetProductList = [];
+    this.invoicingList = [];
     this.genderApplicationsNumber = [];
     this.productApplicationsNumber = [];
     this.ageApplicationsNumber = [];
@@ -774,5 +881,6 @@ export class VisaoFaturamentoComponent implements OnInit {
     this.typeApplicationsNumber = [];
     this.smsSituationNumber = [];
     this.budgetProductNumber = [];
+    this.invoicingNumber = [];
   }
 }

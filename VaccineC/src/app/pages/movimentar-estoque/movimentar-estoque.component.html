@@ -149,12 +149,11 @@
                                                 <mat-label>Lote</mat-label>
                                                 <input type="text" 
                                                     (click)="searchProductSummaryBatchByAutoComplete()" 
-                                                    formControlName="ProductSummaryBatchName"
                                                     [(ngModel)]="ProductSummaryBatchName" 
                                                     placeholder="Selecione o Lote" 
                                                     aria-label="Number" 
                                                     matInput
-                                                    [formControl]="myControlProductSummaryBatch" 
+                                                    [formControl]="$any(discardForm).get('ProductSummaryBatchName')"
                                                     [matAutocomplete]="auto">
 
                                                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProductSummaryBatch" (optionSelected)="onSelectionChanged($event)">

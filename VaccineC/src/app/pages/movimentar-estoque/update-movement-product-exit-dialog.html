@@ -6,22 +6,23 @@
                 <mat-label>Produto</mat-label>
                 <input type="text" 
                        (click)="searchProductByAutoComplete()" 
-                       formControlName="ProductName"
                        [(ngModel)]="ProductName" 
                        placeholder="Selecione o Produto" 
                        aria-label="Number" 
                        matInput
-                       [formControl]="myControl" 
+                       [formControl]="$any(movementProductForm).get('ProductName')"
                        [matAutocomplete]="auto" 
                        required>
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState" (optionSelected)="onSelectionChanged($event)">
+                <mat-autocomplete #auto="matAutocomplete" 
+                                  [displayWith]="displayState"
+                                  (optionSelected)="onSelectionChanged($event)">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                     </mat-option>
                 </mat-autocomplete>
                 <mat-icon matSuffix>search</mat-icon>
                 <mat-error *ngIf="movementProductForm.controls.ProductName.touched && movementProductForm.controls.ProductName.invalid">
-                    <span *ngIf="movementProductForm.controls.ProductName.errors?.required">O Produto é  obrigatório.</span>
+                    <span *ngIf="movementProductForm.controls.ProductName.errors?.required">O Produto é obrigatório.</span>
                 </mat-error>
             </mat-form-field>
         </div>

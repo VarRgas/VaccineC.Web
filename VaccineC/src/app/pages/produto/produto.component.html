@@ -110,23 +110,19 @@
                 <div class="div-row-input">
                   <mat-form-field appearance="fill" class="col-sm-11">
                     <mat-label>Vacina SBIM</mat-label>
-                    <input 
-                      type="text" 
-                      (click)="searchVaccineByAutoComplete()" 
-                      placeholder="Selecione a Vacina"
-                      aria-label="Number" 
-                      matInput 
-                      #sbimVaccinesIdinput 
-                      formControlName="SbimVaccinesId"
-                      [matAutocomplete]="auto" 
-                      [(ngModel)]="sbimVaccinesId" 
-                      (ngModelChange)="onChanged($event)">
-
+                    <input type="text" 
+                           (click)="searchVaccineByAutocomplete()"
+                           placeholder="Selecione a Vacina"
+                           matInput 
+                           #sbimVaccinesIdinput 
+                           [formControl]="$any(productForm).get('SbimVaccinesId')"
+                           [matAutocomplete]="auto" 
+                           [(ngModel)]="sbimVaccinesId" 
+                           (ngModelChange)="onChanged($event)">
                     <mat-autocomplete 
                       #auto="matAutocomplete" 
                       [displayWith]="displayState" 
                       (optionSelected)="onSelectionChanged($event)">
-
                       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.Name}}
                       </mat-option>

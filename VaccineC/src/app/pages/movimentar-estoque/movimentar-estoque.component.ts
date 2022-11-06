@@ -45,7 +45,6 @@ export class MovimentarEstoqueComponent implements OnInit {
   public situationColor!: string;
   public situationTitle!: string;
 
-  myControlProductSummaryBatch = new FormControl();
   options2: string[] = [];
   acProductSummaryBatches: Observable<any[]> | undefined;
 
@@ -89,7 +88,7 @@ export class MovimentarEstoqueComponent implements OnInit {
 
   //Discard Form
   discardForm: FormGroup = this.formBuilder.group({
-    ProductSummaryBatchName: [null, [Validators.required]],
+    ProductSummaryBatchName: new FormControl(null, Validators.required),
     NumberOfUnitsBatch: [null, [Validators.required]],
     Reason: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(100)]]
   });
@@ -553,7 +552,7 @@ export class MovimentarEstoqueComponent implements OnInit {
   }
 
   public searchProductSummaryBatchByAutoComplete() {
-    this.acProductSummaryBatches = this.myControlProductSummaryBatch.valueChanges.pipe(
+    this.acProductSummaryBatches = this.discardForm.controls.ProductSummaryBatchName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -568,7 +567,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     return this.productsSummariesBatchesService.getNotEmptyProductsSummariesBatches()
       .pipe(
         map(response => response.filter((option: { Batch: string; ID: string }) => {
-          return option.Batch.toLowerCase()
+          return option.Batch.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -607,7 +606,6 @@ export class MovimentarEstoqueComponent implements OnInit {
 })
 export class AddMovementProductEntryDialog implements OnInit {
 
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
@@ -641,7 +639,7 @@ export class AddMovementProductEntryDialog implements OnInit {
   movementProductForm: FormGroup = this.formBuilder.group({
     Id: [null],
     MovementId: [null],
-    ProductName: [null, [Validators.required]],
+    ProductName: new FormControl(null, Validators.required),
     Batch: [null, [Validators.required]],
     UnitsNumber: [null, [Validators.required]],
     UnitaryValue: [null, [Validators.required]],
@@ -656,7 +654,7 @@ export class AddMovementProductEntryDialog implements OnInit {
   }
 
   searchProductByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.movementProductForm.controls.ProductName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -671,7 +669,7 @@ export class AddMovementProductEntryDialog implements OnInit {
     return this.productService.getAllProducts()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -768,7 +766,6 @@ export class AddMovementProductEntryDialog implements OnInit {
 })
 export class UpdateMovementProductEntryDialog implements OnInit {
 
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
@@ -802,7 +799,7 @@ export class UpdateMovementProductEntryDialog implements OnInit {
   movementProductForm: FormGroup = this.formBuilder.group({
     Id: [null],
     MovementId: [null],
-    ProductName: [null, [Validators.required]],
+    ProductName: new FormControl(null, Validators.required),
     Batch: [null, [Validators.required]],
     UnitsNumber: [null, [Validators.required]],
     UnitaryValue: [null, [Validators.required]],
@@ -852,7 +849,7 @@ export class UpdateMovementProductEntryDialog implements OnInit {
   }
 
   searchProductByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.movementProductForm.controls.ProductName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -867,7 +864,7 @@ export class UpdateMovementProductEntryDialog implements OnInit {
     return this.productService.getAllProducts()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -969,7 +966,6 @@ export class UpdateMovementProductExitDialog implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
@@ -1001,7 +997,7 @@ export class UpdateMovementProductExitDialog implements OnInit {
   movementProductForm: FormGroup = this.formBuilder.group({
     Id: [null],
     MovementId: [null],
-    ProductName: [null, [Validators.required]],
+    ProductName: new FormControl(null, Validators.required),
     UnitsNumber: [null, [Validators.required]],
     UnitaryValue: [null, [Validators.required]],
     Amount: [null, [Validators.required]],
@@ -1047,7 +1043,7 @@ export class UpdateMovementProductExitDialog implements OnInit {
   }
 
   searchProductByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.movementProductForm.controls.ProductName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1062,7 +1058,7 @@ export class UpdateMovementProductExitDialog implements OnInit {
     return this.productService.getAllProducts()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -1181,7 +1177,7 @@ export class AddMovementProductExitDialog {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  myControl = new FormControl();
+ 
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
@@ -1212,7 +1208,7 @@ export class AddMovementProductExitDialog {
   movementProductForm: FormGroup = this.formBuilder.group({
     Id: [null],
     MovementId: [null],
-    ProductName: [null, [Validators.required]],
+    ProductName: new FormControl(null, Validators.required),
     UnitsNumber: [null, [Validators.required]],
     UnitaryValue: [null, [Validators.required]],
     Amount: [null, [Validators.required]],
@@ -1223,7 +1219,7 @@ export class AddMovementProductExitDialog {
   }
 
   searchProductByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.movementProductForm.controls.ProductName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1238,7 +1234,7 @@ export class AddMovementProductExitDialog {
     return this.productService.getAllProducts()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }

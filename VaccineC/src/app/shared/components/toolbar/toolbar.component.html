@@ -3,10 +3,19 @@
     <form class="d-none d-sm-inline-block form-inline mr-auto navbar-search">
         <mat-form-field appearance="outline" class="col-sm-12 d-flex" style="width:50vw !important">
             <mat-label>Acesso Rápido</mat-label>
-            <input type="text" id="ResourcesId" name="resource"
-               aria-label="Number" matInput #ResourcesIdinput 
-                 [matAutocomplete]="auto" [(ngModel)]="ResourcesId" [formControl]="myControl">
-            <mat-autocomplete  classList="max-height-panel" #auto="matAutocomplete" [displayWith]="displayState" (optionSelected)="onSelectionChanged($event)">
+            <input type="text" 
+                   id="ResourcesId" 
+                   name="resource"
+                   aria-label="Number" 
+                   matInput 
+                   #ResourcesIdinput 
+                   [matAutocomplete]="auto" 
+                   [(ngModel)]="ResourcesId" 
+                   [formControl]="myControl">
+            <mat-autocomplete  classList="max-height-panel" 
+                               #auto="matAutocomplete" 
+                               [displayWith]="displayState" 
+                               (optionSelected)="onSelectionChanged($event)">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{option.Name}}
                 </mat-option>

@@ -8,28 +8,26 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="col-sm-12">
-        <mat-label>Recurso</mat-label>
+        <mat-label>Acesso Rápido</mat-label>
         <input type="text" 
-               (click)="searchResourceByAutoComplete()" 
-               id="ResourcesId" 
-               placeholder="Selecione o Recurso"
-               aria-label="Number" 
                matInput 
+               (click)="searchResourceByAutocomplete()"
                #ResourcesIdinput 
-               formControlName="ResourcesId" 
-               [matAutocomplete]="auto"
-               [(ngModel)]="ResourcesId" 
-               required>
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayState">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option.Name}}
-          </mat-option>
+               [matAutocomplete]="auto" 
+               [(ngModel)]="ResourcesId"
+               [formControl]="$any(userResourceForm).get('ResourcesId')">
+        <mat-autocomplete  classList="max-height-panel" 
+                           #auto="matAutocomplete" 
+                           [displayWith]="displayState">
+            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option.Name}}
+            </mat-option>
         </mat-autocomplete>
         <mat-icon matSuffix>search</mat-icon>
         <mat-error *ngIf="userResourceForm.controls.ResourcesId.touched && userResourceForm.controls.ResourcesId.invalid">
           <span *ngIf="userResourceForm.controls.ResourcesId.errors?.required">O Recurso é obrigatório.</span>
       </mat-error>
-      </mat-form-field>
+    </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>

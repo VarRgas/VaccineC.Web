@@ -11,7 +11,7 @@
                         placeholder="Selecione o Tomador" 
                         aria-label="Number" 
                         matInput 
-                        formControlName="PersonName"
+                        [formControl]="$any(budgetProductForm).get('PersonName')"
                         [matAutocomplete]="autoPerson" 
                         [(ngModel)]="PersonName" 
                         [readonly]="!isSaveButtonVisible">
@@ -33,7 +33,7 @@
                         placeholder="Selecione o Produto" 
                         aria-label="Number" 
                         matInput 
-                        formControlName="ProductName"
+                        [formControl]="$any(budgetProductForm).get('ProductName')"
                         [matAutocomplete]="auto" 
                         [(ngModel)]="ProductName" 
                         required 

@@ -26,7 +26,6 @@ import { VaccinesAutocompleteDispatcherService } from 'src/app/services/vaccines
 })
 export class ProdutoComponent implements OnInit {
 
-  public myControl = new FormControl();
   public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
 
@@ -100,7 +99,7 @@ export class ProdutoComponent implements OnInit {
   //Form de produtos
   public productForm: FormGroup = this.formBuilder.group({
     ProductId: [null],
-    SbimVaccinesId: [null],
+    SbimVaccinesId: new FormControl(null),
     Situation: [null, [Validators.required]],
     Details: [null],
     SaleValue: [null, [Validators.required]],
@@ -460,9 +459,8 @@ export class ProdutoComponent implements OnInit {
     });
   }
 
-
-  public searchVaccineByAutoComplete(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+  public searchVaccineByAutocomplete() {
+    this.filteredOptions = this.productForm.controls.SbimVaccinesId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -476,7 +474,7 @@ export class ProdutoComponent implements OnInit {
     return this.vaccinesAutocompleteDispatcherService.getVaccinesAutocomplete()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }

@@ -41,12 +41,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     localStorage.clear();
-    this.manageNotifications();
   }
 
   showHiddePassword() {
     this.hide = !this.hide;
   }
+
 
   manageNotifications(): void {
     this.notificationsDispatcherService.manageNotifications().subscribe(
@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit {
   }
 
   public validateLogin(): void {
+
     this.loading = true;
 
     let login = new LoginModel();
@@ -68,6 +69,16 @@ export class LoginComponent implements OnInit {
 
     this.loginDispatcherService.Login(login).subscribe(
       response => {
+        //Salva o token no localStorage
+        this.loginService.setLogin(response.Token)
+
+        this.notificationsDispatcherService.manageNotifications().subscribe(
+          response => {
+
+          },
+          error => {
+            console.log(error);
+          });
 
         login.email = response.Email;
         login.id = response.ID;
@@ -79,11 +90,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('profilePic', response.PersonProfilePic);
         localStorage.setItem('userId', response.ID);
         localStorage.setItem('showNotification', response.ShowNotification);
-        this.loading = false;
-        //Salva o token no localStorage
-        this.loginService.setLogin(response.Token)
         this.messageHandlerService.showMessage("Logado com sucesso!", 'success-snackbar')
-
+        this.loading = false;
         this.router.navigateByUrl('/home');
       },
       error => {

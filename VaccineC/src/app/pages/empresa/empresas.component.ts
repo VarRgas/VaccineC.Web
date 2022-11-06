@@ -29,7 +29,6 @@ import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-di
 export class EmpresasComponent implements OnInit {
 
   //Aba de cadastro
-  public myControl = new FormControl();
   public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
 
@@ -73,7 +72,6 @@ export class EmpresasComponent implements OnInit {
   public CompanyIDParameter!: string;
 
   //Autocomplete Forma de Pagamento
-  public myPaymentFormControl = new FormControl();
   public acPaymentForm: string[] = [];
   public acPaymentForms: Observable<any[]> | undefined;
 
@@ -81,20 +79,21 @@ export class EmpresasComponent implements OnInit {
   @ViewChild('paginatorSchedule') paginatorSchedule!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public dialogRef?: MatDialogRef<any>;
+  
   //Parameter form
   companyParametersForm: FormGroup = this.formBuilder.group({
     CompanyParameterID: [null],
     CompanyID: [null],
     ApplicationTimePerMinute: [null, [Validators.required]],
     MaximumDaysBudgetValidity: [null, [Validators.required]],
-    PaymentFormId: [null],
+    PaymentFormId: new FormControl(null),
     ScheduleColor: [null]
   });
 
   //Company Form
   companyForm: FormGroup = this.formBuilder.group({
     CompanyID: [null],
-    PersonId: [null, [Validators.required]],
+    PersonId: new FormControl(null, Validators.required),
     Details: [null],
   });
 
@@ -503,7 +502,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   public searchPersonByAutoComplete(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.companyForm.controls.PersonId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -517,7 +516,7 @@ export class EmpresasComponent implements OnInit {
     return this.personAutocompleteService.getPersonCompanyAutocomplete()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -527,7 +526,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   public searchPaymentFormsByAutoComplete(): void {
-    this.acPaymentForms = this.myPaymentFormControl.valueChanges.pipe(
+    this.acPaymentForms = this.companyParametersForm.controls.PaymentFormId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -541,7 +540,7 @@ export class EmpresasComponent implements OnInit {
     return this.paymentFormsDispatcherService.getAll()
       .pipe(
         map(response => response.filter((paymentForm: { Name: string; ID: string }) => {
-          return paymentForm.Name.toLowerCase()
+          return paymentForm.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }

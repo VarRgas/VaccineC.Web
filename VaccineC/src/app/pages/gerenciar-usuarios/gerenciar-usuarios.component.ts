@@ -60,7 +60,6 @@ export class GerenciarUsuariosComponent implements OnInit {
   public informationField!: string;
 
   //Autocomplete
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
@@ -86,7 +85,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   //Form
   userForm: FormGroup = this.formBuilder.group({
     UserId: [null],
-    PersonId: [null, [Validators.required]],
+    PersonId: new FormControl(null, Validators.required),
     Email: [null, [Validators.required, Validators.email]],
     Password: [null, [Validators.required, Validators.maxLength(255)]],
     ConfirmPassword: [null, [Validators.required, Validators.maxLength(255)]],
@@ -356,7 +355,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   editUser(id: string): void {
-   
+
     this.hide = true;
     this.hideConfirm = true;
     this.isEyeIconHidden = true;
@@ -397,7 +396,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   searchPersonByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.userForm.controls.PersonId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -411,7 +410,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     return this.personAutocompleteService.getPersonUserAutocomplete()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -527,7 +526,6 @@ export class GerenciarUsuariosComponent implements OnInit {
 
 export class UserResourceAddDialog implements OnInit {
 
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
@@ -538,7 +536,7 @@ export class UserResourceAddDialog implements OnInit {
   //Form
   userResourceForm: FormGroup = this.formBuilder.group({
     UsersId: [null],
-    ResourcesId: [null, [Validators.required]],
+    ResourcesId: new FormControl(null, Validators.required)
   });
 
   constructor(
@@ -558,7 +556,6 @@ export class UserResourceAddDialog implements OnInit {
   saveUserResource(): void {
 
     if (!this.userResourceForm.valid) {
-      console.log(this.userResourceForm);
       this.userResourceForm.markAllAsTouched();
       this.messageHandler.showMessage("Campos obrigatórios não preenchidos, verifique!", "warning-snackbar");
       return;
@@ -580,8 +577,8 @@ export class UserResourceAddDialog implements OnInit {
         });
   }
 
-  searchResourceByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+  searchResourceByAutocomplete() {
+    this.filteredOptions = this.userResourceForm.controls.ResourcesId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -596,7 +593,7 @@ export class UserResourceAddDialog implements OnInit {
     return this.resourceAutocompleteService.getResourceData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }

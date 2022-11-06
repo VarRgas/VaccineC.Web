@@ -126,23 +126,20 @@ export class OrcamentosComponent implements OnInit {
   public dataSourceHistoric = new MatTableDataSource<IBudgetHistoric>();
 
   //Autocomplete Pessoa
-  public myControl = new FormControl();
   public options: string[] = [];
   public filteredOptions: Observable<any[]> | undefined;
 
   //Autocomplete Usuário
-  public myUserControl = new FormControl();
   public acUser: string[] = [];
   public acUsers: Observable<any[]> | undefined;
 
   //Autocomplete Forma de Pagamento
-  public myPaymentFormControl = new FormControl();
   public acPaymentForm: string[] = [];
   public acPaymentForms: Observable<any[]> | undefined;
 
   public budgetForm: FormGroup = this.formBuilder.group({
-    PersonId: [null, Validators.required],
-    UserId: [null, Validators.required],
+    PersonId: new FormControl(null, Validators.required),
+    UserId: new FormControl(null, Validators.required),
     Situation: [null],
     ExpirationDate: [null, Validators.required],
     Details: [null],
@@ -156,7 +153,7 @@ export class OrcamentosComponent implements OnInit {
   });
 
   public budgetNegotiationForm: FormGroup = this.formBuilder.group({
-    PaymentFormId: [null, Validators.required],
+    PaymentFormId: new FormControl(null, Validators.required),
     Installments: [null, Validators.required],
     TotalAmountTraded: [null, Validators.required]
   });
@@ -1194,7 +1191,7 @@ export class OrcamentosComponent implements OnInit {
   }
 
   public searchPersonByAutoComplete(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.budgetForm.controls.PersonId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1208,13 +1205,13 @@ export class OrcamentosComponent implements OnInit {
     return this.personAutocompleteService.getAllPersonData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
 
   public searchUsersByAutoComplete(): void {
-    this.acUsers = this.myUserControl.valueChanges.pipe(
+    this.acUsers = this.budgetForm.controls.UserId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1229,13 +1226,13 @@ export class OrcamentosComponent implements OnInit {
       .pipe(
         map(response => response.filter((user: { Email: string; ID: string }) => {
           console.log(user)
-          return user.Email.toLowerCase()
+          return user.Email.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
 
   public searchPaymentFormsByAutoComplete(): void {
-    this.acPaymentForms = this.myPaymentFormControl.valueChanges.pipe(
+    this.acPaymentForms = this.budgetNegotiationForm.controls.PaymentFormId.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1249,7 +1246,7 @@ export class OrcamentosComponent implements OnInit {
     return this.paymentFormsDispatcherService.getAll()
       .pipe(
         map(response => response.filter((paymentForm: { Name: string; ID: string }) => {
-          return paymentForm.Name.toLowerCase()
+          return paymentForm.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -1331,11 +1328,9 @@ export class OrcamentosComponent implements OnInit {
 
 export class AddBudgetProductDialog implements OnInit {
 
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
-  myPersonControl = new FormControl();
   acPerson: string[] = [];
   acPersons: Observable<any[]> | undefined;
 
@@ -1373,8 +1368,8 @@ export class AddBudgetProductDialog implements OnInit {
   //Form
   budgetProductForm: FormGroup = this.formBuilder.group({
     Id: [null],
-    PersonName: [null],
-    ProductName: [null, [Validators.required]],
+    PersonName: new FormControl(null),
+    ProductName: new FormControl(null, Validators.required),
     ProductDose: [null],
     EstimatedSalesValue: [null, [Validators.required]],
     Situation: [null],
@@ -1408,7 +1403,7 @@ export class AddBudgetProductDialog implements OnInit {
   }
 
   searchProductByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.budgetProductForm.controls.ProductName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1422,7 +1417,7 @@ export class AddBudgetProductDialog implements OnInit {
     return this.productService.getAllProducts()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -1432,7 +1427,7 @@ export class AddBudgetProductDialog implements OnInit {
   }
 
   searchPersonByAutoComplete() {
-    this.acPersons = this.myPersonControl.valueChanges.pipe(
+    this.acPersons = this.budgetProductForm.controls.PersonName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1446,7 +1441,7 @@ export class AddBudgetProductDialog implements OnInit {
     return this.personAutocompleteService.getPersonPhysicalData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -1571,11 +1566,9 @@ export class AddBudgetProductDialog implements OnInit {
 
 export class UpdateBudgetProductDialog implements OnInit {
 
-  myControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<any[]> | undefined;
 
-  myPersonControl = new FormControl();
   acPerson: string[] = [];
   acPersons: Observable<any[]> | undefined;
 
@@ -1611,8 +1604,8 @@ export class UpdateBudgetProductDialog implements OnInit {
   //Form
   budgetProductForm: FormGroup = this.formBuilder.group({
     Id: [null],
-    PersonName: [null],
-    ProductName: [null, [Validators.required]],
+    PersonName: new FormControl(null),
+    ProductName: new FormControl(null, Validators.required),
     ProductDose: [null],
     EstimatedSalesValue: [null, [Validators.required]],
     Situation: [null],
@@ -1662,7 +1655,7 @@ export class UpdateBudgetProductDialog implements OnInit {
   }
 
   searchProductByAutoComplete() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.budgetProductForm.controls.ProductName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1677,7 +1670,7 @@ export class UpdateBudgetProductDialog implements OnInit {
     return this.productService.getAllProducts()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }
@@ -1687,7 +1680,7 @@ export class UpdateBudgetProductDialog implements OnInit {
   }
 
   searchPersonByAutoComplete() {
-    this.acPersons = this.myPersonControl.valueChanges.pipe(
+    this.acPersons = this.budgetProductForm.controls.PersonName.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
@@ -1702,7 +1695,7 @@ export class UpdateBudgetProductDialog implements OnInit {
     return this.personAutocompleteService.getPersonPhysicalData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }

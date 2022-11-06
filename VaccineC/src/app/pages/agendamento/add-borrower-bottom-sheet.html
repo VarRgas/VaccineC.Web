@@ -17,7 +17,7 @@
                     placeholder="Selecione o Tomador"
                     aria-label="Number" 
                     matInput 
-                    formControlName="Person"
+                    [formControl]="$any(budgetProductForm).get('Person')"
                     [matAutocomplete]="autoPerson" 
                     [(ngModel)]="person"
                     required>

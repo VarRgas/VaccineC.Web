@@ -745,7 +745,7 @@ export class AplicacaoComponent implements OnInit {
     return this.personAutocompleteService.getAllPersonData()
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
-          return option.Name.toLowerCase()
+          return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
         }))
       )
   }

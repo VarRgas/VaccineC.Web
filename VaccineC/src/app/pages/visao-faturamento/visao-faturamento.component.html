@@ -127,14 +127,32 @@
             </div>
           </div>
 
-          <div class="row" style="margin:0.5rem">
-            <div class="col-lg-12 mb-1">
+          <div class="row d-flex" style="margin:0.5rem;justify-content: center;align-items: center;">
+            <div class="col-lg-8 mb-1">
               <div class="card shadow mb-4 card-dash">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-gray-600">Visão de Faturamento</h6>
+                  <h6 class="m-0 font-weight-bold text-gray-600">Visão de Faturamento Anual - {{currentYear}}</h6>
                 </div>
                 <div class="card-body">
-  
+                  <canvas baseChart [data]="barChartInvoicingData" 
+                                    [plugins]="barChartInvoicingPlugins"
+                                    [type]="barChartInvoicingType" 
+                                    [legend]="false">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 mb-1">
+              <div class="card shadow mb-4 card-dash">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-gray-600" style="font-size: 15px;">Visão de Faturamento Mensal - {{currentMonth}}/{{currentYear}}</h6>
+                </div>
+                <div class="card-body">
+                  <p>R$ Negociado: {{totalBudgetAmount | currency : 'R$' }}</p>
+                  <p>R$ Negociado Anterior: {{totalBudgetAmountPrevious  | currency : 'R$' }}</p>
+                  <p class="text-success" *ngIf="showPhrase">{{phraseIncrease}}</p>
+                  <p class="text-danger" *ngIf="!showPhrase">{{phraseDecrease}}</p>
                 </div>
               </div>
             </div>
