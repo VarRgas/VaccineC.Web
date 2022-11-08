@@ -18,7 +18,7 @@
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isRegistrationVisible">
             <div (click)="isCollapsedRegistration = !isCollapsedRegistration"
                 [attr.aria-expanded]="!isCollapsedRegistration" aria-controls="collapseRegistration"
                 class="nav-link nav-link-menu collapsed" data-toggle="collapse">
@@ -30,14 +30,12 @@
             <div id="collapseRegistration" [collapse]="isCollapsedRegistration" [isAnimated]="true"
                 data-parent="#accordionSidebar" (expands)="expands()" (collapses)="collapses()">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/pessoas">PESSOAS</a>
-                    <a class="collapse-item" href="/produto">PRODUTO</a>
-                    <a class="collapse-item" href="/formas-pagamento">FORMAS PAGAMENTO</a>
+                    <a *ngFor="let resource of listRegistration" class="collapse-item m-0" href="/{{resource.ResourceUrl}}">{{resource.ResourceName}}</a>
                 </div>
             </div>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isOperationalVisible">
             <div (click)="isCollapsedOperational = !isCollapsedOperational"
                 [attr.aria-expanded]="!isCollapsedOperational" aria-controls="collapseOperational"
                 class="nav-link nav-link-menu collapsed" data-toggle="collapse">
@@ -47,16 +45,14 @@
                 </div>
             </div>
             <div id="collapseOperational" [collapse]="isCollapsedOperational" [isAnimated]="true"
-                data-parent="#accordionSidebar">
+                data-parent="#accordionSidebar" (expands)="expands2()" (collapses)="collapses2()">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/agendamento">AGENDAMENTO</a>
-                    <a class="collapse-item" href="/aplicacao">APLICAÇÃO</a>
-                    <a class="collapse-item" href="/orcamentos">ORÇAMENTOS</a>
+                    <a *ngFor="let resource of listOperational" class="collapse-item m-0" href="/{{resource.ResourceUrl}}">{{resource.ResourceName}}</a>
                 </div>
             </div>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isInventoryVisible">
             <div (click)="isCollapsedInventory = !isCollapsedInventory" [attr.aria-expanded]="!isCollapsedInventory"
                 aria-controls="collapseInventory" class="nav-link nav-link-menu collapsed" data-toggle="collapse">
                 <div>
@@ -65,15 +61,14 @@
                 </div>
             </div>
             <div id="collapseInventory" [collapse]="isCollapsedInventory" [isAnimated]="true"
-                data-parent="#accordionSidebar">
+                data-parent="#accordionSidebar" (expands)="expands3()" (collapses)="collapses3()">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/movimentar-estoque">MOVIMENTAR ESTOQUE</a>
-                    <a class="collapse-item" href="/situacao-estoque">SITUAÇÃO ESTOQUE</a>
+                    <a *ngFor="let resource of listInventory" class="collapse-item m-0" href="/{{resource.ResourceUrl}}">{{resource.ResourceName}}</a>
                 </div>
             </div>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isManagementVisible">
             <div (click)="isCollapsedManagement = !isCollapsedManagement" [attr.aria-expanded]="!isCollapsedManagement"
                 aria-controls="collapseManagement" class="nav-link nav-link-menu collapsed" data-toggle="collapse">
                 <div>
@@ -81,12 +76,9 @@
                     <span>GERENCIAL</span>
                 </div>
             </div>
-            <div id="collapseManagement" [collapse]="isCollapsedManagement" [isAnimated]="true" data-parent="#accordionSidebar">
+            <div id="collapseManagement" [collapse]="isCollapsedManagement" [isAnimated]="true" data-parent="#accordionSidebar" (expands)="expands4()" (collapses)="collapses4()">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/empresas">EMPRESA</a>
-                    <a class="collapse-item" href="/gerenciar-usuarios">GERENCIAR USUÁRIOS</a>
-                    <a class="collapse-item" href="/visao-faturamento">DASHBOARD OPERACIONAL</a>
-                    <a class="collapse-item" href="/recursos">RECURSOS</a>
+                    <a *ngFor="let resource of listManagement" class="collapse-item m-0" href="/{{resource.ResourceUrl}}">{{resource.ResourceName}}</a>
                 </div>
             </div>
         </li>
