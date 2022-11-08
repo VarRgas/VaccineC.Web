@@ -86,7 +86,6 @@ export class ToolbarComponent implements OnInit {
 
     this.notificationDispatcherService.getAllNotificationsByUserId(this.userId).subscribe(
       notifications => {
-        console.log(notifications)
         this.notifications = notifications;
         this.treatNotifications(notifications);
       },
@@ -97,7 +96,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   markAsRead(id: string, userId: string, message: string, messageType: string) {
-
+    console.log("markasread")
     let notification = new NotificationModel();
     notification.id = id;
     notification.userId = userId;
@@ -116,6 +115,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   remove(id: string) {
+    console.log("remove")
     this.notificationDispatcherService.delete(id).subscribe(
       notifications => {
         this.notifications = notifications;
@@ -127,9 +127,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   treatNotifications(notifications: any) {
-
     if (notifications.length != 0) {
-
       this.displayNone = "none !important";
       let count = 0;
 
@@ -148,6 +146,7 @@ export class ToolbarComponent implements OnInit {
 
     } else {
       this.displayNone = "";
+      this.isNewNotification = true;
     }
   }
 

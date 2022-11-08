@@ -53,11 +53,17 @@ body {
 }
 
 .situation-pending {
-  background-color: #3788d8 !important; 
-  border-color:  #3788d8 !important; 
+  background-color: #3788d8 !important;
+  border-color: #3788d8 !important;
 }
 
 .situation-finalized {
-  background-color: #37d89d !important; 
-  border-color:  #37d89d !important; 
+  background-color: #37d89d !important;
+  border-color: #37d89d !important;
+}
+
+:host ::ng-deep .dot-green {
+  background-color: #37d89d !important;
+  border-color: #37d89d !important;
+  color: #37d89d !important;
 }

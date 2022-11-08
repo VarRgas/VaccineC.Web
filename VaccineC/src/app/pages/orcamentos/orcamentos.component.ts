@@ -259,7 +259,7 @@ export class OrcamentosComponent implements OnInit {
       this.isButtonReopenVisibile = true;
       this.isRemoveBudgetNegotiationHidden = true;
       this.isDefinePaymentVisible = false;
-    } else if (situation == "F") {
+    } else if (situation == "F" || situation == "V") {
       this.isBudgetReadonly = true;
       this.isbudgetNegotiationReadonly = true;
       this.isBudgetProductDisabled = true;

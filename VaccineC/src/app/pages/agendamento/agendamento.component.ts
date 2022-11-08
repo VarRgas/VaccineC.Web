@@ -200,9 +200,10 @@ export class AgendamentoComponent implements OnInit {
       dayGridMonth: {
         selectable: false,
         eventDidMount: function (info) {
-
+          console.log(info)
           if (info.event._def.extendedProps.authSituation == 'P') {
             info.el.style.color = '#37d89d';
+            info.el.children[0].className = "fc-daygrid-event-dot dot-green";
           }
 
           info.el.title = `(${info.timeText}) ${info.event._def.extendedProps.description}`;
@@ -249,8 +250,7 @@ export class AgendamentoComponent implements OnInit {
         slotMaxTime: this.slotMaxTime,
         events: this.events
       }
-    }, 200);
-
+    }, 600);
   }
 
   public formatDate(date: string, time: string): DateInput {

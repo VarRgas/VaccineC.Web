@@ -8,6 +8,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { LoginService } from 'src/app/services/login.service';
+import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private loginDispatcherService: LoginDispatcherService,
+    private budgetDispatcherService: BudgetsDispatcherService,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router,
@@ -80,6 +82,14 @@ export class LoginComponent implements OnInit {
             console.log(error);
           });
 
+          this.budgetDispatcherService.manageBudgetOverdue(Object).subscribe(
+            response => {
+  
+            },
+            error => {
+              console.log(error);
+            });
+
         login.email = response.Email;
         login.id = response.ID;
         login.personId = response.PersonID;
@@ -90,7 +100,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('profilePic', response.PersonProfilePic);
         localStorage.setItem('userId', response.ID);
         localStorage.setItem('showNotification', response.ShowNotification);
-        this.messageHandlerService.showMessage("Logado com sucesso!", 'success-snackbar')
+        //this.messageHandlerService.showMessage("Logado com sucesso!", 'success-snackbar')
         this.loading = false;
         this.router.navigateByUrl('/home');
       },

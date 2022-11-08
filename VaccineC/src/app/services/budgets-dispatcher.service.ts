@@ -40,6 +40,10 @@ export class BudgetsDispatcherService {
     return this.httpClient.post(`${baseURL}/Create`, data);
   }
 
+  public manageBudgetOverdue(data: object): Observable<any> {
+    return this.httpClient.post(`${baseURL}/manageBudgetOverdue`, data);
+  }
+
   public updateBudget(id: string, data: object): Observable<any> {
     return this.httpClient.put(`${baseURL}/${id}/Update`, data);
   }
