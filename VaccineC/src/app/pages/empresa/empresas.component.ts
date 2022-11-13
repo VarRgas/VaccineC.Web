@@ -19,6 +19,9 @@ import { ICompanyParameter } from 'src/app/interfaces/i-company-parameter';
 import { CompaniesSchedulesDispatcherService } from 'src/app/services/company-schedule-dispatcher.service';
 import { CompanyScheduleModel } from 'src/app/models/company-schedule-model';
 import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-dispatcher.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { Router } from '@angular/router';
+import { ResourceModel } from 'src/app/models/resource-model';
 
 
 @Component({
@@ -107,10 +110,32 @@ export class EmpresasComponent implements OnInit {
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private personAutocompleteService: PersonAutocompleteService) { }
+    private personAutocompleteService: PersonAutocompleteService,
+    private usersService: UsersService,
+	  private router: Router
+    ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
     this.getAllCompanies();
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   public loadCompanyData(): void {

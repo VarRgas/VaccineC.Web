@@ -6,11 +6,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { IApplication } from 'src/app/interfaces/i-application';
 import { ApplicationModel } from 'src/app/models/application-model';
 import { PersonModel } from 'src/app/models/person-model';
 import { PersonPhysicalModel } from 'src/app/models/person-physical-model';
+import { ResourceModel } from 'src/app/models/resource-model';
 import { ApplicationsDispatcherService } from 'src/app/services/application-dispatcher.service';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -21,6 +23,7 @@ import { PersonDispatcherService } from 'src/app/services/person-dispatcher.serv
 import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-dispatcher.service';
 import { PersonsPhysicalsDispatcherService } from 'src/app/services/person-physical-dispatcher.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
 import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 
 @Component({
@@ -99,11 +102,33 @@ export class AplicacaoComponent implements OnInit {
     private _bottomSheet: MatBottomSheet,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private usersService: UsersService,
+	  private router: Router
+
   ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
     this.getAvailableApplications();
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   treatTypeOfServiceExhibition(typeOfService: string) {

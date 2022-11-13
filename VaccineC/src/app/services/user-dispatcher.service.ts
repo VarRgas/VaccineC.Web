@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserModel } from '../models/user-model';
+import { ResourceModel } from '../models/resource-model';
 
 const baseURL = 'http://localhost:5000/api/Users';
 
@@ -51,5 +52,9 @@ export class UsersService {
 
     resetPassword(id: string, userModel: UserModel): Observable<any> {
         return this.httpClient.post(`${baseURL}/${id}/ResetPassword`, userModel);
+    }
+
+    userPermission(id: string, resourceModel: ResourceModel): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${id}/UserPermission`, resourceModel);
     }
 }

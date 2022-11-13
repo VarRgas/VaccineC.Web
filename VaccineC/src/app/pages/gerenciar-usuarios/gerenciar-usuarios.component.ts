@@ -17,6 +17,8 @@ import { UserModel } from 'src/app/models/user-model';
 import { ResourcesService } from 'src/app/services/resources.service';
 import { UserResourceService } from 'src/app/services/user-resource.service';
 import { UserResourceModel } from 'src/app/models/user-resource-model';
+import { Router } from '@angular/router';
+import { ResourceModel } from 'src/app/models/resource-model';
 
 @Component({
   selector: 'app-gerenciar-usuarios',
@@ -101,10 +103,30 @@ export class GerenciarUsuariosComponent implements OnInit {
     private personAutocompleteService: PersonAutocompleteService,
     private usersService: UsersService,
     private resourcesService: ResourcesService,
-    private userResourceService: UserResourceService
+    private userResourceService: UserResourceService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   get passwordInput() {

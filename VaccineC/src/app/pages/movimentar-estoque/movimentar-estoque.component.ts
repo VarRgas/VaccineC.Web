@@ -6,6 +6,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { IMovement } from 'src/app/interfaces/i-movement';
 import { IMovementProduct } from 'src/app/interfaces/i-movement-product';
@@ -13,6 +14,7 @@ import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-b
 import { DiscardModel } from 'src/app/models/discard-model';
 import { MovementModel } from 'src/app/models/movement-model';
 import { MovementProductModel } from 'src/app/models/movement-product-model';
+import { ResourceModel } from 'src/app/models/resource-model';
 import { DiscardsDispatcherService } from 'src/app/services/discards-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
@@ -20,6 +22,7 @@ import { MovementsDispatcherService } from 'src/app/services/movement-dispatcher
 import { MovementsProductsDispatcherService } from 'src/app/services/movement-product-dispatcher.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
 
 @Component({
   selector: 'app-movimentar-estoque',
@@ -101,10 +104,31 @@ export class MovimentarEstoqueComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private usersService: UsersService,
+	  private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   loadMovementData() {
@@ -1011,7 +1035,6 @@ export class UpdateMovementProductExitDialog implements OnInit {
   getMovementProductById(id: string) {
     this.movementProductService.getById(id).subscribe(
       response => {
-        console.log(response);
         this.ProductName = response.Product;
         this.MovementId = response.MovementId;
         this.ProductId = response.ProductId;

@@ -4,14 +4,17 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { IBatch } from 'src/app/interfaces/i-batch';
 import { IDiscard } from 'src/app/interfaces/i-discard';
 import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-batch';
+import { ResourceModel } from 'src/app/models/resource-model';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { DiscardsDispatcherService } from 'src/app/services/discards-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
 
 @Component({
   selector: 'app-situacao-estoque',
@@ -57,14 +60,36 @@ export class SituacaoEstoqueComponent implements OnInit {
     private discardsDispatcherService: DiscardsDispatcherService,
     private errorHandler: ErrorHandlerService,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private usersService: UsersService,
+	  private router: Router
+    ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
     this.getCurrentDate();
     this.getNotEmptySummaryBatchs();
     this.getBatchsBelowMinimumStock();
     this.getSummarySituationAuthorization();
     this.getDiscards();
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   public getCurrentDate(): void {

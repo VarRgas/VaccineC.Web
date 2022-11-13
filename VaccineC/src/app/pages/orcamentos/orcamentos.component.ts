@@ -34,6 +34,8 @@ import { UsersService } from 'src/app/services/user-dispatcher.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
+import { Router } from '@angular/router';
+import { ResourceModel } from 'src/app/models/resource-model';
 
 @Component({
   selector: 'app-orcamentos',
@@ -175,13 +177,18 @@ export class OrcamentosComponent implements OnInit {
     private budgetsHistoricsDispatcherService: BudgetsHistoricsDispatcherService,
     private companiesParametersDispatcherService: CompaniesParametersDispatcherService,
     private usersService: UsersService,
-    private personDispatcherService: PersonDispatcherService) {
+    private personDispatcherService: PersonDispatcherService,
+    private router: Router
+  ) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
   }
 
   ngOnInit(): void {
+
+    this.getUserPermision();
+
     this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
       companyParameter => {
         if (companyParameter != null) {
@@ -192,6 +199,24 @@ export class OrcamentosComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   public budgetProductRowSelected!: any;

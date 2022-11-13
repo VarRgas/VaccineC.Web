@@ -38,7 +38,6 @@ export class SideMenuComponent implements OnInit {
   public getUserResourceMenu() {
     this.userResourceService.getResourcesMenuByUser(localStorage.getItem('userId')!).subscribe(
       response => {
-        console.log(response);
         if (response.listRegistration.length > 0) {
           this.isRegistrationVisible = true;
           this.listRegistration = response.listRegistration;

@@ -22,6 +22,9 @@ import { PersonsJuridicalsDispatcherService } from "src/app/services/person-juri
 import { PersonPhysicalModel } from "src/app/models/person-physical-model";
 import { PersonJuridicalModel } from "src/app/models/person-juridical-model";
 import { cpf, cnpj } from 'cpf-cnpj-validator';
+import { ResourceModel } from "src/app/models/resource-model";
+import { Route, Router } from "@angular/router";
+import { UsersService } from "src/app/services/user-dispatcher.service";
 
 @Component({
   selector: 'app-pessoas',
@@ -135,10 +138,32 @@ export class PessoasComponent implements OnInit {
     private personsAddressesDispatcherService: PersonsAddressesDispatcherService,
     private personsJuridicalsDispatcherService: PersonsJuridicalsDispatcherService,
     private personsPhysicalsDispatcherService: PersonsPhysicalsDispatcherService,
+    private usersService: UsersService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
   }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+  
 
   public isPerson(personType: string): boolean {
     if (personType == "F") {
@@ -519,7 +544,6 @@ export class PessoasComponent implements OnInit {
     this.personsPhysicalsDispatcherService.updatePhysicalComplements(this.personPhysicalId, physicalComplement)
       .subscribe(
         response => {
-          console.log(response);
           this.personPhysicalId = response.ID;
           this.personId = response.PersonID;
           this.cpfNumber = response.CpfNumber;

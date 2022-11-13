@@ -4,11 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IResource } from 'src/app/interfaces/i-resource';
 import { ResourceModel } from 'src/app/models/resource-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ResourcesService } from 'src/app/services/resources.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
 
 @Component({
   selector: 'app-recursos',
@@ -48,7 +50,9 @@ export class RecursosComponent implements OnInit {
   });
 
   constructor(
+    private router: Router,
     private resourcesService: ResourcesService,
+    private usersService: UsersService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -56,7 +60,26 @@ export class RecursosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
     this.getAllResources();
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   loadResourceData() {

@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ListView } from '@fullcalendar/list';
 import * as Chart from 'chart.js';
 import { ChartOptions } from 'chart.js';
@@ -7,11 +8,13 @@ import { ChartConfiguration, ChartData, ChartEvent, ChartType, ControllerDataset
 import plugin from 'chartjs-plugin-datalabels';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { options } from 'preact';
+import { ResourceModel } from 'src/app/models/resource-model';
 import { ApplicationsDispatcherService } from 'src/app/services/application-dispatcher.service';
 import { AuthorizationsDispatcherService } from 'src/app/services/authorization-dispatcher.service';
 import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
 
 
 @Component({
@@ -89,10 +92,15 @@ export class VisaoFaturamentoComponent implements OnInit {
     private authorizationsDispatcherService: AuthorizationsDispatcherService,
     private budgetsDispatcherService: BudgetsDispatcherService,
     private errorHandler: ErrorHandlerService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private usersService: UsersService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+
+    this.getUserPermision();
+
     setTimeout(() => {
       this.getApplicationsByPersonGender();
       this.getApplicationsByProduct();
@@ -104,6 +112,24 @@ export class VisaoFaturamentoComponent implements OnInit {
       this.getBudgetsDashInfo();
       this.informationField = `${this.formatMonthDate(new Date())}/${this.formatYearDate(new Date())}`;
     }, 200);
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   public barChartApplicationGenderType: ChartType = 'doughnut';
@@ -578,13 +604,13 @@ export class VisaoFaturamentoComponent implements OnInit {
         this.currentYear = response.year;
         this.currentMonth = this.getFullNameMonthDateInt(response.month);
 
-        if(response.totalBudgetAmountDecrease < 0 && response.totalBudgetAmountDecreasePercent < 0){
-          this.phraseDecrease = `Decréscimo de: ${Math.abs(response.totalBudgetAmountDecrease).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})} (${Math.abs(Math.trunc(response.totalBudgetAmountDecreasePercent))}%)`;
+        if (response.totalBudgetAmountDecrease < 0 && response.totalBudgetAmountDecreasePercent < 0) {
+          this.phraseDecrease = `Decréscimo de: ${Math.abs(response.totalBudgetAmountDecrease).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })} (${Math.abs(Math.trunc(response.totalBudgetAmountDecreasePercent))}%)`;
           this.showPhrase = false;
-        }else if(response.totalBudgetAmountIncrease > 0 && response.totalBudgetAmountIncreasePercent > 0){
-          this.phraseIncrease = `Acréscimo de: ${response.totalBudgetAmountIncrease.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})} (${Math.trunc(response.totalBudgetAmountIncreasePercent)}%)`;
+        } else if (response.totalBudgetAmountIncrease > 0 && response.totalBudgetAmountIncreasePercent > 0) {
+          this.phraseIncrease = `Acréscimo de: ${response.totalBudgetAmountIncrease.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })} (${Math.trunc(response.totalBudgetAmountIncreasePercent)}%)`;
           this.showPhrase = true;
-        }else{
+        } else {
           this.phraseDecrease = "";
           this.phraseIncrease = "";
         }

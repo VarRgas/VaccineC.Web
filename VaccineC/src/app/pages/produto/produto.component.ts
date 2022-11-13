@@ -6,17 +6,20 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { IProduct } from 'src/app/interfaces/i-product';
 import { IProductDoses } from 'src/app/interfaces/i-product-doses';
 import { IProductSummariesBatches } from 'src/app/interfaces/i-product-summaty-batch';
 import { ProductDosesModel } from 'src/app/models/product-doses-model';
 import { ProductModel } from 'src/app/models/product-model';
+import { ResourceModel } from 'src/app/models/resource-model';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
 import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
 import { VaccinesAutocompleteDispatcherService } from 'src/app/services/vaccines-autocomplete-dispatcher.service';
 
 @Component({
@@ -115,10 +118,32 @@ export class ProdutoComponent implements OnInit {
     private productsSummariesBatchesDispatcherService: ProductsSummariesBatchesDispatcherService,
     private vaccinesAutocompleteDispatcherService: VaccinesAutocompleteDispatcherService,
     private errorHandler: ErrorHandlerService,
-    private messageHandler: MessageHandlerService,) { }
+    private messageHandler: MessageHandlerService,
+    private usersService: UsersService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.getUserPermision();
     this.getAllProducts();
+  }
+
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
   }
 
   public loadProductData(): void {

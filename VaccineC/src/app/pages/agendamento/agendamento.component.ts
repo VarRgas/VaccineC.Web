@@ -49,6 +49,9 @@ import { BudgetProductModel } from 'src/app/models/budget-product-model';
 import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
 import { PersonsAddressesDispatcherService } from 'src/app/services/person-address-dispatcher.service';
+import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { Router } from '@angular/router';
+import { ResourceModel } from 'src/app/models/resource-model';
 
 defineFullCalendarElement()
 
@@ -81,6 +84,8 @@ export class AgendamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.getUserPermision();
 
     setTimeout(() => {
       const button = document.getElementsByClassName('fc-myCustomButton-button')[0];
@@ -140,11 +145,31 @@ export class AgendamentoComponent implements OnInit {
     */
   }
 
+  public getUserPermision() {
+
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersService.userPermission(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+        if (!response) {
+          this.router.navigateByUrl('/unauthorized-error-401');
+        }
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
   constructor(
     private dialog: MatDialog,
     private companyDispatcherService: CompaniesDispatcherService,
     private errorHandler: ErrorHandlerService,
-    private eventsDispatcherService: EventsDispatcherService
+    private eventsDispatcherService: EventsDispatcherService,
+    private usersService: UsersService,
+	  private router: Router
   ) { }
 
   calendarVisible = true;
