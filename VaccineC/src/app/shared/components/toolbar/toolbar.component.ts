@@ -6,6 +6,8 @@ import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchM
 import { NotificationModel } from 'src/app/models/notification-model';
 import { NotificationsDispatcherService } from 'src/app/services/notification-dispatcher.service';
 import { ResourceAutocompleteService } from 'src/app/services/resource-autocomplete.service';
+import { ResourcesService } from 'src/app/services/resources.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -18,7 +20,6 @@ export class ToolbarComponent implements OnInit {
   public userPersonName = "";
   public userPersonProfilePic = "";
   public ResourcesId!: string;
-
 
   public notifications: any;
 
@@ -34,7 +35,8 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private notificationDispatcherService: NotificationsDispatcherService,
     private router: Router,
-    private resourceAutocompleteService: ResourceAutocompleteService
+    private resourceAutocompleteService: ResourceAutocompleteService,
+    private resourceService: ResourcesService
   ) {
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -96,7 +98,6 @@ export class ToolbarComponent implements OnInit {
   }
 
   markAsRead(id: string, userId: string, message: string, messageType: string) {
-    console.log("markasread")
     let notification = new NotificationModel();
     notification.id = id;
     notification.userId = userId;
@@ -115,7 +116,6 @@ export class ToolbarComponent implements OnInit {
   }
 
   remove(id: string) {
-    console.log("remove")
     this.notificationDispatcherService.delete(id).subscribe(
       notifications => {
         this.notifications = notifications;
@@ -170,7 +170,7 @@ export class ToolbarComponent implements OnInit {
 
   filter(val: string): Observable<any[]> {
     // call the service which makes the http-request
-    return this.resourceAutocompleteService.getResourceData()
+    return this.resourceService.getByUser(localStorage.getItem('userId')!)
       .pipe(
         map(response => response.filter((option: { Name: string; ID: string }) => {
           return option.Name.toLowerCase().indexOf(val.toString().toLowerCase()) === 0
@@ -181,7 +181,6 @@ export class ToolbarComponent implements OnInit {
   displayState(state: any) {
     return state && state.Name ? state.Name : '';
   }
-
 
   onSelectionChanged(event: MatAutocompleteSelectedEvent) {
     let url = event.option.value.UrlName.split("/")[1];

@@ -20,6 +20,7 @@ import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/prod
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
 import { ProductsDosesDispatcherService } from 'src/app/services/products-doses-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 import { VaccinesAutocompleteDispatcherService } from 'src/app/services/vaccines-autocomplete-dispatcher.service';
 
 @Component({
@@ -120,11 +121,13 @@ export class ProdutoComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
     this.getAllProducts();
   }
 
@@ -144,6 +147,22 @@ export class ProdutoComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   public loadProductData(): void {

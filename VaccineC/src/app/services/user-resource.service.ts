@@ -29,6 +29,10 @@ export class UserResourceService {
         return this.httpClient.get(`${baseURL}/${userId}/GetResourcesMenuByUser`);
     }
 
+    updateUserResourceAccessNumber(userId: string, data: object): Observable<any> {
+        return this.httpClient.post(`${baseURL}/${userId}/UpdateUserResourceAccessNumber`, data);
+    }
+
     create(data: object): Observable<any> {
         return this.httpClient.post(`${baseURL}/Create`, data);
     }

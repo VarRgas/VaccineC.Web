@@ -36,6 +36,7 @@ import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-d
 import { PersonDispatcherService } from 'src/app/services/person-dispatcher.service';
 import { Router } from '@angular/router';
 import { ResourceModel } from 'src/app/models/resource-model';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 @Component({
   selector: 'app-orcamentos',
@@ -178,6 +179,7 @@ export class OrcamentosComponent implements OnInit {
     private companiesParametersDispatcherService: CompaniesParametersDispatcherService,
     private usersService: UsersService,
     private personDispatcherService: PersonDispatcherService,
+    private usersResourcesService: UserResourceService,
     private router: Router
   ) {
     this.stepperOrientation = breakpointObserver
@@ -188,6 +190,7 @@ export class OrcamentosComponent implements OnInit {
   ngOnInit(): void {
 
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
 
     this.companiesParametersDispatcherService.getDefaultCompanyParameter().subscribe(
       companyParameter => {
@@ -217,6 +220,22 @@ export class OrcamentosComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   public budgetProductRowSelected!: any;

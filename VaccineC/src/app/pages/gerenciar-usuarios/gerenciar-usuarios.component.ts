@@ -109,6 +109,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
   }
 
   public getUserPermision() {
@@ -128,6 +129,23 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.errorHandler.handleError(error);
       });
   }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.userResourceService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
+  }
+  
 
   get passwordInput() {
     return this.userForm.get('Password');

@@ -22,6 +22,7 @@ import { PaymentFormsDispatcherService } from 'src/app/services/payment-forms-di
 import { UsersService } from 'src/app/services/user-dispatcher.service';
 import { Router } from '@angular/router';
 import { ResourceModel } from 'src/app/models/resource-model';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 
 @Component({
@@ -112,11 +113,13 @@ export class EmpresasComponent implements OnInit {
     private dialog: MatDialog,
     private personAutocompleteService: PersonAutocompleteService,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
 	  private router: Router
     ) { }
 
   ngOnInit(): void {
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
     this.getAllCompanies();
   }
 
@@ -136,6 +139,22 @@ export class EmpresasComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   public loadCompanyData(): void {

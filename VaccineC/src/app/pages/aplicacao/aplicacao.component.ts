@@ -24,6 +24,7 @@ import { PersonsPhonesDispatcherService } from 'src/app/services/person-phone-di
 import { PersonsPhysicalsDispatcherService } from 'src/app/services/person-physical-dispatcher.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 import { EditPersonDialog } from 'src/app/shared/edit-person-modal/edit-person-dialog';
 
 @Component({
@@ -104,12 +105,13 @@ export class AplicacaoComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     public dialog: MatDialog,
     private usersService: UsersService,
-	  private router: Router
-
+    private usersResourcesService: UserResourceService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
     this.getAvailableApplications();
   }
 
@@ -129,6 +131,22 @@ export class AplicacaoComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   treatTypeOfServiceExhibition(typeOfService: string) {

@@ -11,6 +11,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ResourcesService } from 'src/app/services/resources.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 @Component({
   selector: 'app-recursos',
@@ -53,6 +54,7 @@ export class RecursosComponent implements OnInit {
     private router: Router,
     private resourcesService: ResourcesService,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private formBuilder: FormBuilder,
@@ -61,6 +63,7 @@ export class RecursosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
     this.getAllResources();
   }
 
@@ -80,6 +83,22 @@ export class RecursosComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   loadResourceData() {

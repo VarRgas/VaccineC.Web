@@ -15,6 +15,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 @Component({
   selector: 'app-situacao-estoque',
@@ -62,11 +63,13 @@ export class SituacaoEstoqueComponent implements OnInit {
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
 	  private router: Router
     ) { }
 
   ngOnInit(): void {
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
     this.getCurrentDate();
     this.getNotEmptySummaryBatchs();
     this.getBatchsBelowMinimumStock();
@@ -90,6 +93,22 @@ export class SituacaoEstoqueComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   public getCurrentDate(): void {

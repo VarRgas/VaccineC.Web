@@ -25,6 +25,7 @@ import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { ResourceModel } from "src/app/models/resource-model";
 import { Route, Router } from "@angular/router";
 import { UsersService } from "src/app/services/user-dispatcher.service";
+import { UserResourceService } from "src/app/services/user-resource.service";
 
 @Component({
   selector: 'app-pessoas',
@@ -139,11 +140,13 @@ export class PessoasComponent implements OnInit {
     private personsJuridicalsDispatcherService: PersonsJuridicalsDispatcherService,
     private personsPhysicalsDispatcherService: PersonsPhysicalsDispatcherService,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
   }
 
   public getUserPermision() {
@@ -162,6 +165,22 @@ export class PessoasComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
   
 

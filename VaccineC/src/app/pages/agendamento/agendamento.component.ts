@@ -52,6 +52,7 @@ import { PersonsAddressesDispatcherService } from 'src/app/services/person-addre
 import { UsersService } from 'src/app/services/user-dispatcher.service';
 import { Router } from '@angular/router';
 import { ResourceModel } from 'src/app/models/resource-model';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 defineFullCalendarElement()
 
@@ -86,6 +87,7 @@ export class AgendamentoComponent implements OnInit {
   ngOnInit(): void {
 
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
 
     setTimeout(() => {
       const button = document.getElementsByClassName('fc-myCustomButton-button')[0];
@@ -163,12 +165,29 @@ export class AgendamentoComponent implements OnInit {
       });
   }
 
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
+  }
+
   constructor(
     private dialog: MatDialog,
     private companyDispatcherService: CompaniesDispatcherService,
     private errorHandler: ErrorHandlerService,
     private eventsDispatcherService: EventsDispatcherService,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
 	  private router: Router
   ) { }
 

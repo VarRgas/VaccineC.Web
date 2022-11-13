@@ -23,6 +23,7 @@ import { MovementsProductsDispatcherService } from 'src/app/services/movement-pr
 import { ProductsSummariesBatchesDispatcherService } from 'src/app/services/product-summary-batch-dispatcher.service';
 import { ProductsDispatcherService } from 'src/app/services/products-dispatcher.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 @Component({
   selector: 'app-movimentar-estoque',
@@ -106,6 +107,7 @@ export class MovimentarEstoqueComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
 	  private router: Router
   ) { }
 
@@ -129,6 +131,22 @@ export class MovimentarEstoqueComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   loadMovementData() {

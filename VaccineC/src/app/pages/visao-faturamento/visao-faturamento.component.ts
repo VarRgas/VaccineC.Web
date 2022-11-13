@@ -15,6 +15,7 @@ import { BudgetsDispatcherService } from 'src/app/services/budgets-dispatcher.se
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { MessageHandlerService } from 'src/app/services/message-handler.service';
 import { UsersService } from 'src/app/services/user-dispatcher.service';
+import { UserResourceService } from 'src/app/services/user-resource.service';
 
 
 @Component({
@@ -75,6 +76,8 @@ export class VisaoFaturamentoComponent implements OnInit {
   totalBudgetNumberPrevious!: number;
   totalBudgetAmount!: number;
   totalBudgetAmountPrevious!: number;
+  totalBudgetAmountLost!: number;
+  totalBudgetAmountLostPrevious!: number;
   totalBudgetDiscount!: number;
   totalBudgetDiscountPrevious!: number;
   currentYear!: number;
@@ -94,12 +97,14 @@ export class VisaoFaturamentoComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private messageHandler: MessageHandlerService,
     private usersService: UsersService,
+    private usersResourcesService: UserResourceService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
 
     this.getUserPermision();
+    this.updateUserResourceAccessNumber();
 
     setTimeout(() => {
       this.getApplicationsByPersonGender();
@@ -130,6 +135,22 @@ export class VisaoFaturamentoComponent implements OnInit {
         console.log(error);
         this.errorHandler.handleError(error);
       });
+  }
+
+  public updateUserResourceAccessNumber() {
+    let resource = new ResourceModel();
+    resource.urlName = this.router.url;
+    resource.name = this.router.url;
+
+    this.usersResourcesService.updateUserResourceAccessNumber(localStorage.getItem('userId')!, resource).subscribe(
+      response => {
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+
   }
 
   public barChartApplicationGenderType: ChartType = 'doughnut';
@@ -599,6 +620,8 @@ export class VisaoFaturamentoComponent implements OnInit {
         this.totalBudgetNumberPrevious = response.totalBudgetNumberPrevious;
         this.totalBudgetAmount = response.totalBudgetAmount;
         this.totalBudgetAmountPrevious = response.totalBudgetAmountPrevious;
+        this.totalBudgetAmountLost = response.totalBudgetAmountLost;
+        this.totalBudgetAmountLostPrevious = response.totalBudgetAmountLostPrevious;
         this.totalBudgetDiscount = response.totalBudgetDiscount;
         this.totalBudgetDiscountPrevious = response.totalBudgetDiscountPrevious;
         this.currentYear = response.year;
