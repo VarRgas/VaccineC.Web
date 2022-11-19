@@ -294,7 +294,7 @@ export class AgendamentoComponent implements OnInit {
         slotMaxTime: this.slotMaxTime,
         events: this.events
       }
-    }, 600);
+    }, 800);
   }
 
   public formatDate(date: string, time: string): DateInput {

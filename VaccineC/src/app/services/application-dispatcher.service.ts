@@ -39,6 +39,14 @@ export class ApplicationsDispatcherService {
         return this.httpClient.get(`${baseURL}/${applicationId}/GetSipniImunizationById`);
     }
 
+    public getApplicationSipniIntegration(): Observable<any> {
+        return this.httpClient.get(`${baseURL}/GetApplicationSipniIntegration`);
+    }
+
+    public getApplicationSipniIntegrationByParameter(borrower: string, situation: string): Observable<any> {
+        return this.httpClient.get(`${baseURL}/${borrower}/${situation}/GetApplicationSipniIntegrationByParameter`);
+    }
+
     public getPersonApplicationProductSameDay(personId: string, productId: string): Observable<any> {
         return this.httpClient.get(`${baseURL}/${personId}/${productId}/GetPersonApplicationProductSameDay`);
     }

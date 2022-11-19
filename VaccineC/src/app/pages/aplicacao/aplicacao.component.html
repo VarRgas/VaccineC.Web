@@ -20,6 +20,7 @@
                                 id="mat-search-button" 
                                 mat-raised-button color="primary"
                                 class="mat-button-entry me-2" 
+                                style="padding-left:12px"
                                 [disabled]="searchButtonLoading">
                                 <div class="spinner">
                                     <mat-spinner *ngIf="searchButtonLoading" [diameter]="15"></mat-spinner>
@@ -42,6 +43,15 @@
                                         <span class="fa-solid fa-clock w-20px"></span>
                                     </span>
                                 </div>
+                        </button>
+
+                        <button id="mat-add-button" 
+                                mat-raised-button
+                                class="mat-button-entry me-2 btn-warning available-button" 
+                                matTooltip="Integrações SIPNI" 
+                                matTooltipPosition="above"
+                                (click)="openSipniDialog()">
+                                <span class="fa-solid fa-wifi"></span>
                         </button>
 
                         <button mat-raised-button

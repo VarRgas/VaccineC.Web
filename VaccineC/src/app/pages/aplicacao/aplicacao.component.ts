@@ -9,6 +9,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
 import { IApplication } from 'src/app/interfaces/i-application';
+import { ISipniIntegration } from 'src/app/interfaces/i-sipni-integration';
 import { ApplicationModel } from 'src/app/models/application-model';
 import { PersonModel } from 'src/app/models/person-model';
 import { PersonPhysicalModel } from 'src/app/models/person-physical-model';
@@ -391,6 +392,18 @@ export class AplicacaoComponent implements OnInit {
         }
       });
   }
+
+  openSipniDialog() {
+    const dialogRef = this.dialog.open(SipniIntegrationDialog, {
+      disableClose: true,
+      maxWidth: '90vw',
+      width: '100%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
 
   public getPersonApplicationInfoByAuth(authId: string, personId: string) {
 
@@ -1251,4 +1264,86 @@ export class ConfirmApplicationDialog implements OnInit {
   ngOnInit(): void {
 
   }
+}
+
+@Component({
+  selector: 'sipni-integration-dialog',
+  templateUrl: 'sipni-integration-dialog.html',
+})
+export class SipniIntegrationDialog implements OnInit {
+
+  public searchButtonLoading = false;
+  public isFilterSituationVisible = true;
+  public searchIntegration!: string;
+  public searchSituation = 'T';
+  public situationColor!: string;
+  public situationTitle!: string;
+
+  public displayedColumns: string[] = ['Application', 'Borrower', 'Situation', 'ID'];
+  public dataSource = new MatTableDataSource<ISipniIntegration>();
+
+  @ViewChild('paginator') paginator!: MatPaginator;
+
+  constructor(
+    private applicationsDispatcherService: ApplicationsDispatcherService,
+    private errorHandler: ErrorHandlerService
+  ) { }
+
+  ngOnInit(): void {
+    this.getApplicationSipniIntegration();
+  }
+
+  public getApplicationSipniIntegration() {
+    this.applicationsDispatcherService.getApplicationSipniIntegration().subscribe(
+      response => {
+        console.log(response);
+        this.dataSource = new MatTableDataSource(response);
+        this.dataSource.paginator = this.paginator;
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  public searchApplicationIntegration(){
+    let searchName = "";
+
+    if(this.searchIntegration == undefined || this.searchIntegration == null || this.searchIntegration == ""){
+      searchName = "replacetonull";
+    }else{
+      searchName = this.searchIntegration;
+    }
+
+    this.applicationsDispatcherService.getApplicationSipniIntegrationByParameter(searchName, this.searchSituation).subscribe(
+      response => {
+        console.log(response);
+        this.dataSource = new MatTableDataSource(response);
+        this.dataSource.paginator = this.paginator;
+
+      },
+      error => {
+        console.log(error);
+        this.errorHandler.handleError(error);
+      });
+  }
+
+  public showSearchSituation() {
+    if (this.isFilterSituationVisible == false) {
+      this.searchSituation = "T";
+    }
+    this.isFilterSituationVisible = !this.isFilterSituationVisible;
+  }
+
+  resolveExibitionSituation(isComunicated: boolean) {
+    if (isComunicated) {
+      this.situationColor = "comunicated-success";
+      this.situationTitle = "Comunicado"
+    } else {
+      this.situationColor = "comunicated-error";
+      this.situationTitle = "Não Comunicado"
+    } 
+  }
+
 }
