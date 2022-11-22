@@ -261,14 +261,29 @@
                                 </div>
 
                                 <div class="div-row-input">
-                                    <mat-form-field appearance="fill" class="col-sm-3">
-                                        <mat-label>Cor Horário Disponível</mat-label>
-                                        <input type="color" 
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>Horário Inicial Agenda</mat-label>
+                                        <input type="time" 
                                                matInput 
-                                               id="scheduleColor" 
-                                               #ScheduleColorInput
-                                               formControlName="ScheduleColor" 
-                                               [(ngModel)]="scheduleColor">
+                                               formControlName="StartTime" 
+                                               [(ngModel)]="startTime"
+                                               required>
+                                        <mat-error *ngIf="companyParametersForm.controls.StartTime.touched && companyParametersForm.controls.StartTime.invalid">
+                                            <span *ngIf="companyParametersForm.controls.StartTime.errors?.required">O Horario Inicial é obrigatório.</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                        
+                                    <mat-form-field appearance="fill" class="col-sm-6">
+                                        <mat-label>Horário Final Agenda</mat-label>
+                                        <input 
+                                            type="time" 
+                                            matInput 
+                                            formControlName="FinalTime" 
+                                            [(ngModel)]="finalTime"
+                                            required="true">
+                                        <mat-error *ngIf="companyParametersForm.controls.FinalTime.touched && companyParametersForm.controls.FinalTime.invalid">
+                                            <span *ngIf="companyParametersForm.controls.FinalTime.errors?.required">O Horario Final é obrigatório.</span>
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
 
@@ -286,7 +301,7 @@
                 </mat-tab>
 
                 <!-- SCHEDULLE TAB -->
-                <mat-tab label="Agenda" [disabled]="tabIsDisabled">
+                <mat-tab label="Agenda" *ngIf="false">
 
                     <div class="search-table">
                         <div class="col-sm-11 search-table-content mat-elevation-z2">

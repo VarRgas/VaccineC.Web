@@ -58,6 +58,8 @@ export class EmpresasComponent implements OnInit {
   public register!: string;
   public informationField!: string;
   public paymentFormId!: string;
+  public startTime!: string;
+  public finalTime!: string;
 
   //Table
   public value = '';
@@ -72,7 +74,6 @@ export class EmpresasComponent implements OnInit {
   public CompanyParameterID!: string;
   public ApplicationTimePerMinute!: string;
   public MaximumDaysBudgetValidity!: string;
-  public scheduleColor: string = "#84d7b0";
   public CompanyIDParameter!: string;
 
   //Autocomplete Forma de Pagamento
@@ -90,8 +91,9 @@ export class EmpresasComponent implements OnInit {
     CompanyID: [null],
     ApplicationTimePerMinute: [null, [Validators.required]],
     MaximumDaysBudgetValidity: [null, [Validators.required]],
+    StartTime: [null, [Validators.required]],
+    FinalTime: [null, [Validators.required]],
     PaymentFormId: new FormControl(null),
-    ScheduleColor: [null]
   });
 
   //Company Form
@@ -242,7 +244,6 @@ export class EmpresasComponent implements OnInit {
           this.createButtonLoading = false;
           this.tabIsDisabled = false;
           this.isInputReadOnly = true;
-          this.scheduleColor = "#84d7b0";
           this.getAllCompanies();
 
           this.messageHandler.showMessage("Empresa criada com sucesso!", "success-snackbar")
@@ -332,8 +333,9 @@ export class EmpresasComponent implements OnInit {
     let companyParameter = new CompanyParameterModel();
     companyParameter.companyId = this.companyID;
     companyParameter.applicationTimePerMinute = this.ApplicationTimePerMinute;
-    companyParameter.scheduleColor = this.scheduleColor;
     companyParameter.maximumDaysBudgetValidity = this.MaximumDaysBudgetValidity;
+    companyParameter.startTime = this.startTime;
+    companyParameter.finalTime = this.finalTime;
 
     if(this.companyParametersForm.value.PaymentFormId == null || this.companyParametersForm.value.PaymentFormId == undefined || this.companyParametersForm.value.PaymentFormId == ""){
       companyParameter.defaultPaymentFormId = null;
@@ -341,8 +343,6 @@ export class EmpresasComponent implements OnInit {
       companyParameter.defaultPaymentFormId = this.companyParametersForm.value.PaymentFormId.ID;
     }
 
-    console.log(companyParameter)
-  
     this.companiesParametersDispatcherService.createCompanyParameter(companyParameter)
       .subscribe(
         response => {
@@ -350,7 +350,8 @@ export class EmpresasComponent implements OnInit {
           this.CompanyIDParameter = response.CompanyId;
           this.ApplicationTimePerMinute = response.ApplicationTimePerMinute;
           this.MaximumDaysBudgetValidity = response.MaximumDaysBudgetValidity;
-          this.scheduleColor = response.ScheduleColor;
+          this.startTime = response.StartTime;
+          this.finalTime = response.FinalTime;
           this.messageHandler.showMessage("Parâmetros criados com sucesso!", "success-snackbar")
         },
         error => {
@@ -374,7 +375,8 @@ export class EmpresasComponent implements OnInit {
     companyParameter.companyId = this.companyID;
     companyParameter.applicationTimePerMinute = this.ApplicationTimePerMinute;
     companyParameter.maximumDaysBudgetValidity = this.MaximumDaysBudgetValidity;
-    companyParameter.scheduleColor = this.scheduleColor;
+    companyParameter.startTime = this.startTime;
+    companyParameter.finalTime = this.finalTime;
     console.log(companyParameter)
 
     if(this.companyParametersForm.value.PaymentFormId == null || this.companyParametersForm.value.PaymentFormId == undefined || this.companyParametersForm.value.PaymentFormId == ""){
@@ -428,15 +430,15 @@ export class EmpresasComponent implements OnInit {
             this.CompanyParameterID = "";
             this.ApplicationTimePerMinute = "";
             this.MaximumDaysBudgetValidity = "";
-            this.scheduleColor = "#84d7b0";
             this.companyParametersForm.clearValidators();
             this.companyParametersForm.updateValueAndValidity();
           } else {
             console.log(companyParameter)
             this.CompanyParameterID = companyParameter.ID;
-            this.scheduleColor = companyParameter.ScheduleColor;
             this.ApplicationTimePerMinute = companyParameter.ApplicationTimePerMinute;
             this.MaximumDaysBudgetValidity = companyParameter.MaximumDaysBudgetValidity;
+            this.startTime = companyParameter.StartTime;
+            this.finalTime = companyParameter.FinalTime;
             if(companyParameter.PaymentForm != null){
               this.paymentFormId = companyParameter.PaymentForm;
             }
@@ -494,7 +496,6 @@ export class EmpresasComponent implements OnInit {
     this.companyParametersForm.clearValidators();
     this.companyParametersForm.updateValueAndValidity();
 
-    this.scheduleColor = "#84d7b0";
     this.isInputReadOnly = false;
     this.tabIsDisabled = true;
 

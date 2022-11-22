@@ -3,6 +3,5 @@ export interface ICompanyParameter {
     CompanyId: string
     ApplicationTimePerMinute: string 
     MaximumDaysBudgetValidity: string 
-    ScheduleColor: string 
   }
   
