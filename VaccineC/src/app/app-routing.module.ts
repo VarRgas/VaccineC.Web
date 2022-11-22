@@ -32,7 +32,7 @@ const routes: Routes = [
   //canActivate: [AuthorizeGuard]: É oq vai dizer se o usuário logado vai ter acesso ou não;
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthorizeGuard] },
-  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [AuthorizeGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
 
   { path: 'formas-pagamento', component: FormasPagamentoComponent, canActivate: [AuthorizeGuard] },
   { path: 'pessoas', component: PessoasComponent, canActivate: [AuthorizeGuard] },
