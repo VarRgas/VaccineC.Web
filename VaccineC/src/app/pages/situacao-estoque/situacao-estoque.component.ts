@@ -286,7 +286,7 @@ export class SituacaoEstoqueComponent implements OnInit {
       case "10":
         response = "Novembro"
         break;
-      case "12":
+      case "11":
         response = "Dezembro"
         break;
       default:
