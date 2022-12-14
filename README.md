@@ -25,7 +25,7 @@
  <a href="#-layout">Layout</a> • 
  <a href="#-tecnologias">Tecnologias</a> • 
  <a href="#-autores">Autores</a> • 
- <a href="#user-content--licença">Licença</a>
+ <a href="#-licença">Licença</a>
 </p>
 
 
@@ -36,6 +36,7 @@ O Projeto VaccineC surgiu com o propósito de auxiliar clínicas privadas de imu
 Foi desenvolvido como trabalho acadêmico, sendo requisito para aprovação e conclusão do curso de Análise e Desenvolvimento de Sistemas da [UNIFTEC - Centro Universitário](https://www.ftec.com.br/), sob orientação do Professor [Thiarlei Machado Macedo](https://www.linkedin.com/in/thiarlei/).
 
 ---
+
 
 ## ⚙️ Funcionalidades
 
@@ -68,6 +69,7 @@ Foi desenvolvido como trabalho acadêmico, sendo requisito para aprovação e co
   - [x] Gerenciamento de Lotes
   - [x] Baixa automática a cada aplicação realizada
   <br>
+  
 ---
 
 ## 🎨 Layout
@@ -114,9 +116,12 @@ As seguintes tecnologias foram utilizadas na construção do projeto:
 -   Protótipos: **[Moqups](https://app.moqups.com/)**
 -   APIs: **[SMSDev](https://www.smsdev.com.br/)**, **[ViaCEP](https://viacep.com.br/)**, **[MockAPI](https://mockapi.io/)**
 -   Editores: **[Visual Studio Code](https://code.visualstudio.com/)**, **[Visual Studio Community 2022](https://visualstudio.microsoft.com/pt-br/vs/community/)**
+-   SGBDs: **[DBeaver](https://dbeaver.io/about/)**, **[SQL Server Management Studio](https://www.microsoft.com/pt-br/sql-server/sql-server-downloads)**
 -   Teste de API: **[Postman](https://www.postman.com/)**
 -   Frameworks de Design de Interface: **[Bootstrap](https://getbootstrap.com/), [Angular Material](https://material.angular.io/)**
 -   Ícones: **[Font Awesome](https://fontawesome.com/icons)**, **[Material Design Icons](https://fonts.google.com/icons)**
+
+> Veja o arquivo  [package.json](https://github.com/amanda-maschio/VaccineC.Web/blob/main/VaccineC/package.json)
 
 ---
 
