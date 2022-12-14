@@ -98,8 +98,9 @@ As seguintes tecnologias foram utilizadas na construção do projeto:
 -   **[Angular](https://angular.io/)**
 -   **[Typescript](https://www.typescriptlang.org/)**
 -   **[Javascript](https://www.javascript.com/)**
--   **HTML5**
--   **CSS3**
+-   **[HTML](https://www.w3schools.com/html/)**
+-   **[CSS](https://www.w3.org/Style/CSS/Overview.en.html)**
+-   **[SASS](https://sass-lang.com/)**
 
 #### **BACKEND**
 
