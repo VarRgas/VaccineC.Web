@@ -36,6 +36,10 @@ O Projeto VaccineC surgiu com o propósito de auxiliar clínicas privadas de imu
 
 Foi desenvolvido como trabalho acadêmico, sendo requisito para aprovação e conclusão do curso de Análise e Desenvolvimento de Sistemas da [UNIFTEC - Centro Universitário](https://www.ftec.com.br/), sob orientação do Professor [Thiarlei Machado Macedo](https://www.linkedin.com/in/thiarlei/).
 
+<br>
+
+> ARTIGO: [VaccineC - Software de Gestão para Clínicas de Vacinação](https://1drv.ms/b/s!AhUeUpwTQPI_yXjraVihgaxDifc0?e=EI1Fgn)
+
 ---
 
 
