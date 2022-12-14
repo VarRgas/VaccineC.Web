@@ -15,9 +15,9 @@
     <img alt="VaccineC" title="VaccineC" src="VaccineC/src/assets/img/login-bg-pic.png" />
 </h1>
 
-<h3 align="center"> 
-	VaccineC - Software de Gestão para Clínicas de Vacinação
-</h3>
+<h2 align="center"> 
+	VaccineC - Software de Gestão para Clínicas de Vacinação (FRONTEND)
+</h2>
 
 <p align="center">
  <a href="#-sobre-o-projeto">Sobre</a> •
